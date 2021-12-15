@@ -6,3 +6,4 @@ dist-ssr
 .*.swo
 .*.swp
 .*.swn
+yarn.lock
