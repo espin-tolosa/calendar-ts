@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "bbuild": "./scripts/build_fullstack.sh",
     "preview": "vite preview"
   },
   "dependencies": {
