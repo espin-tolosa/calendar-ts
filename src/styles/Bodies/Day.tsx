@@ -1,7 +1,12 @@
 import { ReactChildren, ReactChild } from "react";
 
+//Fix: interface-childs-array
 interface AuxProps {
-  children: ReactChild | ReactChildren;
+  children:
+    | Array<ReactChild>
+    | Array<ReactChildren>
+    | ReactChild
+    | ReactChildren;
 }
 
 export const Styles_Bodies_Day = ({ children }: AuxProps) => (
