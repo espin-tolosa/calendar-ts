@@ -4,6 +4,8 @@ import { Styles_Bodies_DayEnd } from "./styles/Bodies/Day";
 import { Styles_Bodies_Day } from "./styles/Bodies/Day";
 import { Styles_Headers_Month } from "./styles/Headers/Month";
 
+import { Event } from "./components/Event";
+
 function App() {
   const dayNames = [
     "Monday",
@@ -34,9 +36,7 @@ function App() {
                 {dayList.map((day) => (
                   <Styles_Bodies_Day key={day}>
                     {events.map((e) => (
-                      <div className="bg-red-800 px-8 m-2" key={e}>
-                        {e}
-                      </div>
+                      <Event key={e} job={e} />
                     ))}
                   </Styles_Bodies_Day>
                 ))}
