@@ -1,5 +1,5 @@
 import React from "react";
-import { Styles_Bodies_Event } from "../styles/Bodies/Events";
+import { Styles_Bodies_Event } from "@styles/Bodies/Events";
 
 interface EventProps {
   job: string;

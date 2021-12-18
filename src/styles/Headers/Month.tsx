@@ -5,5 +5,7 @@ interface AuxProps {
 }
 
 export const Styles_Headers_Month = ({ children }: AuxProps) => (
-  <p className="text-4xl font-bold text-gray-800 mb-8">{children}</p>
+  <p className="text-4xl select-none font-bold text-gray-800 mb-8">
+    {children}
+  </p>
 );

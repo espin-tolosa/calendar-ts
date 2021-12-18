@@ -5,7 +5,7 @@ interface AuxProps {
 }
 
 export const Styles_Headers_Day = ({ children }: AuxProps) => (
-  <p className="w-12 h-full text-sm font-medium text-gray-800 uppercase">
+  <p className="w-12 h-full text-sm select-none font-medium text-gray-800 uppercase">
     {children}
   </p>
 );
