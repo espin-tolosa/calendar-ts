@@ -18,10 +18,11 @@ const dayNames = [
   "Saturday",
   "Sunday",
 ];
-const events = ["event1", "event2"];
+const events = ["event1", "event2", "event3", "event4", "event5", "event10"];
 function App() {
   //const []
 
+  //issue: App-daylist-1428
   const dayList = [
     -28, -29, -30, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
     18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, -1, -2, -3, -4, -5, -6,
@@ -48,48 +49,57 @@ function App() {
               <Styles_Headers_Board_Row>
                 {dayListRow0.map((day) => {
                   return day < 0 ? (
-                    <Styles_Bodies_DayEnd key={day}>
-                      {Math.abs(day)}{" "}
+                    <Styles_Bodies_DayEnd
+                      key={day}
+                      date={String(Math.abs(day))}
+                    >
+                      {""}
                     </Styles_Bodies_DayEnd>
                   ) : (
-                    <>
-                      <Styles_Bodies_Day>
-                        <Styles_Bodies_Event>{events[0]}</Styles_Bodies_Event>
-                        <Styles_Bodies_Event>{events[0]}</Styles_Bodies_Event>
-                        <Styles_Bodies_Event>{events[0]}</Styles_Bodies_Event>
-                        <Styles_Bodies_Event>{events[0]}</Styles_Bodies_Event>
-                      </Styles_Bodies_Day>
-                    </>
+                    <Styles_Bodies_Day key={day} date={String(day)}>
+                      <ThrowEventsArray events={events} date={String(day)} />
+                    </Styles_Bodies_Day>
                   );
                 })}
               </Styles_Headers_Board_Row>
               {/* row 1 */}
               <Styles_Headers_Board_Row>
                 {dayListRow1.map((day) => (
-                  <Styles_Bodies_Day key={day}>{day}</Styles_Bodies_Day>
+                  <Styles_Bodies_Day key={day} date={String(day)}>
+                    <ThrowEventsArray events={events} date={String(day)} />
+                  </Styles_Bodies_Day>
                 ))}
               </Styles_Headers_Board_Row>
               {/* row 2 */}
               <Styles_Headers_Board_Row>
                 {dayListRow2.map((day) => (
-                  <Styles_Bodies_Day key={day}>{day}</Styles_Bodies_Day>
+                  <Styles_Bodies_Day key={day} date={String(day)}>
+                    <ThrowEventsArray events={events} date={String(day)} />
+                  </Styles_Bodies_Day>
                 ))}
               </Styles_Headers_Board_Row>
               {/* row 3 */}
               <Styles_Headers_Board_Row>
                 {dayListRow3.map((day) => (
-                  <Styles_Bodies_Day key={day}>{day}</Styles_Bodies_Day>
+                  <Styles_Bodies_Day key={day} date={String(day)}>
+                    <ThrowEventsArray events={events} date={String(day)} />
+                  </Styles_Bodies_Day>
                 ))}
               </Styles_Headers_Board_Row>
               {/* row 4 */}
               <Styles_Headers_Board_Row>
                 {dayListRow4.map((day) => {
                   return day < 0 ? (
-                    <Styles_Bodies_DayEnd key={day}>
-                      {Math.abs(day)}{" "}
+                    <Styles_Bodies_DayEnd
+                      key={day}
+                      date={String(Math.abs(day))}
+                    >
+                      {""}
                     </Styles_Bodies_DayEnd>
                   ) : (
-                    <Styles_Bodies_Day key={day}>{day}</Styles_Bodies_Day>
+                    <Styles_Bodies_Day key={day} date={String(day)}>
+                      <ThrowEventsArray events={events} date={String(day)} />
+                    </Styles_Bodies_Day>
                   );
                 })}
               </Styles_Headers_Board_Row>
@@ -101,4 +111,37 @@ function App() {
   );
 }
 
+interface EventProps {
+  events: Array<string>;
+  date: string;
+}
+// Strategy: day looks for events
+// The strategy to add events to a day is, each day is looking for events that contains its date as a part of the data
+// This method is good if there is only a few months displayed, or in other words less than houndres of days filtering the Events array
+const ThrowEventsArray: React.FC<EventProps> = ({
+  events,
+  date,
+}): JSX.Element => {
+  return (
+    <>
+      {events
+        .filter((e) => e.includes(date))
+        .map((e) => (
+          <Event key={e} job={e} />
+        ))}
+    </>
+  );
+};
+const ThrowEventsArray_old: React.FC<EventProps> = ({
+  events,
+  date,
+}): JSX.Element => {
+  return (
+    <>
+      {events.map((e) => {
+        return e.includes(date) ? <Event key={e} job={e} /> : <div />;
+      })}
+    </>
+  );
+};
 export default App;
