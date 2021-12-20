@@ -7,6 +7,7 @@ import { Styles_Headers_Board_Row } from "./styles/Headers/Board";
 
 import { Event } from "@components/Event";
 import { Board } from "@components/Form";
+import { Styles_Bodies_Event } from "./styles/Bodies/Events";
 
 const dayNames = [
   "Monday",
@@ -51,7 +52,14 @@ function App() {
                       {Math.abs(day)}{" "}
                     </Styles_Bodies_DayEnd>
                   ) : (
-                    <Styles_Bodies_Day key={day}>{day}</Styles_Bodies_Day>
+                    <>
+                      <Styles_Bodies_Day>
+                        <Styles_Bodies_Event>{events[0]}</Styles_Bodies_Event>
+                        <Styles_Bodies_Event>{events[0]}</Styles_Bodies_Event>
+                        <Styles_Bodies_Event>{events[0]}</Styles_Bodies_Event>
+                        <Styles_Bodies_Event>{events[0]}</Styles_Bodies_Event>
+                      </Styles_Bodies_Day>
+                    </>
                   );
                 })}
               </Styles_Headers_Board_Row>
