@@ -1,5 +1,7 @@
 import { ReactChildren, ReactChild } from "react";
-import { useState } from "react";
+import { useContext, useState } from "react";
+
+import { SimpleCtx } from "@context/formdata";
 
 //Fix: interface-childs-array
 
@@ -8,31 +10,6 @@ interface EventProps {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
 }
-
-const TextForm: React.FC<EventProps> = ({
-  name,
-  value,
-  setValue,
-}): JSX.Element => {
-  return (
-    <div className="block text-gray-700 text-sm font-bold mb-">
-      <input
-        autoComplete="off"
-        className="text-center rounded-full"
-        type="text"
-        placeholder={name.toLowerCase()}
-        name={name}
-        value={value}
-        onClick={(event) => {
-          event.stopPropagation();
-        }}
-        onChange={(event) => {
-          setValue(event.target.value);
-        }}
-      />
-    </div>
-  );
-};
 
 interface AuxProps {
   hidden: string;
@@ -62,8 +39,10 @@ export const EventForm = ({ hidden, children }: AuxProps) => (
 );
 
 export const Board = () => {
-  const [client, setClient] = useState("");
-  const [job, setJob] = useState("");
+  const myCtx = useContext(SimpleCtx);
+
+  const [client, setClient] = [myCtx.client, myCtx.setClient];
+  const [job, setJob] = [myCtx.job, myCtx.setJob];
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [hidden, setHidden] = useState("");
@@ -90,11 +69,41 @@ export const Board = () => {
             event.stopPropagation();
 
             console.log(`Sending: ${client} - ${job} - ${start} - ${end}`);
+            //Clean Form
+            setClient("");
+            setJob("");
+            setStart("");
+            setEnd("");
           }}
         >
           Save
         </button>
       </EventForm>
     </>
+  );
+};
+
+const TextForm: React.FC<EventProps> = ({
+  name,
+  value,
+  setValue,
+}): JSX.Element => {
+  return (
+    <div className="block text-gray-700 text-sm font-bold mb-">
+      <input
+        autoComplete="off"
+        className="text-center rounded-full"
+        type="text"
+        placeholder={name.toLowerCase()}
+        name={name}
+        value={value}
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+        onChange={(event) => {
+          setValue(event.target.value);
+        }}
+      />
+    </div>
   );
 };
