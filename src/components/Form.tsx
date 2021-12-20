@@ -9,31 +9,6 @@ interface EventProps {
   setValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const TextForm: React.FC<EventProps> = ({
-  name,
-  value,
-  setValue,
-}): JSX.Element => {
-  return (
-    <div className="block text-gray-700 text-sm font-bold mb-">
-      <input
-        autoComplete="off"
-        className="text-center rounded-full"
-        type="text"
-        placeholder={name.toLowerCase()}
-        name={name}
-        value={value}
-        onClick={(event) => {
-          event.stopPropagation();
-        }}
-        onChange={(event) => {
-          setValue(event.target.value);
-        }}
-      />
-    </div>
-  );
-};
-
 interface AuxProps {
   hidden: string;
   children:
@@ -90,11 +65,41 @@ export const Board = () => {
             event.stopPropagation();
 
             console.log(`Sending: ${client} - ${job} - ${start} - ${end}`);
+            //Clean Form
+            setClient("");
+            setJob("");
+            setStart("");
+            setEnd("");
           }}
         >
           Save
         </button>
       </EventForm>
     </>
+  );
+};
+
+const TextForm: React.FC<EventProps> = ({
+  name,
+  value,
+  setValue,
+}): JSX.Element => {
+  return (
+    <div className="block text-gray-700 text-sm font-bold mb-">
+      <input
+        autoComplete="off"
+        className="text-center rounded-full"
+        type="text"
+        placeholder={name.toLowerCase()}
+        name={name}
+        value={value}
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+        onChange={(event) => {
+          setValue(event.target.value);
+        }}
+      />
+    </div>
   );
 };
