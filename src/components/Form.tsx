@@ -72,7 +72,24 @@ export const Board = () => {
           onClick={(event) => {
             event.stopPropagation();
 
-            console.log(`Sending: ${client} - ${job} - ${start} - ${end}`);
+            console.log(`Update: ${client} - ${job} - ${start} - ${end}`);
+            console.log(events);
+            dispatch({ type: "update", name: job });
+            //Clean Form
+            setClient("");
+            setJob("");
+            setStart("");
+            setEnd("");
+          }}
+        >
+          Update
+        </button>
+        <button
+          className="bg-blue-500 select-none hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          onClick={(event) => {
+            event.stopPropagation();
+
+            console.log(`Save: ${client} - ${job} - ${start} - ${end}`);
             console.log(events);
             dispatch({ type: "increase", name: job });
             //Clean Form
