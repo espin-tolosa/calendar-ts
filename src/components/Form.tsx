@@ -2,6 +2,7 @@ import { ReactChildren, ReactChild } from "react";
 import { useContext, useState } from "react";
 
 import { SimpleCtx, DatesCtx, SetDatesCtx } from "@context/formdata";
+import { EventsCtx } from "@context/eventsarray";
 
 //Fix: interface-childs-array
 
@@ -40,6 +41,7 @@ export const EventForm = ({ hidden, children }: AuxProps) => (
 
 export const Board = () => {
   const myCtx = useContext(SimpleCtx);
+  const { events, dispatch } = useContext(EventsCtx);
   const { start, end } = useContext(DatesCtx);
   const { setStart, setEnd } = useContext(SetDatesCtx);
 
@@ -71,6 +73,8 @@ export const Board = () => {
             event.stopPropagation();
 
             console.log(`Sending: ${client} - ${job} - ${start} - ${end}`);
+            console.log(events);
+            dispatch({ type: "increase", name: job });
             //Clean Form
             setClient("");
             setJob("");
