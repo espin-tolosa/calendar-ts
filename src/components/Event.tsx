@@ -1,21 +1,18 @@
 import { useContext } from "react";
 import React, { MouseEventHandler } from "react";
 import { Styles_Bodies_Event } from "@styles/Bodies/Events";
-import { SimpleCtx } from "@context/formdata";
+import { SimpleCtx, SetDatesCtx } from "@context/formdata";
 
 interface EventProps {
   job: string;
 }
 
 export const Event: React.FC<EventProps> = ({ job }): JSX.Element => {
-  const myCtx = useContext(SimpleCtx);
+  const { setStart, setEnd } = useContext(SetDatesCtx);
 
-  const [clientform, setClient] = [myCtx.client, myCtx.setClient];
-  const [jobform, setJob] = [myCtx.job, myCtx.setJob];
   const hOnClick = () => {
-    console.log("Event", job);
-    console.log(clientform);
-    setJob(job);
+    setStart("2021-08-25" + job);
+    setEnd("2021-09-18" + job);
   };
   return (
     <Styles_Bodies_Event>

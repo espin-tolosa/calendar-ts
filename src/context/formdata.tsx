@@ -23,7 +23,7 @@ export const FormDataContext = createContext<iForm>(initState);
 
 export const useFormDataContext = () => useContext(FormDataContext);
 */
-import * as React from "react";
+import { useState, createContext } from "react";
 
 //type SetValue = (value: string) => void;
 type SetValue = React.Dispatch<React.SetStateAction<string>>;
@@ -33,6 +33,14 @@ interface AppContextInterface {
   job: string;
   setJob: SetValue;
 }
+interface AppContextInterfaceDates {
+  start: string;
+  end: string;
+}
+interface AppContextInterfaceSetDates {
+  setStart: SetValue;
+  setEnd: SetValue;
+}
 
 const initValue = {
   client: "",
@@ -40,11 +48,24 @@ const initValue = {
   job: "",
   setJob: () => {},
 };
-export const SimpleCtx = React.createContext<AppContextInterface>(initValue);
+const initDateValue = {
+  start: "",
+  end: "",
+};
+const initSetDateValue = {
+  setStart: () => {},
+  setEnd: () => {},
+};
+export const SimpleCtx = createContext<AppContextInterface>(initValue);
+export const DatesCtx = createContext<AppContextInterfaceDates>(initDateValue);
+export const SetDatesCtx =
+  createContext<AppContextInterfaceSetDates>(initSetDateValue);
 
 export const CtxProvider: React.FC = (props) => {
-  const [client, setClient] = React.useState("");
-  const [job, setJob] = React.useState("");
+  const [client, setClient] = useState("");
+  const [job, setJob] = useState("");
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
   return (
     <SimpleCtx.Provider
       value={{
@@ -54,7 +75,11 @@ export const CtxProvider: React.FC = (props) => {
         setJob,
       }}
     >
-      {props.children}
+      <SetDatesCtx.Provider value={{ setStart, setEnd }}>
+        <DatesCtx.Provider value={{ start, end }}>
+          {props.children}
+        </DatesCtx.Provider>
+      </SetDatesCtx.Provider>
     </SimpleCtx.Provider>
   );
 };
