@@ -7,6 +7,7 @@ import { Styles_Headers_Month } from "@styles/Headers/Month";
 import { Styles_Headers_Board_Row } from "@styles/Headers/Board";
 
 import { Event } from "@components/Event";
+import { Day } from "@components/Day";
 import { Board } from "@components/Form";
 import { Styles_Bodies_Event } from "@styles/Bodies/Events";
 
@@ -71,34 +72,34 @@ function App() {
                         {""}
                       </Styles_Bodies_DayEnd>
                     ) : (
-                      <Styles_Bodies_Day key={day} date={String(day)}>
+                      <Day key={day} date={String(day)}>
                         <ThrowEventsArray events={events} date={String(day)} />
-                      </Styles_Bodies_Day>
+                      </Day>
                     );
                   })}
                 </Styles_Headers_Board_Row>
                 {/* row 1 */}
                 <Styles_Headers_Board_Row>
                   {dayListRow1.map((day) => (
-                    <Styles_Bodies_Day key={day} date={String(day)}>
+                    <Day key={day} date={String(day)}>
                       <ThrowEventsArray events={events} date={String(day)} />
-                    </Styles_Bodies_Day>
+                    </Day>
                   ))}
                 </Styles_Headers_Board_Row>
                 {/* row 2 */}
                 <Styles_Headers_Board_Row>
                   {dayListRow2.map((day) => (
-                    <Styles_Bodies_Day key={day} date={String(day)}>
+                    <Day key={day} date={String(day)}>
                       <ThrowEventsArray events={events} date={String(day)} />
-                    </Styles_Bodies_Day>
+                    </Day>
                   ))}
                 </Styles_Headers_Board_Row>
                 {/* row 3 */}
                 <Styles_Headers_Board_Row>
                   {dayListRow3.map((day) => (
-                    <Styles_Bodies_Day key={day} date={String(day)}>
+                    <Day key={day} date={String(day)}>
                       <ThrowEventsArray events={events} date={String(day)} />
-                    </Styles_Bodies_Day>
+                    </Day>
                   ))}
                 </Styles_Headers_Board_Row>
                 {/* row 4 */}
@@ -112,9 +113,9 @@ function App() {
                         {""}
                       </Styles_Bodies_DayEnd>
                     ) : (
-                      <Styles_Bodies_Day key={day} date={String(day)}>
+                      <Day key={day} date={String(day)}>
                         <ThrowEventsArray events={events} date={String(day)} />
-                      </Styles_Bodies_Day>
+                      </Day>
                     );
                   })}
                 </Styles_Headers_Board_Row>
@@ -138,6 +139,8 @@ const ThrowEventsArray: React.FC<EventProps> = ({
   events,
   date,
 }): JSX.Element => {
+  console.log("Filtering for day:", date);
+
   return (
     <>
       {events
