@@ -1,7 +1,7 @@
 import { ReactChildren, ReactChild } from "react";
 import { useContext, useState } from "react";
 
-import { SimpleCtx } from "@context/formdata";
+import { SimpleCtx, DatesCtx, SetDatesCtx } from "@context/formdata";
 
 //Fix: interface-childs-array
 
@@ -40,11 +40,13 @@ export const EventForm = ({ hidden, children }: AuxProps) => (
 
 export const Board = () => {
   const myCtx = useContext(SimpleCtx);
+  const { start, end } = useContext(DatesCtx);
+  const { setStart, setEnd } = useContext(SetDatesCtx);
 
   const [client, setClient] = [myCtx.client, myCtx.setClient];
   const [job, setJob] = [myCtx.job, myCtx.setJob];
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
+  //  const [start, setStart] = useState("");
+  //  const [end, setEnd] = useState("");
   const [hidden, setHidden] = useState("");
   return (
     <>
