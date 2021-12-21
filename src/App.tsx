@@ -33,7 +33,7 @@ const dayNames = [
   "Saturday",
   "Sunday",
 ];
-const events = ["event1", "event2", "event3", "event4", "event5", "event10"];
+
 function App() {
   //const []
 
@@ -73,7 +73,7 @@ function App() {
                       </Styles_Bodies_DayEnd>
                     ) : (
                       <Day key={day} date={String(day)}>
-                        <ThrowEventsArray events={events} date={String(day)} />
+                        <ThrowEventsArray date={String(day)} />
                       </Day>
                     );
                   })}
@@ -82,7 +82,7 @@ function App() {
                 <Styles_Headers_Board_Row>
                   {dayListRow1.map((day) => (
                     <Day key={day} date={String(day)}>
-                      <ThrowEventsArray events={events} date={String(day)} />
+                      <ThrowEventsArray date={String(day)} />
                     </Day>
                   ))}
                 </Styles_Headers_Board_Row>
@@ -90,7 +90,7 @@ function App() {
                 <Styles_Headers_Board_Row>
                   {dayListRow2.map((day) => (
                     <Day key={day} date={String(day)}>
-                      <ThrowEventsArray events={events} date={String(day)} />
+                      <ThrowEventsArray date={String(day)} />
                     </Day>
                   ))}
                 </Styles_Headers_Board_Row>
@@ -98,7 +98,7 @@ function App() {
                 <Styles_Headers_Board_Row>
                   {dayListRow3.map((day) => (
                     <Day key={day} date={String(day)}>
-                      <ThrowEventsArray events={events} date={String(day)} />
+                      <ThrowEventsArray date={String(day)} />
                     </Day>
                   ))}
                 </Styles_Headers_Board_Row>
@@ -114,7 +114,7 @@ function App() {
                       </Styles_Bodies_DayEnd>
                     ) : (
                       <Day key={day} date={String(day)}>
-                        <ThrowEventsArray events={events} date={String(day)} />
+                        <ThrowEventsArray date={String(day)} />
                       </Day>
                     );
                   })}
@@ -129,16 +129,20 @@ function App() {
 }
 
 interface EventProps {
-  events: Array<string>;
   date: string;
 }
 // Strategy: day looks for events
 // The strategy to add events to a day is, each day is looking for events that contains its date as a part of the data
 // This method is good if there is only a few months displayed, or in other words less than houndres of days filtering the Events array
-const ThrowEventsArray: React.FC<EventProps> = ({
-  events,
-  date,
-}): JSX.Element => {
+const ThrowEventsArray: React.FC<EventProps> = ({ date }): JSX.Element => {
+  const [events, setEvents] = useState([
+    "event1",
+    "event2",
+    "event3",
+    "event4",
+    "event5",
+    "event10",
+  ]);
   console.log("Filtering for day:", date);
 
   return (
@@ -151,10 +155,8 @@ const ThrowEventsArray: React.FC<EventProps> = ({
     </>
   );
 };
-const ThrowEventsArray_old: React.FC<EventProps> = ({
-  events,
-  date,
-}): JSX.Element => {
+const ThrowEventsArray_old: React.FC<EventProps> = ({ date }): JSX.Element => {
+  const events = ["event1", "event2", "event3", "event4", "event5", "event10"];
   return (
     <>
       {events.map((e) => {
