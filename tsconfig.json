@@ -20,7 +20,8 @@
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
       "@styles/*": ["src/styles/*"],
-      "@context/*": ["src/context/*"]
+      "@context/*": ["src/context/*"],
+      "@interfaces/*": ["src/interfaces/*"]
     }
   },
   "include": ["./src"]
