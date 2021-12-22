@@ -144,13 +144,11 @@ interface EventProps {
 const ThrowEventsArray: React.FC<EventProps> = ({ date }): JSX.Element => {
   const { events } = useContext(EventsCtx);
 
-  console.log("Filtering for day:", date);
-
   return (
     <>
       {events
-        .filter((e) => e.includes(date))
-        .map((e) => (
+        .filter((e: string) => e.includes(date))
+        .map((e: string) => (
           <Event key={e} job={e} />
         ))}
     </>
