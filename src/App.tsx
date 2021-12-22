@@ -1,13 +1,16 @@
 import { useState, useContext } from "react";
 import "@/App.css";
-import { Styles_Headers_Day } from "@styles/Headers/Day";
+//import { Styles_Headers_Day } from "@styles/Styled_Day";
+import { WeekDay } from "./styles/Styled_Day";
+import { Styles_Bodies_Day } from "@styles/Styled_Day";
 import { Styles_Bodies_DayEnd } from "@styles/Bodies/Day";
-import { Styles_Bodies_Day } from "@styles/Bodies/Day";
+//import { Styles_Bodies_Day } from "@styles/Bodies/Day";
 import { Styles_Headers_Month } from "@styles/Headers/Month";
 import { Styles_Headers_Board_Row } from "@styles/Headers/Board";
 
 import { Event } from "@components/Event";
 import { Day } from "@components/Day";
+import { DayMove } from "@components/Day-move";
 import { Board } from "@components/Form";
 import { Styles_Bodies_Event } from "@styles/Bodies/Events";
 
@@ -55,12 +58,12 @@ function App() {
         <CtxEventProvider>
           <div className="App">
             <Board />
-            <div className="bg-white md:py-8 px-4 lg:max-w-7xl lg:mx-auto lg:px-8">
+            <div className="bg-lime-800 md:py-8 px-4 lg:max-w-7xl lg:mx-auto lg:px-8">
               <Styles_Headers_Month>March 2021</Styles_Headers_Month>
               <div className="inline-flex flex-col space-y-1 items-start justify-start h-full w-full">
-                <div className="inline-flex space-x-28 items-start justify-start pr-24 h-full w-full">
+                <div className="flex pt-6 pb-6  bg-lime-100 space-x-28 items-start justify-center h-full w-full">
                   {dayNames.map((day) => (
-                    <Styles_Headers_Day key={day}>{day}</Styles_Headers_Day>
+                    <WeekDay day={day} />
                   ))}
                 </div>
                 <div className="flex flex-col items-start justify-start">
@@ -84,9 +87,9 @@ function App() {
                   {/* row 1 */}
                   <Styles_Headers_Board_Row>
                     {dayListRow1.map((day) => (
-                      <Day key={day} date={String(day)}>
+                      <DayMove key={day} date={String(day)}>
                         <ThrowEventsArray date={String(day)} />
-                      </Day>
+                      </DayMove>
                     ))}
                   </Styles_Headers_Board_Row>
                   {/* row 2 */}
