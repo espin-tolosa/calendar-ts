@@ -5,7 +5,7 @@ interface AuxProps {
 }
 
 export const Styles_Headers_Board_Row = ({ children }: AuxProps) => (
-  <div className="inline-flex items-center justify-start w-full h-full bg-lime-100">
+  <div className="inline-flex items-center justify-start w-full h-full bg-palette-rm">
     {children}
   </div>
 );
