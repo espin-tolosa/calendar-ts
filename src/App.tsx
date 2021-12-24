@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import tw from "tailwind-styled-components";
 import "@/App.css";
 //import { Styles_Headers_Day } from "@styles/Styled_Day";
 import { WeekDay } from "./styles/Styled_Day";
@@ -54,6 +55,10 @@ function App() {
   const dayListRow4 = dayList.slice(7 + 7 + 7 + 7, 7 + 7 + 7 + 7 + 7);
   return (
     <>
+      <Button primary={0}> Tailwind Props Button </Button>
+      <Container id={"va"}>
+        <div>Use the Container as any other React Component</div>
+      </Container>
       <CtxProvider>
         <CtxEventProvider>
           <div className="App">
@@ -165,3 +170,30 @@ const ThrowEventsArray_old: React.FC<EventProps> = ({ date }): JSX.Element => {
   );
 };
 export default App;
+
+type Props = {
+  id: string;
+};
+
+const Container = tw.div<Props>`
+    flex
+    items-center
+    justify-center
+    flex-col
+    w-full
+    bg-indigo-200
+	 ${(p) => (p.id ? "bg-indigo-600" : "bg-indigo-300")}
+`;
+
+type ButtonProps = {
+  primary: number;
+};
+
+const Button = tw.button<ButtonProps>`
+	 flex
+	 rounded-full
+	 hover:bg-slate-600
+	 transition-all
+	 p-6
+	 ${(p) => (p.primary ? "bg-indigo-600" : "bg-indigo-300")}
+`;
