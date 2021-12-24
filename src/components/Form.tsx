@@ -53,7 +53,7 @@ export const Board = () => {
   return (
     <>
       <button
-        className="bg-blue-500 select-none hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+        className="btn"
         onClick={(event) => {
           event.stopPropagation();
           hidden === "hidden" ? setHidden("") : setHidden("hidden");
@@ -68,7 +68,7 @@ export const Board = () => {
         <TextForm name="end" value={end} setValue={setEnd} />
 
         <button
-          className="bg-blue-500 select-none hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          className="btn"
           onClick={(event) => {
             event.stopPropagation();
 
@@ -85,7 +85,7 @@ export const Board = () => {
           Update
         </button>
         <button
-          className="bg-blue-500 select-none hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          className="btn2"
           onClick={(event) => {
             event.stopPropagation();
 
