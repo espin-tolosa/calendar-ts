@@ -1,10 +1,6 @@
-import { ReactChildren, ReactChild } from "react";
+import { Date, Children } from "@/interfaces";
 
-//Fix: interface-childs-array
-interface AuxProps {
-  children: ReactChild | ReactChildren;
-  date: string;
-}
+type AuxProps = Children & { date: Date };
 
 export const Styles_Bodies_Day = ({ children, date }: AuxProps) => (
   <div className="flex items-start justify-start w-40 h-full pl-2 pr-32 pt-2.5 pb-2.5 border border-gray-200">
