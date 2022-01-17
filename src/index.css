@@ -10,3 +10,13 @@
 .btn2 {
   @apply bg-blue-500 select-none hover:bg-blue-700 text-red-900 font-bold py-2 px-4 rounded-full;
 }
+
+@layer components {
+  .controller-on {
+    grid-template-columns: repeat(2, minmax(var(100px), 1fr));
+    grid-template-columns: minmax(12ch, 30ch) 1fr;
+  }
+  .controller-off {
+    grid-template-columns: 0fr 1fr;
+  }
+}
