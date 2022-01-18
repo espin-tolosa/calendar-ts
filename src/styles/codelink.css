@@ -593,13 +593,6 @@ html {
   display: grid;
   gap: 5px;
 }
-.controller-on {
-  grid-template-columns: repeat(2, minmax(var(100px), 1fr));
-  grid-template-columns: minmax(12ch, 30ch) 1fr;
-}
-.controller-off {
-  grid-template-columns: 0fr 1fr;
-}
 @media (max-width: 640px) {
   .main-layout {
     grid-template-columns: 1fr;
@@ -654,8 +647,6 @@ html {
 }
 
 /* calendar */
-.calendar {
-}
 
 /* utility classes */
 .flex {
