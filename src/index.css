@@ -19,4 +19,28 @@
   .controller-off {
     grid-template-columns: 0fr 1fr;
   }
+
+  .calendar {
+    margin-top: 1em;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--calendar_width), 1fr));
+    gap: 0.5rem;
+    margin-inline: 1em;
+  }
+}
+
+@layer utilities {
+  .smooth {
+    overflow: hidden;
+    transition-property: max-height;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.5s;
+  }
+  .smooth-display-on {
+    max-height: calc(100vh - var(--header_height));
+  }
+  .smooth-display-off {
+    border-bottom: transparent;
+    max-height: calc(0 * var(--header_height));
+  }
 }

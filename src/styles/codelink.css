@@ -424,13 +424,6 @@ html {
 .month-start-sun {
   grid-column-start: min(6, 7);
 }
-.calendar {
-  margin-top: 1em;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(var(--calendar_width), 1fr));
-  gap: 0.5rem;
-  margin-inline: 1em;
-}
 
 .month {
   display: grid;
@@ -693,21 +686,6 @@ html {
 }
 
 /* legacy: loremipsum smooth scrolling */
-.smooth {
-  overflow: hidden;
-  transition-property: max-height;
-  transition-timing-function: ease-in-out;
-  transition-duration: 0.3s;
-  border-bottom: 1px solid hsl(0, 0%, 80%);
-}
-
-.smooth-display-on {
-  max-height: calc(100vh - var(--header_height));
-}
-.smooth-display-off {
-  border-bottom: transparent;
-  max-height: calc(0 * var(--header_height));
-}
 
 /* Create event */
 

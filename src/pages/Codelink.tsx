@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-//import "@styles/codelink.css";
+import "@styles/codelink.css";
 
 const events = [
   { id: 1, start: 1, job: "Starting 1" },
@@ -211,7 +211,7 @@ export default function App(): JSX.Element {
     stateToggle = "smooth-display-off";
     controllerToggle = "controller-off";
   }
-  const controllerLayoutClassName = `controller-layout smooth ${stateToggle} sticky top-controller`;
+  const controllerLayoutClassName = `rounded-b-lg [z-index:11] border-x-2 border-x-gray-600 bg-gray-400 border-t-2 border-t-gray-200 ${stateToggle} smooth sticky top-controller`;
 
   return (
     <>
@@ -226,10 +226,11 @@ export default function App(): JSX.Element {
 					</div>
 				</div>
 			*/}
-      <div className="App select-none">
+      {/*App*/}
+      <div className="select-none box-border">
         {/*header-layout*/}
         <div
-          className="sticky top-0 border-x-2 border-b-2 border-gray-400 bg-gradient-to-r from-gray-300 via-gray-100 to-gray-100"
+          className="sticky z-10 top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
           onClick={() => setToogleCreate((prev) => !prev)}
         >
           {/*header*/}
@@ -244,11 +245,32 @@ export default function App(): JSX.Element {
         </div>
 
         {/*main-layout*/}
-        <div className={`grid gap-2 ${controllerToggle}`}>
+        <div
+          className={`2xl:grid landscape:grid sm:flex sm:flex-col gap-2 ${controllerToggle}`}
+        >
           {/*controller-layout*/}
-          <div className={controllerLayoutClassName}></div>
+          <div
+            className={`rounded-b-lg z-10 2xl:mt-4 sm:mt-0
+						bg-gradient-to-b from-gray-100 via-gray-300 to-gray-400	
+						 ${stateToggle} smooth sticky top-controller`}
+          >
+            {/* this sticky could be removed */}
+            <div className="sticky">{true && <CreateEvent />}</div>
+          </div>
+
+          {/*calendar-layout*/}
+          <div className="m-0">
+            {/*calendar*/}
+            <div className="calendar">
+              <Month />
+              <Month />
+              <Month />
+              <Month />
+            </div>
+          </div>
         </div>
-        {/* 
+      </div>
+      {/* 
 					
 	
 	<div className={`main-layout ${controllerToggle}`}>
@@ -268,7 +290,6 @@ export default function App(): JSX.Element {
 		</div>
 		
 	*/}
-      </div>
     </>
   );
 }
