@@ -108,15 +108,18 @@
   display: flex;
   flex-direction: column;
 }
+/*
 .extend-event {
   background: transparent;
   color: transparent;
   padding: 0.1em 1ch 0.1em 1ch;
   position: absolute;
   z-index: 2;
-  cursor: copy;
+  cursor: default;
 }
+*/
 
+/*
 .event {
   background: hsl(1, 60%, 57%);
   color: white;
@@ -125,23 +128,24 @@
   padding: 0.1em 1ch 0.1em 1ch;
   position: absolute;
   z-index: 1;
-  /* text truncation */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 0.7rem;
 }
-
+*/
+/*
 .event:hover {
   background: hsl(1, 100%, 57%);
   cursor: pointer;
 }
-
+*/
+/*
 .event-holder {
   color: transparent;
-  /*font-size: 1rem;*/
   margin-block: 0.65rem;
 }
+*/
 /*
 .span-1 {
   width: calc(1 * 100% / 7 - 2ch);
@@ -165,6 +169,7 @@
   width: calc(7 * 100% / 7 - 2ch);
 }
 */
+/*
 .extend-span-1 {
   min-width: calc(1 * 100% / 7 - 1 * 50% / 7);
 }
@@ -186,7 +191,7 @@
 .extend-span-7 {
   min-width: calc(7 * 100% / 7 - 7 * 50% / 7);
 }
-
+*/
 /* Color cards */
 
 /* LEGACY */

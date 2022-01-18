@@ -11,26 +11,111 @@
   @apply bg-blue-500 select-none hover:bg-blue-700 text-red-900 font-bold py-2 px-4 rounded-full;
 }
 @layer utilities {
-  .span-1 {
+  .extend-event {
+    background: transparent;
+    color: transparent;
+    padding: 0.1em 1ch 0.1em 1ch;
+    position: absolute;
+    z-index: 2;
+    cursor: copy;
+  }
+  .extend-event-1 {
+    margin-left: calc(1 * 50% / 7);
+    min-width: calc(1 * 100% / 7 - 1 * 50% / 7);
+  }
+  .extend-event-2 {
+    margin-left: calc(2 * 50% / 7);
+    min-width: calc(2 * 100% / 7 - 2 * 50% / 7);
+  }
+  .extend-event-3 {
+    margin-left: calc(3 * 50% / 7);
+    min-width: calc(3 * 100% / 7 - 3 * 50% / 7);
+  }
+  .extend-event-4 {
+    margin-left: calc(4 * 50% / 7);
+    min-width: calc(4 * 100% / 7 - 4 * 50% / 7);
+  }
+  .extend-event-5 {
+    margin-left: calc(5 * 50% / 7);
+    min-width: calc(5 * 100% / 7 - 5 * 50% / 7);
+  }
+  .extend-event-6 {
+    margin-left: calc(6 * 50% / 7);
+    min-width: calc(6 * 100% / 7 - 6 * 50% / 7);
+  }
+  .extend-event-7 {
+    margin-left: calc(7 * 50% / 7);
+    min-width: calc(7 * 100% / 7 - 7 * 50% / 7);
+  }
+
+  .event {
+    background: hsl(1, 60%, 57%);
+    color: white;
+    border-radius: 15px 15px 15px 15px;
+    margin-left: 1ch;
+    padding: 0.1em 1ch 0.1em 1ch;
+    position: absolute;
+    z-index: 1;
+    /* text truncation */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.7rem;
+  }
+
+  .event:hover {
+    background: hsl(1, 100%, 57%);
+    cursor: pointer;
+  }
+
+  .event-holder {
+    color: transparent;
+    /*font-size: 1rem;*/
+    margin-block: 0.65rem;
+  }
+
+  .event-span-1 {
     width: calc(1 * 100% / 7 - 2ch);
   }
-  .span-2 {
+  .event-span-2 {
     width: calc(2 * 100% / 7 - 2ch);
   }
-  .span-3 {
+  .event-span-3 {
     width: calc(3 * 100% / 7 - 2ch);
   }
-  .span-4 {
+  .event-span-4 {
     width: calc(4 * 100% / 7 - 2ch);
   }
-  .span-5 {
+  .event-span-5 {
     width: calc(5 * 100% / 7 - 2ch);
   }
-  .span-6 {
+  .event-span-6 {
     width: calc(6 * 100% / 7 - 2ch);
   }
-  .span-7 {
+  .event-span-7 {
     width: calc(7 * 100% / 7 - 2ch);
+  }
+
+  .extend-span-1 {
+    min-width: calc(1 * 100% / 7 - 1 * 50% / 7);
+  }
+  .extend-span-2 {
+    min-width: calc(2 * 100% / 7 - 2 * 50% / 7);
+  }
+  .extend-span-3 {
+    min-width: calc(3 * 100% / 7 - 3 * 50% / 7);
+  }
+  .extend-span-4 {
+    min-width: calc(4 * 100% / 7 - 4 * 50% / 7);
+  }
+  .extend-span-5 {
+    min-width: calc(5 * 100% / 7 - 5 * 50% / 7);
+  }
+  .extend-span-6 {
+    min-width: calc(6 * 100% / 7 - 6 * 50% / 7);
+  }
+  .extend-span-7 {
+    min-width: calc(7 * 100% / 7 - 7 * 50% / 7);
   }
 }
 

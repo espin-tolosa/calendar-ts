@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import tw from "tailwind-styled-components";
 import "@styles/codelink.css";
 
 const events = [
@@ -27,6 +28,53 @@ function DayStart({ weekday }: { weekday: string }) {
   return <div className={classNameTemplate}></div>;
 }
 
+/* Attemp to use Styled Components with Tailwind */
+/*
+  background: transparent;
+  color: transparent;
+  padding: 0.1em 1ch 0.1em 1ch;
+  position: absolute;
+  z-index: 2;
+  cursor: copy;
+	margin-left: calc(2 * 50% / 7);
+	min-width: calc(2 * 100% / 7 - 1 * 50% / 7);	
+*/
+const Event_span = tw.div<{ cells: number }>`
+	event
+
+	${({ cells }) =>
+    (cells === 1 && "event-span-1") ||
+    (cells === 2 && "event-span-2") ||
+    (cells === 3 && "event-span-3") ||
+    (cells === 4 && "event-span-4") ||
+    (cells === 5 && "event-span-5") ||
+    (cells === 6 && "event-span-6") ||
+    (cells === 7 && "event-span-7") ||
+    "extend-event-1"}
+`;
+const Extend_event = tw.div<{ span: number }>`
+	extend-event
+
+	${({ span }) =>
+    (span === 1 && "extend-event-1") ||
+    (span === 2 && "extend-event-2") ||
+    (span === 3 && "extend-event-3") ||
+    (span === 4 && "extend-event-4") ||
+    (span === 5 && "extend-event-5") ||
+    (span === 6 && "extend-event-6") ||
+    (span === 7 && "extend-event-7") ||
+    "extend-event-1"}
+`;
+
+/*
+
+
+  .extend-event-1 {
+  }
+  .extend-span-1 {
+  }
+*/
+
 const Day = ({ day }: { day: number }) => {
   const tempDay = String(day);
   const dayPadd = day < 10 ? `0${tempDay}` : tempDay;
@@ -35,6 +83,7 @@ const Day = ({ day }: { day: number }) => {
     backgroundColor: "white"
   } as const;
 style={styles} */
+
   return (
     <div
       className="day"
@@ -47,22 +96,21 @@ style={styles} */
       {events
         .filter((evt) => evt.start === day)
         .map((evt) => {
-          const classNameTemplate = `event`;
-          const classNameTemplate2 = `extend-event extend-event-${evt.id} extend-span-${evt.id}`;
+          const classNameTemplate = `event span-${evt.id}`;
           return (
             <>
               <div className="container">
-                <div
+                <Event_span
                   key={evt.id}
-                  className={`${classNameTemplate} span-2 `}
+                  cells={evt.id}
                   onMouseDownCapture={() => {
                     console.log("Event:", evt.job);
                   }}
                 >
                   {evt.job}
-                </div>
-                <div
-                  className={classNameTemplate2}
+                </Event_span>
+                <Extend_event
+                  span={evt.id}
                   onMouseDownCapture={() => {
                     console.log("extend event:", evt.id);
                   }}
@@ -71,7 +119,7 @@ style={styles} */
                   }}
                 >
                   {"_"}
-                </div>
+                </Extend_event>
                 <div key={"p" + evt.id} className="event-holder"></div>
               </div>
             </>
