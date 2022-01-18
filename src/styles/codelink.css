@@ -104,10 +104,12 @@
   padding: 1px;
   background: lightblue;
 }
+/*
 .container {
   display: flex;
   flex-direction: column;
 }
+*/
 /*
 .extend-event {
   background: transparent;

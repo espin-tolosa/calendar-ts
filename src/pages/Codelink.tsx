@@ -39,41 +39,57 @@ function DayStart({ weekday }: { weekday: string }) {
 	margin-left: calc(2 * 50% / 7);
 	min-width: calc(2 * 100% / 7 - 1 * 50% / 7);	
 */
-const Event_span = tw.div<{ cells: number }>`
-	event
 
-	${({ cells }) =>
-    (cells === 1 && "event-span-1") ||
-    (cells === 2 && "event-span-2") ||
-    (cells === 3 && "event-span-3") ||
-    (cells === 4 && "event-span-4") ||
-    (cells === 5 && "event-span-5") ||
-    (cells === 6 && "event-span-6") ||
-    (cells === 7 && "event-span-7") ||
+const Event_container = tw.div`
+  flex
+  flex-column
+	`;
+
+const Event_span = tw.div<{ $cells: number }>`	
+	absolute
+	whitespace-nowrap
+	overflow-hidden
+	overflow-ellipsis
+	pl-2
+	bg-red-500
+	text-white
+	rounded-full
+	ml-[0.1rem]
+
+	z-[1]
+
+	text-sm
+	
+	hover:bg-red-800
+	hover:cursor-pointer
+	
+
+	${({ $cells }) =>
+    ($cells === 1 && "event-span-1") ||
+    ($cells === 2 && "event-span-2") ||
+    ($cells === 3 && "event-span-3") ||
+    ($cells === 4 && "event-span-4") ||
+    ($cells === 5 && "event-span-5") ||
+    ($cells === 6 && "event-span-6") ||
+    ($cells === 7 && "event-span-7") ||
     "extend-event-1"}
 `;
-const Extend_event = tw.div<{ span: number }>`
+
+const Extend_event = tw.div<{ $cells: number }>`
+
 	extend-event
+	extend-event-icon
 
-	${({ span }) =>
-    (span === 1 && "extend-event-1") ||
-    (span === 2 && "extend-event-2") ||
-    (span === 3 && "extend-event-3") ||
-    (span === 4 && "extend-event-4") ||
-    (span === 5 && "extend-event-5") ||
-    (span === 6 && "extend-event-6") ||
-    (span === 7 && "extend-event-7") ||
+	${({ $cells }) =>
+    ($cells === 1 && "extend-event-1") ||
+    ($cells === 2 && "extend-event-2") ||
+    ($cells === 3 && "extend-event-3") ||
+    ($cells === 4 && "extend-event-4") ||
+    ($cells === 5 && "extend-event-5") ||
+    ($cells === 6 && "extend-event-6") ||
+    ($cells === 7 && "extend-event-7") ||
     "extend-event-1"}
 `;
-
-/*
-
-
-  .extend-event-1 {
-  }
-  .extend-span-1 {
-  }
-*/
 
 const Day = ({ day }: { day: number }) => {
   const tempDay = String(day);
@@ -96,13 +112,12 @@ style={styles} */
       {events
         .filter((evt) => evt.start === day)
         .map((evt) => {
-          const classNameTemplate = `event span-${evt.id}`;
           return (
             <>
-              <div className="container">
+              <Event_container>
                 <Event_span
                   key={evt.id}
-                  cells={evt.id}
+                  $cells={evt.id}
                   onMouseDownCapture={() => {
                     console.log("Event:", evt.job);
                   }}
@@ -110,7 +125,7 @@ style={styles} */
                   {evt.job}
                 </Event_span>
                 <Extend_event
-                  span={evt.id}
+                  $cells={evt.id}
                   onMouseDownCapture={() => {
                     console.log("extend event:", evt.id);
                   }}
@@ -121,7 +136,7 @@ style={styles} */
                   {"_"}
                 </Extend_event>
                 <div key={"p" + evt.id} className="event-holder"></div>
-              </div>
+              </Event_container>
             </>
           );
         })}
