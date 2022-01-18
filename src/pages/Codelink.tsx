@@ -47,14 +47,14 @@ style={styles} */
       {events
         .filter((evt) => evt.start === day)
         .map((evt) => {
-          const classNameTemplate = `event span-${evt.id}`;
+          const classNameTemplate = `event`;
           const classNameTemplate2 = `extend-event extend-event-${evt.id} extend-span-${evt.id}`;
           return (
             <>
               <div className="container">
                 <div
                   key={evt.id}
-                  className={classNameTemplate}
+                  className={`${classNameTemplate} span-2 `}
                   onMouseDownCapture={() => {
                     console.log("Event:", evt.job);
                   }}
