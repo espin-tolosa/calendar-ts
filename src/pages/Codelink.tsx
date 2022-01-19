@@ -4,10 +4,10 @@ import "@styles/codelink.css";
 
 const events = [
   { id: 1, start: 1, job: "Starting 1" },
-  { id: 2, start: 22, job: "Starting 2" },
-  { id: 3, start: 22, job: "Starting 3" },
-  { id: 4, start: 22, job: "Starting 4" },
-  { id: 5, start: 22, job: "Starting 5" },
+  { id: 2, start: 2, job: "Starting 2" },
+  { id: 3, start: 2, job: "Starting 3" },
+  { id: 6, start: 11, job: "Starting 5" },
+  { id: 7, start: 28, job: "Starting 5" },
 ];
 //const events = [];
 
@@ -40,18 +40,20 @@ function DayStart({ weekday }: { weekday: string }) {
 	min-width: calc(2 * 100% / 7 - 1 * 50% / 7);	
 */
 
-const Event_container = tw.div`
+const TW_Event_FlexContainer = tw.div`
   flex
   flex-column
+	w-fit
+	bg-[rgb(0,0,0,0.2)]
 	`;
 
-const Event_span = tw.div<{ $cells: number }>`	
+const TW_Event = tw.div<{ $cells: number; $hoverColor: number }>`	
 	absolute
+	bg-red-500
 	whitespace-nowrap
 	overflow-hidden
 	overflow-ellipsis
 	pl-2
-	bg-red-500
 	text-white
 	rounded-full
 	ml-[0.1rem]
@@ -63,6 +65,7 @@ const Event_span = tw.div<{ $cells: number }>`
 	hover:bg-red-800
 	hover:cursor-pointer
 	
+	${({ $hoverColor }) => ($hoverColor === 0 && "bg-red-500") || "bg-red-800"}
 
 	${({ $cells }) =>
     ($cells === 1 && "event-span-1") ||
@@ -75,10 +78,27 @@ const Event_span = tw.div<{ $cells: number }>`
     "extend-event-1"}
 `;
 
-const Extend_event = tw.div<{ $cells: number }>`
+/*
+    background: transparent;
+    color: transparent;
+    position: absolute;
+    z-index: 2;
+    cursor: copy;
+    font-size: 0.8rem;
+    min-width: calc(50% / 7);
 
-	extend-event
-	extend-event-icon
+*/
+// min-w-[7.14%] = 50%/7
+
+const TW_Event_Extend = tw.div<{ $cells: number }>`
+	absolute
+	text-transparent
+	z-[2]
+	cursor-copy
+	text-sm
+	min-w-[7.14%]
+
+
 
 	${({ $cells }) =>
     ($cells === 1 && "extend-event-1") ||
@@ -94,6 +114,7 @@ const Extend_event = tw.div<{ $cells: number }>`
 const Day = ({ day }: { day: number }) => {
   const tempDay = String(day);
   const dayPadd = day < 10 ? `0${tempDay}` : tempDay;
+  const [hoverExtendEvent, setHoverExtendEvent] = useState(0);
   /*
   const styles = {
     backgroundColor: "white"
@@ -114,29 +135,34 @@ style={styles} */
         .map((evt) => {
           return (
             <>
-              <Event_container>
-                <Event_span
+              <TW_Event_FlexContainer>
+                <TW_Event
                   key={evt.id}
                   $cells={evt.id}
+                  $hoverColor={hoverExtendEvent}
                   onMouseDownCapture={() => {
                     console.log("Event:", evt.job);
                   }}
                 >
                   {evt.job}
-                </Event_span>
-                <Extend_event
+                </TW_Event>
+                <TW_Event_Extend
                   $cells={evt.id}
                   onMouseDownCapture={() => {
                     console.log("extend event:", evt.id);
                   }}
+                  onMouseEnter={() => {
+                    setHoverExtendEvent(1);
+                  }}
                   onMouseOut={() => {
                     console.log("leaving extend event");
+                    setHoverExtendEvent(0);
                   }}
                 >
-                  {"_"}
-                </Extend_event>
+                  {">"}
+                </TW_Event_Extend>
                 <div key={"p" + evt.id} className="event-holder"></div>
-              </Event_container>
+              </TW_Event_FlexContainer>
             </>
           );
         })}
@@ -269,10 +295,10 @@ export default function App(): JSX.Element {
   let controllerToggle = "";
   if (toogleCreate) {
     stateToggle = "smooth-display-on";
-    controllerToggle = "controller-on";
+    controllerToggle = "components-controller-on";
   } else {
     stateToggle = "smooth-display-off";
-    controllerToggle = "controller-off";
+    controllerToggle = "components-controller-off";
   }
   const controllerLayoutClassName = `rounded-b-lg [z-index:11] border-x-2 border-x-gray-600 bg-gray-400 border-t-2 border-t-gray-200 ${stateToggle} smooth sticky top-controller`;
 
@@ -323,11 +349,17 @@ export default function App(): JSX.Element {
 
           {/*calendar-layout*/}
           <div className="m-0">
-            {/*calendar*/}
-            <div className="calendar">
-              <Month />
-              <Month />
-              <Month />
+            {/*calendar
+						
+  .calendar {
+    margin-top: 1em;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--calendar_width), 1fr));
+    margin-inline: 1em;
+  }
+						
+						*/}
+            <div className="grid mt-4 components-calendar mx-0 sm:mx-4">
               <Month />
             </div>
           </div>

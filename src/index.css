@@ -11,20 +11,15 @@
   @apply bg-blue-500 select-none hover:bg-blue-700 text-red-900 font-bold py-2 px-4 rounded-full;
 }
 @layer utilities {
-  .extend-event {
-    background: transparent;
-    color: transparent;
-    position: absolute;
-    z-index: 2;
-    cursor: copy;
-    font-size: 0.8rem;
-    min-width: calc(50% / 7);
-  }
-
-  .extend-event:not(:empty):hover {
-    background: red;
-  }
-
+  /*
+    margin-left: 7.14%;
+    margin-left: 21.43%;
+    margin-left: 35.71%;
+    margin-left: 50%;
+    margin-left: 64.29%;
+    margin-left: 78.57%;
+    margin-left: 92.86%;
+*/
   .extend-event-1 {
     margin-left: calc(1 * 100% / 7 - 50% / 7);
   }
@@ -36,47 +31,42 @@
   }
   .extend-event-4 {
     margin-left: calc(4 * 100% / 7 - 50% / 7);
-    min-width: calc(50% / 7);
   }
   .extend-event-5 {
     margin-left: calc(5 * 100% / 7 - 50% / 7);
-    min-width: calc(50% / 7);
   }
   .extend-event-6 {
     margin-left: calc(6 * 100% / 7 - 50% / 7);
-    min-width: calc(50% / 7);
   }
   .extend-event-7 {
     margin-left: calc(7 * 100% / 7 - 50% / 7);
-    min-width: calc(50% / 7);
   }
 
   .event-holder {
     color: transparent;
-    /*font-size: 1rem;*/
     margin-block: 0.75rem;
   }
 
   .event-span-1 {
-    width: calc(1 * 100% / 7 - 1ch);
+    width: calc(1 * 100% / 7 - 0.3rem);
   }
   .event-span-2 {
-    width: calc(2 * 100% / 7 - 1ch);
+    width: calc(2 * 100% / 7 - 0.3rem);
   }
   .event-span-3 {
-    width: calc(3 * 100% / 7 - 1ch);
+    width: calc(3 * 100% / 7 - 0.3rem);
   }
   .event-span-4 {
-    width: calc(4 * 100% / 7 - 1ch);
+    width: calc(4 * 100% / 7 - 0.3rem);
   }
   .event-span-5 {
-    width: calc(5 * 100% / 7 - 1ch);
+    width: calc(5 * 100% / 7 - 0.3rem);
   }
   .event-span-6 {
-    width: calc(6 * 100% / 7 - 1ch);
+    width: calc(6 * 100% / 7 - 0.3rem);
   }
   .event-span-7 {
-    width: calc(7 * 100% / 7 - 1ch);
+    width: calc(7 * 100% / 7 - 0.3rem);
   }
 
   .extend-span-1 {
@@ -103,20 +93,16 @@
 }
 
 @layer components {
-  .controller-on {
+  .components-controller-on {
     grid-template-columns: repeat(2, minmax(var(100px), 1fr));
     grid-template-columns: minmax(12ch, 30ch) 1fr;
   }
-  .controller-off {
+  .components-controller-off {
     grid-template-columns: 0fr 1fr;
   }
 
-  .calendar {
-    margin-top: 1em;
-    display: grid;
+  .components-calendar {
     grid-template-columns: repeat(auto-fit, minmax(var(--calendar_width), 1fr));
-    gap: 0.5rem;
-    margin-inline: 1em;
   }
 }
 

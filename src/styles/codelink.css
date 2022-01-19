@@ -53,7 +53,7 @@
   justify-content: right;
   grid-template-columns: repeat(7, 1fr);
   overflow: hidden;
-  gap: 1px;
+
   position: relative;
   padding-inline: 0rem;
 
@@ -64,6 +64,7 @@
 .day {
   min-height: calc(90vh / 10);
   transition: background 0.1s ease-in-out;
+  outline: 1px solid lightgray;
   border: 1px solid lightgray;
 }
 .day:hover {
@@ -85,9 +86,10 @@
   background: hsl(0, 0%, 99%);
   /*font-size: 0.6rem;*/
 
-  padding: 1px 1px 1px;
+  padding: 1px 1ch 1px 1px;
   margin-bottom: 0.5em;
   transition: background 0.1s ease-in-out;
+  outline: 1px solid lightgray;
 }
 /*
 .day-header-hover {
