@@ -402,15 +402,14 @@ export default function App(): JSX.Element {
           onClick={() => setToogleCreate((prev) => !prev)}
         >
           {/*header*/}
-          <div className="flex h-8 ml-28 justify-between font-medium">
+          <div className="flex justify-between items-baseline h-8 font-medium">
             {/*left-header*/}
-            <div className="flex items-center">JH Diary</div>
-            {/*center-header*/}{" "}
-            <div className="flex items-center">10 of January of 2022</div>
+            <div className="md:ml-28 ml-2">JH Diary</div>
+            {/*center-header*/} <div className="">10 of January of 2022</div>
             {/*right-header*/}
-            <div className="flex">
+            <div className="">
               <div
-                className="flex items-center border-2 hover:bg-transparent mr-8 border-gray-200 hover:border-gray-700 hover:text-black rounded-full px-4 bg-gray-200 text-gray-700 transition-colors active:bg-indigo-500 "
+                className="border-2 hover:bg-transparent mr-4 border-gray-200 hover:border-gray-700 hover:text-black rounded-full px-4 bg-gray-200 text-gray-700 transition-colors active:bg-indigo-500 "
                 onClick={(evt) => {
                   evt.stopPropagation();
                 }}

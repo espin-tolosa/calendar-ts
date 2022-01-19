@@ -258,10 +258,12 @@
 /* calendar */
 
 /* utility classes */
+/*
 .flex {
   display: flex;
   justify-content: space-around;
 }
+*/
 .flex-column {
   flex-direction: column;
 }
