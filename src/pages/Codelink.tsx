@@ -19,6 +19,12 @@ const events1 = [
   { id: 4, start: 20, job: "Starting 4 - 1" },
 ];
 const events2 = [
+  { id: 3, start: 4, job: "Starting 1 - 2" },
+  { id: 2, start: 7, job: "Starting 2 - 2" },
+  { id: 5, start: 18, job: "Starting 3 - 2" },
+  { id: 1, start: 26, job: "Starting 4 - 2" },
+];
+const events_test = [
   { id: 1, start: 6, job: "Starting 1 - 2" },
   { id: 2, start: 6, job: "Starting 2 - 2" },
   { id: 3, start: 6, job: "Starting 3 - 2" },
@@ -52,9 +58,6 @@ const events2 = [
   { id: 1, start: 22, job: "Starting 1 - 2" },
 ];
 
-const events = [events1, events2];
-//const events = [];
-
 function DayStart({ weekday }: { weekday: string }) {
   const options = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -71,18 +74,6 @@ function DayStart({ weekday }: { weekday: string }) {
   const classNameTemplate = `month-start-${weekday}`;
   return <div className={classNameTemplate}></div>;
 }
-
-/* Attemp to use Styled Components with Tailwind */
-/*
-  background: transparent;
-  color: transparent;
-  padding: 0.1em 1ch 0.1em 1ch;
-  position: absolute;
-  z-index: 2;
-  cursor: copy;
-	margin-left: calc(2 * 50% / 7);
-	min-width: calc(2 * 100% / 7 - 1 * 50% / 7);	
-*/
 
 const TW_Event_FlexContainer = tw.div`
   flex
@@ -141,8 +132,6 @@ const TW_Event_Extend = tw.div<{ $cells: number }>`
 	cursor-copy
 	text-sm
 	min-w-[7.14%]
-
-
 
 	${({ $cells }) =>
     ($cells === 1 && "extend-event-1") ||
@@ -352,13 +341,27 @@ export default function App(): JSX.Element {
     return (
       /* Month container: header | board */
       //className="sticky z-10 top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
-      <div className="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 shadow-[10px_10px_15px_rgba(0,0,0,0.3)] rounded-md">
+      <div className="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 shadow-[10px_10px_15px_rgba(0,0,0,0.3)] rounded-md flex flex-col justify-center ">
         {/*month-header*/}
-        <div className="bg-gray-300 rounded-t-md flex font-medium ">
+        <div className="bg-gray-300 rounded-md font-medium px-[2ch] border-b-4 border-gray-400 flex justify-center">
           February of 2022
         </div>
-        {/*board container*/}
-        <div className="month">
+        {/*board container
+				
+				.month {
+					display: grid;
+					justify-content: right;
+					grid-template-columns: repeat(7, 1fr);
+					overflow: hidden;
+					
+					position: relative;
+					padding-inline: 0rem;
+					
+					border-radius: 5px;
+				}
+				
+			*/}
+        <div className="grid grid-cols-7 overflow-hidden relative last:bg-gray-300 border-b-4 border-b-gray-200 border-x-4">
           <DayStart weekday={"wed"} />
           {days.map((day) => (
             <Day key={day.toString()} day={day} events={events} />
@@ -404,8 +407,13 @@ export default function App(): JSX.Element {
           {/*header*/}
           <div className="flex justify-between items-baseline h-8 font-medium">
             {/*left-header*/}
-            <div className="md:ml-28 ml-2">JH Diary</div>
-            {/*center-header*/} <div className="">10 of January of 2022</div>
+            <div className="md:ml-28 ml-2 overflow-visible whitespace-nowrap portrait:mr-2 ">
+              JH Diary
+            </div>
+            {/*center-header*/}{" "}
+            <div className="overflow-hidden whitespace-nowrap text-ellipsis portrait:mr-2">
+              Today: 10 of January of 2022
+            </div>
             {/*right-header*/}
             <div className="">
               <div

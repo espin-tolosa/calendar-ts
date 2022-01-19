@@ -50,7 +50,6 @@
 
 .month {
   display: grid;
-  justify-content: right;
   grid-template-columns: repeat(7, 1fr);
   overflow: hidden;
 

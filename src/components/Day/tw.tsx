@@ -58,6 +58,7 @@ bg-white
 active:bg-green-200
 border-x-gray-200
 border-x-2
+border-b-2
 	`;
 
 /*
