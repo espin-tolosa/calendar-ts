@@ -17,6 +17,7 @@ text-right
 bg-gray-100
 px-[1ch]
 py-px
+font-medium
 
 border-y-2
 border-b-gray-300

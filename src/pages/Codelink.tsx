@@ -4,6 +4,14 @@ import "@styles/codelink.css";
 
 import { TW_header, TW_container } from "@/components/Day/tw";
 
+interface eventType {
+  id: number;
+  start: number;
+  job: string;
+}
+
+const events0 = [{ id: 0, start: 0, job: "" }];
+
 const events1 = [
   { id: 1, start: 1, job: "Starting 1 - 1" },
   { id: 2, start: 2, job: "Starting 2 - 1" },
@@ -147,7 +155,7 @@ const TW_Event_Extend = tw.div<{ $cells: number }>`
     "extend-event-1"}
 `;
 
-const Day = ({ day }: { day: number }) => {
+const Day = ({ day, events }: { day: number; events: Array<eventType> }) => {
   const tempDay = String(day);
   const dayPadd = day < 10 ? `0${tempDay}` : tempDay;
   const [hoverExtendEvent, setHoverExtendEvent] = useState(0);
@@ -178,7 +186,7 @@ style={styles} */
 				*/}
 
       <TW_header>{dayPadd}</TW_header>
-      {events[1]
+      {events
         .filter((evt) => evt.start === day)
         .map((evt) => {
           return (
@@ -326,13 +334,36 @@ export default function App(): JSX.Element {
     );
   };
 
-  const Month = () => {
+  //const Day = ({ day, events }: { day: number; events: Array<eventType> }) => {
+  /*
+  display: grid;
+  justify-content: right;
+  grid-template-columns: repeat(7, 1fr);
+  overflow: hidden;
+
+  position: relative;
+  padding-inline: 0rem;
+
+  box-shadow: hsla(0, 0%, 0%, 0.2) 0 0 13px;
+  border-radius: 5px;
+
+		*/
+  const Month = ({ events }: { events: Array<eventType> }) => {
     return (
-      <div className="month">
-        <DayStart weekday={"wed"} />
-        {days.map((day) => (
-          <Day key={day.toString()} day={day} />
-        ))}
+      /* Month container: header | board */
+      //className="sticky z-10 top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
+      <div className="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 shadow-[10px_10px_15px_rgba(0,0,0,0.3)] rounded-md">
+        {/*month-header*/}
+        <div className="bg-gray-300 rounded-t-md flex font-medium ">
+          February of 2022
+        </div>
+        {/*board container*/}
+        <div className="month">
+          <DayStart weekday={"wed"} />
+          {days.map((day) => (
+            <Day key={day.toString()} day={day} events={events} />
+          ))}
+        </div>
       </div>
     );
   };
@@ -371,13 +402,22 @@ export default function App(): JSX.Element {
           onClick={() => setToogleCreate((prev) => !prev)}
         >
           {/*header*/}
-          <div className="flex h-8 justify-between">
+          <div className="flex h-8 ml-28 justify-between font-medium">
             {/*left-header*/}
             <div className="flex items-center">JH Diary</div>
             {/*center-header*/}{" "}
             <div className="flex items-center">10 of January of 2022</div>
             {/*right-header*/}
-            <div className="flex items-center">Logout</div>
+            <div className="flex">
+              <div
+                className="flex items-center border-2 hover:bg-transparent mr-8 border-gray-200 hover:border-gray-700 hover:text-black rounded-full px-4 bg-gray-200 text-gray-700 transition-colors active:bg-indigo-500 "
+                onClick={(evt) => {
+                  evt.stopPropagation();
+                }}
+              >
+                Logout
+              </div>
+            </div>
           </div>
         </div>
 
@@ -407,8 +447,11 @@ export default function App(): JSX.Element {
   }
 						
 						*/}
-            <div className="grid mt-4 components-calendar mx-0 sm:mx-4 bg-gray-200">
-              <Month />
+            <div className="grid gap-4 mt-4 components-calendar mx-0 sm:mx-4 bg-white">
+              <Month events={events1} />
+              <Month events={events2} />
+              <Month events={events0} />
+              <Month events={events0} />
             </div>
           </div>
         </div>
