@@ -2,13 +2,49 @@ import { useEffect, useState, useRef } from "react";
 import tw from "tailwind-styled-components";
 import "@styles/codelink.css";
 
-const events = [
-  { id: 1, start: 1, job: "Starting 1" },
-  { id: 2, start: 2, job: "Starting 2" },
-  { id: 3, start: 2, job: "Starting 3" },
-  { id: 6, start: 11, job: "Starting 5" },
-  { id: 7, start: 28, job: "Starting 5" },
+import { TW_header, TW_container } from "@/components/Day/tw";
+
+const events1 = [
+  { id: 1, start: 1, job: "Starting 1 - 1" },
+  { id: 2, start: 2, job: "Starting 2 - 1" },
+  { id: 3, start: 11, job: "Starting 3 - 1" },
+  { id: 4, start: 20, job: "Starting 4 - 1" },
 ];
+const events2 = [
+  { id: 1, start: 6, job: "Starting 1 - 2" },
+  { id: 2, start: 6, job: "Starting 2 - 2" },
+  { id: 3, start: 6, job: "Starting 3 - 2" },
+  { id: 4, start: 6, job: "Starting 4 - 2" },
+  { id: 5, start: 6, job: "Starting 5 - 2" },
+  { id: 6, start: 6, job: "Starting 6 - 2" },
+  { id: 7, start: 6, job: "Starting 7 - 2" },
+
+  { id: 7, start: 6, job: "Starting 7 - 2" },
+  { id: 6, start: 6, job: "Starting 6 - 2" },
+  { id: 5, start: 6, job: "Starting 5 - 2" },
+  { id: 4, start: 6, job: "Starting 4 - 2" },
+  { id: 3, start: 6, job: "Starting 3 - 2" },
+  { id: 2, start: 6, job: "Starting 2 - 2" },
+  { id: 1, start: 6, job: "Starting 1 - 2" },
+
+  { id: 1, start: 22, job: "Starting 1 - 2" },
+  { id: 2, start: 22, job: "Starting 2 - 2" },
+  { id: 3, start: 22, job: "Starting 3 - 2" },
+  { id: 4, start: 22, job: "Starting 4 - 2" },
+  { id: 5, start: 22, job: "Starting 5 - 2" },
+  { id: 6, start: 22, job: "Starting 6 - 2" },
+  { id: 7, start: 22, job: "Starting 7 - 2" },
+
+  { id: 7, start: 22, job: "Starting 7 - 2" },
+  { id: 6, start: 22, job: "Starting 6 - 2" },
+  { id: 5, start: 22, job: "Starting 5 - 2" },
+  { id: 4, start: 22, job: "Starting 4 - 2" },
+  { id: 3, start: 22, job: "Starting 3 - 2" },
+  { id: 2, start: 22, job: "Starting 2 - 2" },
+  { id: 1, start: 22, job: "Starting 1 - 2" },
+];
+
+const events = [events1, events2];
 //const events = [];
 
 function DayStart({ weekday }: { weekday: string }) {
@@ -121,16 +157,28 @@ const Day = ({ day }: { day: number }) => {
   } as const;
 style={styles} */
 
+  function getRandomInt(min: number, max: number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   return (
-    <div
-      className="day"
+    <TW_container
       onMouseUp={() => {
         console.log("leaving action at day:", dayPadd);
       }}
       onMouseEnter={() => console.log("passing over:", dayPadd)}
     >
-      <div className="day-header">{dayPadd}</div>
-      {events
+      {/*
+
+  display: flex;
+  justify-content: right;
+  background: hsl(0, 0%, 99%);
+				*/}
+
+      <TW_header>{dayPadd}</TW_header>
+      {events[1]
         .filter((evt) => evt.start === day)
         .map((evt) => {
           return (
@@ -166,7 +214,7 @@ style={styles} */
             </>
           );
         })}
-    </div>
+    </TW_container>
   );
 };
 
@@ -359,7 +407,7 @@ export default function App(): JSX.Element {
   }
 						
 						*/}
-            <div className="grid mt-4 components-calendar mx-0 sm:mx-4">
+            <div className="grid mt-4 components-calendar mx-0 sm:mx-4 bg-gray-200">
               <Month />
             </div>
           </div>

@@ -60,7 +60,7 @@
   box-shadow: hsla(0, 0%, 0%, 0.2) 0 0 13px;
   border-radius: 5px;
 }
-
+/*
 .day {
   min-height: calc(90vh / 10);
   transition: background 0.1s ease-in-out;
@@ -77,20 +77,19 @@
 
 .day:hover .day-header,
 .day.hover .day-header {
-  background: darkgray;
+	background: darkgray;
 }
 
 .day-header {
   display: flex;
   justify-content: right;
   background: hsl(0, 0%, 99%);
-  /*font-size: 0.6rem;*/
-
   padding: 1px 1ch 1px 1px;
   margin-bottom: 0.5em;
   transition: background 0.1s ease-in-out;
   outline: 1px solid lightgray;
 }
+*/
 /*
 .day-header-hover {
   background: hsl(0, 0%, 60%);

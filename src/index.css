@@ -105,6 +105,13 @@
     grid-template-columns: repeat(auto-fit, minmax(var(--calendar_width), 1fr));
   }
 }
+/* catch day hover from day-header */
+@layer components {
+  .day:hover .day-header,
+  .day.hover .day-header {
+    background: darkgray;
+  }
+}
 
 @layer utilities {
   .smooth {
