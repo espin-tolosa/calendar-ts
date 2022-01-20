@@ -18,6 +18,9 @@ module.exports = {
         "january-image":
           "url(https://kprofiles.com/wp-content/uploads/2019/10/calendar-january-silocreativo-free.png)",
       },
+      spacing: {
+        header: "2rem",
+      },
     },
   },
   plugins: [],

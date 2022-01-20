@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import tw from "tailwind-styled-components";
 import "@styles/codelink.css";
 
@@ -84,16 +84,9 @@ const TW_Event_FlexContainer = tw.div`
 	z-0
 	`;
 
-const TW_Event = tw.div<{
-  $cells: number;
-  $hoverColor: number;
-  $bg_left: string;
-  $bg_right: string;
-}>`
+const TW_Event = tw.div<{ $cells: number; $hoverColor: number }>`
 	absolute
 	bg-gradient-to-r
-	${({ $bg_left }) => $bg_left}}
-	${({ $bg_right }) => $bg_right}}
 	whitespace-nowrap
 	overflow-hidden
 	overflow-ellipsis
@@ -178,28 +171,32 @@ style={styles} */
 
   const giveMeColor = (client: string) => {
     if (client === "John") {
-      const styles = {
+      return {
         "--tw-gradient-from": "#0010ee",
         "--tw-gradient-stops":
           "var(--tw-gradient-from), var(--tw-gradient-to, rgb(243 244 246 / 0)",
-      } as React.CSSProperties;
-      return styles;
+      };
     } else if (client === "Xin") {
-      const styles = {
+      return {
         "--tw-gradient-from": "#00ee14",
         "--tw-gradient-stops":
           "var(--tw-gradient-from), var(--tw-gradient-to, rgb(243 244 246 / 0)",
-      } as React.CSSProperties;
-      return styles;
+      };
     } else {
-      const styles = {
+      return {
         "--tw-gradient-from": "#ee0000",
         "--tw-gradient-stops":
           "var(--tw-gradient-from), var(--tw-gradient-to, rgb(243 244 246 / 0)",
-      } as React.CSSProperties;
-      return styles;
+      };
     }
   };
+  /*
+
+                  style={{
+                    background:
+                      "linear-gradient(0.25turn, hsl(200, 45%, 45%), hsl(200, 46%, 49%), hsl(200, 91.17647058823533%, 90%))",
+                  }}
+	*/
 
   return (
     <TW_container
@@ -217,9 +214,7 @@ style={styles} */
             <>
               <TW_Event_FlexContainer>
                 <TW_Event
-                  $bg_left=""
-                  $bg_right=""
-                  style={giveMeColor(evt.client)}
+                  style={giveMeColor(evt.job) as React.CSSProperties}
                   key={evt.id}
                   $cells={evt.id}
                   $hoverColor={hoverExtendEvent}
@@ -378,27 +373,12 @@ export default function App(): JSX.Element {
   const Month = ({ events }: { events: Array<eventType> }) => {
     return (
       /* Month container: header | board */
-      //className="sticky z-10 top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
       <div className="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 shadow-[10px_10px_15px_rgba(0,0,0,0.3)] rounded-md flex flex-col justify-center">
         {/*month-header*/}
         <div className="bg-gray-300 rounded-md font-medium px-[2ch] border-b-4 border-gray-400 flex justify-center">
           February of 2022
         </div>
-        {/*board container
-				
-				.month {
-					display: grid;
-					justify-content: right;
-					grid-template-columns: repeat(7, 1fr);
-					overflow: hidden;
-					
-					position: relative;
-					padding-inline: 0rem;
-					
-					border-radius: 5px;
-				}
-				
-			*/}
+        {/*board container*/}
         <div className="grid grid-cols-7 overflow-hidden relative last:bg-gray-300 border-b-4 border-b-gray-200 border-x-4">
           <DayStart weekday={"wed"} />
           {days.map((day) => (
@@ -414,27 +394,15 @@ export default function App(): JSX.Element {
   let stateToggle = "";
   let controllerToggle = "";
   if (toogleCreate) {
-    stateToggle = "smooth-display-on";
+    stateToggle = "utility-smooth-display-on";
     controllerToggle = "components-controller-on";
   } else {
-    stateToggle = "smooth-display-off";
+    stateToggle = "utility-smooth-display-off";
     controllerToggle = "components-controller-off";
   }
-  const controllerLayoutClassName = `rounded-b-lg [z-index:11] border-x-2 border-x-gray-600 bg-gray-400 border-t-2 border-t-gray-200 ${stateToggle} smooth sticky top-controller`;
 
   return (
     <>
-      {/*
-				<div className="header-layout sticky flex" 
-				onClick={() => setToogleCreate((prev) => !prev)}
-				>
-					<div className="header">
-						<div className="left-header">JH Diary</div>
-						<div className="center-header hidden">Today: 10 of January of 2022</div>
-						<div className="right-header">Logout</div>
-					</div>
-				</div>
-			*/}
       {/*App*/}
       <div className="select-none box-border">
         {/*header-layout*/}
@@ -475,7 +443,7 @@ export default function App(): JSX.Element {
           <div
             className={`rounded-b-lg z-10 2xl:mt-4 sm:mt-0
 						bg-gradient-to-b from-gray-100 via-gray-300 to-gray-400	
-						 ${stateToggle} smooth sticky top-controller`}
+						 ${stateToggle} utility-smooth sticky top-8`}
           >
             {/* this sticky could be removed */}
             <div className="sticky">{true && <CreateEvent />}</div>
@@ -483,16 +451,7 @@ export default function App(): JSX.Element {
 
           {/*calendar-layout*/}
           <div className="m-0">
-            {/*calendar
-						
-  .calendar {
-    margin-top: 1em;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(var(--calendar_width), 1fr));
-    margin-inline: 1em;
-  }
-						
-						*/}
+            {/*calendar*/}
             <div className="grid gap-4 mt-4 components-calendar mx-0 sm:mx-4 bg-white">
               <Month events={events1} />
               <Month events={events2} />
