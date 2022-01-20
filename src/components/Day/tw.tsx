@@ -69,7 +69,7 @@ border-b-2
 
 
 ${({ top }) =>
-  (top && "z-[1] bg-red-200  bg-opacity-50 active:bg-red-200 ") ||
+  (top && "z-[2] bg-red-200  bg-opacity-50 active:bg-red-200 ") ||
   "day bg-white active:bg-green-200"}
 
 

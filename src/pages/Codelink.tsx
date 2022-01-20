@@ -21,9 +21,9 @@ const events1 = [
   { id: 4, client: "Cristine", start: 20, job: "Starting 4 - 1" },
 ];
 const events2 = [
-  { id: 3, client: "Xin", start: 4, job: "Starting 1 - 2" },
+  { id: 3, client: "Xin", start: 7, job: "Starting 1 - 2" },
   { id: 2, client: "John", start: 7, job: "Starting 2 - 2" },
-  { id: 5, client: "Cristine", start: 18, job: "Starting 3 - 2" },
+  { id: 5, client: "Cristine", start: 10, job: "Starting 3 - 2" },
   { id: 1, client: "Bob", start: 26, job: "Starting 4 - 2" },
 ];
 const events_test = [
@@ -161,9 +161,9 @@ style={styles} */
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-
+  //day-off
   let top = false;
-  if (day < 10) {
+  if (day <= 5 && day >= 3) {
     top = true;
   } else {
     top = false;
@@ -171,29 +171,34 @@ style={styles} */
 
   //TODO: Create a Context
   const giveMeColor = (client: string) => {
+    const linearGradientTemplate = (color: number) => {
+      return `linear-gradient(0.25turn, hsl(${color}, 40%, 40%), hsl(${color},50%,50%),  hsl(${color}, 60%, 60%))`;
+    };
+
+    const highContrastText = (bgColor: number) => {
+      // hsl system colors are in range [0º, 360º]
+      return "white";
+    };
+
     if (client === "John") {
       return {
-        background:
-          "linear-gradient(0.25turn, hsl(180, 45%, 45%), hsl(180,45%,45%),  hsl(180, 60%, 60%))",
-        color: "black",
+        background: linearGradientTemplate(10),
+        color: highContrastText(10),
       };
     } else if (client === "Cristine") {
       return {
-        background:
-          "linear-gradient(0.25turn, hsl(182, 45%, 45%), hsl(182,45%,45%),  hsl(182, 60%, 60%))",
-        color: "black",
+        background: linearGradientTemplate(20),
+        color: highContrastText(20),
       };
     } else if (client === "Xin") {
       return {
-        background:
-          "linear-gradient(0.25turn, hsl(220, 45%, 45%), hsl(220,45%,45%),  hsl(220, 60%, 60%))",
-        color: "white",
+        background: linearGradientTemplate(30),
+        color: highContrastText(30),
       };
     } else {
       return {
-        background:
-          "linear-gradient(0.25turn, hsl(250, 45%, 45%), hsl(250,45%,45%),  hsl(250, 60%, 60%))",
-        color: "white",
+        background: linearGradientTemplate(350),
+        color: highContrastText(350),
       };
     }
   };
@@ -226,6 +231,7 @@ style={styles} */
                   onMouseDownCapture={() => {
                     console.log("Event:", evt.job);
                   }}
+                  title={`${evt.client}: ${evt.job} from: ${evt.start} to ${evt.start}`}
                 >
                   {`${evt.client}: ${evt.job}`}
                 </TW_Event>
@@ -241,6 +247,7 @@ style={styles} */
                     console.log("leaving extend event");
                     setHoverExtendEvent(0);
                   }}
+                  title={`Drag here to extend ${evt.client}\'s job`}
                 >
                   {">"}
                 </TW_Event_Extend>
