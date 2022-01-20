@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /*just a remember: --header_height: 2rem;*/
+  --controller_height: 98vh;
+}
+
 /* Buttons used in the form */
 .btn {
   @apply bg-blue-500 select-none hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full;
@@ -156,10 +161,10 @@
     transition-duration: 0.5s;
   }
   .utility-smooth-display-on {
-    max-height: calc(100vh - var(--header_height));
+    max-height: var(--controller_height);
   }
   .utility-smooth-display-off {
     border-bottom: transparent;
-    max-height: calc(0 * var(--header_height));
+    max-height: calc(0 * var(--controller_height));
   }
 }

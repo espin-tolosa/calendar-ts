@@ -1,17 +1,5 @@
 /* LEGACY */
 
-.flex-column {
-  flex-direction: column;
-}
-.ellipsis {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.hidden {
-  white-space: nowrap;
-  overflow-x: hidden;
-}
 .sticky {
   position: sticky;
 }
