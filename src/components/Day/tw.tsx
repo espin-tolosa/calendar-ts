@@ -1,5 +1,13 @@
 import tw from "tailwind-styled-components";
 /*
+NOTE about day-off:
+
+The case of a day that is not assignable to any event, because it's a day-off or something similar it is currently styled but hardcoded
+Still there is a part of this feature that is not implemented and corresponds to the possibility to assign throw events in a day-off
+this requires JS, hasta ahora solamente el CSS ha sido incorporado.
+
+*/
+/*
 .day-header {
 	display: flex;
   justify-content: right;
@@ -59,9 +67,10 @@ border-x-2
 border-b-2
 
 
+
 ${({ top }) =>
-  (top && "z-[1] bg-gray-300  bg-opacity-50 active:bg-red-200 ") ||
-  "day active:bg-green-200"}
+  (top && "z-[1] bg-red-200  bg-opacity-50 active:bg-red-200 ") ||
+  "day bg-white active:bg-green-200"}
 
 
 

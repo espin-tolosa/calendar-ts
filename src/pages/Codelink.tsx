@@ -163,7 +163,7 @@ style={styles} */
   }
 
   let top = false;
-  if (day === 1) {
+  if (day < 10) {
     top = true;
   } else {
     top = false;
