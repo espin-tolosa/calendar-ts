@@ -46,19 +46,24 @@ border-b-gray-300
 	background: darkgray;
 }
 */
-export const TW_container = tw.div`
-day
+export const TW_container = tw.div<{ top: boolean }>`
 
-min-h-[9vh]
+min-h-[18vh]
 transition-colors
 outline-1
 outline-slate-100
-hover:bg-gray-300
-bg-white
-active:bg-green-200
+
 border-x-gray-200
 border-x-2
 border-b-2
+
+
+${({ top }) =>
+  (top && "z-[1] bg-gray-300  bg-opacity-50 active:bg-red-200 ") ||
+  "day active:bg-green-200"}
+
+
+
 	`;
 
 /*

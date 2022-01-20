@@ -6,6 +6,7 @@ import { TW_header, TW_container } from "@/components/Day/tw";
 
 interface eventType {
   id: number;
+  client: string;
   start: number;
   job: string;
 }
@@ -13,49 +14,49 @@ interface eventType {
 const events0 = [{ id: 0, start: 0, job: "" }];
 
 const events1 = [
-  { id: 1, start: 1, job: "Starting 1 - 1" },
-  { id: 2, start: 2, job: "Starting 2 - 1" },
-  { id: 3, start: 11, job: "Starting 3 - 1" },
-  { id: 4, start: 20, job: "Starting 4 - 1" },
+  { id: 1, client: "John", start: 1, job: "Starting 1 - 1" },
+  { id: 2, client: "Marcel", start: 2, job: "Starting 2 - 1" },
+  { id: 3, client: "Bob", start: 11, job: "Starting 3 - 1" },
+  { id: 4, client: "Cristine", start: 20, job: "Starting 4 - 1" },
 ];
 const events2 = [
-  { id: 3, start: 4, job: "Starting 1 - 2" },
-  { id: 2, start: 7, job: "Starting 2 - 2" },
-  { id: 5, start: 18, job: "Starting 3 - 2" },
-  { id: 1, start: 26, job: "Starting 4 - 2" },
+  { id: 3, client: "Xin", start: 4, job: "Starting 1 - 2" },
+  { id: 2, client: "John", start: 7, job: "Starting 2 - 2" },
+  { id: 5, client: "Cristine", start: 18, job: "Starting 3 - 2" },
+  { id: 1, client: "Bob", start: 26, job: "Starting 4 - 2" },
 ];
 const events_test = [
-  { id: 1, start: 6, job: "Starting 1 - 2" },
-  { id: 2, start: 6, job: "Starting 2 - 2" },
-  { id: 3, start: 6, job: "Starting 3 - 2" },
-  { id: 4, start: 6, job: "Starting 4 - 2" },
-  { id: 5, start: 6, job: "Starting 5 - 2" },
-  { id: 6, start: 6, job: "Starting 6 - 2" },
-  { id: 7, start: 6, job: "Starting 7 - 2" },
+  { id: 1, client: "John", start: 6, job: "Starting 1 - 2" },
+  { id: 2, client: "John", start: 6, job: "Starting 2 - 2" },
+  { id: 3, client: "John", start: 6, job: "Starting 3 - 2" },
+  { id: 4, client: "John", start: 6, job: "Starting 4 - 2" },
+  { id: 5, client: "John", start: 6, job: "Starting 5 - 2" },
+  { id: 6, client: "John", start: 6, job: "Starting 6 - 2" },
+  { id: 7, client: "John", start: 6, job: "Starting 7 - 2" },
 
-  { id: 7, start: 6, job: "Starting 7 - 2" },
-  { id: 6, start: 6, job: "Starting 6 - 2" },
-  { id: 5, start: 6, job: "Starting 5 - 2" },
-  { id: 4, start: 6, job: "Starting 4 - 2" },
-  { id: 3, start: 6, job: "Starting 3 - 2" },
-  { id: 2, start: 6, job: "Starting 2 - 2" },
-  { id: 1, start: 6, job: "Starting 1 - 2" },
+  { id: 7, client: "John", start: 6, job: "Starting 7 - 2" },
+  { id: 6, client: "John", start: 6, job: "Starting 6 - 2" },
+  { id: 5, client: "John", start: 6, job: "Starting 5 - 2" },
+  { id: 4, client: "John", start: 6, job: "Starting 4 - 2" },
+  { id: 3, client: "John", start: 6, job: "Starting 3 - 2" },
+  { id: 2, client: "John", start: 6, job: "Starting 2 - 2" },
+  { id: 1, client: "John", start: 6, job: "Starting 1 - 2" },
 
-  { id: 1, start: 22, job: "Starting 1 - 2" },
-  { id: 2, start: 22, job: "Starting 2 - 2" },
-  { id: 3, start: 22, job: "Starting 3 - 2" },
-  { id: 4, start: 22, job: "Starting 4 - 2" },
-  { id: 5, start: 22, job: "Starting 5 - 2" },
-  { id: 6, start: 22, job: "Starting 6 - 2" },
-  { id: 7, start: 22, job: "Starting 7 - 2" },
+  { id: 1, client: "John", start: 22, job: "Starting 1 - 2" },
+  { id: 2, client: "John", start: 22, job: "Starting 2 - 2" },
+  { id: 3, client: "John", start: 22, job: "Starting 3 - 2" },
+  { id: 4, client: "John", start: 22, job: "Starting 4 - 2" },
+  { id: 5, client: "John", start: 22, job: "Starting 5 - 2" },
+  { id: 6, client: "John", start: 22, job: "Starting 6 - 2" },
+  { id: 7, client: "John", start: 22, job: "Starting 7 - 2" },
 
-  { id: 7, start: 22, job: "Starting 7 - 2" },
-  { id: 6, start: 22, job: "Starting 6 - 2" },
-  { id: 5, start: 22, job: "Starting 5 - 2" },
-  { id: 4, start: 22, job: "Starting 4 - 2" },
-  { id: 3, start: 22, job: "Starting 3 - 2" },
-  { id: 2, start: 22, job: "Starting 2 - 2" },
-  { id: 1, start: 22, job: "Starting 1 - 2" },
+  { id: 7, client: "John", start: 22, job: "Starting 7 - 2" },
+  { id: 6, client: "John", start: 22, job: "Starting 6 - 2" },
+  { id: 5, client: "John", start: 22, job: "Starting 5 - 2" },
+  { id: 4, client: "John", start: 22, job: "Starting 4 - 2" },
+  { id: 3, client: "John", start: 22, job: "Starting 3 - 2" },
+  { id: 2, client: "John", start: 22, job: "Starting 2 - 2" },
+  { id: 1, client: "John", start: 22, job: "Starting 1 - 2" },
 ];
 
 function DayStart({ weekday }: { weekday: string }) {
@@ -80,11 +81,19 @@ const TW_Event_FlexContainer = tw.div`
   flex-column
 	w-fit
 	bg-[rgb(0,0,0,0.2)]
+	z-0
 	`;
 
-const TW_Event = tw.div<{ $cells: number; $hoverColor: number }>`	
+const TW_Event = tw.div<{
+  $cells: number;
+  $hoverColor: number;
+  $bg_left: string;
+  $bg_right: string;
+}>`
 	absolute
-	bg-red-500
+	bg-gradient-to-r
+	${({ $bg_left }) => $bg_left}}
+	${({ $bg_right }) => $bg_right}}
 	whitespace-nowrap
 	overflow-hidden
 	overflow-ellipsis
@@ -97,7 +106,7 @@ const TW_Event = tw.div<{ $cells: number; $hoverColor: number }>`
 
 	text-sm
 	
-	hover:bg-red-800
+	hover:bg-red-500
 	hover:cursor-pointer
 	
 	${({ $hoverColor }) => ($hoverColor === 0 && "bg-red-500") || "bg-red-800"}
@@ -145,6 +154,7 @@ const TW_Event_Extend = tw.div<{ $cells: number }>`
 `;
 
 const Day = ({ day, events }: { day: number; events: Array<eventType> }) => {
+  const [color, setColor] = useState("");
   const tempDay = String(day);
   const dayPadd = day < 10 ? `0${tempDay}` : tempDay;
   const [hoverExtendEvent, setHoverExtendEvent] = useState(0);
@@ -160,20 +170,26 @@ style={styles} */
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  let top = false;
+  if (day === 1) {
+    top = true;
+  } else {
+    top = false;
+  }
+  useEffect(() => {
+    setTimeout(() => {
+      setColor("from-blue-500 to-blue-700");
+    }, 2000);
+  }, []);
+
   return (
     <TW_container
+      top={top}
       onMouseUp={() => {
         console.log("leaving action at day:", dayPadd);
       }}
       onMouseEnter={() => console.log("passing over:", dayPadd)}
     >
-      {/*
-
-  display: flex;
-  justify-content: right;
-  background: hsl(0, 0%, 99%);
-				*/}
-
       <TW_header>{dayPadd}</TW_header>
       {events
         .filter((evt) => evt.start === day)
@@ -182,6 +198,9 @@ style={styles} */
             <>
               <TW_Event_FlexContainer>
                 <TW_Event
+                  $bg_left=""
+                  $bg_right=""
+                  className={color}
                   key={evt.id}
                   $cells={evt.id}
                   $hoverColor={hoverExtendEvent}
@@ -341,7 +360,7 @@ export default function App(): JSX.Element {
     return (
       /* Month container: header | board */
       //className="sticky z-10 top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
-      <div className="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 shadow-[10px_10px_15px_rgba(0,0,0,0.3)] rounded-md flex flex-col justify-center ">
+      <div className="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 shadow-[10px_10px_15px_rgba(0,0,0,0.3)] rounded-md flex flex-col justify-center">
         {/*month-header*/}
         <div className="bg-gray-300 rounded-md font-medium px-[2ch] border-b-4 border-gray-400 flex justify-center">
           February of 2022
@@ -418,6 +437,7 @@ export default function App(): JSX.Element {
             <div className="">
               <div
                 className="border-2 hover:bg-transparent mr-4 border-gray-200 hover:border-gray-700 hover:text-black rounded-full px-4 bg-gray-200 text-gray-700 transition-colors active:bg-indigo-500 "
+                title={"Cleans up your session token | Ctrl+Alt+q"}
                 onClick={(evt) => {
                   evt.stopPropagation();
                 }}
@@ -428,9 +448,9 @@ export default function App(): JSX.Element {
           </div>
         </div>
 
-        {/*main-layout*/}
+        {/*main-layout: layout-grid*/}
         <div
-          className={`2xl:grid landscape:grid sm:flex sm:flex-col gap-2 ${controllerToggle}`}
+          className={`2xl:grid landscape:grid sm:flex sm:flex-col ${controllerToggle}`}
         >
           {/*controller-layout*/}
           <div
@@ -457,32 +477,11 @@ export default function App(): JSX.Element {
             <div className="grid gap-4 mt-4 components-calendar mx-0 sm:mx-4 bg-white">
               <Month events={events1} />
               <Month events={events2} />
-              <Month events={events0} />
-              <Month events={events0} />
+              <Month events={events2} />
             </div>
           </div>
         </div>
       </div>
-      {/* 
-					
-	
-	<div className={`main-layout ${controllerToggle}`}>
-	<div className={controllerLayoutClassName}>
-	<div className="controller sticky top-controller">
-	{true && <CreateEvent />}
-	</div>
-	</div>
-	
-	<div className="calendar-layout">
-	{true && (
-		<div className="calendar">
-		<Month />
-		</div>
-		)}
-		</div>
-		</div>
-		
-	*/}
     </>
   );
 }
