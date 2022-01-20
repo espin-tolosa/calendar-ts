@@ -16,7 +16,7 @@ const events0 = [{ id: 0, start: 0, job: "" }];
 const events1 = [
   { id: 1, client: "John", start: 1, job: "Starting 1 - 1" },
   { id: 2, client: "Cristine", start: 1, job: "Starting 1 - 1" },
-  { id: 2, client: "Marcel", start: 2, job: "Starting 2 - 1" },
+  { id: 4, client: "Marcel", start: 2, job: "Starting 2 - 1" },
   { id: 3, client: "Bob", start: 11, job: "Starting 3 - 1" },
   { id: 4, client: "Cristine", start: 20, job: "Starting 4 - 1" },
 ];
@@ -79,10 +79,9 @@ function DayStart({ weekday }: { weekday: string }) {
 
 const TW_Event_FlexContainer = tw.div`
   flex
-  flex-column
+  flex-col
 	w-fit
 	bg-[rgb(0,0,0,0.2)]
-	z-0
 	`;
 
 const TW_Event = tw.div<{ $cells: number; $hoverColor: number }>`
@@ -95,7 +94,6 @@ const TW_Event = tw.div<{ $cells: number; $hoverColor: number }>`
 	rounded-full
 	ml-[0.1rem]
 
-	z-[1]
 
 	text-sm
 	
@@ -115,25 +113,13 @@ const TW_Event = tw.div<{ $cells: number; $hoverColor: number }>`
     "extend-event-1"}
 `;
 
-/*
-    background: transparent;
-    color: transparent;
-    position: absolute;
-    z-index: 2;
-    cursor: copy;
-    font-size: 0.8rem;
-    min-width: calc(50% / 7);
-
-*/
-// min-w-[7.14%] = 50%/7
-
 const TW_Event_Extend = tw.div<{ $cells: number }>`
 	absolute
 	text-transparent
-	z-[2]
 	cursor-copy
 	text-sm
 	min-w-[7.14%]
+	z-ExtendEvent
 
 	${({ $cells }) =>
     ($cells === 1 && "extend-event-1") ||
@@ -280,27 +266,9 @@ const DaySpot = ({ day }: { day: number }) => {
 export default function App(): JSX.Element {
   const days = Array.from(Array(30).keys()).map((day) => day + 1);
 
-  const [height, setHeight] = useState(0);
-  const ref = useRef(null);
-  const Header = () => {
-    return (
-      <div className="header-layout sticky">
-        <div className="flex sticky">
-          <div className="header">
-            <div className="left-header">JH Diary</div>
-            <div className="center-header hidden">
-              Today: 10 of January of 2022
-            </div>
-            <div className="right-header">Logout</div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const CreateEvent = () => {
     return (
-      <form className="create-event flex flex-column" action="post">
+      <form className="px-4 2xl:gap-4 flex flex-col" action="post">
         <input className="create-event-button" type="submit" value="Create" />
 
         <div className="from-to-dates">
@@ -380,7 +348,7 @@ export default function App(): JSX.Element {
       <div className="select-none box-border">
         {/*header-layout*/}
         <div
-          className="sticky z-10 top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
+          className="sticky z-TopLayer top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
           onClick={() => setToogleCreate((prev) => !prev)}
         >
           {/*header*/}
@@ -414,7 +382,7 @@ export default function App(): JSX.Element {
         >
           {/*controller-layout*/}
           <div
-            className={`rounded-b-lg z-10 2xl:mt-4 sm:mt-0
+            className={`rounded-b-lg z-TopLayer mt-1
 						bg-gradient-to-b from-gray-100 via-gray-300 to-gray-400	
 						 ${stateToggle} utility-smooth sticky top-8`}
           >
@@ -425,7 +393,7 @@ export default function App(): JSX.Element {
           {/*calendar-layout*/}
           <div className="m-0">
             {/*calendar*/}
-            <div className="grid gap-4 mt-4 components-calendar mx-0 sm:mx-4 bg-white">
+            <div className="grid gap-4 mt-1 components-calendar mx-0 sm:mx-4 bg-white">
               <Month events={events1} />
               <Month events={events2} />
               <Month events={events2} />

@@ -5,18 +5,6 @@ NOTE about day-off:
 The case of a day that is not assignable to any event, because it's a day-off or something similar it is currently styled but hardcoded
 Still there is a part of this feature that is not implemented and corresponds to the possibility to assign throw events in a day-off
 this requires JS, hasta ahora solamente el CSS ha sido incorporado.
-
-*/
-/*
-.day-header {
-	display: flex;
-  justify-content: right;
-  background: hsl(0, 0%, 99%);
-  padding: 1px 1ch 1px 1px;
-  margin-bottom: 0.5em;
-  transition: background 0.1s ease-in-out;
-  outline: 1px solid lightgray;
-}
 */
 
 export const TW_header = tw.div`
@@ -32,32 +20,9 @@ border-y-2
 border-b-gray-300
 `;
 
-//outline-1
-//outline
-//outline-gray-200
-/*
-.day {
-	min-height: calc(90vh / 10);
-	transition: background 0.1s ease-in-out;
-	outline: 1px solid lightgray;
-	border: 1px solid lightgray;
-}
-.day:hover {
-	background: hsl(0, 0%, 93%);
-	outline: 1px solid lightgray;
-}
-.day:active {
-	background: hsl(100, 60%, 70%);
-}
-
-.day:hover .day-header,
-.day.hover .day-header {
-	background: darkgray;
-}
-*/
 export const TW_container = tw.div<{ top: boolean }>`
 
-min-h-[18vh]
+dayDivHight
 transition-colors
 outline-1
 outline-slate-100
@@ -69,46 +34,9 @@ border-b-2
 
 
 ${({ top }) =>
-  (top && "z-[2] bg-red-200  bg-opacity-50 active:bg-red-200 ") ||
+  (top && "z-Dayoff bg-red-200  bg-opacity-50 active:bg-red-200 ") ||
   "day bg-white active:bg-green-200"}
-
-
-
 	`;
-
-/*
-.day-header {
-	display: flex;
-	justify-content: right;
-	background: hsl(0, 0%, 99%);
-
-	padding: 1px 1ch 1px 1px;
-	margin-bottom: 0.5em;
-	transition: background 0.1s ease-in-out;
-	outline: 1px solid lightgray;
-}
-.day {
-  min-height: calc(90vh / 10);
-  transition: background 0.1s ease-in-out;
-  outline: 1px solid lightgray;
-  border: 1px solid lightgray;
-}
-.day:hover {
-  background: hsl(0, 0%, 93%);
-  outline: 1px solid lightgray;
-}
-.day:active {
-  background: hsl(100, 60%, 70%);
-}
-
-.day:hover .day-header,
-.day.hover .day-header {
-  background: darkgray;
-}
-
-*/
-
-// background: hsl(0, 0%, 99%);
 
 import { Date, Children } from "@/interfaces";
 

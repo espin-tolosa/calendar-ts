@@ -30,6 +30,28 @@
     margin-left: 78.57%;
     margin-left: 92.86%;
 */
+
+  .month-start-mon {
+    display: none;
+  }
+  .month-start-tue {
+    grid-column-start: min(1, 7);
+  }
+  .month-start-wed {
+    grid-column-start: min(2, 7);
+  }
+  .month-start-thu {
+    grid-column-start: min(3, 7);
+  }
+  .month-start-fri {
+    grid-column-start: min(4, 7);
+  }
+  .month-start-sat {
+    grid-column-start: min(5, 7);
+  }
+  .month-start-sun {
+    grid-column-start: min(6, 7);
+  }
   .extend-event-1 {
     margin-left: calc(1 * 100% / 7 - 50% / 7);
   }
@@ -120,6 +142,9 @@
   .day:hover .day-header,
   .day.hover .day-header {
     background: darkgray;
+  }
+  .dayDivHight {
+    @apply min-h-[18vh];
   }
 }
 

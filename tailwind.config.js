@@ -21,6 +21,13 @@ module.exports = {
       spacing: {
         header: "2rem",
       },
+      zIndex: {
+        // Following config allows extend events as: Event: z-index = 0 (default) < Dayoff: z-index = 1 < ExtendEvent: z-index = 2
+        Dayoff: "1",
+        ExtendEvent: "2",
+        // Used in TopNav and Controller
+        TopLayer: "3",
+      },
     },
   },
   plugins: [],
