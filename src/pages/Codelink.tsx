@@ -15,6 +15,7 @@ const events0 = [{ id: 0, start: 0, job: "" }];
 
 const events1 = [
   { id: 1, client: "John", start: 1, job: "Starting 1 - 1" },
+  { id: 2, client: "Cristine", start: 1, job: "Starting 1 - 1" },
   { id: 2, client: "Marcel", start: 2, job: "Starting 2 - 1" },
   { id: 3, client: "Bob", start: 11, job: "Starting 3 - 1" },
   { id: 4, client: "Cristine", start: 20, job: "Starting 4 - 1" },
@@ -86,7 +87,6 @@ const TW_Event_FlexContainer = tw.div`
 
 const TW_Event = tw.div<{ $cells: number; $hoverColor: number }>`
 	absolute
-	bg-gradient-to-r
 	whitespace-nowrap
 	overflow-hidden
 	overflow-ellipsis
@@ -169,34 +169,34 @@ style={styles} */
     top = false;
   }
 
+  //TODO: Create a Context
   const giveMeColor = (client: string) => {
     if (client === "John") {
       return {
-        "--tw-gradient-from": "#0010ee",
-        "--tw-gradient-stops":
-          "var(--tw-gradient-from), var(--tw-gradient-to, rgb(243 244 246 / 0)",
+        background:
+          "linear-gradient(0.25turn, hsl(180, 45%, 45%), hsl(180,45%,45%),  hsl(180, 60%, 60%))",
+        color: "black",
+      };
+    } else if (client === "Cristine") {
+      return {
+        background:
+          "linear-gradient(0.25turn, hsl(182, 45%, 45%), hsl(182,45%,45%),  hsl(182, 60%, 60%))",
+        color: "black",
       };
     } else if (client === "Xin") {
       return {
-        "--tw-gradient-from": "#00ee14",
-        "--tw-gradient-stops":
-          "var(--tw-gradient-from), var(--tw-gradient-to, rgb(243 244 246 / 0)",
+        background:
+          "linear-gradient(0.25turn, hsl(220, 45%, 45%), hsl(220,45%,45%),  hsl(220, 60%, 60%))",
+        color: "white",
       };
     } else {
       return {
-        "--tw-gradient-from": "#ee0000",
-        "--tw-gradient-stops":
-          "var(--tw-gradient-from), var(--tw-gradient-to, rgb(243 244 246 / 0)",
+        background:
+          "linear-gradient(0.25turn, hsl(250, 45%, 45%), hsl(250,45%,45%),  hsl(250, 60%, 60%))",
+        color: "white",
       };
     }
   };
-  /*
-
-                  style={{
-                    background:
-                      "linear-gradient(0.25turn, hsl(200, 45%, 45%), hsl(200, 46%, 49%), hsl(200, 91.17647058823533%, 90%))",
-                  }}
-	*/
 
   return (
     <TW_container
@@ -206,7 +206,12 @@ style={styles} */
       }}
       onMouseEnter={() => console.log("passing over:", dayPadd)}
     >
-      <TW_header>{dayPadd}</TW_header>
+      <TW_header>
+        <div className="flex justify-center items-center px-4 w-[1.6rem] rounded-full bg-gray-200">
+          {dayPadd}
+        </div>
+      </TW_header>
+
       {events
         .filter((evt) => evt.start === day)
         .map((evt) => {
@@ -214,7 +219,7 @@ style={styles} */
             <>
               <TW_Event_FlexContainer>
                 <TW_Event
-                  style={giveMeColor(evt.job) as React.CSSProperties}
+                  style={giveMeColor(evt.client)}
                   key={evt.id}
                   $cells={evt.id}
                   $hoverColor={hoverExtendEvent}
@@ -222,7 +227,7 @@ style={styles} */
                     console.log("Event:", evt.job);
                   }}
                 >
-                  {evt.job}
+                  {`${evt.client}: ${evt.job}`}
                 </TW_Event>
                 <TW_Event_Extend
                   $cells={evt.id}
@@ -252,7 +257,17 @@ const DaySpot = ({ day }: { day: number }) => {
   const tempDay = String(day);
   const dayPadd = day < 10 ? `0${tempDay}` : tempDay;
 
-  return <div className="day-spot">{dayPadd}</div>;
+  /*
+  display: flex;
+  justify-content: center;
+  margin: 1px;
+  border-radius: 100px;
+  padding: 1px;
+  background: lightblue;
+
+*/
+
+  return <div className="rounded-full bg-black text-white">{dayPadd}</div>;
 };
 
 export default function App(): JSX.Element {
@@ -260,41 +275,6 @@ export default function App(): JSX.Element {
 
   const [height, setHeight] = useState(0);
   const ref = useRef(null);
-  /*
-  useEffect(() => {
-    setHeight(ref.current.clientHeight);
-    console.log(height)
-  })
-*/
-  /*
-        <DayStart weekday={"wed"}/>
-        {
-          days.map(day => <DaySpot key={day.toString()} day={day}/>)
-        }
-        </div>
-
- Calendar
-       <div ref={ref} className="board">
-        <div className="month">
-          <DayStart weekday={"mon"}/>
-          {
-            days.map(day => <Day key={day.toString()} day={day}/>)
-          }
-        </div>
-      
-        <div className="month">
-          <DayStart weekday={"wed"}/>
-          {
-            days.map(day => <Day key={day.toString()} day={day}/>)
-          }
-        </div>
-
-      </div>
-
-
-
-      */
-
   const Header = () => {
     return (
       <div className="header-layout sticky">
@@ -356,20 +336,6 @@ export default function App(): JSX.Element {
     );
   };
 
-  //const Day = ({ day, events }: { day: number; events: Array<eventType> }) => {
-  /*
-  display: grid;
-  justify-content: right;
-  grid-template-columns: repeat(7, 1fr);
-  overflow: hidden;
-
-  position: relative;
-  padding-inline: 0rem;
-
-  box-shadow: hsla(0, 0%, 0%, 0.2) 0 0 13px;
-  border-radius: 5px;
-
-		*/
   const Month = ({ events }: { events: Array<eventType> }) => {
     return (
       /* Month container: header | board */

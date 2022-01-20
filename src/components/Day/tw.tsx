@@ -13,7 +13,8 @@ import tw from "tailwind-styled-components";
 
 export const TW_header = tw.div`
 day-header
-text-right
+flex
+justify-start
 bg-gray-100
 px-[1ch]
 py-px
