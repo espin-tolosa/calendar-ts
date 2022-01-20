@@ -178,11 +178,26 @@ style={styles} */
 
   const giveMeColor = (client: string) => {
     if (client === "John") {
-      return "color-1";
+      const styles = {
+        "--tw-gradient-from": "#0010ee",
+        "--tw-gradient-stops":
+          "var(--tw-gradient-from), var(--tw-gradient-to, rgb(243 244 246 / 0)",
+      } as React.CSSProperties;
+      return styles;
     } else if (client === "Xin") {
-      return "color-2";
+      const styles = {
+        "--tw-gradient-from": "#00ee14",
+        "--tw-gradient-stops":
+          "var(--tw-gradient-from), var(--tw-gradient-to, rgb(243 244 246 / 0)",
+      } as React.CSSProperties;
+      return styles;
     } else {
-      return "color-default";
+      const styles = {
+        "--tw-gradient-from": "#ee0000",
+        "--tw-gradient-stops":
+          "var(--tw-gradient-from), var(--tw-gradient-to, rgb(243 244 246 / 0)",
+      } as React.CSSProperties;
+      return styles;
     }
   };
 
@@ -204,7 +219,7 @@ style={styles} */
                 <TW_Event
                   $bg_left=""
                   $bg_right=""
-                  className={giveMeColor(evt.client)}
+                  style={giveMeColor(evt.client)}
                   key={evt.id}
                   $cells={evt.id}
                   $hoverColor={hoverExtendEvent}
