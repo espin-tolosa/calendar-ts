@@ -10,11 +10,14 @@
 .btn2 {
   @apply bg-blue-500 select-none hover:bg-blue-700 text-red-900 font-bold py-2 px-4 rounded-full;
 }
-.color_1 {
+.color-1 {
   @apply from-blue-500 to-blue-700;
 }
-.color_2 {
+.color-2 {
   @apply from-green-500 to-green-700;
+}
+.color-default {
+  @apply from-gray-500 to-gray-700;
 }
 
 @layer utilities {

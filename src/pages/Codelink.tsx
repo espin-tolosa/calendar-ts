@@ -154,7 +154,6 @@ const TW_Event_Extend = tw.div<{ $cells: number }>`
 `;
 
 const Day = ({ day, events }: { day: number; events: Array<eventType> }) => {
-  const [color, setColor] = useState("");
   const tempDay = String(day);
   const dayPadd = day < 10 ? `0${tempDay}` : tempDay;
   const [hoverExtendEvent, setHoverExtendEvent] = useState(0);
@@ -176,11 +175,16 @@ style={styles} */
   } else {
     top = false;
   }
-  useEffect(() => {
-    setTimeout(() => {
-      setColor("from-blue-500 to-blue-700");
-    }, 2000);
-  }, []);
+
+  const giveMeColor = (client: string) => {
+    if (client === "John") {
+      return "color-1";
+    } else if (client === "Xin") {
+      return "color-2";
+    } else {
+      return "color-default";
+    }
+  };
 
   return (
     <TW_container
@@ -200,7 +204,7 @@ style={styles} */
                 <TW_Event
                   $bg_left=""
                   $bg_right=""
-                  className={color}
+                  className={giveMeColor(evt.client)}
                   key={evt.id}
                   $cells={evt.id}
                   $hoverColor={hoverExtendEvent}
