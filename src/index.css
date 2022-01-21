@@ -87,11 +87,6 @@
     margin-left: calc(7 * 100% / 7 - 50% / 7);
   }
 
-  .event-holder {
-    color: transparent;
-    margin-block: 0.75rem;
-  }
-
   .event-span-1 {
     width: calc(1 * 100% / 7 - 0.3rem);
   }

@@ -21,7 +21,8 @@ border-b-gray-300
 
 export const TW_container = tw.div<{ top: boolean }>`
 
-dayDivHight
+landscape:min-h-[18vh]
+portrait:min-h-[9vh]
 transition-colors
 outline-1
 outline-slate-100
@@ -33,7 +34,7 @@ border-b-2
 
 
 ${({ top }) =>
-  (top && "z-Dayoff bg-red-200  bg-opacity-50 active:bg-red-200 ") ||
+  (top && "z-Dayoff bg-gray-200  bg-opacity-50 active:bg-gray-200 ") ||
   "day bg-white active:bg-green-200"}
 	`;
 

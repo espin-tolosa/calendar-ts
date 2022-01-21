@@ -80,11 +80,10 @@ function DayStart({ weekday }: { weekday: string }) {
 const TW_Event_FlexContainer = tw.div`
   flex
   flex-col
-	w-fit
-	bg-[rgb(0,0,0,0.2)]
+	justify-start
 	`;
 
-const TW_Event = tw.div<{ $cells: number; $hoverColor: number }>`
+const TW_Event = tw.div<{ $cells: number }>`
 	absolute
 	whitespace-nowrap
 	overflow-hidden
@@ -93,13 +92,6 @@ const TW_Event = tw.div<{ $cells: number; $hoverColor: number }>`
 	text-white
 	rounded-full
 	ml-[0.1rem]
-
-
-	
-	hover:bg-red-500
-	hover:cursor-pointer
-	
-	${({ $hoverColor }) => ($hoverColor === 0 && "bg-red-500") || "bg-red-800"}
 
 	${({ $cells }) =>
     ($cells === 1 && "event-span-1") ||
@@ -130,10 +122,14 @@ const TW_Event_Extend = tw.div<{ $cells: number }>`
     "extend-event-1"}
 `;
 
+const TW_Event_Placeholder = tw.div`
+text-transparent	
+my-0.5
+`;
+
 const Day = ({ day, events }: { day: number; events: Array<eventType> }) => {
   const tempDay = String(day);
   const dayPadd = day < 10 ? `0${tempDay}` : tempDay;
-  const [hoverExtendEvent, setHoverExtendEvent] = useState(0);
   /*
   const styles = {
     backgroundColor: "white"
@@ -211,7 +207,6 @@ style={styles} */
                   style={giveMeColor(evt.client)}
                   key={evt.id}
                   $cells={evt.id}
-                  $hoverColor={hoverExtendEvent}
                   onMouseDownCapture={() => {
                     console.log("Event:", evt.job);
                   }}
@@ -225,17 +220,18 @@ style={styles} */
                     console.log("extend event:", evt.id);
                   }}
                   onMouseEnter={() => {
-                    setHoverExtendEvent(1);
+                    console.log("enter extend event");
                   }}
                   onMouseOut={() => {
                     console.log("leaving extend event");
-                    setHoverExtendEvent(0);
                   }}
                   title={`Drag here to extend ${evt.client}\'s job`}
                 >
                   {">"}
                 </TW_Event_Extend>
-                <div key={"p" + evt.id} className="event-holder"></div>
+                <TW_Event_Placeholder key={"p" + evt.id}>
+                  {"-"}
+                </TW_Event_Placeholder>
               </TW_Event_FlexContainer>
             </>
           );
@@ -356,7 +352,7 @@ export default function App(): JSX.Element {
   return (
     <>
       {/*App*/}
-      <div className="select-none box-border font-roboto font-extra sm:text-base text-xs">
+      <div className="select-none box-border font-roboto font-extra 2xl:text-2xl xl:text-xl md:text-base sm:text-sm text-xs">
         {/*header-layout*/}
         <div
           className="sticky z-TopLayer top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
