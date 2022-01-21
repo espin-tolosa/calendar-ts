@@ -366,7 +366,7 @@ export default function App(): JSX.Element {
             </div>
             {/*center-header*/}{" "}
             <div className="overflow-hidden whitespace-nowrap text-ellipsis portrait:mr-2">
-              Today: 10 of January of 2022
+              Friday, 21 January 2022
             </div>
             {/*right-header*/}
             <div className="">
@@ -385,7 +385,7 @@ export default function App(): JSX.Element {
 
         {/*main-layout: layout-grid*/}
         <div
-          className={`sm:grid sm:landscape:grid flex flex-col ${controllerToggle} sm:landscape:w-auto landscape:w-[200vw]`}
+          className={`sm:grid sm:landscape:grid flex flex-col ${controllerToggle} landscape:w-[200vw]`}
         >
           {/*controller-layout*/}
           <div
