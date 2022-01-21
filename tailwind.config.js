@@ -6,6 +6,8 @@ module.exports = {
         roboto: ["Roboto"],
       },
       fontWeight: {
+        mini: 100,
+        small: 300,
         regular: 400,
         medium: 700,
         extra: 900,

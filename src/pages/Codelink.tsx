@@ -95,7 +95,6 @@ const TW_Event = tw.div<{ $cells: number; $hoverColor: number }>`
 	ml-[0.1rem]
 
 
-	text-sm
 	
 	hover:bg-red-500
 	hover:cursor-pointer
@@ -117,7 +116,6 @@ const TW_Event_Extend = tw.div<{ $cells: number }>`
 	absolute
 	text-transparent
 	cursor-copy
-	text-sm
 	min-w-[7.14%]
 	z-ExtendEvent
 
@@ -330,7 +328,7 @@ export default function App(): JSX.Element {
       <div className="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 shadow-[10px_10px_15px_rgba(0,0,0,0.3)] rounded-md flex flex-col justify-center">
         {/*month-header*/}
         <div className="bg-gray-300 rounded-md font-medium px-[2ch] border-b-4 border-gray-400 flex justify-center">
-          February of 2022
+          February 2022
         </div>
         {/*board container*/}
         <div className="grid grid-cols-7 overflow-hidden relative last:bg-gray-300 border-b-4 border-b-gray-200 border-x-4">
@@ -358,7 +356,7 @@ export default function App(): JSX.Element {
   return (
     <>
       {/*App*/}
-      <div className="select-none box-border font-roboto">
+      <div className="select-none box-border font-roboto font-extra sm:text-base text-xs">
         {/*header-layout*/}
         <div
           className="sticky z-TopLayer top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
