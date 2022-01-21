@@ -240,23 +240,44 @@ style={styles} */
 export default function App(): JSX.Element {
   const days = Array.from(Array(30).keys()).map((day) => day + 1);
   /*className="
-				sm:portrait:flex sm:portrait:flex-col sm:portrait:gap-4 sm:portrait:px-2
-				sm:landscape:flex sm:landscape:flex-col sm:landscape:gap-4 sm:landscape:px-2
-				landscape:hidden
-				  portrait:hidden "
-*/
+	sm:portrait:flex sm:portrait:flex-col sm:portrait:gap-4 sm:portrait:px-2
+	sm:landscape:flex sm:landscape:flex-col sm:landscape:gap-4 sm:landscape:px-2
+	landscape:hidden
+	portrait:hidden "
+	*/
   const CreateEvent = () => {
     return (
       <form
         className="flex flex-col gap-2 sm:px-4 custombp:px-1 px-1"
         action="post"
+        onSubmit={(event) => {
+          event.preventDefault();
+          console.log("Hello");
+        }}
       >
         <input
           className="bg-white border-none p-1 rounded-full cursor-pointer mt-2 font-extra button-shadow"
           type="submit"
           value="Create"
+          onClick={() => {
+            document.documentElement.style.setProperty(
+              "--calendar_width",
+              "900px"
+            );
+          }}
         />
-
+        <input
+          className="bg-white border-none p-1 rounded-full cursor-pointer mt-2 font-extra button-shadow"
+          type="submit"
+          value="Reduce"
+          title="Testing to reduce calendar"
+          onClick={() => {
+            document.documentElement.style.setProperty(
+              "--calendar_width",
+              "740px"
+            );
+          }}
+        />
         <div className="grid grid-cols-2 gap-2">
           <input
             className=" text-center button-shadow text-effect rounded-sm"
