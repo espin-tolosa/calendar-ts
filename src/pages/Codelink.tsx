@@ -352,14 +352,14 @@ export default function App(): JSX.Element {
   return (
     <>
       {/*App*/}
-      <div className="select-none box-border font-roboto font-extra 2xl:text-2xl xl:text-xl md:text-base sm:text-sm text-xs">
+      <div className="select-none box-border font-roboto font-extra 2xl:text-2xl xl:text-xl md:text-base sm:text-xs text-xs">
         {/*header-layout*/}
         <div
           className="sticky z-TopLayer top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
           onClick={() => setToogleCreate((prev) => !prev)}
         >
           {/*header*/}
-          <div className="flex justify-between items-baseline h-8 font-extra">
+          <div className="flex justify-between items-center h-8 font-extra">
             {/*left-header*/}
             <div className="sm:ml-28 ml-2 overflow-visible whitespace-nowrap portrait:mr-2 ">
               JH Diary
