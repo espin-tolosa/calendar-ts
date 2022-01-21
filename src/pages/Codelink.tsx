@@ -239,15 +239,16 @@ style={styles} */
 
 export default function App(): JSX.Element {
   const days = Array.from(Array(30).keys()).map((day) => day + 1);
-
+  /*className="
+				sm:portrait:flex sm:portrait:flex-col sm:portrait:gap-4 sm:portrait:px-2
+				sm:landscape:flex sm:landscape:flex-col sm:landscape:gap-4 sm:landscape:px-2
+				landscape:hidden
+				  portrait:hidden "
+*/
   const CreateEvent = () => {
     return (
       <form
-        className="
-				sm:portrait:flex sm:portrait:flex-col sm:portrait:gap-4 sm:portrait:px-4
-				sm:landscape:flex sm:landscape:flex-col sm:landscape:gap-4 sm:landscape:px-4
-				landscape:hidden
-				  portrait:hidden "
+        className="flex flex-col gap-2 sm:px-4 custombp:px-1 px-1"
         action="post"
       >
         <input
@@ -258,7 +259,7 @@ export default function App(): JSX.Element {
 
         <div className="grid grid-cols-2 gap-2">
           <input
-            className=" text-center button-shadow text-effect"
+            className=" text-center button-shadow text-effect rounded-sm"
             type="text"
             name="start"
             id="start"
@@ -267,7 +268,7 @@ export default function App(): JSX.Element {
             title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
           />
           <input
-            className="text-center button-shadow text-effect"
+            className="text-center button-shadow text-effect rounded-sm"
             type="text"
             name="end"
             id="end"
@@ -278,7 +279,7 @@ export default function App(): JSX.Element {
         </div>
 
         <input
-          className="border-none py-1 padding-x-clamp button-shadow text-effect"
+          className="border-none py-px padding-x-clamp button-shadow text-effect rounded-sm"
           type="text"
           name="job"
           id="job"
@@ -287,7 +288,7 @@ export default function App(): JSX.Element {
         />
         <div className="grow-wrap">
           <textarea
-            className=" button-shadow"
+            className=" button-shadow rounded-sm"
             name="text"
             id="text"
             value=""
@@ -371,7 +372,7 @@ export default function App(): JSX.Element {
           <div
             className={`rounded-b-lg z-TopLayer mt-1
 						bg-gradient-to-b from-gray-100 via-gray-300 to-gray-400	
-						 ${stateToggle} utility-smooth sticky top-8  custombp:top-5 `}
+						 ${stateToggle} utility-smooth sticky sm:top-10 customtp:top-4 custombp:top-5 `}
           >
             {/* this sticky could be removed */}
             <div className="sticky">{true && <CreateEvent />}</div>

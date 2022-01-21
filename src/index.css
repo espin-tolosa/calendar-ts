@@ -244,12 +244,10 @@
   .grow-wrap::after {
     /* Identical styling required!! */
     padding: 2px 1ch 2px 1ch;
-    font: inherit;
     /* Place on top of each other */
   }
 
   textarea {
-    border-radius: 5px;
     background: rgb(241, 241, 241);
   }
 
