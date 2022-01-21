@@ -2,6 +2,14 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        roboto: ["Roboto"],
+      },
+      fontWeight: {
+        regular: 400,
+        medium: 700,
+        extra: 900,
+      },
       colors: {
         palette: {
           lm: "#264653",

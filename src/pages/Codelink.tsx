@@ -277,7 +277,7 @@ export default function App(): JSX.Element {
         action="post"
       >
         <input
-          className="bg-white border-none p-1 rounded-full cursor-pointer mt-2 font-bold button-shadow"
+          className="bg-white border-none p-1 rounded-full cursor-pointer mt-2 font-extra button-shadow"
           type="submit"
           value="Create"
         />
@@ -358,14 +358,14 @@ export default function App(): JSX.Element {
   return (
     <>
       {/*App*/}
-      <div className="select-none box-border">
+      <div className="select-none box-border font-roboto">
         {/*header-layout*/}
         <div
           className="sticky z-TopLayer top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
           onClick={() => setToogleCreate((prev) => !prev)}
         >
           {/*header*/}
-          <div className="flex justify-between items-baseline h-8 font-medium">
+          <div className="flex justify-between items-baseline h-8 font-extra">
             {/*left-header*/}
             <div className="sm:ml-28 ml-2 overflow-visible whitespace-nowrap portrait:mr-2 ">
               JH Diary
