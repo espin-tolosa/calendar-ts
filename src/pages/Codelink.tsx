@@ -385,7 +385,7 @@ export default function App(): JSX.Element {
 
         {/*main-layout: layout-grid*/}
         <div
-          className={`sm:grid sm:landscape:grid flex flex-col ${controllerToggle}`}
+          className={`sm:grid sm:landscape:grid flex flex-col ${controllerToggle} sm:landscape:w-auto landscape:w-[200vw]`}
         >
           {/*controller-layout*/}
           <div
