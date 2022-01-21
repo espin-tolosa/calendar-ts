@@ -359,7 +359,7 @@ export default function App(): JSX.Element {
           onClick={() => setToogleCreate((prev) => !prev)}
         >
           {/*header*/}
-          <div className="flex justify-between items-center h-8 font-extra">
+          <div className="flex justify-between items-center font-extra">
             {/*left-header*/}
             <div className="sm:ml-28 ml-2 overflow-visible whitespace-nowrap portrait:mr-2 ">
               JH Diary
@@ -391,7 +391,7 @@ export default function App(): JSX.Element {
           <div
             className={`rounded-b-lg z-TopLayer mt-1
 						bg-gradient-to-b from-gray-100 via-gray-300 to-gray-400	
-						 ${stateToggle} utility-smooth sticky top-8`}
+						 ${stateToggle} utility-smooth sticky top-8  custombp:top-5 `}
           >
             {/* this sticky could be removed */}
             <div className="sticky">{true && <CreateEvent />}</div>
