@@ -22,7 +22,7 @@ border-b-gray-300
 export const TW_container = tw.div<{ top: boolean }>`
 
 landscape:min-h-[18vh]
-portrait:min-h-[9vh]
+portrait:min-h-[8vh]
 transition-colors
 outline-1
 outline-slate-100

@@ -352,7 +352,7 @@ export default function App(): JSX.Element {
   return (
     <>
       {/*App*/}
-      <div className="select-none box-border font-roboto font-extra 2xl:text-2xl xl:text-xl md:text-base sm:text-xs text-xs">
+      <div className="select-none box-border font-roboto font-extra 2xl:text-2xl xl:text-xl md:text-base sm:text-xs text-xs custombp:text-xs">
         {/*header-layout*/}
         <div
           className="sticky z-TopLayer top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
@@ -385,7 +385,7 @@ export default function App(): JSX.Element {
 
         {/*main-layout: layout-grid*/}
         <div
-          className={`sm:grid sm:landscape:grid flex flex-col ${controllerToggle} landscape:w-[200vw]`}
+          className={`sm:grid sm:landscape:grid flex flex-col ${controllerToggle} custombp:text-landscape`}
         >
           {/*controller-layout*/}
           <div

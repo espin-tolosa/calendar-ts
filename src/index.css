@@ -170,4 +170,9 @@
     border-bottom: transparent;
     max-height: calc(0 * var(--controller_height));
   }
+
+  .text-landscape {
+    font-size: 0.55rem;
+    line-height: 0.8rem;
+  }
 }

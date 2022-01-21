@@ -12,6 +12,9 @@ module.exports = {
         medium: 700,
         extra: 900,
       },
+      screens: {
+        custombp: { raw: "(max-height: 480px)" },
+      },
       colors: {
         palette: {
           lm: "#264653",
