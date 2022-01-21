@@ -268,39 +268,52 @@ export default function App(): JSX.Element {
 
   const CreateEvent = () => {
     return (
-      <form className="px-4 2xl:gap-4 flex flex-col" action="post">
-        <input className="create-event-button" type="submit" value="Create" />
+      <form
+        className="
+				sm:portrait:flex sm:portrait:flex-col sm:portrait:gap-4 sm:portrait:px-4
+				sm:landscape:flex sm:landscape:flex-col sm:landscape:gap-4 sm:landscape:px-4
+				landscape:hidden
+				  portrait:hidden "
+        action="post"
+      >
+        <input
+          className="bg-white border-none p-1 rounded-full cursor-pointer mt-2 font-bold button-shadow"
+          type="submit"
+          value="Create"
+        />
 
-        <div className="from-to-dates">
+        <div className="flex justify-evenly flex-wrap flex-grow-0 flex-shrink basis-full py-1 ">
           <input
-            className="create-event-text"
+            className="width-clamp text-center button-shadow text-effect"
             type="text"
             name="start"
             id="start"
-            value="31/01/2022"
-            placeholder="start"
+            value=""
+            placeholder="init date"
+            title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
           />
           <input
-            className="create-event-text"
+            className="width-clamp text-center button-shadow text-effect"
             type="text"
             name="end"
             id="end"
             value=""
-            placeholder="end"
+            placeholder="end date"
+            title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
           />
         </div>
 
         <input
-          className="create-event-text"
+          className="py-1 padding-x-clamp button-shadow text-effect"
           type="text"
           name="job"
           id="job"
-          value="New job with a long title more long"
+          value=""
           placeholder="Job"
         />
         <div className="grow-wrap">
           <textarea
-            className="authority_body-input has-value"
+            className="authority_body-input has-value button-shadow"
             name="text"
             id="text"
             value="Lorem ipsum, dolor sit amet consectetur adipisicing elit."
@@ -354,7 +367,7 @@ export default function App(): JSX.Element {
           {/*header*/}
           <div className="flex justify-between items-baseline h-8 font-medium">
             {/*left-header*/}
-            <div className="md:ml-28 ml-2 overflow-visible whitespace-nowrap portrait:mr-2 ">
+            <div className="sm:ml-28 ml-2 overflow-visible whitespace-nowrap portrait:mr-2 ">
               JH Diary
             </div>
             {/*center-header*/}{" "}
@@ -378,7 +391,7 @@ export default function App(): JSX.Element {
 
         {/*main-layout: layout-grid*/}
         <div
-          className={`2xl:grid landscape:grid sm:flex sm:flex-col ${controllerToggle}`}
+          className={`sm:grid sm:landscape:grid flex flex-col ${controllerToggle}`}
         >
           {/*controller-layout*/}
           <div
@@ -393,7 +406,7 @@ export default function App(): JSX.Element {
           {/*calendar-layout*/}
           <div className="m-0">
             {/*calendar*/}
-            <div className="grid gap-4 mt-1 components-calendar mx-0 sm:mx-4 bg-white">
+            <div className="grid gap-4 mt-1 components-calendar sm:mx-4 mx-0 bg-white">
               <Month events={events1} />
               <Month events={events2} />
               <Month events={events2} />

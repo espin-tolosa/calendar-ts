@@ -1,34 +1,47 @@
-/* LEGACY */
-
-.sticky {
-  position: sticky;
+.button-shadow {
+  box-shadow: rgba(14, 1, 10, 0.4) 0 0 5px;
 }
-
-/* Adjustments for small devices of header layout and stick positions */
-@media (max-width: 640px) {
-  .header {
-    flex-direction: row;
-  }
-}
-
-/* legacy: loremipsum smooth scrolling */
-
-/* Create event */
-
-.create-event {
-  padding-inline: 1em;
-  gap: 1rem;
-}
-.create-event-button {
-  background: white;
-  border: none;
+.button-shadow:hover {
   box-shadow: rgba(0, 0, 0, 0.7) 0 0 5px;
-  padding: 0.1em;
-  border-radius: 100px;
-  cursor: pointer;
-  margin-top: 0.4rem;
+}
+.width-clamp {
+  width: clamp(9ch, 12ch, 15ch);
+}
+.padding-x-clamp {
+  padding-inline: clamp(2px, 1ch, 5ch);
+}
+/*
+.text-effects {
+  background: hsl(0, 0%, 90%);
+ }
+.text-effects:focus {
+  background: white;
+  color: black;
+  font-weight: 900;
+  box-shadow: rgba(0, 0, 0, 0.8) 0 0 5px;
+}
+.text-effects [value]:not([value=""]) {
+  color: black;
+  font-weight: 900;
+  background: lightgreen;
+}
+*/
+/*This class doesnt support hsl-colors */
+.text-effect {
+  background: rgb(241, 241, 241);
+}
+.text-effect[value]:not([value=""]) {
+  background: white;
+  color: black;
   font-weight: 900;
 }
+.text-effect:focus {
+  background: white;
+  color: black;
+  font-weight: 900;
+  box-shadow: rgba(0, 0, 0, 0.8) 0 0 5px;
+}
+/* LEGACY */
 
 input {
   border: none;
@@ -37,34 +50,12 @@ input:focus {
   outline: 1px solid gray;
 }
 
-.create-event-text {
-  border-radius: 5px;
-  background: lightgray;
-  padding-block: 2px;
-  padding-inline: clamp(2px, 1ch, 5ch);
-}
-.create-event-text:focus {
-  background: white;
-  color: black;
-  font-weight: 900;
-  box-shadow: rgba(0, 0, 0, 0.8) 0 0 5px;
-}
-.create-event-text[value]:not([value=""]) {
-  background: white;
-  color: black;
-  font-weight: 900;
-}
 .from-to-dates {
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
   flex: 0 1 100%;
-}
-
-.from-to-dates .create-event-text {
-  width: clamp(9ch, 12ch, 15ch);
-  margin-block: 0.5rem;
-  text-align: center;
+  padding-block: 2px;
 }
 
 /* Text area */
@@ -92,7 +83,7 @@ input:focus {
 .grow-wrap > textarea,
 .grow-wrap::after {
   /* Identical styling required!! */
-  padding: 1px 1ch 1px 1ch;
+  padding: 2px 1ch 2px 1ch;
   font: inherit;
   /* Place on top of each other */
 }
