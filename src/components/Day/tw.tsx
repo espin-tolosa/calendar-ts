@@ -19,6 +19,10 @@ border-y-2
 border-b-gray-300
 `;
 
+export const TW_dayspot = tw.div`
+	flex justify-center items-center px-4 w-[1.6rem] rounded-full bg-gray-200
+`;
+
 export const TW_container = tw.div<{ top: boolean }>`
 
 landscape:min-h-[18vh]

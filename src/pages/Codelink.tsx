@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import tw from "tailwind-styled-components";
-import "@styles/codelink.css";
 
-import { TW_header, TW_container } from "@/components/Day/tw";
+import { TW_header, TW_dayspot, TW_container } from "@/components/Day/tw";
 
 interface eventType {
   id: number;
@@ -192,9 +191,7 @@ style={styles} */
       onMouseEnter={() => console.log("passing over:", dayPadd)}
     >
       <TW_header>
-        <div className="flex justify-center items-center px-4 w-[1.6rem] rounded-full bg-gray-200">
-          {dayPadd}
-        </div>
+        <TW_dayspot>{dayPadd}</TW_dayspot>
       </TW_header>
 
       {events
@@ -240,23 +237,6 @@ style={styles} */
   );
 };
 
-const DaySpot = ({ day }: { day: number }) => {
-  const tempDay = String(day);
-  const dayPadd = day < 10 ? `0${tempDay}` : tempDay;
-
-  /*
-  display: flex;
-  justify-content: center;
-  margin: 1px;
-  border-radius: 100px;
-  padding: 1px;
-  background: lightblue;
-
-*/
-
-  return <div className="rounded-full bg-black text-white">{dayPadd}</div>;
-};
-
 export default function App(): JSX.Element {
   const days = Array.from(Array(30).keys()).map((day) => day + 1);
 
@@ -276,18 +256,18 @@ export default function App(): JSX.Element {
           value="Create"
         />
 
-        <div className="flex justify-evenly flex-wrap flex-grow-0 flex-shrink basis-full py-1 ">
+        <div className="grid grid-cols-2 gap-2">
           <input
-            className="width-clamp text-center button-shadow text-effect"
+            className=" text-center button-shadow text-effect"
             type="text"
             name="start"
             id="start"
-            value=""
+            value="2021/01/01"
             placeholder="init date"
             title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
           />
           <input
-            className="width-clamp text-center button-shadow text-effect"
+            className="text-center button-shadow text-effect"
             type="text"
             name="end"
             id="end"
@@ -298,7 +278,7 @@ export default function App(): JSX.Element {
         </div>
 
         <input
-          className="py-1 padding-x-clamp button-shadow text-effect"
+          className="border-none py-1 padding-x-clamp button-shadow text-effect"
           type="text"
           name="job"
           id="job"
@@ -307,11 +287,11 @@ export default function App(): JSX.Element {
         />
         <div className="grow-wrap">
           <textarea
-            className="authority_body-input has-value button-shadow"
+            className=" button-shadow"
             name="text"
             id="text"
-            value="Lorem ipsum, dolor sit amet consectetur adipisicing elit."
-            placeholder="Annotations..."
+            value=""
+            placeholder="Extra notes..."
           ></textarea>
         </div>
       </form>
