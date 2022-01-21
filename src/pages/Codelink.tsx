@@ -372,7 +372,7 @@ export default function App(): JSX.Element {
           <div
             className={`rounded-b-lg z-TopLayer mt-1
 						bg-gradient-to-b from-gray-100 via-gray-300 to-gray-400	
-						 ${stateToggle} utility-smooth sticky sm:top-10 customtp:top-4 custombp:top-5 `}
+						 ${stateToggle} utility-smooth sticky sm:top-8 customtp:top-4 custombp:top-5  `}
           >
             {/* this sticky could be removed */}
             <div className="sticky">{true && <CreateEvent />}</div>
@@ -381,7 +381,7 @@ export default function App(): JSX.Element {
           {/*calendar-layout*/}
           <div className="m-0">
             {/*calendar*/}
-            <div className="grid gap-4 mt-1 components-calendar sm:mx-4 mx-0 bg-white">
+            <div className="grid gap-4 mt-1 xl:components-calendar sm:mx-4 mx-0 bg-white">
               <Month events={events1} />
               <Month events={events2} />
               <Month events={events2} />
