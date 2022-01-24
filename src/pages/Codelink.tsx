@@ -1,9 +1,13 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import tw from "tailwind-styled-components";
 import { Event } from "@components/Event";
+import * as tw_Event from "@components/Event/tw";
+import * as tw_Day from "@components/Day/tw";
+import * as tw_Month from "@components/Month/tw";
+import * as tw_Topnav from "@components/Topnav/tw";
+import * as tw_Layouts from "@/layouts/tw";
+import * as tw_Controller from "@components/Controller/tw";
 import { EventsCtx } from "@context/eventsarray";
-
-import { TW_header, TW_dayspot, TW_container } from "@/components/Day/tw";
 
 interface EventProps {
   date: string;
@@ -78,73 +82,6 @@ const events_test = [
   { id: 1, client: "John", start: 22, job: "Starting 1 - 2" },
 ];
 
-function DayStart({ weekday }: { weekday: string }) {
-  const options = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
-
-  if (!options.some((opt) => opt === weekday)) {
-    console.warn(
-      "DayStart: weekday " +
-        weekday +
-        " is not an option, defaulted to mon, options are:",
-      options
-    );
-    weekday = "mon";
-  }
-
-  const classNameTemplate = `month-start-${weekday}`;
-  return <div className={classNameTemplate}></div>;
-}
-
-const TW_Event_FlexContainer = tw.div`
-  flex
-  flex-col
-	justify-start
-	`;
-
-const TW_Event = tw.div<{ $cells: number }>`
-	absolute
-	whitespace-nowrap
-	overflow-hidden
-	overflow-ellipsis
-	pl-2
-	text-white
-	rounded-full
-	ml-[0.1rem]
-
-	${({ $cells }) =>
-    ($cells === 1 && "event-span-1") ||
-    ($cells === 2 && "event-span-2") ||
-    ($cells === 3 && "event-span-3") ||
-    ($cells === 4 && "event-span-4") ||
-    ($cells === 5 && "event-span-5") ||
-    ($cells === 6 && "event-span-6") ||
-    ($cells === 7 && "event-span-7") ||
-    "extend-event-1"}
-`;
-
-const TW_Event_Extend = tw.div<{ $cells: number }>`
-	absolute
-	text-transparent
-	cursor-copy
-	min-w-[7.14%]
-	z-ExtendEvent
-
-	${({ $cells }) =>
-    ($cells === 1 && "extend-event-1") ||
-    ($cells === 2 && "extend-event-2") ||
-    ($cells === 3 && "extend-event-3") ||
-    ($cells === 4 && "extend-event-4") ||
-    ($cells === 5 && "extend-event-5") ||
-    ($cells === 6 && "extend-event-6") ||
-    ($cells === 7 && "extend-event-7") ||
-    "extend-event-1"}
-`;
-
-const TW_Event_Placeholder = tw.div`
-text-transparent	
-my-0.5
-`;
-
 const Day = ({ day, events }: { day: number; events: Array<eventType> }) => {
   const tempDay = String(day);
   const dayPadd = day < 10 ? `0${tempDay}` : tempDay;
@@ -202,24 +139,24 @@ style={styles} */
   };
 
   return (
-    <TW_container
-      top={top}
+    <tw_Day.sizedContainer
+      $top={top}
       onMouseUp={() => {
         console.log("leaving action at day:", dayPadd);
       }}
       onMouseEnter={() => console.log("passing over:", dayPadd)}
     >
-      <TW_header>
-        <TW_dayspot>{dayPadd}</TW_dayspot>
-      </TW_header>
+      <tw_Day.header>
+        <tw_Day.daySpot>{dayPadd}</tw_Day.daySpot>
+      </tw_Day.header>
 
       {events
         .filter((evt) => evt.start === day)
         .map((evt) => {
           return (
             <>
-              <TW_Event_FlexContainer>
-                <TW_Event
+              <tw_Event.flexContainer>
+                <tw_Event.textContent
                   style={giveMeColor(evt.client)}
                   key={evt.id}
                   $cells={evt.id}
@@ -229,8 +166,8 @@ style={styles} */
                   title={`${evt.client}: ${evt.job} from: ${evt.start} to ${evt.start}`}
                 >
                   {`${evt.client}: ${evt.job}`}
-                </TW_Event>
-                <TW_Event_Extend
+                </tw_Event.textContent>
+                <tw_Event.extend
                   $cells={evt.id}
                   onMouseDownCapture={() => {
                     console.log("extend event:", evt.id);
@@ -244,38 +181,30 @@ style={styles} */
                   title={`Drag here to extend ${evt.client}\'s job`}
                 >
                   {">"}
-                </TW_Event_Extend>
-                <TW_Event_Placeholder key={"p" + evt.id}>
+                </tw_Event.extend>
+                <tw_Event.placeholder key={"p" + evt.id}>
                   {"-"}
-                </TW_Event_Placeholder>
-              </TW_Event_FlexContainer>
+                </tw_Event.placeholder>
+              </tw_Event.flexContainer>
             </>
           );
         })}
-    </TW_container>
+    </tw_Day.sizedContainer>
   );
 };
 
 export default function App(): JSX.Element {
   const days = Array.from(Array(30).keys()).map((day) => day + 1);
-  /*className="
-	sm:portrait:flex sm:portrait:flex-col sm:portrait:gap-4 sm:portrait:px-2
-	sm:landscape:flex sm:landscape:flex-col sm:landscape:gap-4 sm:landscape:px-2
-	landscape:hidden
-	portrait:hidden "
-	*/
   const CreateEvent = () => {
     return (
-      <form
-        className="flex flex-col gap-2 sm:px-4 custombp:px-1 px-1"
+      <tw_Controller.form
         action="post"
         onSubmit={(event) => {
           event.preventDefault();
           console.log("Hello");
         }}
       >
-        <input
-          className="bg-white border-none p-1 rounded-full cursor-pointer mt-2 font-extra button-shadow"
+        <tw_Controller.button
           type="submit"
           value="Create"
           onClick={() => {
@@ -285,8 +214,7 @@ export default function App(): JSX.Element {
             );
           }}
         />
-        <input
-          className="bg-white border-none p-1 rounded-full cursor-pointer mt-2 font-extra button-shadow"
+        <tw_Controller.button
           type="submit"
           value="Reduce"
           title="Testing to reduce calendar"
@@ -297,9 +225,8 @@ export default function App(): JSX.Element {
             );
           }}
         />
-        <div className="grid grid-cols-2 gap-2">
-          <input
-            className=" text-center button-shadow text-effect rounded-sm"
+        <tw_Controller.startEnd>
+          <tw_Controller.date
             type="text"
             name="start"
             id="start"
@@ -307,8 +234,7 @@ export default function App(): JSX.Element {
             placeholder="init date"
             title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
           />
-          <input
-            className="text-center button-shadow text-effect rounded-sm"
+          <tw_Controller.date
             type="text"
             name="end"
             id="end"
@@ -316,119 +242,87 @@ export default function App(): JSX.Element {
             placeholder="end date"
             title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
           />
-        </div>
+        </tw_Controller.startEnd>
 
-        <input
-          className="border-none py-px padding-x-clamp button-shadow text-effect rounded-sm"
+        <tw_Controller.job
           type="text"
           name="job"
           id="job"
           value=""
           placeholder="Job"
         />
-        <div className="grow-wrap">
-          <textarea
-            className=" button-shadow rounded-sm"
+        <tw_Controller.description_wrap>
+          <tw_Controller.description
             name="text"
             id="text"
             value=""
             placeholder="Extra notes..."
-          ></textarea>
-        </div>
-      </form>
+          ></tw_Controller.description>
+        </tw_Controller.description_wrap>
+      </tw_Controller.form>
     );
   };
 
   const Month = ({ events }: { events: Array<eventType> }) => {
     return (
       /* Month container: header | board */
-      <div className="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 shadow-[10px_10px_15px_rgba(0,0,0,0.3)] rounded-md flex flex-col justify-center">
+      <tw_Month.flexColLayout>
         {/*month-header*/}
-        <div className="bg-gray-300 rounded-md font-medium px-[2ch] border-b-4 border-gray-400 flex justify-center">
-          February 2022
-        </div>
+        <tw_Month.header>February 2022</tw_Month.header>
         {/*board container*/}
-        <div className="grid grid-cols-7 overflow-hidden relative last:bg-gray-300 border-b-4 border-b-gray-200 border-x-4">
-          <DayStart weekday={"wed"} />
+        <tw_Month.daysBoard>
+          <tw_Month.dayShift $weekday={"sun"} />
           {days.map((day) => (
             <Day key={day.toString()} day={day} events={events} />
           ))}
-        </div>
-      </div>
+        </tw_Month.daysBoard>
+      </tw_Month.flexColLayout>
     );
   };
 
   const [toogleCreate, setToogleCreate] = useState(false);
 
-  let stateToggle = "";
-  let controllerToggle = "";
-  if (toogleCreate) {
-    stateToggle = "utility-smooth-display-on";
-    controllerToggle = "components-controller-on";
-  } else {
-    stateToggle = "utility-smooth-display-off";
-    controllerToggle = "components-controller-off";
-  }
-
   return (
     <>
       {/*App*/}
-      <div className="select-none box-border font-roboto font-extra md:text-base sm:text-xs text-xs custombp:text-xs customtp:text-portrait ">
+      <tw_Layouts.app>
         {/*header-layout*/}
-        <div
-          className="sticky z-TopLayer top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100"
-          onClick={() => setToogleCreate((prev) => !prev)}
-        >
+        <tw_Layouts.header onClick={() => setToogleCreate((prev) => !prev)}>
           {/*header*/}
-          <div className="flex justify-between items-center font-extra">
+          <tw_Topnav.container>
             {/*left-header*/}
-            <div className="sm:ml-28 ml-2 overflow-visible whitespace-nowrap portrait:mr-2 ">
-              JH Diary
-            </div>
+            <tw_Topnav.logo>JH Diary</tw_Topnav.logo>
             {/*center-header*/}{" "}
-            <div className="overflow-hidden whitespace-nowrap text-ellipsis portrait:mr-2">
-              Friday, 21 January 2022
-            </div>
+            <tw_Topnav.title>Friday, 21 January 2022</tw_Topnav.title>
             {/*right-header*/}
-            <div className="">
-              <div
-                className="border-2 hover:bg-transparent mr-4 border-gray-200 hover:border-gray-700 hover:text-black rounded-full px-4 bg-gray-200 text-gray-700 transition-colors active:bg-indigo-500 "
-                title={"Cleans up your session token | Ctrl+Alt+q"}
-                onClick={(evt) => {
-                  evt.stopPropagation();
-                }}
-              >
-                Logout
-              </div>
-            </div>
-          </div>
-        </div>
+            <tw_Topnav.logout
+              title={"Cleans up your session token | Ctrl+Alt+q"}
+              onClick={(evt) => {
+                evt.stopPropagation();
+              }}
+            >
+              Logout
+            </tw_Topnav.logout>
+          </tw_Topnav.container>
+        </tw_Layouts.header>
 
         {/*main-layout: layout-grid*/}
-        <div
-          className={`sm:grid sm:landscape:grid flex flex-col ${controllerToggle} custombp:text-landscape`}
-        >
+        <tw_Layouts.main $display={toogleCreate}>
           {/*controller-layout*/}
-          <div
-            className={`rounded-b-lg z-TopLayer mt-1
-						bg-gradient-to-b from-gray-100 via-gray-300 to-gray-400	
-						 ${stateToggle} utility-smooth sticky sm:top-8 customtp:top-4 custombp:top-5  `}
-          >
+          <tw_Layouts.controller $display={toogleCreate}>
             {/* this sticky could be removed */}
-            <div className="sticky">{true && <CreateEvent />}</div>
-          </div>
+            <CreateEvent />
+          </tw_Layouts.controller>
 
           {/*calendar-layout*/}
-          <div className="m-0">
-            {/*calendar*/}
-            <div className="grid gap-4 mt-1 xl:components-calendar sm:mx-4 mx-0 bg-white">
-              <Month events={events1} />
-              <Month events={events2} />
-              <Month events={events2} />
-            </div>
-          </div>
-        </div>
-      </div>
+          {/*calendar*/}
+          <tw_Layouts.board>
+            <Month events={events1} />
+            <Month events={events2} />
+            <Month events={events2} />
+          </tw_Layouts.board>
+        </tw_Layouts.main>
+      </tw_Layouts.app>
     </>
   );
 }
