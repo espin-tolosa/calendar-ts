@@ -162,7 +162,7 @@
     background: darkgray;
   }
   .dayDivHight {
-    @apply min-h-[18vh];
+    @apply min-h-[9vh];
   }
 }
 

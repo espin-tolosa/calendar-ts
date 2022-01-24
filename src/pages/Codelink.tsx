@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import tw from "tailwind-styled-components";
-import { Event } from "@components/Event";
+import { Event } from "@components/Event/main";
 import * as tw_Event from "@components/Event/tw";
 import * as tw_Day from "@components/Day/tw";
 import * as tw_Month from "@components/Month/tw";
