@@ -1,7 +1,26 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import tw from "tailwind-styled-components";
+import { Event } from "@components/Event";
+import { EventsCtx } from "@context/eventsarray";
 
 import { TW_header, TW_dayspot, TW_container } from "@/components/Day/tw";
+
+interface EventProps {
+  date: string;
+}
+const ThrowEventsArray: React.FC<EventProps> = ({ date }): JSX.Element => {
+  const { events } = useContext(EventsCtx);
+
+  return (
+    <>
+      {events
+        .filter((e: string) => e.includes(date))
+        .map((e: string) => (
+          <Event key={e} job={e} />
+        ))}
+    </>
+  );
+};
 
 interface eventType {
   id: number;
