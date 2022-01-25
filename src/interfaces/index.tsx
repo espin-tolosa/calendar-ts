@@ -13,3 +13,5 @@ export interface event {
   start: string;
   end: string;
 }
+
+export type setstate<S> = React.Dispatch<React.SetStateAction<S>>;

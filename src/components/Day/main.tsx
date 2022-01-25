@@ -7,12 +7,7 @@ export const Day = ({ day, events }: { day: number; events: Array<event> }) => {
   const dayPadd = day < 10 ? `0${tempDay}` : tempDay;
 
   //day-off
-  let top = false;
-  if (day <= 5 && day >= 3) {
-    top = true;
-  } else {
-    top = false;
-  }
+  const top = day <= 5 && day >= 3 ? true : false;
 
   //TODO: Create a Context
 
@@ -35,3 +30,23 @@ export const Day = ({ day, events }: { day: number; events: Array<event> }) => {
     </tw_Day.sizedContainer>
   );
 };
+
+/*
+interface EventProps {
+	date: string;
+}
+
+const ThrowEventsArray: React.FC<EventProps> = ({ date }): JSX.Element => {
+	const { events } = useContext(EventsCtx);
+
+	return (
+		<>
+			{events
+				.filter((event) => event.start.includes(date))
+				.map((event) => (
+					<Event {...e}></Event>
+				))}
+		</>
+	);
+};
+*/
