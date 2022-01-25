@@ -6,7 +6,7 @@ export interface Children {
   children: ReactChild | ReactChildren;
 }
 
-export interface eventType {
+export interface event {
   id: number;
   client: string;
   job: string;
