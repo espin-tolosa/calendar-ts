@@ -1,15 +1,10 @@
-import React, { useState, useContext } from "react";
-import { Day } from "@components/Day/main";
+import { useState } from "react";
+import { Month } from "@components/Month/main";
 import { CreateEvent } from "@/components/Controller/main";
-import * as tw_Day from "@components/Day/tw";
-import * as tw_Month from "@components/Month/tw";
 import * as tw_Topnav from "@components/Topnav/tw";
 import * as tw_Layouts from "@/layouts/tw";
-import * as tw_Controller from "@components/Controller/tw";
 import { EventsCtx } from "@context/eventsarray";
-import { giveMeColor } from "@/utils/giveMeColor";
 import * as initEvent from "@/static/initEvents";
-import { event } from "@interfaces/index";
 
 interface EventProps {
   date: string;
@@ -31,25 +26,6 @@ const ThrowEventsArray: React.FC<EventProps> = ({ date }): JSX.Element => {
 };
 */
 export default function App(): JSX.Element {
-  const days = Array.from(Array(30).keys()).map((day) => day + 1);
-
-  const Month = ({ events }: { events: Array<event> }) => {
-    return (
-      /* Month container: header | board */
-      <tw_Month.flexColLayout>
-        {/*month-header*/}
-        <tw_Month.header>February 2022</tw_Month.header>
-        {/*board container*/}
-        <tw_Month.daysBoard>
-          <tw_Month.dayShift $weekday={"sun"} />
-          {days.map((day) => (
-            <Day key={day.toString()} day={day} events={events} />
-          ))}
-        </tw_Month.daysBoard>
-      </tw_Month.flexColLayout>
-    );
-  };
-
   const [toogleCreate, setToogleCreate] = useState(false);
 
   return (

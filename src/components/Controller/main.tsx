@@ -1,11 +1,15 @@
 import { useState } from "react";
+import { useDate } from "./handlers";
+//import { onChange } from "./handlers";
 import * as tw_Controller from "./tw";
 
 export const CreateEvent = () => {
   const [description, setDescription] = useState("");
   const [job, setJob] = useState("");
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
+
+  const [start, onChangeStart, removeBackSlashStart] = useDate();
+  const [end, onChangeEnd, removeBackSlashEnd] = useDate();
+
   return (
     <tw_Controller.form
       action="post"
@@ -40,22 +44,20 @@ export const CreateEvent = () => {
           type="text"
           name="start"
           id="start"
-          onChange={(e) => {
-            setStart(e.target.value);
-          }}
           value={start}
-          placeholder="init date"
+          onChange={onChangeStart}
+          onKeyDown={removeBackSlashStart}
+          placeholder="init: y/m/d"
           title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
         />
         <tw_Controller.date
           type="text"
           name="end"
           id="end"
-          onChange={(e) => {
-            setEnd(e.target.value);
-          }}
           value={end}
-          placeholder="end date"
+          onChange={onChangeEnd}
+          onKeyDown={removeBackSlashEnd}
+          placeholder="end: y/m/d"
           title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
         />
       </tw_Controller.startEnd>
