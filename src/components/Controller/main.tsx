@@ -45,6 +45,7 @@ export const CreateEvent = () => {
           name="start"
           id="start"
           value={start}
+          autoComplete="off"
           onChange={onChangeStart}
           onKeyDown={removeBackSlashStart}
           placeholder="init: y/m/d"
@@ -55,6 +56,7 @@ export const CreateEvent = () => {
           name="end"
           id="end"
           value={end}
+          autoComplete="off"
           onChange={onChangeEnd}
           onKeyDown={removeBackSlashEnd}
           placeholder="end: y/m/d"
