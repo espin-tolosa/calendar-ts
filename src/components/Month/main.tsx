@@ -1,21 +1,21 @@
 import { Day } from "@components/Day/main";
 import { event } from "@/interfaces";
-import * as tw_Month from "./tw";
+import * as StyledMonth from "./tw";
 
 export const Month = ({ events }: { events: Array<event> }) => {
   const days = Array.from(Array(30).keys()).map((day) => day + 1);
   return (
     /* Month container: header | board */
-    <tw_Month.flexColLayout>
+    <StyledMonth.TWflexColLayout>
       {/*month-header*/}
-      <tw_Month.header>February 2022</tw_Month.header>
+      <StyledMonth.TWheader>February 2022</StyledMonth.TWheader>
       {/*board container*/}
-      <tw_Month.daysBoard>
-        <tw_Month.dayShift $weekday={"sun"} />
+      <StyledMonth.TWdaysBoard>
+        <StyledMonth.TWdayShift $weekday={"sun"} />
         {days.map((day) => (
           <Day key={day.toString()} day={day} events={events} />
         ))}
-      </tw_Month.daysBoard>
-    </tw_Month.flexColLayout>
+      </StyledMonth.TWdaysBoard>
+    </StyledMonth.TWflexColLayout>
   );
 };

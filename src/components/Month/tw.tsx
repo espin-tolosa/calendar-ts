@@ -1,7 +1,7 @@
 import tw from "tailwind-styled-components";
 
 // This integrates the header and the board of a month
-export const flexColLayout = tw.div`
+export const TWflexColLayout = tw.div`
 flex flex-col justify-center
 bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100
 shadow-[10px_10px_15px_rgba(0,0,0,0.3)]
@@ -9,7 +9,7 @@ rounded-md
 `;
 
 // The header displays a text as: month year, like February 2022
-export const header = tw.div`
+export const TWheader = tw.div`
 flex justify-center
 font-medium
 px-[2ch] border-b-4 border-gray-400 
@@ -24,12 +24,12 @@ rounded-md
 // max_length: longest month (31 days) starting at very end of the week (sunday)
 // [mon + 28, sun + 31 ] = [28,30] cell days
 // this means that N can take values of [4,5]
-export const daysBoard = tw.div`
+export const TWdaysBoard = tw.div`
 	grid grid-cols-7 overflow-hidden relative last:bg-gray-300 border-b-4 border-b-gray-200 border-x-4
 `;
 
 // Shifts the day where a month starts
-export const dayShift = tw.div<{ $weekday: string }>`
+export const TWdayShift = tw.div<{ $weekday: string }>`
 
 ${({ $weekday }) =>
   ($weekday === "mon" && "month-start-mon") ||
