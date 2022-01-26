@@ -1,6 +1,8 @@
 import { event } from "@/interfaces";
 
-export const month0 = [{ id: 0, start: 0, job: "" }];
+export const month0 = [
+  { id: 0, client: "", job: "", start: "", end: "" },
+] as Array<event>;
 
 export const month1 = [
   { id: 1, client: "John", job: "codelink", start: "1", end: "1" },

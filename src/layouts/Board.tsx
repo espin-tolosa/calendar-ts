@@ -1,12 +1,15 @@
 import { TWboard } from "./tw";
 import { Month } from "@/components/Month/main";
-import * as initEvent from "@/static/initEvents";
+import { month1 } from "@/static/initEvents";
+import { EventsProvider } from "@/context/eventState";
 export const LayoutBoard = () => {
   return (
     <TWboard>
-      <Month events={initEvent.month1} />
-      <Month events={initEvent.month2} />
-      <Month events={initEvent.month1} />
+      <EventsProvider.Provider value={month1}>
+        <Month />
+        <Month />
+        <Month />
+      </EventsProvider.Provider>
     </TWboard>
   );
 };

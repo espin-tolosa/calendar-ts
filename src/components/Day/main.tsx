@@ -1,8 +1,10 @@
+import { useContext } from "react";
+import { EventsProvider } from "@/context/eventState";
 import * as StyledDay from "@components/Day/tw";
-import { event } from "@interfaces/index";
 import { Event } from "@components/Event/main";
 
-export const Day = ({ day, events }: { day: number; events: Array<event> }) => {
+export const Day = ({ day }: { day: number }) => {
+  const events = useContext(EventsProvider);
   const tempDay = String(day);
   const dayPadd = day < 10 ? `0${tempDay}` : tempDay;
 
