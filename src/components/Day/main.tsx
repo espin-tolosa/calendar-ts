@@ -22,31 +22,39 @@ export const Day = ({ day }: { day: number }) => {
       <StyledDay.TWheader>
         <StyledDay.TWdaySpot>{dayPadd}</StyledDay.TWdaySpot>
       </StyledDay.TWheader>
-      {events
-        .filter((event) => event.start === String(day))
-        .map((event) => (
-          <Event key={event.id} {...event}></Event>
-        ))}
+      <ThrowEventsArray day={dayPadd} />
     </StyledDay.TWsizedContainer>
   );
 };
 
-/*
 interface EventProps {
-	date: string;
+  day: string;
 }
 
-const ThrowEventsArray: React.FC<EventProps> = ({ date }): JSX.Element => {
-	const { events } = useContext(EventsCtx);
+const ThrowEventsArray: React.FC<EventProps> = ({ day }): JSX.Element => {
+  const events = useContext(EventsProvider);
 
-	return (
-		<>
-			{events
-				.filter((event) => event.start.includes(date))
-				.map((event) => (
-					<Event {...e}></Event>
-				))}
-		</>
-	);
+  return (
+    <>
+      {events
+        .filter((event) => event.start === day)
+        .map((event) => (
+          <Event key={event.id} {...event}></Event>
+        ))}
+    </>
+  );
 };
-*/
+
+const ThrowEventsArray2 = ({ day }: { day: string }) => {
+  const events = useContext(EventsProvider);
+
+  return (
+    <>
+      {events
+        .filter((event) => event.start === day)
+        .map((event) => (
+          <Event key={event.id} {...event}></Event>
+        ))}
+    </>
+  );
+};
