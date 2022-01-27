@@ -4,11 +4,15 @@ import { month1 } from "@/static/initEvents";
 import { EventsProvider } from "@/context/eventState";
 import { useBoardScroll } from "@/hooks/useBoardScroll";
 import { useLayoutEffect } from "react";
+import { isNullOrUndefined } from "util";
 
 export const LayoutBoard = () => {
   const monthKeys = useBoardScroll({ initialLength: 1 });
   useLayoutEffect(() => {
-    document.getElementById("Present").scrollIntoView();
+    const top = document.getElementById("Present");
+    if (top) {
+      top.scrollIntoView();
+    }
   }, []);
   //*--------------------------*/
   return (
