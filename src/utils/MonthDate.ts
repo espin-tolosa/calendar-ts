@@ -5,7 +5,7 @@ import {
   GetLastDayMonth,
   GetDate,
   ToFormattedMonth,
-} from "../services/Date";
+} from "@/utils/Date";
 
 export const WeekDays = {
   Monday: 7,
@@ -17,12 +17,12 @@ export const WeekDays = {
   Sunday: 6,
 };
 
-export function useMonthDate(year, month) {
+export function useMonthDate(year: number, month: number) {
   const newDate = recomputeDates(year, month);
   return useState(newDate);
 }
 
-export function recomputeDates(year, month) {
+export function recomputeDates(year: number, month: number) {
   const date = GetDate(year, month);
   const daysOfMonth = GetLastDayMonth(date);
   const monthDayKey = GetMonthDayKey(date);
@@ -34,10 +34,10 @@ export function recomputeDates(year, month) {
 
     dateFormat: ToFormattedMonth(date),
     daysList: createListOfDays(daysOfMonth),
-    padding: WeekDays[monthDayKey],
+    start: String(monthDayKey.toLowerCase()).substring(0, 3),
   };
 }
 
-function createListOfDays(lastDay) {
+function createListOfDays(lastDay: number) {
   return Array.from({ length: lastDay }, (_, i) => i + 1);
 }

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { DateService } from "@/utils/Date";
 
-export function useInitMonths(length?: number) {
+export function useInitMonths(length: number) {
   //Case for one month
-  if (typeof length === "undefined" || length <= 1) {
+  if (length <= 1) {
     return useState([DateService.GetDateNextMonth()]);
   }
 
