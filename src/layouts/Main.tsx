@@ -3,7 +3,7 @@ import { LayoutMaster } from "@/layouts/Master";
 import { LayoutHeader } from "@/layouts/Header";
 import * as tw_Layouts from "@/layouts/tw";
 
-const initState = { display: true };
+const initState = { display: false };
 
 function reducer(state: { display: boolean }) {
   return { display: !state.display };

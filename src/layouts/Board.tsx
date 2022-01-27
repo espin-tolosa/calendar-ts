@@ -10,9 +10,23 @@ export const LayoutBoard = () => {
   const monthKeys = useBoardScroll({ initialLength: 1 });
 
   useLayoutEffect(() => {
-    const top = document.getElementById("Present");
-    top && top.scrollIntoView();
+    setTimeout(() => {
+      const top = document.getElementById("Present");
+      top &&
+        top.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+    }, 100);
   }, []);
+  //useLayoutEffect(() => {
+  //  const top = document.getElementById("Present");
+  //  setTimeout(() => {
+  //    const coord = top?.getBoundingClientRect();
+  //    console.log(coord?.y);
+  //    window.scroll(0, coord?.y);
+  //  }, 1000);
+  //}, []);
   //*--------------------------*/
   return (
     <TWboard>
