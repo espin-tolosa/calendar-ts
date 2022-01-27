@@ -2,13 +2,13 @@ import { Day } from "@components/Day/main";
 import { event } from "@/interfaces";
 import * as StyledMonth from "./tw";
 
-export const Month = () => {
+export const Month = ({ year, month }: { year: number; month: number }) => {
   const days = Array.from(Array(30).keys()).map((day) => day + 1);
   return (
     /* Month container: header | board */
     <StyledMonth.TWflexColLayout>
       {/*month-header*/}
-      <StyledMonth.TWheader>February 2022</StyledMonth.TWheader>
+      <StyledMonth.TWheader>{`${month} ${year}`}</StyledMonth.TWheader>
       {/*board container*/}
       <StyledMonth.TWdaysBoard>
         <StyledMonth.TWdayShift $weekday={"sun"} />

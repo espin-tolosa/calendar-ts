@@ -1,13 +1,11 @@
-function zeroPad(num: number, places = 2) {
+function zeroPad(num, places = 2) {
   return String(num).padStart(places, "0");
 }
-
-type Idt = globalThis.Date;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Interface for Javascript Date API
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-export function GetDate(y?: number, m?: number, d?: number) {
+export function GetDate(y, m, d) {
   if (
     typeof y !== "undefined" &&
     typeof m !== "undefined" &&
@@ -25,74 +23,61 @@ export function GetDate(y?: number, m?: number, d?: number) {
   }
 }
 
-export function GetDateNextMonth(year?: number, month?: number) {
-  const dt_new = GetDate(year, Number(month) + 1);
+export function GetDateNextMonth({ year, month } = {}) {
+  const dt_new = GetDate(year, month + 1);
   const y_next = GetYear(dt_new);
   const m_next = GetMonth(dt_new);
   return { year: y_next, month: m_next };
 }
 
-export function GetLastDayMonth(dt: Idt) {
+export function GetLastDayMonth(dt) {
   /*user Input Jan = 1*/
   return GetDay(new Date(GetYear(dt), GetMonth(dt), 0));
 }
 
-export function GetDay(dt: Idt) {
+export function GetDay(dt) {
   return dt.getDate();
 }
 
-export function GetMonth(dt: Idt) {
+export function GetMonth(dt) {
   return 1 + dt.getMonth();
 }
-export function GetDayPad(dt: any) {
+export function GetDayPad(dt) {
   return zeroPad(dt.getDate());
 }
 
-export function GetMonthPad(dt: Idt) {
+export function GetMonthPad(dt) {
   return zeroPad(1 + dt.getMonth());
 }
 
-export function GetYear(dt: Idt) {
+export function GetYear(dt) {
   return dt.getFullYear();
 }
 
-export function FormatDate(dt: Idt) {
+export function FormatDate(dt) {
   /*return a Y-M-D used as a date value | output example: "2021/00/01" */
   return `${GetYear(dt)}-${zeroPad(GetMonth(dt))}-${zeroPad(GetDay(dt))}`;
 }
 
-export function GetMonthDayKey(dt: Idt) {
+export function GetMonthDayKey(dt) {
   /*return a string in en-GB format | output example: "Monday, 21 June 2021" */
-  //const options = { weekday: "long" };
-  //return dt.toLocaleDateString("en-GB", options);
-  return Intl.DateTimeFormat("en-GB", {
-    weekday: "long",
-  }).format(dt);
+  const options = { weekday: "long" };
+  return dt.toLocaleDateString("en-GB", options);
 }
-export function ToFormattedMonth(dt: Idt) {
+export function ToFormattedMonth(dt) {
   /*return a string in en-GB format | output example: "Monday, 21 June 2021" */
-  //const options = { year: "numeric", month: "long" };
-  //return dt.toLocaleDateString("en-GB", options);
-  return Intl.DateTimeFormat("en-GB", {
-    year: "numeric",
-    month: "long",
-  }).format(dt);
+  const options = { year: "numeric", month: "long" };
+  return dt.toLocaleDateString("en-GB", options);
 }
-export function ToFormattedDate(dt: Idt) {
+export function ToFormattedDate(dt) {
   /*return a string in en-GB format | output example: "Monday, 21 June 2021" */
-  // const options = {
-  //   weekday: "long",
-  //   year: "numeric",
-  //   month: "long",
-  //  day: "numeric",
-  //};
-  //return dt.toLocaleDateString("en-GB", options);
-  return Intl.DateTimeFormat("en-GB", {
+  const options = {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
-  }).format(dt);
+  };
+  return dt.toLocaleDateString("en-GB", options);
 }
 
 export const DateService = {

@@ -7,7 +7,7 @@ Still there is a part of this feature that is not implemented and corresponds to
 this requires JS, hasta ahora solamente el CSS ha sido incorporado.
 */
 export const TWsizedContainer = tw.div<{ $top: boolean }>`
-	landscape:min-h-[18vh] portrait:min-h-[8vh] transition-colors outline-1 outline-slate-100 border-x-gray-200 border-x-2 border-b-2
+	landscape:min-h-[15vh] portrait:min-h-[8vh] transition-colors outline-1 outline-slate-100 border-x-gray-200 border-x-2 border-b-2
 
 	${({ $top }) =>
     ($top && "bg-gray-300 z-Dayoff bg-opacity-50 active:bg-gray-300 ") ||
