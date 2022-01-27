@@ -10,6 +10,7 @@ export const LayoutBoard = () => {
   const monthKeys = useBoardScroll({ initialLength: 1 });
 
   useLayoutEffect(() => {
+    window.scroll(0, 0);
     setTimeout(() => {
       const top = document.getElementById("Present");
       top &&

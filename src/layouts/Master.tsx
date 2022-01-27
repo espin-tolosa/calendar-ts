@@ -5,6 +5,7 @@ interface display {
   display: boolean;
 }
 export const LayoutMaster = ({ display }: display) => {
+  console.log("passing display", display);
   return (
     <tw_Layouts.TWmain $display={display}>
       <LayoutController display={display} />
