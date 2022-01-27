@@ -25,5 +25,5 @@ export const TWboard = tw.div`
 	grid gap-4 mt-1 xl:components-calendar sm:mx-4 mx-0 bg-white
 `;
 export const TWheader = tw.div`
-	sticky z-TopLayer top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-100
+	sticky z-TopLayer top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-400
 `;

@@ -19,7 +19,7 @@ export const WeekDays = {
 
 export function useMonthDate(year: number, month: number) {
   const newDate = recomputeDates(year, month);
-  return useState(newDate);
+  return useState(newDate)[0];
 }
 
 export function recomputeDates(year: number, month: number) {

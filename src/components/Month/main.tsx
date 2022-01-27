@@ -1,19 +1,27 @@
-import { Day } from "@components/Day/main";
-import { useMonthDate } from "@/hooks/useMonthDate";
-import { event } from "@/interfaces";
-import * as StyledMonth from "./tw";
 import { useEffect } from "react";
+import { useMonthDate } from "@/hooks/useMonthDate";
+import { Day } from "@components/Day/main";
+import * as StyledMonth from "./tw";
 
-export const Month = ({ year, month }: { year: number; month: number }) => {
-  const [date, setDate] = useMonthDate(year, month);
+export const Month = ({
+  time,
+  year,
+  month,
+}: {
+  time: string;
+  year: number;
+  month: number;
+}) => {
+  const date = useMonthDate(year, month);
   useEffect(() => {
     console.log(date.daysList);
   }, []);
   return (
-    /* Month container: header | board */
     <StyledMonth.TWflexColLayout>
+      <div id={time} className="text-transparent h-0"></div>
       {/*month-header*/}
       <StyledMonth.TWheader>{date.dateFormat}</StyledMonth.TWheader>
+
       {/*board container*/}
       <StyledMonth.TWdaysBoard>
         <StyledMonth.TWdayShift $weekday={date.start} />
@@ -22,5 +30,6 @@ export const Month = ({ year, month }: { year: number; month: number }) => {
         ))}
       </StyledMonth.TWdaysBoard>
     </StyledMonth.TWflexColLayout>
+    /* Month container: header | board */
   );
 };
