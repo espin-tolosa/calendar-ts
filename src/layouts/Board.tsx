@@ -8,11 +8,10 @@ import { isNullOrUndefined } from "util";
 
 export const LayoutBoard = () => {
   const monthKeys = useBoardScroll({ initialLength: 1 });
+
   useLayoutEffect(() => {
     const top = document.getElementById("Present");
-    if (top) {
-      top.scrollIntoView();
-    }
+    top && top.scrollIntoView();
   }, []);
   //*--------------------------*/
   return (
