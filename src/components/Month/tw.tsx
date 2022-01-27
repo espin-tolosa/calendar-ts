@@ -2,7 +2,7 @@ import tw from "tailwind-styled-components";
 
 // This integrates the header and the board of a month
 export const TWflexColLayout = tw.div`
-flex flex-col justify-center
+flex flex-col justify-start
 bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100
 shadow-[10px_10px_15px_rgba(0,0,0,0.3)]
 rounded-md 

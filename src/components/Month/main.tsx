@@ -1,5 +1,5 @@
 import { Day } from "@components/Day/main";
-import { useMonthDate } from "@/utils/MonthDate";
+import { useMonthDate } from "@/hooks/useMonthDate";
 import { event } from "@/interfaces";
 import * as StyledMonth from "./tw";
 import { useEffect } from "react";
