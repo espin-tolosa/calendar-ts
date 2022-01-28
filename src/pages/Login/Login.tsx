@@ -2,7 +2,7 @@ import { useSetLogged } from "@/hooks/useToken";
 import { useForm } from "react-hook-form";
 import { TWloginButton, TWloginForm, TWloginInput, TWloginWrapper } from "./tw";
 
-export default function Login(props: any) {
+export default function Login() {
   const {
     register,
     handleSubmit,
