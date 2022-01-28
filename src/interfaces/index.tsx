@@ -2,6 +2,10 @@ import { ReactChildren, ReactChild } from "react";
 
 export type Date = string;
 
+export interface objectKeys<V> {
+  [key: string]: V;
+}
+
 export interface Children {
   children: ReactChild | ReactChildren;
 }
