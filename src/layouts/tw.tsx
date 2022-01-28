@@ -1,7 +1,7 @@
 import tw from "tailwind-styled-components";
 
 export const TWapp = tw.div`
-	select-none box-border font-roboto font-extra md:text-base sm:text-xs text-xs custombp:text-xs customtp:text-portrait
+	select-none box-border font-roboto font-extra md:text-base sm:text-xs text-xs custombp:text-xs customtp:text-portrait scale-100
 `;
 
 export const TWmain = tw.div<{ $display: boolean }>`
