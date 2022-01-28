@@ -1,3 +1,4 @@
+import { useSetLogged } from "@/hooks/useToken";
 import { useForm } from "react-hook-form";
 import { TWloginButton, TWloginForm, TWloginInput, TWloginWrapper } from "./tw";
 
@@ -9,27 +10,34 @@ export default function Login(props: any) {
   } = useForm();
 
   const fakeLogin = (user: string, password: string) => {
-    if (user === "samuel" && password === "freesolo") {
+    if (
+      (user === "samuel" && password === "freesolo") ||
+      (user === "thomas" && password === "admin") ||
+      (user === "james" && password === "admin")
+    ) {
       return true;
     } else {
       return false;
     }
   };
 
-  function onSubmitLogin(payload: any) {
-    console.log("payload", payload);
-    fakeLogin(payload.user, payload.password) && props.setIsLogged(true);
-    // const data = new FormData();
-    // data.append("json", JSON.stringify(payload));
+  const setSession = useSetLogged();
 
-    // fetch("/backend/routes/login.api.php", {
-    //   method: "POST",
-    //   body: data,
-    // }).then((res) => {
-    //   if (res.status === 200) {
-    //     props.setIsLogged((prev: any) => !prev); //condition to render the Calendar View (ref: ad52)
-    //   }
-    // });
+  function onSubmitLogin(payload: any) {
+    fakeLogin(payload.user, payload.password) && setSession(true);
+    const data = new FormData();
+    data.append("json", JSON.stringify(payload));
+
+    fetch("/backend/routes/login.api.php", {
+      method: "POST",
+      body: data,
+    }).then((res) => {
+      if (res.status === 200) {
+        setSession(true); //condition to render the Calendar View (ref: ad52)
+      } else {
+        console.warn("unable to connect Login");
+      }
+    });
   }
   return (
     <TWloginWrapper>
