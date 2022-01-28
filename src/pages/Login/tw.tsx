@@ -1,7 +1,7 @@
 import tw from "tailwind-styled-components";
 
 export const TWloginWrapper = tw.section`
-flex justify-center items-center h-full
+flex justify-center items-center h-full text-base
 `;
 
 export const TWloginForm = tw.form`
