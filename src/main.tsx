@@ -2,13 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "@/index.css";
 import App from "./App";
-import { UserLoggedContext } from "@/hooks/useToken";
+import { UserSession } from "@/hooks/useUserSession";
 
 ReactDOM.render(
   <React.StrictMode>
-    <UserLoggedContext>
+    <UserSession>
       <App />
-    </UserLoggedContext>
+    </UserSession>
   </React.StrictMode>,
   document.getElementById("root")
 );

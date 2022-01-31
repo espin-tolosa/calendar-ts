@@ -1,8 +1,8 @@
-import { useSetLogged } from "@/hooks/useToken";
+import { useUserSession } from "@/hooks/useUserSession";
 import * as StyledTopnav from "./tw";
 
 export const Topnav = () => {
-  const setSession = useSetLogged();
+  const setSession = useUserSession();
   return (
     <StyledTopnav.TWcontainer>
       {/*left-header*/}
@@ -14,7 +14,7 @@ export const Topnav = () => {
         title={"Cleans up your session token | Ctrl+Alt+q"}
         onClick={(evt) => {
           evt.stopPropagation();
-          setSession(false);
+          setSession.dispatch(false);
         }}
       >
         Logout

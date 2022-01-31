@@ -1,31 +1,10 @@
-import { useContext } from "react";
-
 import "@/index.css";
 import Codelink from "@/pages/Codelink";
 import Login from "@/pages/Login/Login";
-//import { useToken } from "./hooks/useToken";
-//import { CtxLogged } from "./hooks/useToken";
-import { useLogged } from "./hooks/useToken";
+import { useUserSession } from "./hooks/useUserSession";
 
 export default function App() {
-  // const [isLogged, setIsLogged] = useToken();
-  const isLogged = useLogged();
-  //const CtxsetIsLogged = createContext(setIsLogged);
+  const isLogged = useUserSession();
 
-  return !isLogged ? <Login /> : <Codelink />;
+  return !isLogged.value() ? <Login /> : <Codelink />;
 }
-
-/*
-ReactDOM.render(
-  <React.StrictMode>
-    {!isLogged ? (
-      <Login />
-    ) : (
-      <>
-        <Codelink />
-      </>
-    )}
-  </React.StrictMode>,
-  document.getElementById("root")
-);
-*/

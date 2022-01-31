@@ -19,3 +19,6 @@ export interface event {
 }
 
 export type setstate<S> = React.Dispatch<React.SetStateAction<S>>;
+
+export type children = { children: ReactChild | ReactChildren };
+export type composition = React.FC<children>;
