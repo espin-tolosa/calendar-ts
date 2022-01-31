@@ -19,4 +19,4 @@ export const TWheader = tw.div`
 	day-header flex justify-start bg-gray-100 px-[1ch] py-px border-y-2 border-b-gray-300`;
 
 export const TWdaySpot = tw.div`
-	flex justify-center items-center px-4 w-[1.6rem] rounded-full bg-gray-200`;
+	flex justify-center items-center px-4 w-[1.6rem] rounded-full bg-white`;
