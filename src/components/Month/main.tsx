@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useMonthDate } from "@/hooks/useMonthDate";
-import { Day } from "@components/Day/main";
+import { IDay } from "@components/Day/main";
 import * as StyledMonth from "./tw";
+import { EventsThrower } from "../EventsThrower/main";
 
 export const Month = ({
   time,
@@ -26,7 +27,9 @@ export const Month = ({
       <StyledMonth.TWdaysBoard>
         <StyledMonth.TWdayShift $weekday={date.start} />
         {date.daysList.map((day) => (
-          <Day key={day.toString()} day={day} />
+          <IDay key={day.toString()} daynumber={day}>
+            <EventsThrower day={day.toString()} />
+          </IDay>
         ))}
       </StyledMonth.TWdaysBoard>
     </StyledMonth.TWflexColLayout>

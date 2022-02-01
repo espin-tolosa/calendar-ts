@@ -4,7 +4,7 @@ import Login from "@/pages/Login/Login";
 import { useUserSession } from "./hooks/useUserSession";
 
 export default function App() {
-  const isLogged = useUserSession();
+  const userSession = useUserSession();
 
-  return !isLogged.value() ? <Login /> : <Codelink />;
+  return !userSession.value() ? <Login /> : <Codelink />;
 }
