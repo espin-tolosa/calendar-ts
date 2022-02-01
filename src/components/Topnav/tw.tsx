@@ -1,11 +1,11 @@
 import tw from "tailwind-styled-components";
 
 export const TWcontainer = tw.div`
-	flex justify-between items-center font-extra
+	font-extrabold text-lg flex justify-between items-center
 `;
 
 export const TWlogo = tw.div`
-	sm:ml-28 ml-2 overflow-visible whitespace-nowrap portrait:mr-2
+	sm:ml-28 ml-2 overflow-visible whitespace-nowrap portrait:mr-2 text-white
 `;
 
 export const TWtitle = tw.div`
@@ -13,5 +13,5 @@ export const TWtitle = tw.div`
 `;
 
 export const TWlogout = tw.button`
-	border-2 hover:bg-transparent mr-4 border-gray-200 hover:border-gray-700 hover:text-black rounded-full px-4 bg-gray-200 text-gray-700 transition-colors active:bg-indigo-500
+f	text-white hover:text-black border-2 hover:bg-gray-50 my-0.5 mr-4 border-gray-50 hover:border-transparent rounded-full px-4 bg-transparent transition-colors
 `;

@@ -1,7 +1,7 @@
 import tw from "tailwind-styled-components";
 
 export const TWapp = tw.div`
-	select-none box-border font-roboto font-extra md:text-base sm:text-xs text-xs custombp:text-xs customtp:text-portrait scale-100
+	select-none box-border font-roboto font-extra md:text-base sm:text-xs text-xs custombp:text-xs customtp:text-portrait scale-100 bg-gray-50
 `;
 
 export const TWmain = tw.div<{ $display: boolean }>`
@@ -18,14 +18,14 @@ ${({ $display }) =>
   (!$display && "utility-smooth-display-off") ||
   ""}	
 rounded-b-lg z-TopLayer mt-1
-bg-gradient-to-b from-gray-100 via-gray-300 to-gray-400	
-utility-smooth sticky sm:top-8 customtp:top-4 custombp:top-5
+bg-gray-50
+utility-smooth sticky sm:top-11 customtp:top-4 custombp:top-5
 `;
 export const TWboard = tw.div`
-	grid gap-4 mt-1 xl:components-calendar sm:mx-4 mx-0 bg-white
+	grid gap-1 mt-1 xl:components-calendar sm:ml-2 mx-0 bg-white
 `;
 export const TWheader = tw.div`
-	sticky z-TopLayer top-0 bg-gradient-to-r from-gray-400 via-gray-100 to-gray-400
+	sticky z-50 top-0 bg-gradient-to-r from-palette-lm via-gray-50 to-palette-lm border-b-2 border-gray-100
 `;
 
 // Login Form

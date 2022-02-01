@@ -7,16 +7,16 @@ Still there is a part of this feature that is not implemented and corresponds to
 this requires JS, hasta ahora solamente el CSS ha sido incorporado.
 */
 export const TWsizedContainer = tw.div<{ $top: boolean }>`
-	landscape:min-h-[15vh] portrait:min-h-[8vh] transition-colors outline-1 outline-slate-100 border-x-gray-200 border-x-2 border-b-2
+	landscape:min-h-[15vh] portrait:min-h-[8vh] transition-colors outline-1 outline-slate-100
 
 	${({ $top }) =>
-    ($top && "bg-gray-300 z-Dayoff bg-opacity-50 active:bg-gray-300 ") ||
-    (!$top && "bg-white day active:bg-green-200") ||
+    ($top && "bg-gray-100 z-Dayoff bg-opacity-50 cursor-not-allowed ") ||
+    (!$top && "bg-white day active:bg-green-200 cursor-pointer") ||
     ""}	
 `;
 
 export const TWheader = tw.div`
-	day-header flex justify-start bg-gray-100 px-[1ch] py-px border-y-2 border-b-gray-300`;
+	font-light text-sm border-y-current day-header flex sm:justify-start justify-center bg-gray-100`;
 
 export const TWdaySpot = tw.div`
-	flex justify-center items-center px-4 w-[1.6rem] rounded-full bg-white`;
+	flex justify-center items-center w-[1.6rem] sm:rounded-full rounded-r-full bg-white m-1`;

@@ -3,8 +3,8 @@ import tw from "tailwind-styled-components";
 // This integrates the header and the board of a month
 export const TWflexColLayout = tw.div`
 flex flex-col justify-start
-bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100
-shadow-[10px_10px_15px_rgba(0,0,0,0.3)]
+bg-white
+shadow-[5px_5px_5px_rgba(0,0,0,0.3)]
 rounded-md 
 `;
 
@@ -12,9 +12,10 @@ rounded-md
 export const TWheader = tw.div`
 flex justify-center
 font-medium
-px-[2ch] border-b-4 border-gray-400 
-bg-gray-300
-rounded-md 
+text-black
+px-[2ch] border-b-1 border-gray-400 
+bg-gradient-to-r from-palette-lm via-white to-palette-lm
+rounded-t-md
 `;
 
 // The gridBoard forces to display the days in a grid of 7xN being N in range: [4,5]
@@ -25,7 +26,7 @@ rounded-md
 // [mon + 28, sun + 31 ] = [28,30] cell days
 // this means that N can take values of [4,5]
 export const TWdaysBoard = tw.div`
-	grid grid-cols-7 overflow-hidden relative last:bg-gray-300 border-b-4 border-b-gray-200 border-x-4
+	grid grid-cols-7 overflow-hidden relative last:bg-gray-300 gap-[1px] border-b-[1px] border-gray-300
 `;
 
 // Shifts the day where a month starts

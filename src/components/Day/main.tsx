@@ -1,5 +1,6 @@
 import * as StyledDay from "@components/Day/tw";
 import { EventsThrower } from "@components/EventsThrower/main";
+import { memo } from "react";
 
 export const Day = ({ daynumber }: { daynumber: number }) => {
   const tempDay = String(daynumber);
@@ -50,3 +51,10 @@ export function IDay({ children, daynumber }: IDayProps) {
     </StyledDay.TWsizedContainer>
   );
 }
+
+export const MemoIDay = memo(IDay, (prevProps, nextProps) => {
+  console.warn("Memo day");
+  console.log("prevProps", prevProps);
+  console.log("nextProps", nextProps);
+  return false;
+});

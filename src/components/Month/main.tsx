@@ -1,6 +1,6 @@
 import { useEffect, memo } from "react";
 import { useMonthDate } from "@/hooks/useMonthDate";
-import { IDay } from "@components/Day/main";
+import { MemoIDay } from "@components/Day/main";
 import * as StyledMonth from "./tw";
 import { EventsThrower } from "../EventsThrower/main";
 
@@ -27,9 +27,9 @@ const Month = ({
       <StyledMonth.TWdaysBoard>
         <StyledMonth.TWdayShift $weekday={date.start} />
         {date.daysList.map((day) => (
-          <IDay key={day.toString()} daynumber={day}>
+          <MemoIDay key={day.toString()} daynumber={day}>
             <EventsThrower day={day.toString()} />
-          </IDay>
+          </MemoIDay>
         ))}
       </StyledMonth.TWdaysBoard>
     </StyledMonth.TWflexColLayout>
@@ -37,4 +37,9 @@ const Month = ({
   );
 };
 
-export const MemoMonth = memo(Month);
+export const MemoMonth = memo(Month, (prevProps, nextProps) => {
+  console.warn("Memo month");
+  console.log("prevProps", prevProps);
+  console.log("nextProps", nextProps);
+  return false;
+});
