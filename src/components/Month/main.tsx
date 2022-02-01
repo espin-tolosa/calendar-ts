@@ -1,10 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, memo } from "react";
 import { useMonthDate } from "@/hooks/useMonthDate";
 import { IDay } from "@components/Day/main";
 import * as StyledMonth from "./tw";
 import { EventsThrower } from "../EventsThrower/main";
 
-export const Month = ({
+const Month = ({
   time,
   year,
   month,
@@ -36,3 +36,5 @@ export const Month = ({
     /* Month container: header | board */
   );
 };
+
+export const MemoMonth = memo(Month);

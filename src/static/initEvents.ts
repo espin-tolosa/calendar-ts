@@ -10,6 +10,7 @@ export const month1 = [
   { id: 4, client: "Marcel", job: "Starting 2 - 1", start: "12", end: "01" },
   { id: 3, client: "Bob", job: "Starting 3 - 1", start: "21", end: "01" },
   { id: 4, client: "Cristine", job: "Starting 4 - 1", start: "30", end: "01" },
+  { id: 5, client: "Raphael", job: "Starting 5 - 1", start: "14", end: "14" },
 ] as Array<event>;
 export const month2 = [
   { id: 3, client: "Xin", job: "Starting 1 - 2", start: "1", end: "1" },
