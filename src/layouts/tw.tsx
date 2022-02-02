@@ -25,7 +25,7 @@ export const TWboard = tw.div`
 	grid gap-1 mt-1 xl:components-calendar sm:ml-2 mx-0 bg-white
 `;
 export const TWheader = tw.div`
-	sticky z-50 top-0 bg-gradient-to-r from-palette-lm via-gray-50 to-palette-lm border-b-2 border-gray-100
+	sticky z-50 top-0 bg-gradient-to-r from-palette-lm via-gray-50 to-palette-lm outline outline-gray-100
 `;
 
 // Login Form

@@ -1,7 +1,7 @@
 import tw from "tailwind-styled-components";
 
 export const TWcontainer = tw.div`
-	font-extrabold text-lg flex justify-between items-center
+	sm:font-extrabold sm:text-lg font-extrabold text-sm flex justify-between items-center
 `;
 
 export const TWlogo = tw.div`
@@ -13,5 +13,5 @@ export const TWtitle = tw.div`
 `;
 
 export const TWlogout = tw.button`
-f	text-white hover:text-black border-2 hover:bg-gray-50 my-0.5 mr-4 border-gray-50 hover:border-transparent rounded-full px-4 bg-transparent transition-colors
+	text-white hover:text-black border-2 hover:bg-gray-50 my-0.5 mr-4 border-gray-50 hover:border-transparent rounded-full px-4 bg-transparent transition-colors
 `;
