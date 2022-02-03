@@ -21,16 +21,16 @@ rounded-b-lg z-TopLayer mt-1
 customtp:h-screen
 customtp:bg-gradient-to-b
 from-slate-100
-via-slate-50
-to-[rgba(241, 245, 249, 0.8)]
-overflow-hidden
-utility-smooth sticky sm:top-20 customtp:top-8 custombp:top-10
+via-[rgba(241,245,249,0.8)]
+to-transparent
+overscroll-contain
+utility-smooth sticky sm:top-20 customtp:top-[31px] custombp:top-10
 `;
 export const TWboard = tw.div`
 	grid gap-1 mt-1 xl:components-calendar sm:ml-2 mx-0 bg-white
 `;
 export const TWheader = tw.div`
-	sticky z-50 top-0 bg-gradient-to-r from-slate-900 via-slate-50 to-slate-900 outline outline-slate-50 outline-4
+	sticky z-50 top-0 bg-gradient-to-r from-slate-900 via-slate-50 to-slate-900 outline outline-white outline-4 overscroll-contain
 `;
 
 // Login Form
