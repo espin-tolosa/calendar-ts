@@ -23,6 +23,12 @@
   input:focus {
     outline: 1px solid gray;
   }
+  @media print {
+    body,
+    html {
+      margin-top: 0 !important;
+    }
+  }
 }
 
 /* Buttons used in the form */
