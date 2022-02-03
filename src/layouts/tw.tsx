@@ -18,11 +18,11 @@ ${({ $display }) =>
   (!$display && "utility-smooth-display-off") ||
   ""}	
 rounded-b-lg z-TopLayer mt-1
-customtp: h-screen
+customtp:h-screen
 customtp:bg-gradient-to-b
 from-slate-100
-via-slate-100
-to-transparent
+via-slate-50
+to-[rgba(241, 245, 249, 0.8)]
 
 utility-smooth sticky sm:top-20 customtp:top-8 custombp:top-10
 `;
