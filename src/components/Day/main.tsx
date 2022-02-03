@@ -59,9 +59,10 @@ export function IDay({ children, daynumber }: IDayProps) {
   );
 }
 
-export const MemoIDay = memo(IDay, (prevProps, nextProps) => {
-  console.warn("Memo day");
-  console.log("prevProps", prevProps);
-  console.log("nextProps", nextProps);
-  return false;
-});
+export const MemoIDay = memo(IDay);
+
+//  console.warn("Memo day");
+//console.log("prevProps", prevProps);
+// console.log("nextProps", nextProps);
+//return false;
+//});

@@ -37,9 +37,9 @@ const Month = ({
   );
 };
 
-export const MemoMonth = memo(Month, (prevProps, nextProps) => {
-  console.warn("Memo month");
-  console.log("prevProps", prevProps);
-  console.log("nextProps", nextProps);
-  return false;
-});
+export const MemoMonth = memo(Month);
+//console.warn("Memo month");
+//console.log("prevProps", prevProps);
+//console.log("nextProps", nextProps);
+//return false;
+//});
