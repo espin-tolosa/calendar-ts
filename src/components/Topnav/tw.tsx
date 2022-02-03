@@ -13,5 +13,5 @@ export const TWtitle = tw.div`
 `;
 
 export const TWlogout = tw.button`
-	text-white hover:text-black border-2 hover:bg-gray-50 my-0.5 mr-4 border-gray-50 hover:border-transparent rounded-full px-4 bg-transparent transition-colors
+	text-white hover:text-black border-2 hover:bg-slate-50 my-0.5 mr-4 border-slate-50 hover:border-transparent rounded-full px-4 bg-transparent transition-colors
 `;

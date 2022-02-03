@@ -144,7 +144,7 @@
 
 @layer components {
   .components-controller-on {
-    grid-template-columns: repeat(2, minmax(var(100px), 1fr));
+    grid-template-columns: repeat(2, minmax(var(200px), 1fr));
     grid-template-columns: minmax(12ch, 30ch) 1fr;
   }
   .components-controller-off {
@@ -159,7 +159,8 @@
 @layer components {
   .day:hover .day-header,
   .day.hover .day-header {
-    background: darkgray;
+    background: rgb(203, 213, 225);
+    transition: background-color 0.3s ease;
   }
   .dayDivHight {
     @apply min-h-[9vh];
@@ -266,5 +267,28 @@
   .has-value {
     background: white;
     color: gray;
+  }
+}
+
+@layer utilities {
+  .cursor-test {
+    /*cursor: url(http://www.javascriptkit.com/dhtmltutors/cursor-hand.gif), auto;*/
+    cursor: no-drop;
+  }
+}
+
+@layer utilities {
+  .headers-gradient {
+    background: rgb(2, 0, 36);
+    background: linear-gradient(
+      90deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgba(255, 255, 255, 1) 40%,
+      rgba(255, 255, 255, 1) 60%,
+      rgba(2, 0, 36, 1) 100%
+    );
+  }
+  .header-bg {
+    background: red;
   }
 }

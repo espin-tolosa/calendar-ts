@@ -17,7 +17,7 @@ export const TWtextContent = tw.div<{ $cells: number }>`
 `;
 
 export const TWextend = tw.div<{ $cells: number }>`
-	absolute text-transparent	cursor-copy	min-w-[7.14%]	z-ExtendEvent
+	absolute text-transparent	cursor-e-resize	min-w-[7.14%]	z-ExtendEvent
 	${({ $cells }) =>
     ($cells === 1 && "extend-event-1") ||
     ($cells === 2 && "extend-event-2") ||

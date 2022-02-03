@@ -4,7 +4,7 @@ import tw from "tailwind-styled-components";
 export const TWflexColLayout = tw.div`
 flex flex-col justify-start
 bg-white
-shadow-[5px_5px_5px_rgba(0,0,0,0.3)]
+shadow-[5px_5px_5px_rgb(148,163,184)]
 rounded-md 
 `;
 
@@ -13,8 +13,8 @@ export const TWheader = tw.div`
 flex justify-center
 font-medium
 text-black
-px-[2ch] border-b-1 border-gray-400 
-bg-gradient-to-r from-palette-lm via-white to-palette-lm
+px-[2ch] border-b-2 border-slate-200 
+bg-gradient-to-r from-slate-200 via-slate-50 to-slate-200
 rounded-t-md
 `;
 
@@ -26,7 +26,7 @@ rounded-t-md
 // [mon + 28, sun + 31 ] = [28,30] cell days
 // this means that N can take values of [4,5]
 export const TWdaysBoard = tw.div`
-	grid grid-cols-7 overflow-hidden relative last:bg-gray-300 gap-[1px] border-b-[1px] border-gray-300
+	grid grid-cols-7 overflow-hidden relative bg-slate-300 gap-[1px] border-b-[1px] border-slate-300
 `;
 
 // Shifts the day where a month starts
