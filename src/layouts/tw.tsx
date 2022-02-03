@@ -23,7 +23,7 @@ customtp:bg-gradient-to-b
 from-slate-100
 via-slate-50
 to-[rgba(241, 245, 249, 0.8)]
-
+overflow-hidden
 utility-smooth sticky sm:top-20 customtp:top-8 custombp:top-10
 `;
 export const TWboard = tw.div`
