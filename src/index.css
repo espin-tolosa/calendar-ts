@@ -96,6 +96,9 @@
   .extend-event-7 {
     margin-left: calc(7 * 100% / 7 - 50% / 7);
   }
+  .extend-event-8 {
+    margin-left: calc(8 * 100% / 7 - 50% / 7);
+  }
 
   .event-span-1 {
     width: calc(1 * 100% / 7 - 0.3rem);
@@ -118,6 +121,9 @@
   .event-span-7 {
     width: calc(7 * 100% / 7 - 0.3rem);
   }
+  .event-span-8 {
+    width: calc(8 * 100% / 7 - 0.3rem);
+  }
 
   .extend-span-1 {
     min-width: calc(1 * 100% / 7 - 1 * 50% / 7);
@@ -139,6 +145,9 @@
   }
   .extend-span-7 {
     min-width: calc(7 * 100% / 7 - 7 * 50% / 7);
+  }
+  .extend-span-8 {
+    min-width: calc(8 * 100% / 7 - 8 * 50% / 7);
   }
 }
 

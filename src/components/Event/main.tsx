@@ -7,13 +7,11 @@ import { DateService } from "@/utils/Date";
 
 export const Event = (event: event) => {
   const { setStart, setEnd } = useContext(SetDatesCtx);
-  console.log("Start", event.start);
-  console.log("End  ", event.end);
   const dtSstart = new Date(event.start);
   const dtEnd = new Date(event.end);
   const cells = Math.min(
     1 + DateService.DaysFromStartToEnd(dtSstart, dtEnd),
-    7
+    8 //TODO
   );
 
   const hOnClick = () => {
@@ -35,7 +33,7 @@ export const Event = (event: event) => {
         {`${event.client}: ${event.job}`}
       </StyledEvent.TWtextContent>
       <StyledEvent.TWextend
-        $cells={event.id}
+        $cells={cells}
         onMouseDownCapture={() => {
           console.log("extend event:", event.id);
         }}
