@@ -5,6 +5,7 @@ import { useDate } from "./handlers";
 import * as tw_Controller from "./tw";
 
 export const CreateEvent = () => {
+  const [client, setClient] = useState("");
   const [description, setDescription] = useState("");
   const [job, setJob] = useState("");
 
@@ -45,6 +46,26 @@ export const CreateEvent = () => {
       <tw_Controller.button
         type="submit"
         value="New"
+        title="Testing to new dispatch event"
+        onClick={() => {
+          console.log({ client, job, description, start, end });
+          eventDispatcher({
+            type: "appendarray",
+            payload: [
+              {
+                id: Math.floor(Math.random() * 1000),
+                client: "test client",
+                job,
+                start: "20" + start,
+                end: "20" + end,
+              },
+            ],
+          });
+        }}
+      />
+      <tw_Controller.button
+        type="submit"
+        value="Delete"
         title="Testing to new dispatch event"
         onClick={() => {
           eventDispatcher({

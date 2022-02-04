@@ -3,9 +3,18 @@ import { useContext } from "react";
 import { SetDatesCtx } from "@context/formdata";
 import { giveMeColor } from "@/utils/giveMeColor";
 import { event } from "@interfaces/index";
+import { DateService } from "@/utils/Date";
 
 export const Event = (event: event) => {
   const { setStart, setEnd } = useContext(SetDatesCtx);
+  console.log("Start", event.start);
+  console.log("End  ", event.end);
+  const dtSstart = new Date(event.start);
+  const dtEnd = new Date(event.end);
+  const cells = Math.min(
+    1 + DateService.DaysFromStartToEnd(dtSstart, dtEnd),
+    7
+  );
 
   const hOnClick = () => {
     setStart("2021-08-25" + event.job);
@@ -16,7 +25,7 @@ export const Event = (event: event) => {
       <StyledEvent.TWtextContent
         style={giveMeColor(event.client)}
         key={event.id}
-        $cells={event.id}
+        $cells={cells}
         onMouseDownCapture={() => {
           console.log("Event:", event.job);
         }}

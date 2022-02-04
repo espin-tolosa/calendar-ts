@@ -95,6 +95,18 @@ export function ToFormattedDate(dt: Idt) {
   }).format(dt);
 }
 
+function difference(start: Idt, end: Idt) {
+  const endUTC = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
+  const startUTC = Date.UTC(
+    start.getFullYear(),
+    start.getMonth(),
+    start.getDate()
+  );
+  const day = 1000 * 60 * 60 * 24;
+  console.log("Difference", (endUTC - startUTC) / day);
+  return (endUTC - startUTC) / day;
+}
+
 export const DateService = {
   GetDate: GetDate,
   GetDateNextMonth: GetDateNextMonth,
@@ -104,4 +116,5 @@ export const DateService = {
   GetLastDayMonth: GetLastDayMonth,
   ToFormattedMonth: ToFormattedMonth,
   GetMonthDayKey: GetMonthDayKey,
+  DaysFromStartToEnd: difference,
 };
