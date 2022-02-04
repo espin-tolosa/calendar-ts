@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { EventsProvider } from "@/context/eventState";
 import { Event } from "@components/Event/main";
+import { useEventState } from "@/hooks/useEventsApi";
 
 interface EventProps {
   day: string;
@@ -8,10 +9,11 @@ interface EventProps {
 
 export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
   const events = useContext(EventsProvider);
+  const events2 = useEventState();
 
   return (
     <>
-      {events
+      {events2
         .filter((event) => event.start === day)
         .map((event) => (
           <Event key={event.id} {...event}></Event>

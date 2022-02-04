@@ -1,3 +1,4 @@
+import { useEventDispatch } from "@/hooks/useEventsApi";
 import { useState } from "react";
 import { useDate } from "./handlers";
 //import { onChange } from "./handlers";
@@ -6,6 +7,8 @@ import * as tw_Controller from "./tw";
 export const CreateEvent = () => {
   const [description, setDescription] = useState("");
   const [job, setJob] = useState("");
+
+  const eventDispatcher = useEventDispatch();
 
   const [start, onChangeStart, removeBackSlashStart] = useDate();
   const [end, onChangeEnd, removeBackSlashEnd] = useDate();
@@ -37,6 +40,25 @@ export const CreateEvent = () => {
             "--calendar_width",
             "740px"
           );
+        }}
+      />
+      <tw_Controller.button
+        type="submit"
+        value="New"
+        title="Testing to new dispatch event"
+        onClick={() => {
+          eventDispatcher({
+            type: "appendarray",
+            payload: [
+              {
+                id: 100,
+                client: "dispatch client",
+                job: "testing dispatcher",
+                start: "12",
+                end: "13",
+              },
+            ],
+          });
         }}
       />
       <tw_Controller.startEnd>
