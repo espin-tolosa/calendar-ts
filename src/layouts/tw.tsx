@@ -20,9 +20,9 @@ ${({ $display }) =>
 rounded-b-lg z-TopLayer mt-1
 customtp:h-screen
 customtp:bg-gradient-to-b
-from-slate-100
-via-[rgba(241,245,249,0.8)]
-to-transparent
+customtp:from-slate-100
+customtp:via-[rgba(241,245,249,0.8)]
+customtp:to-transparent
 overscroll-contain
 utility-smooth sticky sm:top-20 customtp:top-[31px] custombp:top-10
 `;

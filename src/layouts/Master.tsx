@@ -4,11 +4,12 @@ import { LayoutBoard } from "@/layouts/Board";
 interface display {
   display: boolean;
 }
-export const LayoutMaster = ({ display }: display) => {
-  console.log("passing display", display);
+import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
+export const LayoutMaster = () => {
+  const { localState } = useLocalUserPreferencesContext();
   return (
-    <tw_Layouts.TWmain $display={display}>
-      <LayoutController display={display} />
+    <tw_Layouts.TWmain $display={localState.displayController}>
+      <LayoutController />
 
       <LayoutBoard />
     </tw_Layouts.TWmain>

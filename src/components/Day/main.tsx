@@ -1,10 +1,10 @@
+import { zeroPadd } from "@/utils/zeroPadd";
 import * as StyledDay from "@components/Day/tw";
 import { EventsThrower } from "@components/EventsThrower/main";
 import { memo, useState } from "react";
 
 export const Day = ({ daynumber }: { daynumber: number }) => {
-  const tempDay = String(daynumber);
-  const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
+  const dayPadd = zeroPadd(daynumber);
 
   //day-off
   const top = daynumber <= 5 && daynumber >= 3 ? true : false;
@@ -13,7 +13,7 @@ export const Day = ({ daynumber }: { daynumber: number }) => {
     <StyledDay.TWsizedContainer
       $top={top}
       onMouseUp={() => {
-        console.log("leaving action at day:", dayPadd);
+        console.log("leaving action at day:", daynumber);
       }}
       onMouseEnter={() => console.log("passing over:", dayPadd)}
     >

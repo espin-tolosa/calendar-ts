@@ -1,23 +1,17 @@
-import { useState, useReducer } from "react";
 import { LayoutMaster } from "@/layouts/Master";
 import { LayoutHeader } from "@/layouts/Header";
 import * as tw_Layouts from "@/layouts/tw";
 
-const initState = { display: false };
-
-function reducer(state: { display: boolean }) {
-  return { display: !state.display };
-}
-
 export const LayoutMain = () => {
-  const [state, dispatch] = useReducer(reducer, initState);
   return (
     <tw_Layouts.TWapp>
       {/*header-layout*/}
-      <LayoutHeader setToogle={dispatch} />
+      <LayoutHeader />
 
       {/*main-layout: layout-grid*/}
-      <LayoutMaster display={state.display} />
+      <LayoutMaster />
     </tw_Layouts.TWapp>
   );
 };
+
+// Note: dispatchLocalState is passed down, so the Reducer function is available there

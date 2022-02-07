@@ -1,7 +1,7 @@
 import tw from "tailwind-styled-components";
 
 export const form = tw.form`
-	flex flex-col gap-2 sm:px-4 custombp:px-1 px-1 bg-slate-200
+	flex flex-col gap-2 sm:px-4 custombp:px-1 px-1 bg-slate-50
 `;
 
 export const button = tw.input`

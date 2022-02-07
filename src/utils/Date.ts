@@ -1,5 +1,11 @@
+import { zeroPadd } from "./zeroPadd";
+
 function zeroPad(num: number, places = 2) {
   return String(num).padStart(places, "0");
+}
+
+function fullYear(yy: number, groundMillenium: number) {
+  return (yy < 100 ? groundMillenium : 0) + yy;
 }
 
 type Idt = globalThis.Date;
@@ -105,6 +111,10 @@ function difference(start: Idt, end: Idt) {
   const day = 1000 * 60 * 60 * 24;
   console.log("Difference", (endUTC - startUTC) / day);
   return (endUTC - startUTC) / day;
+}
+
+function ComposeDate(year: number, month: number, day: number) {
+  return `${fullYear(year, 2000)}-${zeroPadd(month)}-${zeroPadd(day)}`;
 }
 
 export const DateService = {

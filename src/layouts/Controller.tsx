@@ -1,12 +1,11 @@
 import * as tw_Layouts from "@/layouts/tw";
 import { CreateEvent } from "@/components/Controller/main";
 
-interface display {
-  display: boolean;
-}
-export const LayoutController = ({ display }: display) => {
+import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
+export const LayoutController = () => {
+  const { localState } = useLocalUserPreferencesContext();
   return (
-    <tw_Layouts.TWcontroller $display={display}>
+    <tw_Layouts.TWcontroller $display={localState.displayController}>
       <CreateEvent />
     </tw_Layouts.TWcontroller>
   );

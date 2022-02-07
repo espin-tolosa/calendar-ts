@@ -3,8 +3,8 @@ import { useMonthDate } from "@/hooks/useMonthDate";
 import { MemoIDay } from "@components/Day/main";
 import * as StyledMonth from "./tw";
 import { EventsThrower } from "../EventsThrower/main";
+import { zeroPadd } from "@/utils/zeroPadd";
 
-const zeroPadd = (number: number) => (number < 10 ? `0${number}` : `${number}`);
 const keyDate = (year: number, month: number, day: number) =>
   `${year}/${zeroPadd(month)}/${zeroPadd(day)}`;
 
