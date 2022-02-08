@@ -1,6 +1,8 @@
 import { createContext, useContext, useReducer } from "react";
 import { composition } from "@/interfaces";
 
+// The reducer needs to recieve typed strings for limited actions, change: action.type : string by "action1" | "action2" | ...
+
 import {
   UserPreferencesState,
   defaultUserState,
@@ -24,21 +26,6 @@ const getLocalUserState = () => {
   ) as UserPreferencesState;
   //return {displayController: false}
 };
-
-function reducer_Example(state: any, action: any) {
-  let newState;
-  switch (action.type) {
-    case "increase":
-      newState = { counter: state.counter + 1 };
-      break;
-    case "descrease":
-      newState = { counter: state.counter - 1 };
-      break;
-    default:
-      throw new Error();
-  }
-  return newState;
-}
 
 function reducer(state: UserPreferencesState, action: { type: string }) {
   //  console.log("Entering at the reducer");

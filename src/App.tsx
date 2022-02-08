@@ -6,5 +6,10 @@ import { useUserSession } from "./hooks/useUserSession";
 export default function App() {
   const userSession = useUserSession();
 
-  return !userSession.value() ? <Login /> : <Codelink />;
+  {
+    /*this code is forcing enter in the calendar automatically*/
+  }
+  return userSession.value() ? <Login /> : <Codelink />;
 }
+//Correct code:
+//return !userSession.value() ? <Login /> : <Codelink />;

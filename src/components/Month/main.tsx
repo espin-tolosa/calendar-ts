@@ -8,20 +8,13 @@ import { zeroPadd } from "@/utils/zeroPadd";
 const keyDate = (year: number, month: number, day: number) =>
   `${year}/${zeroPadd(month)}/${zeroPadd(day)}`;
 
-const Month = ({
-  time,
-  year,
-  month,
-}: {
+type iMonth = {
   time: string;
   year: number;
   month: number;
-}) => {
+};
+const Month = ({ time, year, month }: iMonth) => {
   const date = useMonthDate(year, month);
-
-  useEffect(() => {
-    console.log(date.daysList);
-  }, []);
 
   return (
     <StyledMonth.TWflexColLayout>

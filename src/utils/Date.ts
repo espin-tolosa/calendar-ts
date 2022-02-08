@@ -109,10 +109,11 @@ function difference(start: Idt, end: Idt) {
     start.getDate()
   );
   const day = 1000 * 60 * 60 * 24;
-  console.log("Difference", (endUTC - startUTC) / day);
   return (endUTC - startUTC) / day;
 }
 
+//convert a triad of numbers representing: year, month, day as: 22,12,01
+//in a string fully formatted as: 2022-12-01
 function ComposeDate(year: number, month: number, day: number) {
   return `${fullYear(year, 2000)}-${zeroPadd(month)}-${zeroPadd(day)}`;
 }
@@ -127,4 +128,5 @@ export const DateService = {
   ToFormattedMonth: ToFormattedMonth,
   GetMonthDayKey: GetMonthDayKey,
   DaysFromStartToEnd: difference,
+  ComposeDate: ComposeDate,
 };

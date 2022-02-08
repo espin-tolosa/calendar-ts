@@ -13,5 +13,3 @@ export const LayoutMain = () => {
     </tw_Layouts.TWapp>
   );
 };
-
-// Note: dispatchLocalState is passed down, so the Reducer function is available there

@@ -12,10 +12,16 @@ ${({ $display }) =>
 sm:grid sm:landscape:grid flex flex-col custombp:text-landscape
 `;
 
+// overflow: hidden;
+// transition-property: max-height;
+// transition-timing-function: ease-in-out;
+// transition-duration: 0.3s;
+
 export const TWcontroller = tw.div<{ $display: boolean }>`
 ${({ $display }) =>
-  ($display && "utility-smooth-display-on") ||
-  (!$display && "utility-smooth-display-off") ||
+  ($display &&
+    "max-h-[95vh] border-2 customtp:max-h-[30vh] custombp:max-h-[88vh]") ||
+  (!$display && "max-h-0") ||
   ""}	
 rounded-b-lg z-TopLayer mt-1
 customtp:h-screen
@@ -24,7 +30,15 @@ customtp:from-slate-100
 customtp:via-[rgba(241,245,249,0.8)]
 customtp:to-transparent
 overscroll-contain
-utility-smooth sticky sm:top-20 customtp:top-[31px] custombp:top-10
+
+overflow-hidden
+transition-[max-height]
+ease-in-out
+duration-500
+
+sticky sm:top-10 customtp:top-[31px] custombp:top-10
+rounded-md
+shadow-[shadow-[5px_5px_5px_rgb(148,163,184)]
 `;
 export const TWboard = tw.div`
 	grid gap-1 mt-1 xl:components-calendar sm:ml-2 mx-0 bg-white
