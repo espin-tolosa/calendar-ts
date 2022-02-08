@@ -22,18 +22,3 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
     </>
   );
 };
-/*
-const ThrowEventsArray2 = ({ day }: { day: string }) => {
-  const events = useContext(EventsProvider);
-
-  return (
-    <>
-      {events
-        .filter((event) => event.start === day)
-        .map((event) => (
-          <Event key={event.id} {...event}></Event>
-        ))}
-    </>
-  );
-};
-*/

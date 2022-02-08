@@ -1,12 +1,9 @@
 import * as StyledEvent from "./tw";
-import { useContext } from "react";
-import { SetDatesCtx } from "@context/formdata";
 import { giveMeColor } from "@/utils/giveMeColor";
 import { event } from "@interfaces/index";
 import { DateService } from "@/utils/Date";
 
 export const Event = (event: event) => {
-  const { setStart, setEnd } = useContext(SetDatesCtx);
   const dtSstart = new Date(event.start);
   const dtEnd = new Date(event.end);
   const cells = Math.min(
@@ -15,8 +12,8 @@ export const Event = (event: event) => {
   );
 
   const hOnClick = () => {
-    setStart("2021-08-25" + event.job);
-    setEnd("2021-09-18" + event.job);
+    console.log("setStartDate", event.start);
+    console.log("setEndDate", event.end);
   };
   return (
     <StyledEvent.TWflexContainer>
