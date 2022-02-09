@@ -24,23 +24,22 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
 
   rootEvents.map((c) => {
     merged.push(c);
-    const lastIndex = merged.length - 1;
-    let bubblingIndex = lastIndex;
+
+    let bubblingIndex = merged.length - 1;
     let bubbling = true;
-    while (bubbling && bubblingIndex !== 0) {
-      if (
-        merged.length > 1 &&
-        merged[bubblingIndex - 1].id < 0 &&
-        parseInt(merged[bubblingIndex - 1].end) > bubblingIndex - 1
-      ) {
-        const temp = merged[bubblingIndex];
-        merged[bubblingIndex] = merged[bubblingIndex - 1];
-        merged[bubblingIndex - 1] = temp;
-      } else {
-        bubbling = false;
-      }
+
+    while (
+      bubblingIndex !== 0 &&
+      merged.length > 1 &&
+      merged[bubblingIndex - 1].id < 0 &&
+      parseInt(merged[bubblingIndex - 1].end) > bubblingIndex - 1
+    ) {
+      //swap
+      [merged[bubblingIndex - 1], merged[bubblingIndex]] = [
+        merged[bubblingIndex],
+        merged[bubblingIndex - 1],
+      ];
       bubblingIndex--;
-      console.log("bubbling index", bubblingIndex);
     }
   });
 
