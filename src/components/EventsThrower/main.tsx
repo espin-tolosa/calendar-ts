@@ -6,35 +6,41 @@ interface EventProps {
 }
 
 export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
-  const events = useEventState(day);
+  const dayEvents = useEventState(day);
   const allEvents = useEventState();
-  if (events.length === 0) {
+  if (dayEvents.length === 0) {
     return <></>;
   }
 
-  const merged = events
+  //allEvents: the global state of events componsed by event objects
+  //dayEvents: the events of the day filtered from the global state
+  //merged: placeholder of spreaded events sorted by it target position (end) attribute
+
+  const merged = dayEvents
     .filter((e) => e.id < 0)
     .sort((prev, next) => parseInt(prev.end) - parseInt(next.end));
-  const clean = events.filter((e) => e.id > 0); //separate the real events of that day
 
-  clean.map((c) => {
+  const rootEvents = dayEvents.filter((e) => e.id > 0); //separate the real events of that day
+
+  rootEvents.map((c) => {
     merged.push(c);
     const lastIndex = merged.length - 1;
     let bubblingIndex = lastIndex;
     let bubbling = true;
     while (bubbling && bubblingIndex !== 0) {
-      if (merged.length > 1 && merged[bubblingIndex - 1].id < 0) {
-        if (parseInt(merged[bubblingIndex - 1].end) > bubblingIndex - 1) {
-          const temp = merged[bubblingIndex];
-          merged[bubblingIndex] = merged[bubblingIndex - 1];
-          merged[bubblingIndex - 1] = temp;
-          bubblingIndex--;
-        } else {
-          bubbling = false;
-        }
+      if (
+        merged.length > 1 &&
+        merged[bubblingIndex - 1].id < 0 &&
+        parseInt(merged[bubblingIndex - 1].end) > bubblingIndex - 1
+      ) {
+        const temp = merged[bubblingIndex];
+        merged[bubblingIndex] = merged[bubblingIndex - 1];
+        merged[bubblingIndex - 1] = temp;
       } else {
         bubbling = false;
       }
+      bubblingIndex--;
+      console.log("bubbling index", bubblingIndex);
     }
   });
 
