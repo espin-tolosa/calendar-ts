@@ -1,10 +1,37 @@
-import { useEventDispatch } from "@/hooks/useEventsApi";
-import { useState } from "react";
+import { useEventDispatch, useEventState } from "@/hooks/useEventsApi";
+import { composition, event } from "@/interfaces";
+import { Event } from "@components/Event/main";
+import React, { createContext, Dispatch, useContext, useState } from "react";
 import { useDate } from "./handlers";
 //import { onChange } from "./handlers";
 import * as tw_Controller from "./tw";
 
+const cEventSelected = createContext<event | null>(null);
+const cSetEventSelected = createContext<
+  Dispatch<React.SetStateAction<event | null>>
+>(() => null);
+
+export const useEventSelected = () => {
+  return useContext(cEventSelected);
+};
+export const useSetEventSelected = () => {
+  return useContext(cSetEventSelected);
+};
+
+export const EventInController: composition = ({ children }) => {
+  const [eventSelected, setEventSelected] = useState<event | null>(null);
+  return (
+    <cEventSelected.Provider value={eventSelected}>
+      <cSetEventSelected.Provider value={setEventSelected}>
+        {children}
+      </cSetEventSelected.Provider>
+    </cEventSelected.Provider>
+  );
+};
+
 export const CreateEvent = () => {
+  const eventSelected = useEventSelected();
+  const events = useEventState();
   const [client, setClient] = useState("");
   const [description, setDescription] = useState("");
   const [job, setJob] = useState("");
@@ -22,6 +49,7 @@ export const CreateEvent = () => {
         console.log("Hello");
       }}
     >
+      {/* create button */}
       <tw_Controller.button
         type="submit"
         value="Create"
@@ -32,6 +60,7 @@ export const CreateEvent = () => {
           );
         }}
       />
+      {/* reduce button */}
       <tw_Controller.button
         type="submit"
         value="Reduce"
@@ -43,62 +72,40 @@ export const CreateEvent = () => {
           );
         }}
       />
+
+      {/* delete button */}
       <tw_Controller.button
         type="submit"
-        value="New"
+        value="Test"
         title="Testing to new dispatch event"
         onClick={() => {
-          console.log({ client, job, description, start, end });
-          eventDispatcher({
-            type: "appendarray",
-            payload: [
-              {
-                id: Math.floor(Math.random() * 1000), //TODO:
-                client: "test client",
-                job,
-                start: "20" + start,
-                end: "20" + end,
-              },
-            ],
-          });
+          const index = events.findIndex((event) => event.client === "Marcel");
+          if (index > 0) {
+            console.log("Founded Marcel at position", index);
+            events[index].client = "Updated Marcel";
+          }
         }}
       />
-      <tw_Controller.button
-        type="submit"
-        value="Delete"
-        title="Testing to new dispatch event"
-        onClick={() => {
-          eventDispatcher({
-            type: "appendarray",
-            payload: [
-              {
-                id: 100,
-                client: "dispatch client",
-                job: "testing dispatcher",
-                start: "12",
-                end: "13",
-              },
-            ],
-          });
-        }}
-      />
+
       <tw_Controller.startEnd>
+        {/* start field */}
         <tw_Controller.date
           type="text"
           name="start"
           id="start"
-          value={start}
+          value={(() => start)()} //TODO: function to represent string dates in the desired user format keeping internal consistency as: yyyy-mm-dd
           autoComplete="off"
           onChange={onChangeStart}
           onKeyDown={removeBackSlashStart}
           placeholder="init: y/m/d"
           title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
         />
+        {/* end field */}
         <tw_Controller.date
           type="text"
           name="end"
           id="end"
-          value={end}
+          value={(() => end)()} //TODO: same as start
           autoComplete="off"
           onChange={onChangeEnd}
           onKeyDown={removeBackSlashEnd}
@@ -107,6 +114,7 @@ export const CreateEvent = () => {
         />
       </tw_Controller.startEnd>
 
+      {/* job field */}
       <tw_Controller.job
         onChange={(e) => {
           setJob(e.target.value);
@@ -118,6 +126,7 @@ export const CreateEvent = () => {
         placeholder="Job"
       />
       <tw_Controller.description_wrap>
+        {/* description optional field */}
         <tw_Controller.description
           onChange={(e) => {
             setDescription(e.target.value);
@@ -128,6 +137,27 @@ export const CreateEvent = () => {
           placeholder="Extra notes..."
         ></tw_Controller.description>
       </tw_Controller.description_wrap>
+      {/* new button */}
+      <tw_Controller.button
+        type="submit"
+        value="New"
+        title="Testing to new dispatch event"
+        onClick={() => {
+          eventDispatcher({
+            type: "appendarray",
+            payload: [
+              {
+                id: Math.floor(Math.random() * 1000), //TODO:
+                client: "test client",
+                job,
+                start: "20" + start.replaceAll("/", "-"), //TODO: refactor this by adding Date complete year fuction
+                end: "20" + end.replaceAll("/", "-"),
+              },
+            ],
+          });
+        }}
+      />
+      {eventSelected ? <Event {...eventSelected} /> : <></>}
     </tw_Controller.form>
   );
 };

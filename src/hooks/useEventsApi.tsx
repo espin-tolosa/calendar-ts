@@ -16,8 +16,9 @@ function reducerEvents(state: State, action: Action) {
   switch (action.type) {
     //
     case "appendarray": {
-      eventSpreader();
-      const newState = [...state, ...action.payload];
+      const spread = eventSpreader(action.payload[0]);
+      const newState = [...state, ...action.payload, ...spread];
+      console.info(newState);
       //
       return newState;
     }
@@ -57,8 +58,9 @@ function reducerEvents(state: State, action: Action) {
 const cEventState = createContext<Array<event>>(month1);
 const cEventDispatch = createContext<React.Dispatch<Action>>(() => {});
 
-export function useEventState() {
-  return useContext(cEventState);
+export function useEventState(day?: string) {
+  const events = useContext(cEventState);
+  return day ? events.filter((event) => event.start === day) : events;
 }
 export function useEventDispatch() {
   return useContext(cEventDispatch);

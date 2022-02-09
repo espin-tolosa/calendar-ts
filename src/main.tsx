@@ -5,16 +5,19 @@ import App from "./App";
 import { UserSession } from "@/hooks/useUserSession";
 import { EventsDispatcher } from "./hooks/useEventsApi";
 import { UserPreferences } from "@/hooks/useLocalUserPreferences";
+import { EventInController } from "./components/Controller/main";
 
 ReactDOM.render(
   <React.StrictMode>
-    <UserPreferences>
-      <EventsDispatcher>
-        <UserSession>
-          <App />
-        </UserSession>
-      </EventsDispatcher>
-    </UserPreferences>
+    <EventInController>
+      <UserPreferences>
+        <EventsDispatcher>
+          <UserSession>
+            <App />
+          </UserSession>
+        </EventsDispatcher>
+      </UserPreferences>
+    </EventInController>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -101,13 +101,22 @@ export function ToFormattedDate(dt: Idt) {
   }).format(dt);
 }
 
-function difference(start: Idt, end: Idt) {
-  const endUTC = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
-  const startUTC = Date.UTC(
-    start.getFullYear(),
-    start.getMonth(),
-    start.getDate()
+function DaysFromStartToEnd(start: string, end: string) {
+  const dtStart = new Date(start);
+  const dtEnd = new Date(end);
+
+  const endUTC = Date.UTC(
+    dtEnd.getFullYear(),
+    dtEnd.getMonth(),
+    dtEnd.getDate()
   );
+
+  const startUTC = Date.UTC(
+    dtStart.getFullYear(),
+    dtStart.getMonth(),
+    dtStart.getDate()
+  );
+
   const day = 1000 * 60 * 60 * 24;
   return (endUTC - startUTC) / day;
 }
@@ -118,15 +127,22 @@ function ComposeDate(year: number, month: number, day: number) {
   return `${fullYear(year, 2000)}-${zeroPadd(month)}-${zeroPadd(day)}`;
 }
 
+function GetNextDayOfDate(today: string) {
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return tomorrow;
+}
+
 export const DateService = {
-  GetDate: GetDate,
-  GetDateNextMonth: GetDateNextMonth,
-  GetMonth: GetMonth,
-  GetYear: GetYear,
-  FormatDate: FormatDate,
-  GetLastDayMonth: GetLastDayMonth,
-  ToFormattedMonth: ToFormattedMonth,
-  GetMonthDayKey: GetMonthDayKey,
-  DaysFromStartToEnd: difference,
-  ComposeDate: ComposeDate,
+  GetDate,
+  GetDateNextMonth,
+  GetMonth,
+  GetYear,
+  FormatDate,
+  GetLastDayMonth,
+  ToFormattedMonth,
+  GetMonthDayKey,
+  DaysFromStartToEnd,
+  ComposeDate,
+  GetNextDayOfDate,
 };

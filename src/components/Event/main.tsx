@@ -2,12 +2,12 @@ import * as StyledEvent from "./tw";
 import { giveMeColor } from "@/utils/giveMeColor";
 import { event } from "@interfaces/index";
 import { DateService } from "@/utils/Date";
+import { useSetEventSelected } from "../Controller/main";
 
 export const Event = (event: event) => {
-  const dtSstart = new Date(event.start);
-  const dtEnd = new Date(event.end);
+  const setEventController = useSetEventSelected();
   const cells = Math.min(
-    1 + DateService.DaysFromStartToEnd(dtSstart, dtEnd),
+    1 + DateService.DaysFromStartToEnd(event.start, event.end),
     8 //TODO
   );
 
@@ -23,6 +23,7 @@ export const Event = (event: event) => {
         $cells={cells}
         onMouseDownCapture={() => {
           console.log("Event:", event.job);
+          setEventController(event);
         }}
         onClick={hOnClick}
         title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
@@ -48,5 +49,13 @@ export const Event = (event: event) => {
         {"placeholder"}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
+  );
+};
+
+export const EventHolder = (event: event) => {
+  return (
+    <StyledEvent.TWplaceholder key={"p" + event.id}>
+      {-event.id}
+    </StyledEvent.TWplaceholder>
   );
 };
