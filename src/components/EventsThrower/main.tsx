@@ -6,7 +6,6 @@ interface EventProps {
 }
 
 export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
-  //console.clear();
   const events = useEventState(day);
   const allEvents = useEventState();
   if (events.length === 0) {
@@ -18,22 +17,26 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
     .sort((prev, next) => parseInt(prev.end) - parseInt(next.end));
   const clean = events.filter((e) => e.id > 0); //separate the real events of that day
 
-  console.log("clean map", day);
-  clean.map((c, index) => {
+  clean.map((c) => {
     merged.push(c);
     const lastIndex = merged.length - 1;
-    if (merged.length > 1 && merged[lastIndex - 1].id < 0) {
-      if (parseInt(merged[lastIndex - 1].end) > lastIndex - 1) {
-        const temp = merged[lastIndex];
-        merged[lastIndex] = merged[lastIndex - 1];
-        console.log("reset event");
-        merged[lastIndex - 1] = temp;
+    let bubblingIndex = lastIndex;
+    let bubbling = true;
+    while (bubbling && bubblingIndex !== 0) {
+      if (merged.length > 1 && merged[bubblingIndex - 1].id < 0) {
+        if (parseInt(merged[bubblingIndex - 1].end) > bubblingIndex - 1) {
+          const temp = merged[bubblingIndex];
+          merged[bubblingIndex] = merged[bubblingIndex - 1];
+          merged[bubblingIndex - 1] = temp;
+          bubblingIndex--;
+        } else {
+          bubbling = false;
+        }
+      } else {
+        bubbling = false;
       }
     }
   });
-
-  console.log("result");
-  console.log(merged);
 
   //console.log("Before", filterEvents);
   //const cleanEvents = filterEvents.filter((e) => e.id > 0);

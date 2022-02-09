@@ -1,8 +1,9 @@
 import { composition } from "@/interfaces";
-import React, { createContext, useContext, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { event } from "@interfaces/index";
-import { month1 } from "@/static/initEvents";
+import { month0, month1 } from "@/static/initEvents";
 import { eventSpreader } from "@/algorithms/eventSpreader";
+import { DateService } from "@/utils/Date";
 
 type State = Array<event>;
 type Action =
@@ -16,8 +17,16 @@ function reducerEvents(state: State, action: Action) {
   switch (action.type) {
     //
     case "appendarray": {
-      const spread = eventSpreader(action.payload[0]);
-      const newState = [...state, ...action.payload, ...spread];
+      const event = action.payload[0]; // by now I can only manage first item
+
+      //checks the case of end begins before the start
+      const daysSpread = DateService.DaysFromStartToEnd(event.start, event.end);
+      if (daysSpread < 0) {
+        return state;
+      }
+
+      const spread = eventSpreader(event);
+      const newState = [...state, event, ...spread];
       console.info(newState);
       //
       return newState;
@@ -69,7 +78,13 @@ export function useEventDispatch() {
 // Context Dispatcher of Event Reducer
 
 export const EventsDispatcher: composition = ({ children }) => {
-  const [state, dispatch] = useReducer(reducerEvents, month1);
+  const [state, dispatch] = useReducer(reducerEvents, month0);
+
+  /*
+        onClick={() => {
+          eventDispatcher({
+        }}
+*/
 
   return (
     <cEventState.Provider value={state}>

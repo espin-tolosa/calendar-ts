@@ -1,7 +1,7 @@
 import tw from "tailwind-styled-components";
 
 export const TWflexContainer = tw.div`
-  flex flex-col justify-start`;
+  flex flex-col justify-start my-1`;
 
 export const TWtextContent = tw.div<{ $cells: number }>`
 	absolute whitespace-nowrap overflow-hidden overflow-ellipsis pl-2 text-white rounded-l-full ml-[0.1rem]
@@ -34,5 +34,5 @@ export const TWextend = tw.div<{ $cells: number }>`
 `;
 
 export const TWplaceholder = tw.div`
-	text-transparent my-0.5
+	text-transparent
 `;

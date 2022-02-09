@@ -54,8 +54,10 @@ export const Event = (event: event) => {
 
 export const EventHolder = (event: event) => {
   return (
-    <StyledEvent.TWplaceholder key={"p" + event.id}>
-      {-event.id}
-    </StyledEvent.TWplaceholder>
+    <StyledEvent.TWflexContainer>
+      <StyledEvent.TWplaceholder key={"p" + event.id}>
+        {-event.id}
+      </StyledEvent.TWplaceholder>
+    </StyledEvent.TWflexContainer>
   );
 };
