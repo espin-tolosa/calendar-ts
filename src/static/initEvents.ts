@@ -46,6 +46,34 @@ export const month1 = [
     start: "2022-02-06",
     end: "2022-02-06",
   },
+  {
+    id: 7,
+    client: "Cristine",
+    job: "Spread - 1",
+    start: "2022-02-01",
+    end: "2022-02-01",
+  },
+  {
+    id: 8,
+    client: "Marcel",
+    job: "Starting - 1",
+    start: "2022-02-01",
+    end: "2022-02-06",
+  },
+  {
+    id: 9,
+    client: "Cristine",
+    job: "Starting - 1",
+    start: "2022-02-02",
+    end: "2022-02-03",
+  },
+  {
+    id: 10,
+    client: "Cristine",
+    job: "Starting - 1",
+    start: "2022-02-04",
+    end: "2022-02-06",
+  },
 ] as Array<event>;
 
 export const month2 = [
