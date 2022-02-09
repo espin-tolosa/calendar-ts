@@ -13,7 +13,9 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
     return <></>;
   }
 
-  const merged = events.filter((e) => e.id < 0); //initialize with only the placeholders
+  const merged = events
+    .filter((e) => e.id < 0)
+    .sort((prev, next) => parseInt(prev.end) - parseInt(next.end));
   const clean = events.filter((e) => e.id > 0); //separate the real events of that day
 
   console.log("clean map", day);
@@ -29,6 +31,7 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
       }
     }
   });
+
   console.log("result");
   console.log(merged);
 
