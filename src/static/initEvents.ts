@@ -56,16 +56,16 @@ export const month1 = [
   {
     id: 8,
     client: "Marcel",
-    job: "Starting - 1",
-    start: "2022-02-01",
-    end: "2022-02-06",
+    job: "Long job example",
+    start: "2022-02-02",
+    end: "2022-02-15",
   },
   {
     id: 9,
     client: "Cristine",
-    job: "Starting - 1",
-    start: "2022-02-02",
-    end: "2022-02-03",
+    job: "job description",
+    start: "2022-02-14",
+    end: "2022-02-17",
   },
   {
     id: 10,
