@@ -25,9 +25,16 @@ function reducerEvents(state: State, action: Action) {
         return state;
       }
 
+      //check if start and end day exists
+      if (
+        !DateService.isValidKeyDate(event.start) ||
+        !DateService.isValidKeyDate(event.end)
+      ) {
+        return state;
+      }
+
       const spread = eventSpreader(event);
       const newState = [...state, event, ...spread];
-      console.info(newState);
       //
       return newState;
     }

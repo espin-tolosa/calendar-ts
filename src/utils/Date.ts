@@ -133,6 +133,11 @@ function GetNextDayOfDate(today: string) {
   return tomorrow;
 }
 
+function isValidKeyDate(today: string) {
+  const dt = new Date(today);
+  return dt.toDateString() !== "Invalid Date";
+}
+
 export const DateService = {
   GetDate,
   GetDateNextMonth,
@@ -145,4 +150,5 @@ export const DateService = {
   DaysFromStartToEnd,
   ComposeDate,
   GetNextDayOfDate,
+  isValidKeyDate,
 };
