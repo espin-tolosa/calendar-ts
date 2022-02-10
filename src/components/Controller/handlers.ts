@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 
 const isNumber = (value: string) => {
   const result = Number(value);
@@ -18,6 +18,7 @@ const isValidDay = (day: string) => {
   return day.length === 2 && dayNumber >= 1 && dayNumber <= 31;
 };
 
+//TODO: fix it
 const autoCompleteDate = (value: string) => {
   const [year, month, day] = value.split("-");
 
@@ -36,69 +37,44 @@ const autoCompleteDate = (value: string) => {
     return `${year}-${month}-`;
   }
 
-  /*
-	if (!isNumber(value[value.length - 1])) return "";
-  if (date.length === 3) {
-		return value.slice(0, -1);
-  }
-  if (date.length === 3 && isValidDay(date[2])) {
-		return `${value}/`;
-  }
-  if (date.length === 2 && isValidMonth(date[1])) {
-		return `${value}/`;
-  }
-  if (date.length === 1 && isValidYear(date[0])) {
-		return `${value}/`;
-  }
-	*/
   return value.substring(0, 10);
 };
 
 export const useDate = () => {
   const [date, setDate] = useState("");
 
-  const hOnChange = () => {
-    const lock = useRef(false); //lock onChange runtime when onKey detect Backslash
+  const hOnChange = useCallback(() => {
     const onChange = (e: React.FormEvent<HTMLInputElement>) => {
-      if (!lock.current) {
-        setDate(autoCompleteDate(e.currentTarget.value));
-      }
+      setDate(autoCompleteDate(e.currentTarget.value));
     };
+
     const removeBackSlash = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      console.log(e.key);
       if (e.key === "Backspace") {
-        setDate((prev) => {
-          const [y, m, d] = prev.split("-");
-          if (d) {
-            if (m === "") {
-              return `${y}-`;
-            } else {
-              return `${y}-${m}-`;
-            }
-          } else if (m) {
-            if (m === "") {
-              return "";
-            } else {
-              return `${y}-`;
-            }
-          } else {
-            return "";
-          }
-        });
-        lock.current = true;
-      } else {
-        lock.current = false;
+        setDate(removePrevField);
       }
     };
     return [onChange, removeBackSlash] as [
       typeof onChange,
       typeof removeBackSlash
     ];
-  };
+  }, []);
+
   const [onChange, removeBackSlash] = hOnChange();
   return [date, onChange, removeBackSlash] as [
     string,
     typeof onChange,
     typeof removeBackSlash
   ];
+};
+
+const hasContent = (textField: string) => {
+  return typeof textField !== "undefined" && textField !== "";
+};
+
+const removePrevField = (prev: string) => {
+  const [yy, mm, dd] = prev.split("-");
+
+  if (hasContent(dd)) return `${yy}-${mm}-`;
+  else if (hasContent(mm)) return `${yy}-`;
+  else return "";
 };
