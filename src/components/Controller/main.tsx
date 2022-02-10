@@ -157,7 +157,7 @@ export const CreateEvent = () => {
           });
         }}
       />
-      {eventSelected ? <Event {...eventSelected} /> : <></>}
+      {eventSelected ? <Event event={eventSelected} /> : <></>}
     </tw_Controller.form>
   );
 };

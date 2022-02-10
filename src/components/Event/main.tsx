@@ -4,7 +4,7 @@ import { event } from "@interfaces/index";
 import { DateService } from "@/utils/Date";
 import { useSetEventSelected } from "../Controller/main";
 
-export const Event = (event: event) => {
+export const Event = ({ event }: { event: event }) => {
   const setEventController = useSetEventSelected();
   const cells = Math.min(
     1 + DateService.DaysFromStartToEnd(event.start, event.end),
@@ -52,7 +52,7 @@ export const Event = (event: event) => {
   );
 };
 
-export const EventHolder = (event: event) => {
+export const EventHolder = ({ event }: { event: event }) => {
   return (
     <StyledEvent.TWflexContainer>
       <StyledEvent.TWplaceholder key={"p" + event.id}>

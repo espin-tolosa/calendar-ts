@@ -1,10 +1,10 @@
 import { Event, EventHolder } from "@components/Event/main";
 import { useEventState } from "@/hooks/useEventsApi";
-import { event } from "@/interfaces";
 import {
   bubblingAlgo,
   isPlaceholder,
 } from "@components/EventsThrower/bubblingAlgoUtils";
+import { sendEndReferencesToPlaceholders } from "@components/EventsThrower/sendReferencesToPlaceholders";
 
 interface EventProps {
   day: string;
@@ -13,6 +13,7 @@ interface EventProps {
 export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
   const dayEvents = useEventState(day);
   const allEvents = useEventState();
+  //No events in a day fast exit
   if (dayEvents.length === 0) {
     return <></>;
   }
@@ -21,16 +22,16 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
 
   return (
     <>
-      {sortedEvents.map((event, index) => {
+      {sortedEvents.map((event, position) => {
+        const keyValue = Math.abs(event.id);
         if (isPlaceholder(event)) {
-          return <EventHolder key={event.id} {...event}></EventHolder>;
+          return (
+            <EventHolder key={`p-${keyValue}`} event={event}></EventHolder>
+          );
         }
-        const foundEvents =
-          allEvents.filter((placeholder) => placeholder.id === -event.id) || [];
-        foundEvents.map((placeholder) => (placeholder.end = String(index)));
-        if (foundEvents.length > 0) {
-        }
-        return <Event key={event.id} {...event}></Event>;
+        //Mutable instruction for global state of events
+        sendEndReferencesToPlaceholders(allEvents, event, position);
+        return <Event key={`e-${keyValue}`} event={event}></Event>;
       })}
     </>
   );

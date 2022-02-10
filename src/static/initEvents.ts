@@ -37,7 +37,7 @@ export const month1 = [
     client: "Cristine",
     job: "Starting 4 - 1",
     start: "2022-02-04",
-    end: "2022-03-06",
+    end: "2022-02-06",
   },
   {
     id: 6,
