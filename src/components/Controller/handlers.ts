@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { date } from "./tw";
 
 const isNumber = (value: string) => {
   const result = Number(value);
@@ -20,21 +19,21 @@ const isValidDay = (day: string) => {
 };
 
 const autoCompleteDate = (value: string) => {
-  const [year, month, day] = value.split("/");
+  const [year, month, day] = value.split("-");
 
   if (isNumber(value[value.length - 1])) {
     if (isValidYear(year || "") && value.length === 2) {
-      return `${year}/`;
+      return `${year}-`;
     }
     if (isValidMonth(month || "") && value.length === 5) {
-      return `${year}/${month}/`;
+      return `${year}-${month}-`;
     } else if (!isValidMonth(month || "") && value.length === 7) {
-      return `${year}/`;
+      return `${year}-`;
     }
   }
 
   if (value.length === 8 && !isValidDay(day)) {
-    return `${year}/${month}/`;
+    return `${year}-${month}-`;
   }
 
   /*
@@ -66,20 +65,21 @@ export const useDate = () => {
       }
     };
     const removeBackSlash = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      console.log(e.key);
       if (e.key === "Backspace") {
         setDate((prev) => {
-          const p = prev.split("/");
-          if (p.length === 3) {
-            if (p[2] === "") {
-              return `${p[0]}/`;
+          const [y, m, d] = prev.split("-");
+          if (d) {
+            if (m === "") {
+              return `${y}-`;
             } else {
-              return `${p[0]}/${p[1]}/`;
+              return `${y}-${m}-`;
             }
-          } else if (p.length === 2) {
-            if (p[1] === "") {
+          } else if (m) {
+            if (m === "") {
               return "";
             } else {
-              return `${p[0]}/`;
+              return `${y}-`;
             }
           } else {
             return "";

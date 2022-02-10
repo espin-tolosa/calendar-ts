@@ -97,7 +97,7 @@ export const CreateEvent = () => {
           autoComplete="off"
           onChange={onChangeStart}
           onKeyDown={removeBackSlashStart}
-          placeholder="init: y/m/d"
+          placeholder="init: yy-mm-dd"
           title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
         />
         {/* end field */}
@@ -109,7 +109,7 @@ export const CreateEvent = () => {
           autoComplete="off"
           onChange={onChangeEnd}
           onKeyDown={removeBackSlashEnd}
-          placeholder="end: y/m/d"
+          placeholder="end: yy-mm-dd"
           title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
         />
       </tw_Controller.startEnd>
@@ -150,8 +150,8 @@ export const CreateEvent = () => {
                 id: Math.floor(Math.random() * 1000), //TODO:
                 client: "test client",
                 job,
-                start: "20" + start.replaceAll("/", "-"), //TODO: refactor this by adding Date complete year fuction
-                end: "20" + end.replaceAll("/", "-"),
+                start: "20" + start, //TODO: refactor this by adding Date complete year fuction
+                end: "20" + end,
               },
             ],
           });
