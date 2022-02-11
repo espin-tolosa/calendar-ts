@@ -21,9 +21,9 @@ export const LayoutBoard = () => {
 
   /* Automatic scroll when refresh the page */
   useLayoutEffect(() => {
-    setTimeout(() => {
-      window.scroll(0, 0);
-    }, 100);
+    //setTimeout(() => {
+    //window.scroll(0, 0);
+    //}, 100);
     setTimeout(() => {
       const top = document.getElementById("Past-0");
       top &&
@@ -32,7 +32,7 @@ export const LayoutBoard = () => {
           block: "start",
           inline: "start",
         });
-    }, 300);
+    }, 500);
   }, []);
   //useLayoutEffect(() => {
   //  const top = document.getElementById("Present");
