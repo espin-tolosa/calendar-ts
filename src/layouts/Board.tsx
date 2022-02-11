@@ -22,7 +22,7 @@ export const LayoutBoard = () => {
   useLayoutEffect(() => {
     window.scroll(0, 0);
     setTimeout(() => {
-      const top = document.getElementById("Present");
+      const top = document.getElementById("Past-0");
       top &&
         top.scrollIntoView({
           behavior: "smooth",
@@ -41,12 +41,12 @@ export const LayoutBoard = () => {
   //*--------------------------*/
   return (
     <TWboard>
-      <MemoMonth time={"Past"} year={2021} month={12} />
-      <MemoMonth time={"Past"} year={2022} month={1} />
+      <MemoMonth time={"Past-1"} year={2021} month={12} />
+      <MemoMonth time={"Past-0"} year={2022} month={1} />
       {monthKeys.map((month_entry, index) => {
         return (
           <MemoMonth
-            time={"Present"}
+            time={`Present-${index}`}
             key={`${month_entry.year}-${month_entry.month}`}
             year={month_entry.year}
             month={month_entry.month}

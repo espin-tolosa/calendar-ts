@@ -15,8 +15,8 @@ const Month = ({ time, year, month }: iMonth) => {
   const date = useMonthDate(year, month);
 
   return (
-    <StyledMonth.TWflexColLayout>
-      <div id={time} className="text-transparent h-0"></div>
+    <StyledMonth.TWflexColLayout className="relative">
+      <div className="text-transparent h-0"></div>
       {/*month-header*/}
       <StyledMonth.TWheader>{date.dateFormat}</StyledMonth.TWheader>
 
@@ -32,6 +32,10 @@ const Month = ({ time, year, month }: iMonth) => {
           </MemoIDay>
         ))}
       </StyledMonth.TWdaysBoard>
+      <div
+        id={time}
+        className="absolute w-0 h-0 bg-transparent bottom-8 customtp:bottom-6 custombp:bottom-6 z-TopLayer "
+      ></div>
     </StyledMonth.TWflexColLayout>
     /* Month container: header | board */
   );
