@@ -23,7 +23,7 @@ ${({ $display }) =>
     "max-h-[95vh] border-2 customtp:max-h-[30vh] custombp:max-h-[88vh]") ||
   (!$display && "max-h-0") ||
   ""}	
-rounded-b-lg z-TopLayer mt-1
+rounded-b-lg mt-1
 customtp:h-screen
 customtp:bg-gradient-to-b
 customtp:from-slate-100
@@ -36,15 +36,17 @@ transition-[max-height]
 ease-in-out
 duration-500
 
-sticky sm:top-10 customtp:top-[31px] custombp:top-10
+sticky sm:top-9 customtp:top-6 custombp:top-6 z-TopLayer
+
 rounded-md
 shadow-[shadow-[5px_5px_5px_rgb(148,163,184)]
 `;
 export const TWboard = tw.div`
-	grid gap-1 mt-1 xl:components-calendar sm:ml-2 mx-0 bg-white
+grid gap-1 mt-1 xl:components-calendar sm:ml-2 mx-0 bg-white
 `;
 export const TWheader = tw.div`
-	sticky z-50 top-0 bg-gradient-to-r from-slate-900 via-slate-50 to-slate-900 outline outline-white outline-4 overscroll-contain
+sticky top-0 z-50
+bg-gradient-to-r from-slate-900 via-slate-50 to-slate-900 outline outline-white outline-4 overscroll-contain
 `;
 
 // Login Form

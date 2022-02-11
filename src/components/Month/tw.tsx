@@ -11,10 +11,7 @@ rounded-md
 // The header displays a text as: month year, like February 2022
 export const TWheader = tw.div`
 flex justify-center
-sticky
-top-9
-customtp:top-7
-z-TopLayer
+sticky sm:top-9 customtp:top-6 custombp:top-6 z-Dayoff
 font-medium
 text-black
 px-[2ch] border-b-2 border-slate-200 
