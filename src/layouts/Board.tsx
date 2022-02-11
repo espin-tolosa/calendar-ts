@@ -19,16 +19,20 @@ export const LayoutBoard = () => {
     });
   }, []);
 
+  /* Automatic scroll when refresh the page */
   useLayoutEffect(() => {
-    window.scroll(0, 0);
+    setTimeout(() => {
+      window.scroll(0, 0);
+    }, 100);
     setTimeout(() => {
       const top = document.getElementById("Past-0");
       top &&
         top.scrollIntoView({
           behavior: "smooth",
           block: "start",
+          inline: "start",
         });
-    }, 100);
+    }, 300);
   }, []);
   //useLayoutEffect(() => {
   //  const top = document.getElementById("Present");
