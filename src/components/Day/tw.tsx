@@ -18,7 +18,7 @@ export const TWsizedContainer = tw.div<{ $top: boolean }>`
 `;
 
 export const TWheader = tw.div`
-	mb-1 py-1 border-y-current day-header flex sm:justify-start justify-center bg-slate-100`;
+	mb-1 py-1 border-b-[1px] border-slate-200 day-header flex sm:justify-start justify-center bg-white`;
 
 export const TWdaySpot = tw.div`
 	flex justify-center items-center w-[1.6rem] customtp:w-[1rem] rounded-full bg-white customtp:p-0 customtp:my-[1px] ml-1 mx-1`;
