@@ -1,5 +1,29 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState } from "react";
 
+type OnChange = (e: React.FormEvent<HTMLInputElement>) => void;
+type Backslash = (e: React.KeyboardEvent<HTMLInputElement>) => void;
+
+export const useDate = () => {
+  const [date, setDate] = useState("");
+
+  const handlesClosure = () => {
+    const onChange: OnChange = (e) => {
+      setDate(autoCompleteDate(e.currentTarget.value));
+    };
+
+    const backslash: Backslash = (e) => {
+      if (e.key === "Backspace") {
+        setDate(removePrevField);
+      }
+    };
+
+    return [onChange, backslash] as [OnChange, Backslash];
+  };
+
+  const [onChange, removeBackSlash] = handlesClosure();
+  return [date, onChange, removeBackSlash] as [string, OnChange, Backslash];
+};
+//- Utilities --------------------------
 const isNumber = (value: string) => {
   const result = Number(value);
   return result === result;
@@ -40,41 +64,14 @@ const autoCompleteDate = (value: string) => {
   return value.substring(0, 10);
 };
 
-export const useDate = () => {
-  const [date, setDate] = useState("");
-
-  const hOnChange = useCallback(() => {
-    const onChange = (e: React.FormEvent<HTMLInputElement>) => {
-      setDate(autoCompleteDate(e.currentTarget.value));
-    };
-
-    const removeBackSlash = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Backspace") {
-        setDate(removePrevField);
-      }
-    };
-    return [onChange, removeBackSlash] as [
-      typeof onChange,
-      typeof removeBackSlash
-    ];
-  }, []);
-
-  const [onChange, removeBackSlash] = hOnChange();
-  return [date, onChange, removeBackSlash] as [
-    string,
-    typeof onChange,
-    typeof removeBackSlash
-  ];
-};
-
-const hasContent = (textField: string) => {
-  return typeof textField !== "undefined" && textField !== "";
-};
-
 const removePrevField = (prev: string) => {
   const [yy, mm, dd] = prev.split("-");
 
   if (hasContent(dd)) return `${yy}-${mm}-`;
   else if (hasContent(mm)) return `${yy}-`;
   else return "";
+};
+
+const hasContent = (textField: string) => {
+  return typeof textField !== "undefined" && textField !== "";
 };
