@@ -24,24 +24,6 @@
   }
 }
 
-/* Buttons used in the form */
-.btn {
-  @apply bg-blue-500 select-none hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full;
-}
-
-.btn2 {
-  @apply bg-blue-500 select-none hover:bg-blue-700 text-red-900 font-bold py-2 px-4 rounded-full;
-}
-.color-1 {
-  @apply from-blue-500 to-blue-700;
-}
-.color-2 {
-  @apply from-green-500 to-green-700;
-}
-.color-default {
-  @apply from-gray-500 to-gray-700;
-}
-
 @layer utilities {
   /*
     margin-left: 7.14%;
@@ -167,7 +149,7 @@
 @layer components {
   .day:hover .day-header,
   .day.hover .day-header {
-    background: rgb(203, 213, 225);
+    background: rgb(241, 245, 249); /*slate-100*/
     transition: background-color 0.3s ease;
   }
   .dayDivHight {
