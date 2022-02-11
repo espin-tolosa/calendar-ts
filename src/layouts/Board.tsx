@@ -2,7 +2,7 @@ import { TWboard } from "./tw";
 import { MemoMonth } from "@/components/Month/main";
 import { useBoardScroll } from "@/hooks/useBoardScroll";
 import { useEffect, useLayoutEffect } from "react";
-import { month1 } from "@/static/initEvents";
+import { month0 } from "@/static/initEvents";
 import { useEventDispatch } from "@/hooks/useEventsApi";
 
 export const LayoutBoard = () => {
@@ -11,7 +11,7 @@ export const LayoutBoard = () => {
 
   //The events fetchedneeds to be send to dispatcher in order to spread it
   useEffect(() => {
-    month1.forEach((m) => {
+    month0.forEach((m) => {
       dispatchEvents({
         type: "appendarray",
         payload: [m],

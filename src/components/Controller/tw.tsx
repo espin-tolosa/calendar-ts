@@ -4,8 +4,10 @@ export const form = tw.form`
 	flex flex-col gap-2 sm:px-4 custombp:px-1 px-1 bg-slate-50
 `;
 
-export const button = tw.input`
+export const button = tw.input<{ $display: boolean }>`
 	bg-white border-none p-1 rounded-full cursor-pointer mt-2 font-extra button-shadow
+
+  ${({ $display }) => ($display && "") || (!$display && "hidden") || ""}
 `;
 
 export const startEnd = tw.div`

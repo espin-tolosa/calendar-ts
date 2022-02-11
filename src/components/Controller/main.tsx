@@ -5,6 +5,7 @@ import React, { createContext, Dispatch, useContext, useState } from "react";
 import { useDate } from "./handlers";
 //import { onChange } from "./handlers";
 import * as tw_Controller from "./tw";
+import tw from "tailwind-styled-components";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -49,8 +50,30 @@ export const CreateEvent = () => {
         console.log("Hello");
       }}
     >
+      {/* new button */}
+      <tw_Controller.button
+        $display={true}
+        type="submit"
+        value="Create"
+        title="Testing to new dispatch event"
+        onClick={() => {
+          eventDispatcher({
+            type: "appendarray",
+            payload: [
+              {
+                id: Math.floor(Math.random() * 1000), //TODO:
+                client: client,
+                job,
+                start: "20" + start, //TODO: refactor this by adding Date complete year fuction
+                end: "20" + end,
+              },
+            ],
+          });
+        }}
+      />
       {/* create button */}
       <tw_Controller.button
+        $display={false}
         type="submit"
         value="Create"
         onClick={() => {
@@ -62,6 +85,7 @@ export const CreateEvent = () => {
       />
       {/* reduce button */}
       <tw_Controller.button
+        $display={false}
         type="submit"
         value="Reduce"
         title="Testing to reduce calendar"
@@ -75,6 +99,7 @@ export const CreateEvent = () => {
 
       {/* delete button */}
       <tw_Controller.button
+        $display={false}
         type="submit"
         value="Test"
         title="Testing to new dispatch event"
@@ -86,6 +111,21 @@ export const CreateEvent = () => {
           }
         }}
       />
+      <StyledSelect
+        defaultValue={"default"}
+        onChange={(e) => setClient(e.target.value)}
+      >
+        <option value="default" disabled hidden>
+          Select Client
+        </option>
+        {CLIENTS.map((clientIterator, index) => {
+          return (
+            <option key={index} value={clientIterator}>
+              {clientIterator}
+            </option>
+          );
+        })}
+      </StyledSelect>
 
       <tw_Controller.startEnd>
         {/* start field */}
@@ -97,8 +137,8 @@ export const CreateEvent = () => {
           autoComplete="off"
           onChange={onChangeStart}
           onKeyDown={removeBackSlashStart}
-          placeholder="init: yy-mm-dd"
-          title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
+          placeholder="start date"
+          title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
         />
         {/* end field */}
         <tw_Controller.date
@@ -109,8 +149,8 @@ export const CreateEvent = () => {
           autoComplete="off"
           onChange={onChangeEnd}
           onKeyDown={removeBackSlashEnd}
-          placeholder="end: yy-mm-dd"
-          title="input: dd/mm/yyyy, also accepts: dd/mm/yy"
+          placeholder="end date"
+          title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
         />
       </tw_Controller.startEnd>
 
@@ -137,27 +177,43 @@ export const CreateEvent = () => {
           placeholder="Extra notes..."
         ></tw_Controller.description>
       </tw_Controller.description_wrap>
-      {/* new button */}
-      <tw_Controller.button
-        type="submit"
-        value="New"
-        title="Testing to new dispatch event"
-        onClick={() => {
-          eventDispatcher({
-            type: "appendarray",
-            payload: [
-              {
-                id: Math.floor(Math.random() * 1000), //TODO:
-                client: "test client",
-                job,
-                start: "20" + start, //TODO: refactor this by adding Date complete year fuction
-                end: "20" + end,
-              },
-            ],
-          });
-        }}
-      />
+
       {eventSelected ? <Event event={eventSelected} /> : <></>}
     </tw_Controller.form>
+  );
+};
+const CLIENTS = [
+  "Client_1",
+  "Client_2",
+  "Client_3",
+  "Client_4",
+  "Client_5",
+  "Client_6",
+  "Client_7",
+  "Client_8",
+  "Client_9",
+];
+
+const StyledSelect = tw.select`
+  border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer
+`;
+
+const DropDownClientMenu = () => {
+  return (
+    <StyledSelect id={"client"}>
+      <option value={""}>
+        Client ↓
+        {
+          //TODO I've removed this from <option value={""} default select option> because this use is not intended on React (https://techstrology.com/warning-received-true-for-a-non-boolean-attribute-name-in-reactjs/)
+        }
+      </option>
+      {CLIENTS.map((clientIterator, index) => {
+        return (
+          <option key={index} value={clientIterator}>
+            {clientIterator}
+          </option>
+        );
+      })}
+    </StyledSelect>
   );
 };
