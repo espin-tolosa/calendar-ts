@@ -55,7 +55,7 @@ flex justify-center items-center h-full w-full
 `;
 
 export const TWloginForm = tw.form`
-flex flex-col relative mx-0 my-auto w-full max-w-md p-5 
+flex flex-col relative mx-0 my-auto w-full max-w-md p-5
 `;
 
 export const TWloginInput = tw.input`
