@@ -1,23 +1,33 @@
 import React, { useState } from "react";
 
-type OnChange = (e: React.FormEvent<HTMLInputElement>) => void;
-type Backslash = (e: React.KeyboardEvent<HTMLInputElement>) => void;
+type OnChange = (htmlEvent: React.FormEvent<HTMLInputElement>) => void;
+type Backslash = (htmlEvent: React.KeyboardEvent<HTMLInputElement>) => void;
+type SetDate = (date: string) => void;
 
 export const useDate = () => {
   const [date, setDate] = useState("");
 
   const handlesClosure = () => {
-    const onChange: OnChange = (e) => {
-      setDate(autoCompleteDate(e.currentTarget.value));
+    const onChange: OnChange = (htmlEvent) => {
+      setDate(autoCompleteDate(htmlEvent.currentTarget.value));
     };
 
-    const backslash: Backslash = (e) => {
-      if (e.key === "Backspace") {
+    const backslash: Backslash = (htmlEvent) => {
+      if (htmlEvent.key === "Backspace") {
         setDate(removePrevField);
       }
     };
 
-    return [onChange, backslash] as [OnChange, Backslash];
+    const setParsedDate: SetDate = (date) => {
+      /* Parsing method here */
+      setDate(date);
+    };
+
+    return [onChange, backslash, setParsedDate] as [
+      OnChange,
+      Backslash,
+      SetDate
+    ];
   };
 
   const [onChange, removeBackSlash] = handlesClosure();
