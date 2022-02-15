@@ -5,7 +5,7 @@ export const form = tw.form`
 `;
 
 export const button = tw.input<{ $display: boolean }>`
-	bg-white border-none p-1 rounded-full cursor-pointer font-extra button-shadow
+	bg-white border-none p-1 rounded-full cursor-pointer font-extra button-shadow active:bg-slate-50 transition-colors
 
   ${({ $display }) => ($display && "") || (!$display && "hidden") || ""}
 `;

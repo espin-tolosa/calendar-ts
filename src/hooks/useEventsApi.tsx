@@ -4,6 +4,7 @@ import { event } from "@interfaces/index";
 import { month0, month1 } from "@/static/initEvents";
 import { eventSpreader } from "@/algorithms/eventSpreader";
 import { DateService } from "@/utils/Date";
+import { isValidEvent } from "@/utils/ValidateEvent";
 
 type State = Array<event>;
 type Action =
@@ -26,10 +27,9 @@ function reducerEvents(state: State, action: Action) {
       }
 
       //check if start and end day exists
-      if (
-        !DateService.isValidKeyDate(event.start) ||
-        !DateService.isValidKeyDate(event.end)
-      ) {
+
+      //TODO: extract to a function
+      if (!isValidEvent) {
         return state;
       }
 

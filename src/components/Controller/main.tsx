@@ -11,6 +11,7 @@ import {
   useControllerState,
 } from "@/hooks/useController";
 import { DateService } from "@/utils/Date";
+import { isValidEvent } from "@/utils/ValidateEvent";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -43,13 +44,10 @@ export const CreateEvent = () => {
   const [job, setJob] = useState("");
 
   /*  parallel change consume date context */
-  const dates = useControllerState();
+  const { start, end } = useControllerState();
   const dispatchController = useControllerDispatch();
 
   const eventDispatcher = useEventDispatch();
-
-  const [start, onChangeStart, removeBackSlashStart] = useDate();
-  const [end, onChangeEnd, removeBackSlashEnd] = useDate();
 
   return (
     <tw_Controller.form
@@ -66,15 +64,20 @@ export const CreateEvent = () => {
         value="Create"
         title="Testing to new dispatch event"
         onClick={() => {
+          // TODO: check if is valid event
+          if (!isValidEvent) {
+            return;
+          }
+
           eventDispatcher({
             type: "appendarray",
             payload: [
               {
                 id: Math.floor(Math.random() * 1000), //TODO:
-                client: client,
+                client,
                 job,
-                start: dates.start, //TODO: refactor this by adding Date complete year fuction
-                end: dates.end,
+                start,
+                end,
               },
             ],
           });
@@ -139,11 +142,7 @@ export const CreateEvent = () => {
           }
         }}
       />
-      <StyledSelect
-        defaultValue={"default"}
-        value={client}
-        onChange={(e) => setClient(e.target.value)}
-      >
+      <StyledSelect value={client} onChange={(e) => setClient(e.target.value)}>
         <option value="default" hidden>
           Select Client
         </option>
@@ -162,7 +161,7 @@ export const CreateEvent = () => {
           type="text"
           name="start"
           id="start"
-          value={DateService.ExportDateToControllerValue(dates.start)} //TODO: function to represent string dates in the desired user format keeping internal consistency as: yyyy-mm-dd
+          value={DateService.ExportDateToControllerValue(start)} //TODO: function to represent string dates in the desired user format keeping internal consistency as: yyyy-mm-dd
           autoComplete="off"
           onChange={() => {
             /* onChange */
@@ -178,7 +177,7 @@ export const CreateEvent = () => {
           type="text"
           name="end"
           id="end"
-          value={DateService.ExportDateToControllerValue(dates.end)} //TODO: same as start
+          value={DateService.ExportDateToControllerValue(end)} //TODO: same as start
           autoComplete="off"
           onChange={() => {
             /* onChange */

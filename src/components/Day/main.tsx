@@ -34,9 +34,6 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
       $top={lock}
       $isSelected={isSelected}
       onClick={() => {
-        console.log(left);
-        console.log(right);
-        console.group(isSelected);
         dispatchController({
           type: "setDates",
           payload: { start: fullDate, end: fullDate },
