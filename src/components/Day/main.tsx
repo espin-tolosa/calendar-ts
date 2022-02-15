@@ -24,6 +24,12 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
           payload: { start: fullDate, end: fullDate },
         });
       }}
+      onTouchEnd={() => {
+        distpatchController({
+          type: "setDates",
+          payload: { start: fullDate, end: fullDate },
+        });
+      }}
       onMouseUp={() => {
         console.log("leaving action at day:", dayPadd);
       }}
