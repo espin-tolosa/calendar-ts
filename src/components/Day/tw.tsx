@@ -6,7 +6,7 @@ The case of a day that is not assignable to any event, because it's a day-off or
 Still there is a part of this feature that is not implemented and corresponds to the possibility to assign throw events in a day-off
 this requires JS, hasta ahora solamente el CSS ha sido incorporado.
 */
-export const TWsizedContainer = tw.div<{ $top: boolean }>`
+export const TWsizedContainer = tw.div<{ $top: boolean; $isSelected: boolean }>`
 	landscape:min-h-[15vh] portrait:min-h-[8vh] transition-colors
 	font-light
  	shadow-[0px_0px_1px_rgb(226,232,240)]
@@ -15,6 +15,9 @@ export const TWsizedContainer = tw.div<{ $top: boolean }>`
     ($top && "bg-slate-100 z-Dayoff bg-opacity-50 cursor-not-allowed ") ||
     (!$top && "bg-white day active:bg-green-200 cursor-pointer") ||
     ""}	
+	${({ $isSelected }) =>
+    ($isSelected && "border-2 bg-green-100") || (!$isSelected && "") || ""}	
+
 `;
 
 export const TWheader = tw.div`

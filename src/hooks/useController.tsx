@@ -13,7 +13,7 @@ export const useControllerDispatch = () => useContext(cControllerDispatch);
 
 type Action =
   | {
-      type: "setDates" | "setEnd" | "backSlash" | "onChange";
+      type: "setDates" | "clearDates" | "backSlash" | "onChange";
       payload: State;
     }
   | { type: "default" };
@@ -21,10 +21,19 @@ type Action =
 function reducerController(state: State, action: Action) {
   switch (action.type) {
     case "setDates": {
+      if (
+        state.end === action.payload.end &&
+        state.start === action.payload.start
+      ) {
+        return { start: "", end: "" };
+      }
       if (DateService.DaysFromStartToEnd(state.end, action.payload.end) > 0) {
         return { ...state, end: action.payload.end };
       }
       return { start: action.payload.start, end: action.payload.end };
+    }
+    case "clearDates": {
+      return { start: "", end: "" };
     }
 
     default: {

@@ -6,7 +6,10 @@ import { useDate } from "./handlers";
 //import { onChange } from "./handlers";
 import * as tw_Controller from "./tw";
 import tw from "tailwind-styled-components";
-import { useControllerState } from "@/hooks/useController";
+import {
+  useControllerDispatch,
+  useControllerState,
+} from "@/hooks/useController";
 import { DateService } from "@/utils/Date";
 
 const cEventSelected = createContext<event | null>(null);
@@ -41,6 +44,7 @@ export const CreateEvent = () => {
 
   /*  parallel change consume date context */
   const dates = useControllerState();
+  const dispatchController = useControllerDispatch();
 
   const eventDispatcher = useEventDispatch();
 
@@ -74,6 +78,14 @@ export const CreateEvent = () => {
               },
             ],
           });
+
+          dispatchController({
+            type: "setDates",
+            payload: { start: "", end: "" },
+          });
+
+          setJob(() => "");
+          setClient(() => "default");
         }}
       />
       {/* create button */}
@@ -118,9 +130,10 @@ export const CreateEvent = () => {
       />
       <StyledSelect
         defaultValue={"default"}
+        value={client}
         onChange={(e) => setClient(e.target.value)}
       >
-        <option value="default" disabled hidden>
+        <option value="default" hidden>
           Select Client
         </option>
         {CLIENTS.map((clientIterator, index) => {

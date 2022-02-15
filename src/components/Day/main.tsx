@@ -1,6 +1,10 @@
-import * as StyledDay from "@components/Day/tw";
+import * as StyledDay from "@/components/Day/tw";
 import { memo, useState } from "react";
-import { useControllerDispatch } from "@/hooks/useController";
+import {
+  useControllerDispatch,
+  useControllerState,
+} from "@/hooks/useController";
+import { DateService } from "@/utils/Date";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -11,15 +15,29 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
   const tempDay = String(daynumber);
   const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
   const [lock, setLock] = useState(false);
-  const distpatchController = useControllerDispatch();
+  const dispatchController = useControllerDispatch();
+
+  const controllerState = useControllerState();
+
+  const left = DateService.DaysFromStartToEnd(controllerState.start, fullDate);
+  const right = DateService.DaysFromStartToEnd(controllerState.end, fullDate);
+  let isSelected = false;
+
+  if (left >= 0 && right <= 0) {
+    isSelected = true;
+  }
 
   //day-off
 
   return (
     <StyledDay.TWsizedContainer
       $top={lock}
+      $isSelected={isSelected}
       onClick={() => {
-        distpatchController({
+        console.log(left);
+        console.log(right);
+        console.group(isSelected);
+        dispatchController({
           type: "setDates",
           payload: { start: fullDate, end: fullDate },
         });
@@ -33,7 +51,8 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
         title={(() => {
           return (lock ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
         })()}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setLock((prev) => !prev);
         }}
       >
