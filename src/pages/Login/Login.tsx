@@ -24,7 +24,7 @@ export default function Login() {
   const session = useUserSession();
 
   function onSubmitLogin(payload: any) {
-    //fakeLogin(payload.user, payload.password) && session.dispatch(true);
+    fakeLogin(payload.user, payload.password) && session.dispatch(true);
     const data = new FormData();
     data.append("json", JSON.stringify(payload));
 

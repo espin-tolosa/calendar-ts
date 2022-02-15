@@ -8,11 +8,11 @@ import { DateService } from "@/utils/Date";
 import { DateCalendar } from "@/entities/date";
 
 type iMonth = {
-  time: string;
+  id: string;
   year: number;
   month: number;
 };
-const Month = ({ time, year, month }: iMonth) => {
+const Month = ({ id, year, month }: iMonth) => {
   const date = useMonthDate(year, month);
 
   return (
@@ -35,7 +35,7 @@ const Month = ({ time, year, month }: iMonth) => {
         ))}
       </StyledMonth.TWdaysBoard>
       <div
-        id={time}
+        id={id}
         className="absolute w-0 h-0 bg-transparent bottom-8 customtp:bottom-6 custombp:bottom-6 z-TopLayer "
       ></div>
     </StyledMonth.TWflexColLayout>
