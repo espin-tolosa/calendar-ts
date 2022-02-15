@@ -10,7 +10,12 @@ export const eventSpreader = (event: event) => {
 
   for (let day = 0; day < eventLength; day++) {
     const dayWeek = DateService.GetMonthDayKey(nextDate);
-    if (isNewRowDay(dayWeek)) {
+    console.log(keyNextDate.split("-")[2]);
+    //TODO: Conditions to split a event:
+    // 1. Is monday: ok
+    // 2. Is day 1: ok
+    // 3. Is day after day off: no
+    if (isNewRowDay(dayWeek) || keyNextDate.split("-")[2] === "01") {
       spreadEvent.push(toMonday(event, keyNextDate));
     } else {
       spreadEvent.push(toPlaceholder(event, keyNextDate));
