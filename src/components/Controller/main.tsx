@@ -1,12 +1,12 @@
 import { useEventDispatch, useEventState } from "@/hooks/useEventsApi";
 import { composition, event } from "@/interfaces";
-import { Event } from "@components/Event/main";
+import { Event } from "@/components/Event/main";
 import React, { createContext, Dispatch, useContext, useState } from "react";
 import { useDate } from "./handlers";
 //import { onChange } from "./handlers";
 import * as tw_Controller from "./tw";
 import tw from "tailwind-styled-components";
-import { useControllerState } from "./useController";
+import { useControllerState } from "@/hooks/useController";
 import { DateService } from "@/utils/Date";
 
 const cEventSelected = createContext<event | null>(null);

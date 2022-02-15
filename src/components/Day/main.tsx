@@ -1,6 +1,6 @@
 import * as StyledDay from "@components/Day/tw";
 import { memo, useState } from "react";
-import { useControllerDispatch } from "../Controller/useController";
+import { useControllerDispatch } from "@/hooks/useController";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -19,12 +19,6 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
     <StyledDay.TWsizedContainer
       $top={lock}
       onClick={() => {
-        distpatchController({
-          type: "setDates",
-          payload: { start: fullDate, end: fullDate },
-        });
-      }}
-      onTouchEnd={() => {
         distpatchController({
           type: "setDates",
           payload: { start: fullDate, end: fullDate },
