@@ -90,6 +90,17 @@ export const CreateEvent = () => {
       />
       {/* create button */}
       <tw_Controller.button
+        $display={true}
+        type={"button"}
+        value="Fetch"
+        onClick={() => {
+          fetch("./backend/test.php")
+            .then((res) => res.json())
+            .then((json) => console.log(json));
+        }}
+      />
+      {/* create button */}
+      <tw_Controller.button
         $display={false}
         type="submit"
         value="Create"

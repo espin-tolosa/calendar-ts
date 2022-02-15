@@ -9,7 +9,7 @@ export default function App() {
   {
     /*this code is forcing enter in the calendar automatically*/
   }
-  return userSession.value() ? <Login /> : <Codelink />;
+  return !userSession.value() ? <Login /> : <Codelink />;
 }
 //Correct code:
 //return !userSession.value() ? <Login /> : <Codelink />;
