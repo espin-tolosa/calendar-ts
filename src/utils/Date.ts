@@ -31,6 +31,15 @@ export function GetDate(y?: number, m?: number, d?: number) {
   }
 }
 
+export function ExportDateToControllerValue(date: string) {
+  const fields = date.split("-");
+  if (fields.length !== 3) {
+    return "";
+  }
+
+  return `${fields[2]} | ${fields[1]} | ${parseInt(fields[0])}`;
+}
+
 export function GetDateNextMonth(year?: number, month?: number) {
   const dt_new = GetDate(year, Number(month) + 1);
   const y_next = GetYear(dt_new);
@@ -151,4 +160,5 @@ export const DateService = {
   ComposeDate,
   GetNextDayOfDate,
   isValidKeyDate,
+  ExportDateToControllerValue,
 };

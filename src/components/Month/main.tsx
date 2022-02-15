@@ -5,6 +5,7 @@ import * as StyledMonth from "./tw";
 import { EventsThrower } from "../EventsThrower/main";
 import { zeroPadd } from "@/utils/zeroPadd";
 import { DateService } from "@/utils/Date";
+import { DateCalendar } from "@/entities/date";
 
 type iMonth = {
   time: string;
@@ -27,6 +28,7 @@ const Month = ({ time, year, month }: iMonth) => {
           <MemoIDay
             key={DateService.ComposeDate(year, month, day)}
             daynumber={day}
+            fullDate={DateService.ComposeDate(year, month, day)}
           >
             <EventsThrower day={DateService.ComposeDate(year, month, day)} />
           </MemoIDay>

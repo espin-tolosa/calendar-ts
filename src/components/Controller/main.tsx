@@ -6,6 +6,8 @@ import { useDate } from "./handlers";
 //import { onChange } from "./handlers";
 import * as tw_Controller from "./tw";
 import tw from "tailwind-styled-components";
+import { useControllerState } from "./useController";
+import { DateService } from "@/utils/Date";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -37,6 +39,9 @@ export const CreateEvent = () => {
   const [description, setDescription] = useState("");
   const [job, setJob] = useState("");
 
+  /*  parallel change consume date context */
+  const dates = useControllerState();
+
   const eventDispatcher = useEventDispatch();
 
   const [start, onChangeStart, removeBackSlashStart] = useDate();
@@ -64,8 +69,8 @@ export const CreateEvent = () => {
                 id: Math.floor(Math.random() * 1000), //TODO:
                 client: client,
                 job,
-                start: "20" + start, //TODO: refactor this by adding Date complete year fuction
-                end: "20" + end,
+                start: dates.start, //TODO: refactor this by adding Date complete year fuction
+                end: dates.end,
               },
             ],
           });
@@ -126,17 +131,21 @@ export const CreateEvent = () => {
           );
         })}
       </StyledSelect>
-
+      {/* parallel change on context testing */}
       <tw_Controller.startEnd>
         {/* start field */}
         <tw_Controller.date
           type="text"
           name="start"
           id="start"
-          value={(() => start)()} //TODO: function to represent string dates in the desired user format keeping internal consistency as: yyyy-mm-dd
+          value={DateService.ExportDateToControllerValue(dates.start)} //TODO: function to represent string dates in the desired user format keeping internal consistency as: yyyy-mm-dd
           autoComplete="off"
-          onChange={onChangeStart}
-          onKeyDown={removeBackSlashStart}
+          onChange={() => {
+            /* onChange */
+          }}
+          onKeyDown={() => {
+            /* backslash */
+          }}
           placeholder="start date"
           title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
         />
@@ -145,10 +154,14 @@ export const CreateEvent = () => {
           type="text"
           name="end"
           id="end"
-          value={(() => end)()} //TODO: same as start
+          value={DateService.ExportDateToControllerValue(dates.end)} //TODO: same as start
           autoComplete="off"
-          onChange={onChangeEnd}
-          onKeyDown={removeBackSlashEnd}
+          onChange={() => {
+            /* onChange */
+          }}
+          onKeyDown={() => {
+            /* backslash */
+          }}
           placeholder="end date"
           title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
         />
@@ -217,3 +230,32 @@ const DropDownClientMenu = () => {
     </StyledSelect>
   );
 };
+
+/* OLD START END FORM FIELD WITH BACKSLASH FUNCTION */
+
+//      <tw_Controller.startEnd>
+//        {/* start field */}
+//        <tw_Controller.date
+//          type="text"
+//          name="start"
+//          id="start"
+//          value={(() => start)()} //TODO: function to represent string dates in the desired user format keeping internal consistency as: yyyy-mm-dd
+//          autoComplete="off"
+//          onChange={onChangeStart}
+//          onKeyDown={removeBackSlashStart}
+//          placeholder="start date"
+//          title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
+//        />
+//        {/* end field */}
+//        <tw_Controller.date
+//          type="text"
+//          name="end"
+//          id="end"
+//          value={(() => end)()} //TODO: same as start
+//          autoComplete="off"
+//          onChange={onChangeEnd}
+//          onKeyDown={removeBackSlashEnd}
+//          placeholder="end date"
+//          title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
+//        />
+//      </tw_Controller.startEnd>

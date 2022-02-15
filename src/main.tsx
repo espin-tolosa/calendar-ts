@@ -6,18 +6,21 @@ import { UserSession } from "@/hooks/useUserSession";
 import { EventsDispatcher } from "./hooks/useEventsApi";
 import { UserPreferences } from "@/hooks/useLocalUserPreferences";
 import { EventInController } from "./components/Controller/main";
+import { ControllerProvider } from "./components/Controller/useController";
 
 ReactDOM.render(
   <React.StrictMode>
-    <EventInController>
-      <UserPreferences>
-        <EventsDispatcher>
-          <UserSession>
-            <App />
-          </UserSession>
-        </EventsDispatcher>
-      </UserPreferences>
-    </EventInController>
+    <ControllerProvider>
+      <EventInController>
+        <UserPreferences>
+          <EventsDispatcher>
+            <UserSession>
+              <App />
+            </UserSession>
+          </EventsDispatcher>
+        </UserPreferences>
+      </EventInController>
+    </ControllerProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
