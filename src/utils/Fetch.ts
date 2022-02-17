@@ -1,15 +1,53 @@
 const FormData = require("form-data");
-import { objectKeys } from "@interfaces/index";
+import { event, objectKeys } from "@interfaces/index";
 
 //const hostinger = "https://samuelengineer.com";
 
 const http_response_code: objectKeys<number> = {
   GET_ALL: 201,
+  GET_FROM: 201,
   POST: 202,
   PUT: 203,
   DELETE: 204,
   DELETE_ALL: 204,
 };
+
+//apifetch({action: "POST",})
+
+/*
+useEffect(() => {
+	if (isMount.current) {
+		if (click === 1) {
+			(async () => {
+				await apifetch({
+					action: action,
+					...event,
+				}).then((res) => {
+					if (!res) {
+						return;
+					}
+
+					dispatch({
+						type: action,
+						payload: res,
+					});
+				});
+			})();
+		}
+	} else {
+		isMount.current = true;
+	}
+	// eslint-disable-next-line
+}, [isMount, click]);
+}
+*/
+
+export async function fetchEvent(action: string, event: event) {
+  console.log("Query", action);
+  const data = new FormData();
+  data.append("json", JSON.stringify({ action, event }));
+  return fetch("backend/routes/test.api.php", { method: "POST", body: data });
+}
 
 export async function apifetch(query: { action: string }) {
   const data = new FormData();

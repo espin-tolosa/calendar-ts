@@ -15,6 +15,7 @@ export const eventSpreader = (event: event) => {
     // 1. Is monday: ok
     // 2. Is day 1: ok
     // 3. Is day after day off: no
+    //TODO: Span event proper size, actually spans-8 (maximun) allways
     if (isNewRowDay(dayWeek) || keyNextDate.split("-")[2] === "01") {
       spreadEvent.push(toMonday(event, keyNextDate));
     } else {

@@ -1,10 +1,8 @@
+import React, { createContext, Dispatch, useContext, useState } from "react";
+import * as tw_Controller from "./tw";
 import { useEventDispatch, useEventState } from "@/hooks/useEventsApi";
 import { composition, event } from "@/interfaces";
 import { Event } from "@/components/Event/main";
-import React, { createContext, Dispatch, useContext, useState } from "react";
-import { useDate } from "./handlers";
-//import { onChange } from "./handlers";
-import * as tw_Controller from "./tw";
 import tw from "tailwind-styled-components";
 import {
   useControllerDispatch,
@@ -12,6 +10,7 @@ import {
 } from "@/hooks/useController";
 import { DateService } from "@/utils/Date";
 import { isValidEvent } from "@/utils/ValidateEvent";
+import { useUserSession } from "@/hooks/useUserSession";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -48,6 +47,15 @@ export const CreateEvent = () => {
   const dispatchController = useControllerDispatch();
 
   const eventDispatcher = useEventDispatch();
+  const event: event = {
+    id: 1,
+    client: "Test Fetch",
+    job: "Post",
+    start: "2022-02-01",
+    end: "2022-02-02",
+  };
+
+  const { value } = useUserSession();
 
   return (
     <tw_Controller.form
@@ -96,9 +104,12 @@ export const CreateEvent = () => {
         $display={true}
         type={"button"}
         value="Fetch"
-        onClick={() => {
-          fetch("./backend/test.php")
-            .then((res) => res.json())
+        onClick={async () => {
+          fetchEvent("POSTisad", event)
+            .then((res) => {
+              console.log("status", res.status);
+              return res.text();
+            })
             .then((json) => console.log(json));
         }}
       />
@@ -282,3 +293,13 @@ const DropDownClientMenu = () => {
 //          title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
 //        />
 //      </tw_Controller.startEnd>
+
+async function fetchEvent(action: string, event: event) {
+  console.log("Query", action);
+  const data = new FormData();
+  data.append("json", JSON.stringify({ action, event }));
+  return fetch("backend/routes/events.api.php", {
+    method: "POST",
+    body: data,
+  });
+}

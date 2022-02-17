@@ -4,12 +4,10 @@ import Login from "@/pages/Login/Login";
 import { useUserSession } from "./hooks/useUserSession";
 
 export default function App() {
-  const userSession = useUserSession();
+  const { value } = useUserSession();
 
   {
     /*this code is forcing enter in the calendar automatically*/
   }
-  return !userSession.value() ? <Login /> : <Codelink />;
+  return !value() ? <Login /> : <Codelink />;
 }
-//Correct code:
-//return !userSession.value() ? <Login /> : <Codelink />;
