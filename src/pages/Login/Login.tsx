@@ -9,36 +9,13 @@ export default function Login() {
     formState: { errors },
   } = useForm();
 
-  const fakeLogin = (user: string, password: string) => {
-    if (
-      (user === "samuel" && password === "freesolo") ||
-      (user === "thomas" && password === "admin") ||
-      (user === "james" && password === "admin")
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+  const { fetchLogin } = useUserSession();
+
+  const onSubmitLogin = (payload: any) => {
+    //TODO: fix any, understand handleSubmit
+    //fakeLogin(payload);
+    fetchLogin(payload);
   };
-
-  const session = useUserSession();
-
-  function onSubmitLogin(payload: any) {
-    fakeLogin(payload.user, payload.password) && session.dispatch(true);
-    const data = new FormData();
-    data.append("json", JSON.stringify(payload));
-
-    fetch("/backend/routes/login.api.php", {
-      method: "POST",
-      body: data,
-    }).then((res) => {
-      if (res.status === 200) {
-        session.dispatch(true); //condition to render the Calendar View (ref: ad52)
-      } else {
-        console.warn("unable to connect Login");
-      }
-    });
-  }
   return (
     <TWloginWrapper>
       <TWloginForm onSubmit={handleSubmit(onSubmitLogin)}>
