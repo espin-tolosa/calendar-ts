@@ -6,10 +6,17 @@ import { FieldValues, SubmitHandler } from "react-hook-form";
 
 const value = () => false;
 const dispatch: (update: boolean) => void = () => {};
-const fakeLogin: (payload: SubmitHandler<FieldValues>) => void = () => {};
-const fetchLogin: (payload: SubmitHandler<FieldValues>) => void = () => {};
+//const fakeLogin: (payload: SubmitHandler<FieldValues>) => void = () => {};
+//const fetchLogin: (payload: SubmitHandler<FieldValues>) => void = () => {};
+const clearLoginSession: () => void = () => {};
+const fetchLogin: (payload: any) => void = () => {};
 
-const cUserSession = createContext({ value, dispatch, fakeLogin, fetchLogin });
+const cUserSession = createContext({
+  value,
+  dispatch,
+  fetchLogin,
+  clearLoginSession,
+});
 
 // * 2. Export context handler
 
@@ -58,14 +65,19 @@ export const UserSession: composition = ({ children }) => {
       method: "POST",
       body: data,
     }).then((res) => {
-      if (res.status === 200) {
-        dispatch(true);
-      }
+      res.status === 201 ? dispatch(true) : dispatch(false);
     });
   };
 
+  const clearLoginSession = () => {
+    const payload = { user: "", password: "" };
+    fetchLogin(payload);
+  };
+
   return (
-    <cUserSession.Provider value={{ value, dispatch, fakeLogin, fetchLogin }}>
+    <cUserSession.Provider
+      value={{ value, dispatch, fetchLogin, clearLoginSession }}
+    >
       {children}
     </cUserSession.Provider>
   );

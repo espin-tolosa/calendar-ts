@@ -1,4 +1,5 @@
 const FormData = require("form-data");
+import { api } from "@/static/apiRoutes";
 import { event, objectKeys } from "@interfaces/index";
 
 //const hostinger = "https://samuelengineer.com";
@@ -11,6 +12,14 @@ const http_response_code: objectKeys<number> = {
   DELETE: 204,
   DELETE_ALL: 204,
 };
+
+type ACTIONS =
+  | "GET_ALL"
+  | "GET_FROM"
+  | "POST"
+  | "PUT"
+  | "DELETE"
+  | "DELETE_ALL";
 
 //apifetch({action: "POST",})
 
@@ -41,12 +50,20 @@ useEffect(() => {
 }, [isMount, click]);
 }
 */
-
-export async function fetchEvent(action: string, event: event) {
-  console.log("Query", action);
+export async function fetchEvent(
+  action: string,
+  event: event = { id: 0, client: "", job: "", start: "", end: "" }
+) {
   const data = new FormData();
-  data.append("json", JSON.stringify({ action, event }));
-  return fetch("backend/routes/test.api.php", { method: "POST", body: data });
+  if (typeof event === "undefined") {
+    data.append("json", JSON.stringify({ action }));
+  } else {
+    data.append("json", JSON.stringify({ action, ...event }));
+  }
+  return fetch(api.routes.events, {
+    method: "POST",
+    body: data,
+  });
 }
 
 export async function apifetch(query: { action: string }) {

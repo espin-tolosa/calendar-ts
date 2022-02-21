@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { useMonthDate } from "@/hooks/useMonthDate";
 import { MemoIDay } from "@components/Day/main";
 import * as StyledMonth from "./tw";
@@ -6,6 +6,8 @@ import { EventsThrower } from "../EventsThrower/main";
 import { zeroPadd } from "@/utils/zeroPadd";
 import { DateService } from "@/utils/Date";
 import { DateCalendar } from "@/entities/date";
+import { composition, event } from "@/interfaces";
+import { EventsDispatcher, useEventDispatch } from "@/hooks/useEventsApi";
 
 type iMonth = {
   id: string;
@@ -14,6 +16,42 @@ type iMonth = {
 };
 const Month = ({ id, year, month }: iMonth) => {
   const date = useMonthDate(year, month);
+  const eventsDispatcher = useEventDispatch();
+
+  useEffect(() => {
+    const result = fetchEvent("GET_FROM", {
+      id: 0,
+      client: "",
+      job: "",
+      start: `${year}-${month}-01`,
+      end: "",
+    });
+    result
+      .then((res: any) => res.json())
+      .then((json: Array<event>) =>
+        json.forEach((event: event) => {
+          console.log("dispatch", {
+            id: event.id,
+            client: event.client,
+            job: event.job,
+            start: event.start.split(" ")[0],
+            end: event.end.split(" ")[0],
+          });
+          eventsDispatcher({
+            type: "appendarray",
+            payload: [
+              {
+                id: event.id,
+                client: event.client,
+                job: event.job,
+                start: event.start,
+                end: event.end,
+              },
+            ],
+          });
+        })
+      );
+  }, []);
 
   return (
     <StyledMonth.TWflexColLayout className="relative">
@@ -49,3 +87,16 @@ export const MemoMonth = memo(Month);
 //console.log("nextProps", nextProps);
 //return false;
 //});
+
+async function fetchEvent(
+  action: string,
+  event: event = { id: 0, client: "", job: "", start: "", end: "" }
+) {
+  const data = new FormData();
+  const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
+  data.append("json", dataJSON);
+  return fetch("backend/routes/events.api.php", {
+    method: "POST",
+    body: data,
+  });
+}

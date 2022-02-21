@@ -77,18 +77,29 @@ export const CreateEvent = () => {
             return;
           }
 
-          eventDispatcher({
-            type: "appendarray",
-            payload: [
-              {
-                id: Math.floor(Math.random() * 1000), //TODO:
-                client,
-                job,
-                start,
-                end,
-              },
-            ],
+          const result = fetchEvent("POST", {
+            id: Math.floor(Math.random() * 1000),
+            client,
+            job,
+            start,
+            end,
           });
+          result
+            .then((res: any) => res.json())
+            .then((json) => {
+              eventDispatcher({
+                type: "appendarray",
+                payload: [
+                  {
+                    id: json[0].id,
+                    client: json[0].client,
+                    job: json[0].job,
+                    start: json[0].start,
+                    end: json[0].end,
+                  },
+                ],
+              });
+            });
 
           dispatchController({
             type: "setDates",
@@ -99,19 +110,63 @@ export const CreateEvent = () => {
           setClient(() => "default");
         }}
       />
+      {/* test button */}
+      <ControllerButton
+        onClick={() => {
+          const result = fetchEvent("GET_ALL");
+          result
+            .then((res: any) => res.json())
+            .then((json) => console.log(json));
+        }}
+        name={"Test GET_ALL"}
+        display={false}
+      />
+      {/* test button */}
+      <ControllerButton
+        onClick={() => {
+          const result = fetchEvent("POST", {
+            id: 100,
+            client: "test client",
+            job: "test job",
+            start: "2022-02-01",
+            end: "2022-02-11",
+          });
+          result
+            .then((res: any) => res.text())
+            .then((text) => console.log("text", text));
+        }}
+        name={"Test POST"}
+        display={false}
+      />
+      {/* test button */}
+      <ControllerButton
+        onClick={() => {
+          const result = fetchEvent("GET_FROM", {
+            id: 0,
+            client: "",
+            job: "",
+            start: "2022-02-01",
+            end: "",
+          });
+          result
+            .then((res: any) => res.json())
+            .then((json) => console.log("text", json));
+        }}
+        name={"Test GET_MONTH"}
+        display={false}
+      />
       {/* create button */}
-      <tw_Controller.button
-        $display={true}
-        type={"button"}
-        value="Fetch"
-        onClick={async () => {
-          fetchEvent("POSTisad", event)
-            .then((res) => {
+      <ControllerButton
+        onClick={() => {
+          fetchEvent("POST", event)
+            .then((res: any) => {
               console.log("status", res.status);
               return res.text();
             })
             .then((json) => console.log(json));
         }}
+        name={"Fetch"}
+        display={false}
       />
       {/* create button */}
       <tw_Controller.button
@@ -294,12 +349,34 @@ const DropDownClientMenu = () => {
 //        />
 //      </tw_Controller.startEnd>
 
-async function fetchEvent(action: string, event: event) {
-  console.log("Query", action);
+async function fetchEvent(
+  action: string,
+  event: event = { id: 0, client: "", job: "", start: "", end: "" }
+) {
   const data = new FormData();
-  data.append("json", JSON.stringify({ action, event }));
+  const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
+  data.append("json", dataJSON);
   return fetch("backend/routes/events.api.php", {
     method: "POST",
     body: data,
   });
+}
+
+function ControllerButton({
+  onClick,
+  name,
+  display,
+}: {
+  onClick: any;
+  name: string;
+  display: boolean;
+}) {
+  return (
+    <tw_Controller.button
+      $display={display}
+      type="button"
+      value={name}
+      onClick={onClick}
+    />
+  );
 }

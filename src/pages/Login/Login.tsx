@@ -1,4 +1,5 @@
 import { useUserSession } from "@/hooks/useUserSession";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { TWloginButton, TWloginForm, TWloginInput, TWloginWrapper } from "./tw";
 
@@ -9,7 +10,11 @@ export default function Login() {
     formState: { errors },
   } = useForm();
 
-  const { fetchLogin } = useUserSession();
+  const { fetchLogin, clearLoginSession } = useUserSession();
+
+  useEffect(() => {
+    clearLoginSession();
+  }, []);
 
   const onSubmitLogin = (payload: any) => {
     //TODO: fix any, understand handleSubmit
