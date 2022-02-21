@@ -70,7 +70,7 @@ export async function apifetch(query: { action: string }) {
   const data = new FormData();
   data.append("json", JSON.stringify(query));
 
-  return fetch(`backend/routes/events.api.php`, {
+  return fetch(api.routes.events, {
     method: "POST",
     body: data,
   })

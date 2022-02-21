@@ -11,6 +11,7 @@ import {
 import { DateService } from "@/utils/Date";
 import { isValidEvent } from "@/utils/ValidateEvent";
 import { useUserSession } from "@/hooks/useUserSession";
+import { api } from "@/static/apiRoutes";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -356,7 +357,7 @@ async function fetchEvent(
   const data = new FormData();
   const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
   data.append("json", dataJSON);
-  return fetch("backend/routes/events.api.php", {
+  return fetch(api.routes.events, {
     method: "POST",
     body: data,
   });

@@ -8,6 +8,7 @@ import { DateService } from "@/utils/Date";
 import { DateCalendar } from "@/entities/date";
 import { composition, event } from "@/interfaces";
 import { EventsDispatcher, useEventDispatch } from "@/hooks/useEventsApi";
+import { api } from "@/static/apiRoutes";
 
 type iMonth = {
   id: string;
@@ -53,6 +54,8 @@ const Month = ({ id, year, month }: iMonth) => {
       );
   }, []);
 
+  console.info(date.daysList);
+
   return (
     <StyledMonth.TWflexColLayout className="relative">
       <div className="text-transparent h-0"></div>
@@ -95,7 +98,7 @@ async function fetchEvent(
   const data = new FormData();
   const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
   data.append("json", dataJSON);
-  return fetch("backend/routes/events.api.php", {
+  return fetch(api.routes.events, {
     method: "POST",
     body: data,
   });

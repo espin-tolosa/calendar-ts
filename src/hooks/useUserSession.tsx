@@ -1,6 +1,7 @@
 import { useState, useContext, createContext } from "react";
 import { composition } from "@/interfaces";
 import { FieldValues, SubmitHandler } from "react-hook-form";
+import { api } from "@/static/apiRoutes";
 
 // * 1. Create context: Logged
 
@@ -61,7 +62,7 @@ export const UserSession: composition = ({ children }) => {
     const data = new FormData();
     data.append("json", JSON.stringify(payload));
 
-    fetch("/backend/routes/login.api.php", {
+    fetch(api.routes.login, {
       method: "POST",
       body: data,
     }).then((res) => {
