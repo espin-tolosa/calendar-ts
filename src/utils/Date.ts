@@ -1,5 +1,20 @@
 import { zeroPadd } from "./zeroPadd";
 
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 function zeroPad(num: number, places = 2) {
   return String(num).padStart(places, "0");
 }
@@ -59,6 +74,11 @@ export function GetDay(dt: Idt) {
 export function GetMonth(dt: Idt) {
   return 1 + dt.getMonth();
 }
+
+export function GetMonthKeyName(dt: Idt) {
+  return monthNames[GetMonth(dt)];
+}
+
 export function GetDayPad(dt: any) {
   return zeroPad(dt.getDate());
 }
@@ -147,10 +167,22 @@ function isValidKeyDate(today: string) {
   return dt.toDateString() !== "Invalid Date";
 }
 
+function GetTodayDateFormat() {
+  const today = GetDate();
+  const day = GetMonthDayKey(today);
+  const month = GetMonthKeyName(today);
+  const year = GetYear(today);
+  const number = GetDay(today);
+  return `${day}: ${number} ${month} ${year}`;
+}
+
 export const DateService = {
   GetDate,
+  GetTodayDateFormat,
   GetDateNextMonth,
+  GetDay,
   GetMonth,
+  GetMonthKeyName,
   GetYear,
   FormatDate,
   GetLastDayMonth,
