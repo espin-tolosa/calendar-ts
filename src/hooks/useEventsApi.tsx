@@ -18,7 +18,20 @@ function reducerEvents(state: State, action: Action) {
   switch (action.type) {
     //
     case "appendarray": {
-      const event = action.payload[0]; // by now I can only manage first item
+      const eventWithDayHour = action.payload[0]; // by now I can only manage first item
+      const event = {
+        id: eventWithDayHour.id,
+        client: eventWithDayHour.client,
+        job: eventWithDayHour.job,
+        start: eventWithDayHour.start.split(" ")[0],
+        end: eventWithDayHour.end.split(" ")[0],
+      };
+
+      // Check if event already exists in the state by its id
+      const isEventInState = state.findIndex((inner) => inner.id === event.id);
+      if (isEventInState >= 0) {
+        return state;
+      }
 
       //checks the case of end begins before the start
       const daysSpread = DateService.DaysFromStartToEnd(event.start, event.end);

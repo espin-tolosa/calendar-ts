@@ -24,7 +24,7 @@ export function useUserSession() {
 
 // * dep: src/main.tsx
 export const UserSession: composition = ({ children }) => {
-  const [state, setState] = useState(isCookie("PHPSESSID"));
+  const [state, setState] = useState(isPHPSession() && isToken());
 
   // * Dispatcher closure wrapping setState:
   // * case dispatch true:	updates login status
@@ -76,6 +76,25 @@ function isCookie(name: string) {
   return document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"))
     ? true
     : false;
+}
+
+function isToken() {
+  return getCookie("token") === "" ? false : true;
+}
+function isPHPSession() {
+  return getCookie("phpsession") === "" ? false : true;
+}
+
+function getCookie(name: string) {
+  const [phpsession, token] = document.cookie.split(" ");
+
+  if (name === "phpsession") {
+    return phpsession ? phpsession : "";
+  } else if (name === "token") {
+    return token ? token : "";
+  } else {
+    return "";
+  }
 }
 
 export function deleteSession() {
