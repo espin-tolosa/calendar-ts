@@ -249,8 +249,15 @@ export const CreateEvent = () => {
           onChange={() => {
             /* onChange */
           }}
-          onKeyDown={() => {
+          onKeyDown={(e) => {
             /* backslash */
+            if (e.code === "Backspace") {
+              dispatchController({
+                type: "backSlash",
+                payload: { start: start, end: "" },
+              });
+            }
+            console.log(e.code);
           }}
           placeholder="end date"
           title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
