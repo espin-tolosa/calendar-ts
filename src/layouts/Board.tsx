@@ -24,7 +24,7 @@ export const LayoutBoard = () => {
   const autoScrollTarget = useAutoScroll();
   //*--------------------------*/
   return (
-    <TWboard>
+    <TWboard id={"Board"}>
       <MemoMonth id={"Past-1"} year={2021} month={12} />
       <MemoMonth id={autoScrollTarget} year={2022} month={1} />
       {monthKeys.map((month_entry, index) => {

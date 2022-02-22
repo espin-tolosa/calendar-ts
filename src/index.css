@@ -4,7 +4,8 @@
 
 :root {
   /*just a remember: --header_height: 2rem;*/
-  --calendar_width: 740px;
+  --calendar_width: auto;
+  --calendar_columns: 1;
 }
 
 @font-face {
@@ -142,7 +143,10 @@
   }
 
   .components-calendar {
-    grid-template-columns: repeat(auto-fit, minmax(var(--calendar_width), 1fr));
+    grid-template-columns: repeat(
+      var(--calendar_columns),
+      minmax(var(--calendar_width), 1fr)
+    );
   }
 }
 /* catch day hover from day-header */

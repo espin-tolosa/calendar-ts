@@ -1,16 +1,15 @@
-import * as tw_Layouts from "@/layouts/tw";
+import { TWcontroller } from "./tw";
 import { CreateEvent } from "@/components/Controller/main";
-
+import { Configuration } from "@/components/Configuration/main";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
+
 export const LayoutController = () => {
-  const { localState } = useLocalUserPreferencesContext();
-  console.log(
-    "Displaycontroller from localState",
-    localState.displayController
-  );
+  const { displayController } = useLocalUserPreferencesContext().localState;
+
   return (
-    <tw_Layouts.TWcontroller $display={localState.displayController}>
+    <TWcontroller id={"Controller"} $display={displayController}>
       <CreateEvent />
-    </tw_Layouts.TWcontroller>
+      <Configuration />
+    </TWcontroller>
   );
 };

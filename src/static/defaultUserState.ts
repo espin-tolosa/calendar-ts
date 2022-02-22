@@ -1,5 +1,5 @@
 export const defaultUserState = {
-  displayController: true,
+  displayController: false,
   darkMode: false,
 };
 export type UserPreferencesState = typeof defaultUserState;

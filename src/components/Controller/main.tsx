@@ -56,8 +56,6 @@ export const CreateEvent = () => {
     end: "2022-02-02",
   };
 
-  const { value } = useUserSession();
-
   return (
     <tw_Controller.form
       action="post"
@@ -224,57 +222,13 @@ export const CreateEvent = () => {
       {/* parallel change on context testing */}
       <tw_Controller.startEnd>
         {/* start field */}
-        <tw_Controller.date
-          type="text"
-          name="start"
-          id="start"
-          value={DateService.ExportDateToControllerValue(start)} //TODO: function to represent string dates in the desired user format keeping internal consistency as: yyyy-mm-dd
-          autoComplete="off"
-          onChange={() => {
-            /* onChange */
-          }}
-          onKeyDown={() => {
-            /* backslash */
-          }}
-          placeholder="start date"
-          title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
-        />
+        <DateField date={start} name="start" />
         {/* end field */}
-        <tw_Controller.date
-          type="text"
-          name="end"
-          id="end"
-          value={DateService.ExportDateToControllerValue(end)} //TODO: same as start
-          autoComplete="off"
-          onChange={() => {
-            /* onChange */
-          }}
-          onKeyDown={(e) => {
-            /* backslash */
-            if (e.code === "Backspace") {
-              dispatchController({
-                type: "backSlash",
-                payload: { start: start, end: "" },
-              });
-            }
-            console.log(e.code);
-          }}
-          placeholder="end date"
-          title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
-        />
+        <DateField date={end} name="end" />
       </tw_Controller.startEnd>
 
       {/* job field */}
-      <tw_Controller.job
-        onChange={(e) => {
-          setJob(e.target.value);
-        }}
-        type="text"
-        name="job"
-        id="job"
-        value={job}
-        placeholder="Job"
-      />
+      <JobField value={job} setValue={setJob} />
       <tw_Controller.description_wrap>
         {/* description optional field */}
         <tw_Controller.description
@@ -388,3 +342,37 @@ function ControllerButton({
     />
   );
 }
+
+const DateField = ({ date, name }: { date: string; name: string }) => {
+  return (
+    <tw_Controller.date
+      type="text"
+      name={name}
+      id={name}
+      value={DateService.ExportDateToControllerValue(date)}
+      autoComplete="off"
+      placeholder={`${name} date`}
+    />
+  );
+};
+
+const JobField = ({
+  value,
+  setValue,
+}: {
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+}) => {
+  return (
+    <tw_Controller.job
+      onChange={(e) => {
+        setValue(e.target.value);
+      }}
+      type="text"
+      name="job"
+      id="job"
+      value={value}
+      placeholder="Job"
+    />
+  );
+};
