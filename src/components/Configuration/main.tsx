@@ -87,7 +87,7 @@ export function Configuration() {
       <tw_Controller.form>
         <div className="grid grid-cols-2 gap-2">
           <div>Columns</div>
-          <div className="flex flex-row justify-center text-xl ">
+          <div className="flex flex-row justify-center">
             <TW_button
               type="button"
               className="rounded-l-full"
