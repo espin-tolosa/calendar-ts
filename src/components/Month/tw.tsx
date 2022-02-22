@@ -14,7 +14,7 @@ flex justify-center
 sticky sm:top-9 customtp:top-6 custombp:top-6 z-Dayoff
 font-medium
 text-black
-px-[2ch] border-b-2 border-slate-200 
+px-[2ch] border-b-2 border-slate-400 
 bg-gradient-to-r from-slate-200 via-slate-50 to-slate-200
 rounded-t-md
 `;
@@ -27,7 +27,7 @@ rounded-t-md
 // [mon + 28, sun + 31 ] = [28,30] cell days
 // this means that N can take values of [4,5]
 export const TWdaysBoard = tw.div`
-	grid grid-cols-7 overflow-hidden relative bg-slate-300 gap-[1px] border-b-[1px] border-slate-300
+	grid grid-cols-7 overflow-hidden relative bg-slate-200 gap-[1px] border-b-[1px] border-slate-300
 `;
 
 // Shifts the day where a month starts

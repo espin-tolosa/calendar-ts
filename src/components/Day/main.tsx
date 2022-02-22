@@ -17,6 +17,9 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
   const [lock, setLock] = useState(false);
   const dispatchController = useControllerDispatch();
 
+  const dayName = DateService.GetMonthDayKey(new Date(fullDate));
+  const isWeekend = dayName === "Sunday" || dayName === "Saturday";
+
   const controllerState = useControllerState();
 
   const left = DateService.DaysFromStartToEnd(controllerState.start, fullDate);
@@ -32,6 +35,7 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
   return (
     <StyledDay.TWsizedContainer
       $top={lock}
+      $isWeekend={isWeekend}
       $isSelected={isSelected}
       onClick={() => {
         dispatchController({
@@ -48,6 +52,7 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
         title={(() => {
           return (lock ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
         })()}
+        $isWeekend={isWeekend}
         onClick={(e) => {
           e.stopPropagation();
           setLock((prev) => !prev);
