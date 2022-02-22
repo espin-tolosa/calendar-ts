@@ -76,7 +76,7 @@ export function GetMonth(dt: Idt) {
 }
 
 export function GetMonthKeyName(dt: Idt) {
-  return monthNames[GetMonth(dt)];
+  return monthNames[GetMonth(dt) - 1]; //index of array starts at 0
 }
 
 export function GetDayPad(dt: any) {
