@@ -7,20 +7,27 @@ import { EventsDispatcher } from "@/hooks/useEventsApi";
 import { UserPreferences } from "@/hooks/useLocalUserPreferences";
 import { EventInController } from "@components/Controller/main";
 import { ControllerProvider } from "@/hooks/useController";
+import { DragDropContext } from "react-beautiful-dnd";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ControllerProvider>
-      <EventInController>
-        <UserPreferences>
-          <EventsDispatcher>
-            <UserSession>
-              <App />
-            </UserSession>
-          </EventsDispatcher>
-        </UserPreferences>
-      </EventInController>
-    </ControllerProvider>
+    <DragDropContext
+      onDragEnd={(e) => {
+        console.log(e);
+      }}
+    >
+      <ControllerProvider>
+        <EventInController>
+          <UserPreferences>
+            <EventsDispatcher>
+              <UserSession>
+                <App />
+              </UserSession>
+            </EventsDispatcher>
+          </UserPreferences>
+        </EventInController>
+      </ControllerProvider>
+    </DragDropContext>
   </React.StrictMode>,
   document.getElementById("root")
 );

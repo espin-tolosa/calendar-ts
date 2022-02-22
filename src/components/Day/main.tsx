@@ -6,6 +6,7 @@ import {
 } from "@/hooks/useController";
 import { DateService } from "@/utils/Date";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
+import { Droppable } from "react-beautiful-dnd";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -35,37 +36,44 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
   //day-off
 
   return (
-    <StyledDay.TWsizedContainer
-      $top={lock}
-      $isWeekend={isWeekend}
-      $showWeekend={localState.showWeekends}
-      $isSelected={isSelected}
-      onClick={() => {
-        dispatchController({
-          type: "setDates",
-          payload: { start: fullDate, end: fullDate },
-        });
-      }}
-      onMouseUp={() => {
-        console.log("leaving action at day:", dayPadd);
-      }}
-      onMouseEnter={() => console.log("passing over:", dayPadd)}
-    >
-      <StyledDay.TWheader
-        $showWeekend={localState.showWeekends}
-        title={(() => {
-          return (lock ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
-        })()}
-        $isWeekend={isWeekend}
-        onClick={(e) => {
-          e.stopPropagation();
-          setLock((prev) => !prev);
-        }}
-      >
-        <StyledDay.TWdaySpot>{dayPadd}</StyledDay.TWdaySpot>
-      </StyledDay.TWheader>
-      {children}
-    </StyledDay.TWsizedContainer>
+    <Droppable droppableId={`Day:${dayName}`}>
+      {(provided, snapshot) => (
+        <StyledDay.TWsizedContainer
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+          $top={lock}
+          $isWeekend={isWeekend}
+          $showWeekend={localState.showWeekends}
+          $isSelected={isSelected}
+          onClick={() => {
+            dispatchController({
+              type: "setDates",
+              payload: { start: fullDate, end: fullDate },
+            });
+          }}
+          onMouseUp={() => {
+            console.log("leaving action at day:", dayPadd);
+          }}
+          onMouseEnter={() => console.log("passing over:", dayPadd)}
+        >
+          <StyledDay.TWheader
+            $showWeekend={localState.showWeekends}
+            title={(() => {
+              return (lock ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
+            })()}
+            $isWeekend={isWeekend}
+            onClick={(e) => {
+              e.stopPropagation();
+              setLock((prev) => !prev);
+            }}
+          >
+            <StyledDay.TWdaySpot>{dayPadd}</StyledDay.TWdaySpot>
+          </StyledDay.TWheader>
+          {children}
+          {provided.placeholder}
+        </StyledDay.TWsizedContainer>
+      )}
+    </Droppable>
   );
 }
 

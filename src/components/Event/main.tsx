@@ -3,6 +3,7 @@ import { giveMeColor } from "@/utils/giveMeColor";
 import { event } from "@interfaces/index";
 import { DateService } from "@/utils/Date";
 import { useSetEventSelected } from "../Controller/main";
+import { Draggable } from "react-beautiful-dnd";
 
 export const Event = ({ event }: { event: event }) => {
   const setEventController = useSetEventSelected();
@@ -30,21 +31,28 @@ export const Event = ({ event }: { event: event }) => {
       >
         {`${event.client}: ${event.job}`}
       </StyledEvent.TWtextContent>
-      <StyledEvent.TWextend
-        $cells={cells}
-        onMouseDownCapture={() => {
-          console.log("extend event:", event.id);
-        }}
-        onMouseEnter={() => {
-          console.log("enter extend event");
-        }}
-        onMouseOut={() => {
-          console.log("leaving extend event");
-        }}
-        title={`Drag here to extend ${event.client}\'s job`}
-      >
-        {"+"}
-      </StyledEvent.TWextend>
+      <Draggable draggableId={String(event.id)} index={event.id}>
+        {(provided, snapshot) => (
+          <StyledEvent.TWextend
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+            $cells={cells}
+            onMouseDownCapture={() => {
+              console.log("extend event:", event.id);
+            }}
+            onMouseEnter={() => {
+              console.log("enter extend event");
+            }}
+            onMouseOut={() => {
+              console.log("leaving extend event");
+            }}
+            title={`Drag here to extend ${event.client}\'s job`}
+          >
+            {"+"}
+          </StyledEvent.TWextend>
+        )}
+      </Draggable>
       <StyledEvent.TWplaceholder key={"p" + event.id}>
         {"placeholder"}
       </StyledEvent.TWplaceholder>
