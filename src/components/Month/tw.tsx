@@ -27,7 +27,7 @@ rounded-t-md
 // [mon + 28, sun + 31 ] = [28,30] cell days
 // this means that N can take values of [4,5]
 export const TWdaysBoard = tw.div`
-	grid grid-cols-7 overflow-hidden relative bg-slate-200 gap-[1px] border-b-[1px] border-slate-300
+	grid grid-cols-7 overflow-hidden relative bg-slate-50 gap-[1px] border-b-[1px] border-slate-300
 `;
 
 // Shifts the day where a month starts

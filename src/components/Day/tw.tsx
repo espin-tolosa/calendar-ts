@@ -23,7 +23,7 @@ export const TWsizedContainer = tw.div<{
     ($isSelected && "border-2 bg-green-100") || (!$isSelected && "") || ""}	
 
 	${({ $isWeekend }) =>
-    ($isWeekend && "bg-slate-100") || (!$isWeekend && "") || ""}	
+    ($isWeekend && "bg-slate-300") || (!$isWeekend && "") || ""}	
 
 `;
 
@@ -33,7 +33,7 @@ export const TWheader = tw.div<{
 border-b-[1px] border-slate-200 day-header flex sm:justify-end justify-center bg-white
 
 	${({ $isWeekend }) =>
-    ($isWeekend && "bg-slate-100") || (!$isWeekend && "") || ""}	
+    ($isWeekend && "bg-slate-300") || (!$isWeekend && "") || ""}	
 
 `;
 
