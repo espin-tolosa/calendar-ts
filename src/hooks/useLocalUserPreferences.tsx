@@ -36,7 +36,12 @@ function reducer(state: UserPreferencesState, action: { type: string }) {
       ...state,
       displayController: !state.displayController,
     };
-    //   console.log("result", result);
+    return result;
+  } else if (action.type === "toggleShowWeekend") {
+    const result: UserPreferencesState = {
+      ...state,
+      showWeekends: !state.showWeekends,
+    };
     return result;
   } else {
     return state;

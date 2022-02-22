@@ -5,6 +5,7 @@ import {
   useControllerState,
 } from "@/hooks/useController";
 import { DateService } from "@/utils/Date";
+import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -16,6 +17,7 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
   const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
   const [lock, setLock] = useState(false);
   const dispatchController = useControllerDispatch();
+  const { localState } = useLocalUserPreferencesContext();
 
   const dayName = DateService.GetMonthDayKey(new Date(fullDate));
   const isWeekend = dayName === "Sunday" || dayName === "Saturday";
@@ -36,6 +38,7 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
     <StyledDay.TWsizedContainer
       $top={lock}
       $isWeekend={isWeekend}
+      $showWeekend={localState.showWeekends}
       $isSelected={isSelected}
       onClick={() => {
         dispatchController({
@@ -49,6 +52,7 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
       onMouseEnter={() => console.log("passing over:", dayPadd)}
     >
       <StyledDay.TWheader
+        $showWeekend={localState.showWeekends}
         title={(() => {
           return (lock ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
         })()}
