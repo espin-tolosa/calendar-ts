@@ -35,7 +35,7 @@ transition-[max-height]
 ease-in-out
 duration-500
 
-sticky sm:top-9 customtp:top-6 custombp:top-6 z-TopLayer
+sticky sm:top-10 customtp:top-6 custombp:top-6 z-TopLayer
 
 rounded-md
 shadow-[shadow-[5px_5px_5px_rgb(148,163,184)]

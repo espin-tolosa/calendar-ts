@@ -2,11 +2,13 @@ import { useUserSession } from "@/hooks/useUserSession";
 import { DateService } from "@/utils/Date";
 import * as StyledTopnav from "./tw";
 
+export const TOPNAV_ID = "Topnav";
+
 export const Topnav = () => {
   const setSession = useUserSession();
 
   return (
-    <StyledTopnav.TWcontainer>
+    <StyledTopnav.TWcontainer id={TOPNAV_ID}>
       {/*left-header*/}
       <StyledTopnav.TWlogo>JH Diary</StyledTopnav.TWlogo>
       {/*center-header*/}{" "}

@@ -1,84 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import * as tw_Controller from "./tw";
 
 import tw from "tailwind-styled-components/dist/tailwind";
+import { useConfigColumns, useListenWindowSize } from "./hook";
 
 export function Configuration() {
-  const [columns, setColumns] = useState(1);
-  const [boundError, setBoundError] = useState("");
+  const [columns, errorMsg, hChangeColumns] = useConfigColumns();
+  const isLargeWindow = useListenWindowSize();
 
-  const screenWidth = useRef(window.screen.width); // TODO: use Observer in the future
-
-  useEffect(() => {
-    const controller = window.document.getElementById("Controller")!;
-    console.log("Controller", controller.clientWidth);
-    const computedWidth = columns;
-    console.log("Computed width", computedWidth);
-    document.documentElement.style.setProperty(
-      "--calendar_columns",
-      `${computedWidth}`
-    );
-    if (columns < 3) {
-      let scrollTarget = "AutoScrollTarget_OnlyOneUniqueId";
-      setTimeout(() => {
-        handleScroll(scrollTarget);
-      }, 0);
-
-      const handleScroll = (target: string) => {
-        const top = document.getElementById(target);
-        top &&
-          top.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-            inline: "start",
-          });
-      };
-
-      setBoundError("");
-    } else {
-      window.scrollTo(0, 16);
-    }
-  }, [columns]);
-
-  const hChangeColumns = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const onChangeColumValue = parseInt(e.target.value);
-    if (onChangeColumValue > 0 && onChangeColumValue < 5) {
-      setColumns(onChangeColumValue);
-      //
-    } else {
-      setBoundError("Layout accepts maximum of 4 columns");
-      setTimeout(() => {
-        setBoundError("");
-      }, 2000);
-    }
-  };
-  const hSubcolumn = () => {
-    const onChangeColumValue = columns - 1;
-    if (onChangeColumValue > 0 && onChangeColumValue < 5) {
-      setColumns(onChangeColumValue);
-      //
-    } else {
-      setBoundError("Layout accepts maximum of 4 columns");
-      setTimeout(() => {
-        setBoundError("");
-      }, 2000);
-    }
-  };
-
-  const hAddcolumn = () => {
-    const onChangeColumValue = columns + 1;
-    if (onChangeColumValue > 0 && onChangeColumValue < 5) {
-      setColumns(onChangeColumValue);
-      //
-    } else {
-      setBoundError("Layout accepts maximum of 4 columns");
-      setTimeout(() => {
-        setBoundError("");
-      }, 2000);
-    }
-  };
-
-  if (screenWidth.current < 720) {
+  if (!isLargeWindow) {
     return <></>;
   }
 
@@ -92,7 +22,7 @@ export function Configuration() {
               type="button"
               className="rounded-l-full"
               $display={columns > 1}
-              onClick={hSubcolumn as any}
+              onClick={() => hChangeColumns(-1) as any}
             >
               -
             </TW_button>
@@ -102,13 +32,13 @@ export function Configuration() {
               className="rounded-r-full"
               $display={columns < 4}
               type="button"
-              onClick={hAddcolumn as any}
+              onClick={() => hChangeColumns(1) as any}
             >
               +
             </TW_button>
           </div>
         </div>
-        <div className="text-xs text-red-900 ">{boundError}</div>
+        <div className="text-xs text-red-900 ">{errorMsg}</div>
       </tw_Controller.form>
     </>
   );
