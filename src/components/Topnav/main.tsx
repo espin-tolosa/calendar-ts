@@ -4,12 +4,6 @@ import * as StyledTopnav from "./tw";
 
 export const Topnav = () => {
   const setSession = useUserSession();
-  const today = DateService.GetDate();
-  const day = DateService.GetMonthDayKey(today);
-  const month = DateService.GetMonthKeyName(today);
-  const y = DateService.GetYear(today);
-  const n = DateService.GetDay(today);
-  //const [d, m, n] = new Date().toDateString().split(" ");
 
   return (
     <StyledTopnav.TWcontainer>

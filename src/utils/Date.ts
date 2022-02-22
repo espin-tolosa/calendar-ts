@@ -173,7 +173,7 @@ function GetTodayDateFormat() {
   const month = GetMonthKeyName(today);
   const year = GetYear(today);
   const number = GetDay(today);
-  return `${day}: ${number} ${month} ${year}`;
+  return `${day} ${number} ${month} ${year}`;
 }
 
 export const DateService = {
