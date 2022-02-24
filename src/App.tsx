@@ -8,6 +8,7 @@ import { useEventDispatch, useEventState } from "@/hooks/useEventsApi";
 import { api } from "@/static/apiRoutes";
 import { event, objectKeys } from "@interfaces/index";
 import { DateService } from "./utils/Date";
+import { useRef } from "react";
 
 async function fetchEvent(
   action: string,
@@ -29,6 +30,13 @@ export default function App() {
   const { value } = useUserSession();
   const eventDispatcher = useEventDispatch();
   const allEvents = useEventState();
+  const eventStartDragging = useRef<event>({
+    id: 0,
+    client: "",
+    job: "",
+    start: "1970-01-01",
+    end: "1970-01-01",
+  });
 
   {
     /*this code is forcing enter in the calendar automatically*/
@@ -39,6 +47,10 @@ export default function App() {
     <DragDropContext
       onBeforeCapture={(result) => {
         console.log("beforecapture", result);
+        const event = allEvents.find(
+          (e) => e.id === parseInt(result.draggableId)
+        )!;
+        eventStartDragging.current = event;
       }}
       onDragUpdate={(result) => {
         const { source, destination } = result;
@@ -87,12 +99,16 @@ export default function App() {
           destination?.droppableId!
         );
         const endTarget = DateService.DaysFromStartToEnd(
-          event.end,
+          eventStartDragging.current.end,
           destination?.droppableId!
         );
 
+        console.log("spread condition", spread < 0);
+        console.log("end target condition", endTarget === 0);
+
         if (spread < 0) return;
         if (endTarget === 0) return;
+        console.log("fetch put");
         const fetchResultPUT = fetchEvent("PUT", {
           id: event.id,
           client: event.client,
@@ -102,9 +118,13 @@ export default function App() {
         });
 
         fetchResultPUT
-          .then((res: any) => res.json())
+          .then((res) => {
+            if (res.status !== 203) {
+              throw new Error("Error code differs from expected");
+            }
+            return res.json();
+          })
           .then((json) => {
-            console.log("PUT", json);
             eventDispatcher({
               type: "deletebyid_test",
               payload: [
@@ -120,6 +140,26 @@ export default function App() {
             eventDispatcher({
               type: "appendarray",
               payload: [json[0]],
+            });
+          })
+          .catch((error) => {
+            console.log("Restaure event");
+            console.log(error);
+            eventDispatcher({
+              type: "deletebyid_test",
+              payload: [
+                {
+                  id: event.id,
+                  client: event.client,
+                  job: event.job,
+                  start: event.start,
+                  end: destination?.droppableId!,
+                },
+              ],
+            });
+            eventDispatcher({
+              type: "appendarray",
+              payload: [eventStartDragging.current],
             });
           });
       }}
