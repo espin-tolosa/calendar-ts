@@ -25,7 +25,7 @@
   }
 
   [data-rbd-drag-handle-context-id="0"] {
-    cursor: e-resize !important;
+    cursor: e-resize !important; /* the way I find to */
   }
 }
 

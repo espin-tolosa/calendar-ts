@@ -68,7 +68,7 @@ export const CreateEvent = () => {
       <tw_Controller.button
         $display={true}
         type="submit"
-        value="Create"
+        value="Save"
         title="Testing to new dispatch event"
         onClick={() => {
           // TODO: check if is valid event

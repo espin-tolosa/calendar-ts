@@ -34,21 +34,23 @@ export const TWsizedContainer = tw.div<{
 	${({ $isWeekend, $showWeekend }) =>
     ($isWeekend && !$showWeekend && "z-Dayoff") || ""}	
 
-		${({ $restDays }) => ($restDays && "bg-slate-200 z-Dayoff") || ""}
+		${({ $restDays }) => ($restDays && "bg-slate-50 z-Dayoff text-slate-50") || ""}
 
 `;
 
 export const TWheader = tw.div<{
   $isWeekend: boolean;
   $showWeekend: boolean;
+  $restDays: boolean;
 }>`
 border-b-[1px] border-slate-200 day-header flex sm:justify-end justify-center bg-white
 
 	${({ $isWeekend, $showWeekend }) =>
-    ($isWeekend && !$showWeekend && "bg-slate-300 hover:bg-slate-300 ") ||
+    ($isWeekend && !$showWeekend && "bg-slate-50 hover:bg-slate-50 ") ||
     (!$isWeekend && "") ||
     ""}	
 
+		${({ $restDays }) => ($restDays && "bg-slate-50 z-Dayoff text-slate-50") || ""}
 `;
 
 export const TWdaySpot = tw.div`

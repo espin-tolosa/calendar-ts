@@ -1,6 +1,7 @@
 import { memo, useEffect } from "react";
 import { useMonthDate } from "@/hooks/useMonthDate";
 import { MemoIDay } from "@components/Day/main";
+import { IDayHolder } from "@components/DayHolder/main";
 import * as StyledMonth from "./tw";
 import { EventsThrower } from "../EventsThrower/main";
 import { zeroPadd } from "@/utils/zeroPadd";
@@ -54,24 +55,18 @@ const Month = ({ id, year, month }: iMonth) => {
       );
   }, []);
 
-  console.info(date.daysList);
-  console.log("Start month", date.start);
   const DayStart = DateService.GetDayNumberOfDay(date.start);
-  console.log("Day list length", DayStart + date.daysList.length);
-  const diff = 5 * 7 - DayStart - date.daysList.length + 1;
-  console.log("Diff", diff);
+  let diff = 5 * 7 - DayStart - date.daysList.length + 1;
+  if (diff < 0) {
+    diff = 6 * 7 - DayStart - date.daysList.length + 1;
+  }
   const restOfDays = Array.from({ length: diff }, (_, i) => -i - 1);
+
+  const leftOfDays = Array.from({ length: DayStart - 1 }, (_, i) => -i - 1);
   restOfDays.forEach((r) => date.daysList.push(r));
-
-  console.log("daylist", date.daysList);
-
-  //date.daysList.push(1);
-  //date.daysList.push(2);
-  //date.daysList.push(3);
-  //date.daysList.push(4);
-  //date.daysList.push(5);
-  //date.daysList.push(6);
-  //date.daysList.push(7);
+  console.info("DIFF", diff);
+  console.log("left days", leftOfDays);
+  console.log("right, days", restOfDays);
 
   return (
     <StyledMonth.TWflexColLayout className="relative">
@@ -81,33 +76,32 @@ const Month = ({ id, year, month }: iMonth) => {
 
       {/*board container*/}
       <StyledMonth.TWdaysBoard>
-        <StyledMonth.TWdayShift $weekday={date.start} />
+        <StyledMonth.TWdayShift $weekday={"mon"} />
 
-        {date.daysList.map((day) => {
-          if (day > 0) {
-            return (
-              <MemoIDay
-                key={DateService.ComposeDate(year, month, day)}
-                daynumber={day}
-                fullDate={DateService.ComposeDate(year, month, day)}
-                restDays={false}
-              >
-                <EventsThrower
-                  day={DateService.ComposeDate(year, month, day)}
-                />
-              </MemoIDay>
-            );
-          } else {
-            return (
-              <MemoIDay
-                key={"r" + DateService.ComposeDate(year, month + 1, -day)}
-                daynumber={-day}
-                fullDate={DateService.ComposeDate(year, (month + 1) % 12, -day)}
-                restDays={true}
-              ></MemoIDay>
-            );
-          }
-        })}
+        {leftOfDays
+          .map((day, index) => {
+            return <IDayHolder key={"l" + index}></IDayHolder>;
+          })
+          .concat(
+            date.daysList.map((day, index) => {
+              if (day > 0) {
+                return (
+                  <MemoIDay
+                    key={DateService.ComposeDate(year, month, day)}
+                    daynumber={day}
+                    fullDate={DateService.ComposeDate(year, month, day)}
+                    restDays={false}
+                  >
+                    <EventsThrower
+                      day={DateService.ComposeDate(year, month, day)}
+                    />
+                  </MemoIDay>
+                );
+              } else {
+                return <IDayHolder key={"r" + index}></IDayHolder>;
+              }
+            })
+          )}
       </StyledMonth.TWdaysBoard>
       <div
         id={id}

@@ -76,6 +76,7 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
         >
           <StyledDay.TWheader
             $showWeekend={localState.showWeekends}
+            $restDays={restDays}
             title={(() => {
               return (lock ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
             })()}
