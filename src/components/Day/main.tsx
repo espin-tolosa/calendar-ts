@@ -35,12 +35,28 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
 
   //day-off
 
+  /*
+	        {(provided, snapshot) => (
+          <StyledDay.Container
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            onClick={handleClick}
+            backGroundColor={background[styles]}
+            isDraggingOver={snapshot.isDraggingOver}
+          >
+            <StyledDay.Header isDraggingOver={snapshot.isDraggingOver}>
+              {day}
+            </StyledDay.Header>
+            <StyledDay.Body isDraggingOver={snapshot.isDraggingOver}>
+
+	*/
+
   return (
-    <Droppable droppableId={`Day:${dayName}`}>
+    <Droppable droppableId={fullDate}>
       {(provided, snapshot) => (
         <StyledDay.TWsizedContainer
-          ref={provided.innerRef}
           {...provided.droppableProps}
+          ref={provided.innerRef}
           $top={lock}
           $isWeekend={isWeekend}
           $showWeekend={localState.showWeekends}
