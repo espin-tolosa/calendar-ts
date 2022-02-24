@@ -11,6 +11,7 @@ export const TWsizedContainer = tw.div<{
   $isSelected: boolean;
   $isWeekend: boolean;
   $showWeekend: boolean;
+  $restDays: boolean;
 }>`
 	landscape:min-h-[15vh] portrait:min-h-[8vh] transition-colors
 	font-light
@@ -32,6 +33,8 @@ export const TWsizedContainer = tw.div<{
 
 	${({ $isWeekend, $showWeekend }) =>
     ($isWeekend && !$showWeekend && "z-Dayoff") || ""}	
+
+		${({ $restDays }) => ($restDays && "bg-slate-200 z-Dayoff") || ""}
 
 `;
 

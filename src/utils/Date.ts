@@ -176,6 +176,11 @@ function GetTodayDateFormat() {
   return `${day} ${number} ${month} ${year}`;
 }
 
+function GetDayNumberOfDay(name: string) {
+  const names = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+  return names.findIndex((n) => n === name) + 1;
+}
+
 export const DateService = {
   GetDate,
   GetTodayDateFormat,
@@ -193,4 +198,5 @@ export const DateService = {
   GetNextDayOfDate,
   isValidKeyDate,
   ExportDateToControllerValue,
+  GetDayNumberOfDay,
 };

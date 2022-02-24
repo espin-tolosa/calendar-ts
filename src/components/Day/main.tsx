@@ -12,8 +12,9 @@ type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
   daynumber: number;
   fullDate: string;
+  restDays: boolean;
 }>;
-export function IDay({ children, daynumber, fullDate }: IDayProps) {
+export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
   const tempDay = String(daynumber);
   const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
   const [lock, setLock] = useState(false);
@@ -61,6 +62,7 @@ export function IDay({ children, daynumber, fullDate }: IDayProps) {
           $isWeekend={isWeekend}
           $showWeekend={localState.showWeekends}
           $isSelected={isSelected}
+          $restDays={restDays}
           onClick={() => {
             dispatchController({
               type: "setDates",
