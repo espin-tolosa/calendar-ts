@@ -89,7 +89,6 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
             <StyledDay.TWdaySpot>{dayPadd}</StyledDay.TWdaySpot>
           </StyledDay.TWheader>
           {children}
-          {provided.placeholder}
         </StyledDay.TWsizedContainer>
       )}
     </Droppable>

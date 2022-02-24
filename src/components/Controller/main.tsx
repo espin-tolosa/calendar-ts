@@ -1,4 +1,11 @@
-import React, { createContext, Dispatch, useContext, useState } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import * as tw_Controller from "./tw";
 import { useEventDispatch, useEventState } from "@/hooks/useEventsApi";
 import { composition, event } from "@/interfaces";
@@ -12,6 +19,7 @@ import { DateService } from "@/utils/Date";
 import { isValidEvent } from "@/utils/ValidateEvent";
 import { useUserSession } from "@/hooks/useUserSession";
 import { api } from "@/static/apiRoutes";
+import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -46,6 +54,18 @@ export const CreateEvent = () => {
   /*  parallel change consume date context */
   const { start, end } = useControllerState();
   const dispatchController = useControllerDispatch();
+  const { dispatchLocalState } = useLocalUserPreferencesContext();
+  const initDate = useRef(false);
+
+  const isDateForm = start !== "" && end !== "";
+  const initState = initDate.current;
+  useEffect(() => {
+    initState && isDateForm && dispatchLocalState({ type: "toggleController" });
+    initDate.current = true;
+    return () => {
+      isDateForm && dispatchLocalState({ type: "toggleController" });
+    };
+  }, [start, end]);
 
   const eventDispatcher = useEventDispatch();
   const event: event = {
