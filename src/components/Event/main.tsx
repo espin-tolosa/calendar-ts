@@ -34,6 +34,7 @@ export const Event = ({ event }: { event: event }) => {
       <Draggable draggableId={String(event.id)} index={event.id}>
         {(provided, snapshot) => (
           <StyledEvent.TWextend
+            style={{ cursor: "cursor-e-resize" }}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}

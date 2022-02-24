@@ -23,6 +23,10 @@
   input:focus {
     outline: 1px solid gray;
   }
+
+  [data-rbd-drag-handle-context-id="0"] {
+    cursor: e-resize !important;
+  }
 }
 
 @layer utilities {

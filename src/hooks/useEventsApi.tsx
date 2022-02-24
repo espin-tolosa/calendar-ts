@@ -9,7 +9,7 @@ import { isValidEvent } from "@/utils/ValidateEvent";
 type State = Array<event>;
 type Action =
   | {
-      type: "appendarray" | "deletebyid" | "replacebyid";
+      type: "appendarray" | "deletebyid" | "replacebyid" | "deletebyid_test";
       payload: State;
     }
   | { type: "default" };
@@ -52,6 +52,13 @@ function reducerEvents(state: State, action: Action) {
       return newState;
     }
     //
+    case "deletebyid_test": {
+      const newState = state.filter(
+        (toDelete) => Math.abs(action.payload[0].id) !== Math.abs(toDelete.id)
+      );
+      //
+      return newState;
+    }
     case "deletebyid": {
       const newState = [...state];
       action.payload.forEach((toReplace) => {
@@ -65,7 +72,19 @@ function reducerEvents(state: State, action: Action) {
     }
     //
     case "replacebyid": {
-      const newState = [...state];
+      const eventWithDayHour = action.payload[0]; // by now I can only manage first item
+      console.log("Event with day hour", eventWithDayHour);
+      const event = {
+        id: eventWithDayHour.id,
+        client: eventWithDayHour.client,
+        job: eventWithDayHour.job,
+        start: eventWithDayHour.start.split(" ")[0],
+        end: eventWithDayHour.end.split(" ")[0],
+      };
+      const spread = eventSpreader(event);
+
+      console.log("Spread", spread);
+      const newState = [...state, ...spread];
       action.payload.forEach((toReplace) => {
         newState.splice(
           newState.findIndex((event) => event.id === toReplace.id),

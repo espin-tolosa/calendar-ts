@@ -7,6 +7,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { useEventDispatch, useEventState } from "@/hooks/useEventsApi";
 import { api } from "@/static/apiRoutes";
 import { event, objectKeys } from "@interfaces/index";
+import { DateService } from "./utils/Date";
 
 async function fetchEvent(
   action: string,
@@ -36,12 +37,62 @@ export default function App() {
     <Login />
   ) : (
     <DragDropContext
-      onDragUpdate={(result) => console.log("Drag update", result)}
+      onBeforeCapture={(result) => {
+        console.log("beforecapture", result);
+      }}
+      onDragUpdate={(result) => {
+        const { source, destination } = result;
+        const event = allEvents.find((e) => e.id === source.index)!;
+        if (destination === null) {
+          return;
+        }
+        const spread = DateService.DaysFromStartToEnd(
+          event.start,
+          destination?.droppableId!
+        );
+        console.log("SPREAD", spread);
+        if (spread < 0) return;
+        eventDispatcher({
+          type: "deletebyid_test",
+          payload: [
+            {
+              id: event.id,
+              client: event.client,
+              job: event.job,
+              start: event.start,
+              end: destination?.droppableId!,
+            },
+          ],
+        });
+        eventDispatcher({
+          type: "appendarray",
+          payload: [
+            {
+              id: event.id,
+              client: event.client,
+              job: event.job,
+              start: event.start,
+              end: destination?.droppableId!,
+            },
+          ],
+        });
+      }}
       onDragEnd={(result) => {
         const { source, destination } = result;
-        console.log("source", source);
-        console.log("destination", destination);
+        if (destination === null) return;
+
         const event = allEvents.find((e) => e.id === source.index)!;
+        const spread = DateService.DaysFromStartToEnd(
+          event.start,
+          destination?.droppableId!
+        );
+        const endTarget = DateService.DaysFromStartToEnd(
+          event.end,
+          destination?.droppableId!
+        );
+
+        if (spread < 0) return;
+        if (endTarget === 0) return;
         const fetchResultPUT = fetchEvent("PUT", {
           id: event.id,
           client: event.client,
@@ -53,8 +104,9 @@ export default function App() {
         fetchResultPUT
           .then((res: any) => res.json())
           .then((json) => {
+            console.log("PUT", json);
             eventDispatcher({
-              type: "replacebyid",
+              type: "deletebyid_test",
               payload: [
                 {
                   id: event.id,
@@ -64,6 +116,10 @@ export default function App() {
                   end: destination?.droppableId!,
                 },
               ],
+            });
+            eventDispatcher({
+              type: "appendarray",
+              payload: [json[0]],
             });
           });
       }}
