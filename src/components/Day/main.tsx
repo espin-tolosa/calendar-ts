@@ -8,6 +8,7 @@ import { DateService } from "@/utils/Date";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
 import { Droppable } from "react-beautiful-dnd";
 import { useDayLock, useDayLockDispatcher } from "@/hooks/useDayLock";
+import { useEventSelected, useSetEventSelected } from "../Controller/main";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -23,6 +24,9 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
   const isLocked = lockedDays.find((lock) => lock === fullDate) === fullDate;
   const dispatchController = useControllerDispatch();
   const { localState } = useLocalUserPreferencesContext();
+  const eventSelected = useEventSelected();
+  const setEventController = useSetEventSelected();
+  const { start, end } = useControllerState();
 
   const dayName = DateService.GetMonthDayKey(new Date(fullDate));
   const isWeekend = dayName === "Sunday" || dayName === "Saturday";
@@ -51,14 +55,26 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
           $isSelected={isSelected}
           $restDays={restDays}
           onClick={() => {
-            dispatchController({
-              type: "setDates",
-              payload: { start: "", end: "" },
-            });
+            console.log("Day: event id;", eventSelected?.id || 0);
+            if (eventSelected !== null) {
+              setTimeout(() => {
+                //setEventController(null);
+                //dispatchController({
+                //  type: "setDates",
+                //  payload: { start: "", end: "" },
+                //});
+              }, 100);
+            }
+
             dispatchController({
               type: "setDates",
               payload: { start: fullDate, end: fullDate },
             });
+            setTimeout(() => {
+              if (start === fullDate && end === fullDate) {
+                setEventController(null);
+              }
+            }, 100);
           }}
           onMouseUp={() => {
             //console.log("leaving action at day:", dayPadd);

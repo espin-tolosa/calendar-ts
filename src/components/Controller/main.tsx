@@ -47,18 +47,21 @@ export const EventInController: composition = ({ children }) => {
 export const CreateEvent = () => {
   const eventSelected = useEventSelected();
   const events = useEventState();
+  const [id, setId] = useState(0);
   const [client, setClient] = useState("");
-  const [description, setDescription] = useState("");
   const [job, setJob] = useState("");
+  const { start, end } = useControllerState();
+  const [description, setDescription] = useState("");
+  const setEventController = useSetEventSelected();
 
   /*  parallel change consume date context */
-  const { start, end } = useControllerState();
   const dispatchController = useControllerDispatch();
   const { dispatchLocalState } = useLocalUserPreferencesContext();
   const initDate = useRef(false);
 
   useEffect(() => {
     console.log("Event Selected");
+    setId(eventSelected?.id || 0);
     setClient(eventSelected?.client || "");
     setJob(eventSelected?.job || "");
     dispatchController({
@@ -104,7 +107,7 @@ export const CreateEvent = () => {
       <tw_Controller.button
         $display={true}
         type="submit"
-        value="Save"
+        value={eventSelected ? "Copy" : "Save"}
         title="Testing to new dispatch event"
         onClick={() => {
           // TODO: check if is valid event
@@ -142,6 +145,7 @@ export const CreateEvent = () => {
           });
 
           setJob(() => "");
+          setEventController(null);
           setClient(() => "default");
         }}
       />
