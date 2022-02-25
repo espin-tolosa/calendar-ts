@@ -4,11 +4,10 @@ import { MemoIDay } from "@components/Day/main";
 import { IDayHolder } from "@components/DayHolder/main";
 import * as StyledMonth from "./tw";
 import { EventsThrower } from "../EventsThrower/main";
-import { zeroPadd } from "@/utils/zeroPadd";
 import { DateService } from "@/utils/Date";
-import { DateCalendar } from "@/entities/date";
-import { composition, event } from "@/interfaces";
-import { EventsDispatcher, useEventDispatch } from "@/hooks/useEventsApi";
+import { event } from "@/interfaces";
+import { useEventDispatch } from "@/hooks/useEventsApi";
+
 import { api } from "@/static/apiRoutes";
 
 type iMonth = {
@@ -55,18 +54,7 @@ const Month = ({ id, year, month }: iMonth) => {
       );
   }, []);
 
-  const DayStart = DateService.GetDayNumberOfDay(date.start);
-  let diff = 5 * 7 - DayStart - date.daysList.length + 1;
-  if (diff < 0) {
-    diff = 6 * 7 - DayStart - date.daysList.length + 1;
-  }
-  const restOfDays = Array.from({ length: diff }, (_, i) => -i - 1);
-
-  const leftOfDays = Array.from({ length: DayStart - 1 }, (_, i) => -i - 1);
-  restOfDays.forEach((r) => date.daysList.push(r));
-  console.info("DIFF", diff);
-  console.log("left days", leftOfDays);
-  console.log("right, days", restOfDays);
+  const [left, rest] = totalCellsInLastRow(date.start, date.daysList.length);
 
   return (
     <StyledMonth.TWflexColLayout className="relative">
@@ -78,29 +66,25 @@ const Month = ({ id, year, month }: iMonth) => {
       <StyledMonth.TWdaysBoard>
         <StyledMonth.TWdayShift $weekday={"mon"} />
 
-        {leftOfDays
-          .map((day, index) => {
-            return <IDayHolder key={"l" + index}></IDayHolder>;
-          })
+        {left //previous days
+          .map((_, index) => <IDayHolder key={"l" + index}></IDayHolder>)
           .concat(
-            date.daysList.map((day, index) => {
-              if (day > 0) {
-                return (
-                  <MemoIDay
-                    key={DateService.ComposeDate(year, month, day)}
-                    daynumber={day}
-                    fullDate={DateService.ComposeDate(year, month, day)}
-                    restDays={false}
-                  >
-                    <EventsThrower
-                      day={DateService.ComposeDate(year, month, day)}
-                    />
-                  </MemoIDay>
-                );
-              } else {
-                return <IDayHolder key={"r" + index}></IDayHolder>;
-              }
-            })
+            date.daysList.map((day) => (
+              <MemoIDay
+                key={DateService.ComposeDate(year, month, day)}
+                daynumber={day}
+                fullDate={DateService.ComposeDate(year, month, day)}
+                restDays={false}
+              >
+                <EventsThrower
+                  day={DateService.ComposeDate(year, month, day)}
+                />
+              </MemoIDay>
+            ))
+          )
+          .concat(
+            //rest days
+            rest.map((_, index) => <IDayHolder key={"r" + index}></IDayHolder>)
           )}
       </StyledMonth.TWdaysBoard>
       <div
@@ -113,11 +97,6 @@ const Month = ({ id, year, month }: iMonth) => {
 };
 
 export const MemoMonth = memo(Month);
-//console.warn("Memo month");
-//console.log("prevProps", prevProps);
-//console.log("nextProps", nextProps);
-//return false;
-//});
 
 async function fetchEvent(
   action: string,
@@ -131,3 +110,17 @@ async function fetchEvent(
     body: data,
   });
 }
+
+const totalCellsInLastRow = (start: string, length: number) => {
+  const DayStart = DateService.GetDayNumberOfDay(start);
+  let startRows = 4; //it's the minimun ever when feb starts on monday 28days/7cols = 4rows
+  let diff = startRows * 7 - DayStart - length + 1;
+  while (diff <= 0) {
+    diff = 7 * startRows++ - DayStart - length + 1;
+  }
+  const restOfDays = Array.from({ length: diff }, (_, i) => -i - 1);
+
+  const leftOfDays = Array.from({ length: DayStart - 1 }, (_, i) => -i - 1);
+
+  return [leftOfDays, restOfDays];
+};
