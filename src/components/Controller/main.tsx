@@ -81,7 +81,6 @@ export const CreateEvent = () => {
       action="post"
       onSubmit={(event) => {
         event.preventDefault();
-        console.log("Hello");
       }}
     >
       {/* new button */}
@@ -133,9 +132,7 @@ export const CreateEvent = () => {
       <ControllerButton
         onClick={() => {
           const result = fetchEvent("GET_ALL");
-          result
-            .then((res: any) => res.json())
-            .then((json) => console.log(json));
+          result.then((res) => res.json()).then((json) => console.log(json));
         }}
         name={"Test GET_ALL"}
         display={false}
@@ -151,7 +148,7 @@ export const CreateEvent = () => {
             end: "2022-02-11",
           });
           result
-            .then((res: any) => res.text())
+            .then((res) => res.text())
             .then((text) => console.log("text", text));
         }}
         name={"Test POST"}
@@ -262,7 +259,7 @@ export const CreateEvent = () => {
         ></tw_Controller.description>
       </tw_Controller.description_wrap>
 
-      {eventSelected ? <Event event={eventSelected} /> : <></>}
+      {/*eventSelected ? <Event event={eventSelected} /> : <></>*/}
     </tw_Controller.form>
   );
 };

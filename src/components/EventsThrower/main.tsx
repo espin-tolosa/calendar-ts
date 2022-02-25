@@ -1,5 +1,6 @@
 import { Event, EventHolder } from "@components/Event/main";
 import { useEventState } from "@/hooks/useEventsApi";
+import { useDayLock } from "@/hooks/useDayLock";
 import {
   bubblingAlgo,
   isPlaceholder,
@@ -13,8 +14,10 @@ interface EventProps {
 export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
   const dayEvents = useEventState(day);
   const allEvents = useEventState();
+  const lockedDays = useDayLock();
+  const isLocked = lockedDays.find((lock) => lock === day) === day;
   //No events in a day fast exit
-  if (dayEvents.length === 0) {
+  if (dayEvents.length === 0 || isLocked) {
     return <></>;
   }
 

@@ -46,7 +46,6 @@ export default function App() {
   ) : (
     <DragDropContext
       onBeforeCapture={(result) => {
-        console.log("beforecapture", result);
         const event = allEvents.find(
           (e) => e.id === parseInt(result.draggableId)
         )!;
@@ -62,7 +61,6 @@ export default function App() {
           event.start,
           destination?.droppableId!
         );
-        console.log("SPREAD", spread);
         if (spread < 0) return;
         eventDispatcher({
           type: "deletebyid_test",
@@ -103,12 +101,8 @@ export default function App() {
           destination?.droppableId!
         );
 
-        console.log("spread condition", spread < 0);
-        console.log("end target condition", endTarget === 0);
-
         if (spread < 0) return;
         if (endTarget === 0) return;
-        console.log("fetch put");
         const fetchResultPUT = fetchEvent("PUT", {
           id: event.id,
           client: event.client,
@@ -143,8 +137,6 @@ export default function App() {
             });
           })
           .catch((error) => {
-            console.log("Restaure event");
-            console.log(error);
             eventDispatcher({
               type: "deletebyid_test",
               payload: [

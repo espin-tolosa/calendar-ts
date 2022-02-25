@@ -8,8 +8,8 @@ this requires JS, hasta ahora solamente el CSS ha sido incorporado.
 */
 export const TWsizedContainer = tw.div`
 bg-slate-100
-	landscape:min-h-[18vh] portrait:min-h-[8vh] transition-colors
+	landscape:min-h-[17vh] portrait:min-h-[8vh] transition-colors
 	font-light
- 	shadow-[0px_0px_1px_rgb(226,232,240)]
-	 z-TopLayer
+ 	shadow-[0px_0px_1px_rgb(226,232,240)]	
+	 z-Dayoff
 `;

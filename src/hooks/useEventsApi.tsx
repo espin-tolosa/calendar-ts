@@ -73,7 +73,6 @@ function reducerEvents(state: State, action: Action) {
     //
     case "replacebyid": {
       const eventWithDayHour = action.payload[0]; // by now I can only manage first item
-      console.log("Event with day hour", eventWithDayHour);
       const event = {
         id: eventWithDayHour.id,
         client: eventWithDayHour.client,
@@ -83,7 +82,6 @@ function reducerEvents(state: State, action: Action) {
       };
       const spread = eventSpreader(event);
 
-      console.log("Spread", spread);
       const newState = [...state, ...spread];
       action.payload.forEach((toReplace) => {
         newState.splice(

@@ -31,13 +31,6 @@ const Month = ({ id, year, month }: iMonth) => {
       .then((res: any) => res.json())
       .then((json: Array<event>) =>
         json.forEach((event: event) => {
-          console.log("dispatch", {
-            id: event.id,
-            client: event.client,
-            job: event.job,
-            start: event.start.split(" ")[0],
-            end: event.end.split(" ")[0],
-          });
           eventsDispatcher({
             type: "appendarray",
             payload: [
@@ -57,7 +50,6 @@ const Month = ({ id, year, month }: iMonth) => {
     const DayStart = DateService.GetDayNumberOfDay(start);
     let startRows = 4; //it's the minimun ever when feb starts on monday 28days/7cols = 4rows
     let diff = startRows * 7 - DayStart - length + 1;
-    console.info(`Diff for: ${year}-${month}`, diff);
     while (diff <= 0 && diff !== -7) {
       diff = 7 * ++startRows - DayStart - length + 1;
     }

@@ -7,6 +7,7 @@ import {
 import { DateService } from "@/utils/Date";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
 import { Droppable } from "react-beautiful-dnd";
+import { useDayLock, useDayLockDispatcher } from "@/hooks/useDayLock";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -17,7 +18,9 @@ type IDayProps = WithChildren<{
 export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
   const tempDay = String(daynumber);
   const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
-  const [lock, setLock] = useState(false);
+  const lockedDays = useDayLock();
+  const lockedDaysDispatcher = useDayLockDispatcher();
+  const isLocked = lockedDays.find((lock) => lock === fullDate) === fullDate;
   const dispatchController = useControllerDispatch();
   const { localState } = useLocalUserPreferencesContext();
 
@@ -42,7 +45,7 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
         <StyledDay.TWsizedContainer
           {...provided.droppableProps}
           ref={provided.innerRef}
-          $isLock={lock}
+          $isLock={isLocked}
           $isWeekend={isWeekend}
           $showWeekend={localState.showWeekends}
           $isSelected={isSelected}
@@ -59,16 +62,16 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
           onMouseEnter={() => console.log("passing over:", dayPadd)}
         >
           <StyledDay.TWheader
-            $isLock={lock}
+            $isLock={isLocked}
             $showWeekend={localState.showWeekends}
             $restDays={restDays}
             title={(() => {
-              return (lock ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
+              return (isLocked ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
             })()}
             $isWeekend={isWeekend}
             onClick={(e) => {
               e.stopPropagation();
-              setLock((prev) => !prev);
+              lockedDaysDispatcher({ type: "addlock", payload: fullDate });
             }}
           >
             <StyledDay.TWdaySpot $isToday={isToday}>
@@ -83,9 +86,3 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
 }
 
 export const MemoIDay = memo(IDay);
-
-//  console.warn("Memo day");
-//console.log("prevProps", prevProps);
-// console.log("nextProps", nextProps);
-//return false;
-//});

@@ -13,8 +13,7 @@ export const Event = ({ event }: { event: event }) => {
   );
 
   const hOnClick = () => {
-    console.log("setStartDate", event.start);
-    console.log("setEndDate", event.end);
+    setEventController(event);
   };
   return (
     <StyledEvent.TWflexContainer>
@@ -22,10 +21,6 @@ export const Event = ({ event }: { event: event }) => {
         style={giveMeColor(event.client)}
         key={event.id}
         $cells={cells}
-        onMouseDownCapture={() => {
-          console.log("Event:", event.job);
-          setEventController(event);
-        }}
         onClick={hOnClick}
         title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
       >

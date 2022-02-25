@@ -7,19 +7,22 @@ import { EventsDispatcher } from "@/hooks/useEventsApi";
 import { UserPreferences } from "@/hooks/useLocalUserPreferences";
 import { EventInController } from "@components/Controller/main";
 import { ControllerProvider } from "@/hooks/useController";
+import { DayLock } from "./hooks/useDayLock";
 
 ReactDOM.render(
   <React.StrictMode>
     <ControllerProvider>
-      <EventInController>
-        <UserPreferences>
+      <UserPreferences>
+        <DayLock>
           <EventsDispatcher>
-            <UserSession>
-              <App />
-            </UserSession>
+            <EventInController>
+              <UserSession>
+                <App />
+              </UserSession>
+            </EventInController>
           </EventsDispatcher>
-        </UserPreferences>
-      </EventInController>
+        </DayLock>
+      </UserPreferences>
     </ControllerProvider>
   </React.StrictMode>,
   document.getElementById("root")
