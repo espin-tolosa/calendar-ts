@@ -53,11 +53,15 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
           onClick={() => {
             dispatchController({
               type: "setDates",
+              payload: { start: "", end: "" },
+            });
+            dispatchController({
+              type: "setDates",
               payload: { start: fullDate, end: fullDate },
             });
           }}
           onMouseUp={() => {
-            console.log("leaving action at day:", dayPadd);
+            //console.log("leaving action at day:", dayPadd);
           }}
           onMouseEnter={() => console.log("passing over:", dayPadd)}
         >

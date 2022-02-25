@@ -57,6 +57,23 @@ export const CreateEvent = () => {
   const { dispatchLocalState } = useLocalUserPreferencesContext();
   const initDate = useRef(false);
 
+  useEffect(() => {
+    console.log("Event Selected");
+    setClient(eventSelected?.client || "");
+    setJob(eventSelected?.job || "");
+    dispatchController({
+      type: "setDates",
+      payload: { start: "", end: "" },
+    });
+    dispatchController({
+      type: "setDates",
+      payload: {
+        start: eventSelected?.start || "",
+        end: eventSelected?.end || "",
+      },
+    });
+  }, [eventSelected]);
+
   const isDateForm = start !== "" && end !== "";
   const initState = initDate.current;
   useEffect(() => {

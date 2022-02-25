@@ -36,13 +36,13 @@ export const Event = ({ event }: { event: event }) => {
             ref={provided.innerRef}
             $cells={cells}
             onMouseDownCapture={() => {
-              console.log("extend event:", event.id);
+              //console.log("extend event:", event.id);
             }}
             onMouseEnter={() => {
-              console.log("enter extend event");
+              //console.log("enter extend event");
             }}
             onMouseOut={() => {
-              console.log("leaving extend event");
+              //console.log("leaving extend event");
             }}
             title={`Drag here to extend ${event.client}\'s job`}
           >

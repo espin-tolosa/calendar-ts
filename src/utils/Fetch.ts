@@ -83,16 +83,11 @@ export async function apifetch(query: { action: string }) {
         if (res.status === 401 || res.status === 403) {
           alert("Permissions expired, please refresh");
         }
-        //        console.error(
-        //          `response code ${res.status} isn't allowed, see: http_response_code table`
-        //        );
         return false;
       }
 
       const contentType = res.headers.get("content-type");
       if (contentType && contentType.indexOf("application/json") !== -1) {
-        //	console.log("Success fetch");
-        //	console.log(res);
         return res.json();
       } else {
         //* NOTE: I'm removing the action from the query, and then returning the event, It's horrible but API returns nothing, I need the idevent
@@ -104,7 +99,6 @@ export async function apifetch(query: { action: string }) {
       return res;
     })
     .catch((err) => {
-      //      console.error(`Error ${err.name} at apifetch: ${err.message}`);
       alert("Error No internet connection");
       return false;
     });

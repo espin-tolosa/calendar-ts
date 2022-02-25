@@ -18,7 +18,6 @@ export function useFetchEvents({
   action,
   ...event
 }: UseFetchEvents) {
-  console.log("USE FETCH EVENTS", { click, action, ...event });
   //  const { dispatch } = useEventsReducer();
 
   //save a reference of unmounted component

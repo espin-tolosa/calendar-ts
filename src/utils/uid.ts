@@ -25,7 +25,6 @@ export function uniqueID() {
     }
 
     cachedID.push(result);
-    console.log("cached", cachedID);
 
     return result;
   };
