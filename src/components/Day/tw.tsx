@@ -7,19 +7,19 @@ Still there is a part of this feature that is not implemented and corresponds to
 this requires JS, hasta ahora solamente el CSS ha sido incorporado.
 */
 export const TWsizedContainer = tw.div<{
-  $top: boolean;
+  $isLock: boolean;
   $isSelected: boolean;
   $isWeekend: boolean;
   $showWeekend: boolean;
   $restDays: boolean;
 }>`
-	landscape:min-h-[15vh] portrait:min-h-[8vh] transition-colors
+	landscape:min-h-[17vh] portrait:min-h-[8vh] transition-colors
 	font-light
  	shadow-[0px_0px_1px_rgb(226,232,240)]
 
-	${({ $top }) =>
-    ($top && "bg-slate-100 z-Dayoff bg-opacity-50 cursor-not-allowed ") ||
-    (!$top && "bg-white day active:bg-green-200 cursor-pointer") ||
+	${({ $isLock }) =>
+    ($isLock && "bg-slate-300 z-Dayoff cursor-not-allowed ") ||
+    (!$isLock && "bg-white day active:bg-green-200 cursor-pointer") ||
     ""}	
 	${({ $isSelected }) =>
     ($isSelected && "border-2 bg-green-100") || (!$isSelected && "") || ""}	
@@ -39,19 +39,26 @@ export const TWsizedContainer = tw.div<{
 `;
 
 export const TWheader = tw.div<{
+  $isLock: boolean;
   $isWeekend: boolean;
   $showWeekend: boolean;
   $restDays: boolean;
 }>`
 border-b-[1px] border-slate-200 day-header flex sm:justify-end justify-center bg-white
+	
+	${({ $isLock }) => ($isLock && "bg-slate-300 z-Dayoff bg-opacity-50 ") || ""}	
 
 	${({ $isWeekend, $showWeekend }) =>
-    ($isWeekend && !$showWeekend && "bg-slate-50 hover:bg-slate-50 ") ||
+    ($isWeekend && !$showWeekend && "bg-slate-300 hover:bg-slate-50 ") ||
     (!$isWeekend && "") ||
     ""}	
 
-		${({ $restDays }) => ($restDays && "bg-slate-50 z-Dayoff text-slate-50") || ""}
-`;
+	${({ $restDays }) => ($restDays && "bg-slate-50 z-Dayoff text-slate-50") || ""}
 
-export const TWdaySpot = tw.div`
-	flex justify-center items-center w-[1.6rem] customtp:w-[1rem] rounded-full bg-white custombp:p-0 sm:my-1 customtp:my-0 custombp:my-0 ml-1 mx-1`;
+	`;
+
+export const TWdaySpot = tw.div<{ $isToday: boolean }>`
+flex justify-center items-center w-[1.6rem] customtp:w-[1rem] rounded-full bg-white custombp:p-0 sm:my-1 customtp:my-0 custombp:my-0 ml-1 mx-1
+${({ $isToday }) => ($isToday && "bg-blue-200") || ""}
+	
+	`;

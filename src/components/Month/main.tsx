@@ -53,6 +53,20 @@ const Month = ({ id, year, month }: iMonth) => {
         })
       );
   }, []);
+  const totalCellsInLastRow = (start: string, length: number) => {
+    const DayStart = DateService.GetDayNumberOfDay(start);
+    let startRows = 4; //it's the minimun ever when feb starts on monday 28days/7cols = 4rows
+    let diff = startRows * 7 - DayStart - length + 1;
+    console.info(`Diff for: ${year}-${month}`, diff);
+    while (diff <= 0 && diff !== -7) {
+      diff = 7 * ++startRows - DayStart - length + 1;
+    }
+    const restOfDays = Array.from({ length: diff }, (_, i) => i + 1);
+
+    const leftOfDays = Array.from({ length: DayStart - 1 }, (_, i) => i + 1);
+
+    return [leftOfDays, restOfDays];
+  };
 
   const [left, rest] = totalCellsInLastRow(date.start, date.daysList.length);
 
@@ -67,7 +81,7 @@ const Month = ({ id, year, month }: iMonth) => {
         <StyledMonth.TWdayShift $weekday={"mon"} />
 
         {left //previous days
-          .map((_, index) => <IDayHolder key={"l" + index}></IDayHolder>)
+          .map((day) => <IDayHolder key={"l" + day}></IDayHolder>)
           .concat(
             date.daysList.map((day) => (
               <MemoIDay
@@ -84,7 +98,7 @@ const Month = ({ id, year, month }: iMonth) => {
           )
           .concat(
             //rest days
-            rest.map((_, index) => <IDayHolder key={"r" + index}></IDayHolder>)
+            rest.map((day) => <IDayHolder key={"r" + day}></IDayHolder>)
           )}
       </StyledMonth.TWdaysBoard>
       <div
@@ -110,17 +124,3 @@ async function fetchEvent(
     body: data,
   });
 }
-
-const totalCellsInLastRow = (start: string, length: number) => {
-  const DayStart = DateService.GetDayNumberOfDay(start);
-  let startRows = 4; //it's the minimun ever when feb starts on monday 28days/7cols = 4rows
-  let diff = startRows * 7 - DayStart - length + 1;
-  while (diff <= 0) {
-    diff = 7 * startRows++ - DayStart - length + 1;
-  }
-  const restOfDays = Array.from({ length: diff }, (_, i) => -i - 1);
-
-  const leftOfDays = Array.from({ length: DayStart - 1 }, (_, i) => -i - 1);
-
-  return [leftOfDays, restOfDays];
-};

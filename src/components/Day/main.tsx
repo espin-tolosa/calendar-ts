@@ -34,23 +34,7 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
     isSelected = true;
   }
 
-  //day-off
-
-  /*
-	        {(provided, snapshot) => (
-          <StyledDay.Container
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            onClick={handleClick}
-            backGroundColor={background[styles]}
-            isDraggingOver={snapshot.isDraggingOver}
-          >
-            <StyledDay.Header isDraggingOver={snapshot.isDraggingOver}>
-              {day}
-            </StyledDay.Header>
-            <StyledDay.Body isDraggingOver={snapshot.isDraggingOver}>
-
-	*/
+  const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
 
   return (
     <Droppable droppableId={fullDate}>
@@ -58,7 +42,7 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
         <StyledDay.TWsizedContainer
           {...provided.droppableProps}
           ref={provided.innerRef}
-          $top={lock}
+          $isLock={lock}
           $isWeekend={isWeekend}
           $showWeekend={localState.showWeekends}
           $isSelected={isSelected}
@@ -75,6 +59,7 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
           onMouseEnter={() => console.log("passing over:", dayPadd)}
         >
           <StyledDay.TWheader
+            $isLock={lock}
             $showWeekend={localState.showWeekends}
             $restDays={restDays}
             title={(() => {
@@ -86,7 +71,9 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
               setLock((prev) => !prev);
             }}
           >
-            <StyledDay.TWdaySpot>{dayPadd}</StyledDay.TWdaySpot>
+            <StyledDay.TWdaySpot $isToday={isToday}>
+              {dayPadd}
+            </StyledDay.TWdaySpot>
           </StyledDay.TWheader>
           {children}
         </StyledDay.TWsizedContainer>
