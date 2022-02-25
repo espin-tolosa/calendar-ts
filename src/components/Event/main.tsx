@@ -12,7 +12,8 @@ export const Event = ({ event }: { event: event }) => {
     8 //TODO
   );
 
-  const hOnClick = () => {
+  const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
     setEventController(event);
   };
   return (
