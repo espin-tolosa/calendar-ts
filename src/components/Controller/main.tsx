@@ -128,103 +128,18 @@ export const CreateEvent = () => {
           setClient(() => "default");
         }}
       />
-      {/* test button */}
-      <ControllerButton
-        onClick={() => {
-          const result = fetchEvent("GET_ALL");
-          result.then((res) => res.json()).then((json) => console.log(json));
-        }}
-        name={"Test GET_ALL"}
-        display={false}
-      />
-      {/* test button */}
-      <ControllerButton
-        onClick={() => {
-          const result = fetchEvent("POST", {
-            id: 100,
-            client: "test client",
-            job: "test job",
-            start: "2022-02-01",
-            end: "2022-02-11",
-          });
-          result
-            .then((res) => res.text())
-            .then((text) => console.log("text", text));
-        }}
-        name={"Test POST"}
-        display={false}
-      />
-      {/* test button */}
-      <ControllerButton
-        onClick={() => {
-          const result = fetchEvent("GET_FROM", {
-            id: 0,
-            client: "",
-            job: "",
-            start: "2022-02-01",
-            end: "",
-          });
-          result
-            .then((res: any) => res.json())
-            .then((json) => console.log("text", json));
-        }}
-        name={"Test GET_MONTH"}
-        display={false}
-      />
-      {/* create button */}
-      <ControllerButton
-        onClick={() => {
-          fetchEvent("POST", event)
-            .then((res: any) => {
-              console.log("status", res.status);
-              return res.text();
-            })
-            .then((json) => console.log(json));
-        }}
-        name={"Fetch"}
-        display={false}
-      />
-      {/* create button */}
-      <tw_Controller.button
-        $display={false}
-        type="submit"
-        value="Create"
-        onClick={() => {
-          document.documentElement.style.setProperty(
-            "--calendar_width",
-            "900px"
-          );
-        }}
-      />
-      {/* reduce button */}
-      <tw_Controller.button
-        $display={false}
-        type="submit"
-        value="Reduce"
-        title="Testing to reduce calendar"
-        onClick={() => {
-          document.documentElement.style.setProperty(
-            "--calendar_width",
-            "740px"
-          );
-        }}
-      />
-
-      {/* delete button */}
-      <tw_Controller.button
-        $display={false}
-        type="submit"
-        value="Test"
-        title="Testing to new dispatch event"
-        onClick={() => {
-          const index = events.findIndex((event) => event.client === "Marcel");
-          if (index > 0) {
-            console.log("Founded Marcel at position", index);
-            events[index].client = "Updated Marcel";
-          }
-        }}
-      />
-      <StyledSelect value={client} onChange={(e) => setClient(e.target.value)}>
+      <tw_Controller.startEnd>
+        {/* start field */}
+        <DateField date={start} name="start" />
+        {/* end field */}
+        <DateField date={end} name="end" />
+      </tw_Controller.startEnd>
+      {/* client field */}
+      <StyledSelect
+        value={client}
+        onChange={(e) => setClient(e.target.value)}
+        autoFocus
+      >
         <option value="default" hidden>
           Select Client
         </option>
@@ -236,14 +151,6 @@ export const CreateEvent = () => {
           );
         })}
       </StyledSelect>
-      {/* parallel change on context testing */}
-      <tw_Controller.startEnd>
-        {/* start field */}
-        <DateField date={start} name="start" />
-        {/* end field */}
-        <DateField date={end} name="end" />
-      </tw_Controller.startEnd>
-
       {/* job field */}
       <JobField value={job} setValue={setJob} />
       <tw_Controller.description_wrap>
@@ -258,8 +165,6 @@ export const CreateEvent = () => {
           placeholder="Extra notes..."
         ></tw_Controller.description>
       </tw_Controller.description_wrap>
-
-      {/*eventSelected ? <Event event={eventSelected} /> : <></>*/}
     </tw_Controller.form>
   );
 };
@@ -298,35 +203,6 @@ const DropDownClientMenu = () => {
     </StyledSelect>
   );
 };
-
-/* OLD START END FORM FIELD WITH BACKSLASH FUNCTION */
-
-//      <tw_Controller.startEnd>
-//        {/* start field */}
-//        <tw_Controller.date
-//          type="text"
-//          name="start"
-//          id="start"
-//          value={(() => start)()} //TODO: function to represent string dates in the desired user format keeping internal consistency as: yyyy-mm-dd
-//          autoComplete="off"
-//          onChange={onChangeStart}
-//          onKeyDown={removeBackSlashStart}
-//          placeholder="start date"
-//          title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
-//        />
-//        {/* end field */}
-//        <tw_Controller.date
-//          type="text"
-//          name="end"
-//          id="end"
-//          value={(() => end)()} //TODO: same as start
-//          autoComplete="off"
-//          onChange={onChangeEnd}
-//          onKeyDown={removeBackSlashEnd}
-//          placeholder="end date"
-//          title="input: yy/mm/dd, it also will accepts: dd/mm/yy"
-//        />
-//      </tw_Controller.startEnd>
 
 async function fetchEvent(
   action: string,

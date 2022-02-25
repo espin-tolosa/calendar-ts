@@ -59,6 +59,6 @@ border-b-[1px] border-slate-200 day-header flex sm:justify-end justify-center bg
 
 export const TWdaySpot = tw.div<{ $isToday: boolean }>`
 flex justify-center items-center w-[1.6rem] customtp:w-[1rem] rounded-full bg-white custombp:p-0 sm:my-1 customtp:my-0 custombp:my-0 ml-1 mx-1
-${({ $isToday }) => ($isToday && "bg-blue-200") || ""}
+${({ $isToday }) => ($isToday && "bg-blue-400 text-white") || ""}
 	
 	`;
