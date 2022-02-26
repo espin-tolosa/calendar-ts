@@ -9,7 +9,11 @@ import { api } from "@/static/apiRoutes";
 import { event, objectKeys } from "@interfaces/index";
 import { DateService } from "./utils/Date";
 import { useEffect, useRef } from "react";
-import { useEventSelected } from "./components/Controller/main";
+import {
+  useEventSelected,
+  useSetEventSelected,
+} from "./components/Controller/main";
+import { useControllerDispatch } from "./hooks/useController";
 
 async function fetchEvent(
   action: string,
@@ -44,6 +48,8 @@ export default function App() {
   }
 
   const eventSelected = useEventSelected();
+  const setEventController = useSetEventSelected();
+  const dispatchController = useControllerDispatch();
 
   useEffect(() => {
     const hOnKeyDown = (e: any) => {
@@ -55,24 +61,19 @@ export default function App() {
               type: "deletebyid",
               payload: [eventSelected],
             });
+            dispatchController({
+              type: "setDates",
+              payload: { start: "", end: "" },
+            });
           }
         });
-        //   result
-        //     .then((res) => res.json())
-        //     .then((json) => {
-        //       eventDispatcher({
-        //         type: "deletebyid",
-        //         payload: [
-        //           {
-        //             id: json[0].id,
-        //             client: json[0].client,
-        //             job: json[0].job,
-        //             start: json[0].start,
-        //             end: json[0].end,
-        //           },
-        //         ],
-        //       });
-        //     });
+      } else if (e.key === "Escape") {
+        setEventController(null);
+
+        dispatchController({
+          type: "setDates",
+          payload: { start: "", end: "" },
+        });
       }
     };
 

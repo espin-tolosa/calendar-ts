@@ -151,16 +151,13 @@ export const CreateEvent = () => {
       />
       <tw_Controller.startEnd>
         {/* start field */}
-        <DateField date={start} name="start" />
+        <DateField date={start} name="start" autoFocus={false} />
         {/* end field */}
-        <DateField date={end} name="end" />
+        <DateField date={end} name="end" autoFocus={true} />
       </tw_Controller.startEnd>
+
       {/* client field */}
-      <StyledSelect
-        value={client}
-        onChange={(e) => setClient(e.target.value)}
-        autoFocus
-      >
+      <StyledSelect value={client} onChange={(e) => setClient(e.target.value)}>
         <option value="default" hidden>
           Select Client
         </option>
@@ -172,20 +169,23 @@ export const CreateEvent = () => {
           );
         })}
       </StyledSelect>
+
       {/* job field */}
       <JobField value={job} setValue={setJob} />
-      <tw_Controller.description_wrap>
-        {/* description optional field */}
-        <tw_Controller.description
-          onChange={(e) => {
-            setDescription(e.target.value);
-          }}
-          name="text"
-          id="text"
-          value={description}
-          placeholder="Extra notes..."
-        ></tw_Controller.description>
-      </tw_Controller.description_wrap>
+      {/*
+	<tw_Controller.description_wrap>
+		<tw_Controller.description
+			onChange={(e) => {
+				setDescription(e.target.value);
+			}}
+			name="text"
+			id="text"
+			value={description}
+			placeholder="Extra notes..."
+		></tw_Controller.description>
+	</tw_Controller.description_wrap>
+	
+	*/}
     </tw_Controller.form>
   );
 };
@@ -257,7 +257,15 @@ function ControllerButton({
   );
 }
 
-const DateField = ({ date, name }: { date: string; name: string }) => {
+const DateField = ({
+  date,
+  name,
+  autoFocus,
+}: {
+  date: string;
+  name: string;
+  autoFocus: boolean;
+}) => {
   return (
     <tw_Controller.date
       type="text"
@@ -266,6 +274,7 @@ const DateField = ({ date, name }: { date: string; name: string }) => {
       value={DateService.ExportDateToControllerValue(date)}
       autoComplete="off"
       placeholder={`${name} date`}
+      autoFocus={autoFocus}
     />
   );
 };
