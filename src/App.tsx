@@ -8,7 +8,8 @@ import { useEventDispatch, useEventState } from "@/hooks/useEventsApi";
 import { api } from "@/static/apiRoutes";
 import { event, objectKeys } from "@interfaces/index";
 import { DateService } from "./utils/Date";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useEventSelected } from "./components/Controller/main";
 
 async function fetchEvent(
   action: string,
@@ -41,6 +42,48 @@ export default function App() {
   {
     /*this code is forcing enter in the calendar automatically*/
   }
+
+  const eventSelected = useEventSelected();
+
+  useEffect(() => {
+    const hOnKeyDown = (e: any) => {
+      if (eventSelected && e.key === "Delete") {
+        const result = fetchEvent("DELETE", eventSelected);
+        result.then((res) => {
+          if (res.status === 204) {
+            eventDispatcher({
+              type: "deletebyid",
+              payload: [eventSelected],
+            });
+          }
+        });
+        //   result
+        //     .then((res) => res.json())
+        //     .then((json) => {
+        //       eventDispatcher({
+        //         type: "deletebyid",
+        //         payload: [
+        //           {
+        //             id: json[0].id,
+        //             client: json[0].client,
+        //             job: json[0].job,
+        //             start: json[0].start,
+        //             end: json[0].end,
+        //           },
+        //         ],
+        //       });
+        //     });
+      }
+    };
+
+    document.querySelector("html")?.addEventListener("keydown", hOnKeyDown);
+    return () => {
+      document
+        .querySelector("html")
+        ?.removeEventListener("keydown", hOnKeyDown);
+    };
+  }, [eventSelected]);
+
   return !value() ? (
     <Login />
   ) : (
