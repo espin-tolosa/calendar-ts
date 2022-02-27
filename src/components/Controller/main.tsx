@@ -20,6 +20,7 @@ import { isValidEvent } from "@/utils/ValidateEvent";
 import { useUserSession } from "@/hooks/useUserSession";
 import { api } from "@/static/apiRoutes";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
+import { useListenWindowSize } from "@/hooks/useResponsiveLayout";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -58,6 +59,7 @@ export const CreateEvent = () => {
   const dispatchController = useControllerDispatch();
   const { dispatchLocalState } = useLocalUserPreferencesContext();
   const initDate = useRef(false);
+  const isLargeWindow = useListenWindowSize();
 
   useEffect(() => {
     console.log("Event Selected");
@@ -186,6 +188,21 @@ export const CreateEvent = () => {
 	</tw_Controller.description_wrap>
 	
 	*/}
+      {!isLargeWindow && (
+        <tw_Controller.button
+          $display={true}
+          type="button"
+          value={"Close"}
+          title="Close control panel"
+          onClick={() => {
+            setEventController(null);
+            dispatchController({
+              type: "setDates",
+              payload: { start: "", end: "" },
+            });
+          }}
+        />
+      )}
     </tw_Controller.form>
   );
 };
@@ -267,15 +284,18 @@ const DateField = ({
   autoFocus: boolean;
 }) => {
   return (
-    <tw_Controller.date
-      type="text"
-      name={name}
-      id={name}
-      value={DateService.ExportDateToControllerValue(date)}
-      autoComplete="off"
-      placeholder={`${name} date`}
-      autoFocus={autoFocus}
-    />
+    <>
+      <tw_Controller.date
+        type="text"
+        name={name}
+        readOnly={true}
+        id={name}
+        value={DateService.ExportDateToControllerValue(date)}
+        autoComplete="off"
+        placeholder={`${name} date`}
+        autoFocus={autoFocus}
+      />
+    </>
   );
 };
 

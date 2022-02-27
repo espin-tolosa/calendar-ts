@@ -1,30 +1,26 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useState } from "react";
+const LARGE_WINDOW_SIZE = 1280; /*px*/
 
-export default function useResponsiveBreakpoints(
-  elRef: React.MutableRefObject<any>,
-  breakpoints: Array<any>
-) {
-  const firstQuery = Object.keys(breakpoints[0])[0];
-  const [breakSize, setBreakSize] = useState(firstQuery);
+export const useListenWindowSize = () => {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const [windowSize, setWindowSize] = useState({ width, height });
 
-  const observer = useRef(
-    new ResizeObserver((entries) => {
-      // Only care about the first element, we expect one element ot be watched
-      const { width } = entries[0].contentRect;
+  const windowObserver = () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    setWindowSize({ width, height });
+  };
 
-      //setBreakSize(findBreakPoint(breakpoints, width))
-    })
-  );
-
+  //This event listener never unmounts but in any case I will keep the clean effect
   useEffect(() => {
-    if (elRef.current) {
-      observer.current.observe(elRef.current);
-    }
-
+    window.addEventListener("resize", windowObserver);
     return () => {
-      observer.current.unobserve(elRef.current);
+      window.removeEventListener("resize", windowObserver);
     };
-  }, [elRef, observer]);
+  }, []);
 
-  return breakSize;
-}
+  const isLargeWindow = windowSize.width > LARGE_WINDOW_SIZE;
+
+  return isLargeWindow;
+};

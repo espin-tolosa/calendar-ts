@@ -2,8 +2,9 @@ import { useMemo, useState } from "react";
 import * as tw_Controller from "./tw";
 
 import tw from "tailwind-styled-components/dist/tailwind";
-import { useConfigColumns, useListenWindowSize } from "./hook";
+import { useConfigColumns } from "./hook";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
+import { useListenWindowSize } from "@/hooks/useResponsiveLayout";
 
 export function Configuration() {
   const [columns, errorMsg, hChangeColumns] = useConfigColumns();
