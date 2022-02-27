@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAutoScroll } from "@/hooks/useAutoScroll";
 
 const MAX_COLUMS = 4;
-const LARGE_WINDOW_SIZE = 1280; /*px*/
+
 const ROOT_TARGET = "--calendar_columns";
 const PREV_MONTHS = 2; //months rendered before present month
 
@@ -54,30 +54,6 @@ export const useConfigColumns = () => {
 
 //////////////////////////////////////////////////////////////////////////
 // Listen resize screen
-
-export const useListenWindowSize = () => {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  const [windowSize, setWindowSize] = useState({ width, height });
-
-  const windowObserver = () => {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    setWindowSize({ width, height });
-  };
-
-  //This event listener never unmounts but in any case I will keep the clean effect
-  useEffect(() => {
-    window.addEventListener("resize", windowObserver);
-    return () => {
-      window.removeEventListener("resize", windowObserver);
-    };
-  }, []);
-
-  const isLargeWindow = windowSize.width > LARGE_WINDOW_SIZE;
-
-  return isLargeWindow;
-};
 
 /////////////////////////////////////////////////////////////////////////
 // Set bound error

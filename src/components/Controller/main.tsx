@@ -48,11 +48,11 @@ export const EventInController: composition = ({ children }) => {
 export const CreateEvent = () => {
   const eventSelected = useEventSelected();
   const events = useEventState();
-  const [id, setId] = useState(0);
-  const [client, setClient] = useState("");
-  const [job, setJob] = useState("");
-  const { start, end } = useControllerState();
-  const [description, setDescription] = useState("");
+  //const [id, setId] = useState(0);
+  //const [client, setClient] = useState("");
+  //const [job, setJob] = useState("");
+  const { id, client, job, start, end } = useControllerState();
+  //const [description, setDescription] = useState("");
   const setEventController = useSetEventSelected();
 
   /*  parallel change consume date context */
@@ -62,17 +62,19 @@ export const CreateEvent = () => {
   const isLargeWindow = useListenWindowSize();
 
   useEffect(() => {
-    console.log("Event Selected");
-    setId(eventSelected?.id || 0);
-    setClient(eventSelected?.client || "");
-    setJob(eventSelected?.job || "");
+    const id = eventSelected?.id || 0;
+    const client = eventSelected?.client || "";
+    const job = eventSelected?.job || "";
     dispatchController({
-      type: "setDates",
-      payload: { start: "", end: "" },
+      type: "setController",
+      payload: { id, client, job, start: "", end: "" },
     });
     dispatchController({
       type: "setDates",
       payload: {
+        id: 0,
+        client: "",
+        job: "",
         start: eventSelected?.start || "",
         end: eventSelected?.end || "",
       },
@@ -142,13 +144,11 @@ export const CreateEvent = () => {
             });
 
           dispatchController({
-            type: "setDates",
-            payload: { start: "", end: "" },
+            type: "setController",
+            payload: { id: 0, client: "default", job: "", start: "", end: "" },
           });
 
-          setJob(() => "");
           setEventController(null);
-          setClient(() => "default");
         }}
       />
       <tw_Controller.startEnd>
@@ -159,7 +159,21 @@ export const CreateEvent = () => {
       </tw_Controller.startEnd>
 
       {/* client field */}
-      <StyledSelect value={client} onChange={(e) => setClient(e.target.value)}>
+      <StyledSelect
+        value={client}
+        onChange={(e) =>
+          dispatchController({
+            type: "setClient",
+            payload: {
+              id: 0,
+              client: e.target.value,
+              job: "",
+              start: "",
+              end: "",
+            },
+          })
+        }
+      >
         <option value="default" hidden>
           Select Client
         </option>
@@ -173,7 +187,21 @@ export const CreateEvent = () => {
       </StyledSelect>
 
       {/* job field */}
-      <JobField value={job} setValue={setJob} />
+      <JobField
+        value={job}
+        setValue={(job: string) => {
+          dispatchController({
+            type: "setJob",
+            payload: {
+              id: 0,
+              client: "",
+              job,
+              start: "",
+              end: "",
+            },
+          });
+        }}
+      />
       {/*
 	<tw_Controller.description_wrap>
 		<tw_Controller.description
@@ -197,8 +225,8 @@ export const CreateEvent = () => {
           onClick={() => {
             setEventController(null);
             dispatchController({
-              type: "setDates",
-              payload: { start: "", end: "" },
+              type: "clearDates",
+              payload: { id: 0, client: "", job: "", start: "", end: "" },
             });
           }}
         />
@@ -219,28 +247,8 @@ const CLIENTS = [
 ];
 
 const StyledSelect = tw.select`
-  border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer
+  border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer outline-none
 `;
-
-const DropDownClientMenu = () => {
-  return (
-    <StyledSelect id={"client"}>
-      <option value={""}>
-        Client ↓
-        {
-          //TODO I've removed this from <option value={""} default select option> because this use is not intended on React (https://techstrology.com/warning-received-true-for-a-non-boolean-attribute-name-in-reactjs/)
-        }
-      </option>
-      {CLIENTS.map((clientIterator, index) => {
-        return (
-          <option key={index} value={clientIterator}>
-            {clientIterator}
-          </option>
-        );
-      })}
-    </StyledSelect>
-  );
-};
 
 async function fetchEvent(
   action: string,
@@ -304,7 +312,7 @@ const JobField = ({
   setValue,
 }: {
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: (job: string) => void;
 }) => {
   return (
     <tw_Controller.job

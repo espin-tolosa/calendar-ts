@@ -62,8 +62,8 @@ export default function App() {
               payload: [eventSelected],
             });
             dispatchController({
-              type: "setDates",
-              payload: { start: "", end: "" },
+              type: "setController",
+              payload: { id: 0, client: "", job: "", start: "", end: "" },
             });
           }
         });
@@ -71,9 +71,31 @@ export default function App() {
         setEventController(null);
 
         dispatchController({
-          type: "setDates",
-          payload: { start: "", end: "" },
+          type: "setController",
+          payload: { id: 0, client: "", job: "", start: "", end: "" },
         });
+      } else if (!isNaN(parseInt(e.key))) {
+        const jobField = document.getElementById("job");
+        const selectField = document.querySelector("select");
+
+        if (jobField === document.activeElement) {
+          console.log("jobField has focus!");
+        } else {
+          dispatchController({
+            type: "setClient",
+            payload: {
+              id: 0,
+              client: `Client_${e.key}`,
+              job: "",
+              start: "",
+              end: "",
+            },
+          });
+          selectField?.focus();
+        }
+      } else if (e.key === "Tab") {
+        const selectField = document.querySelector("select");
+        selectField?.focus();
       }
     };
 

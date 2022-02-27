@@ -68,7 +68,13 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
 
             dispatchController({
               type: "setDates",
-              payload: { start: fullDate, end: fullDate },
+              payload: {
+                id: 0,
+                client: "",
+                job: "",
+                start: fullDate,
+                end: fullDate,
+              },
             });
             setTimeout(() => {
               if (start === fullDate && end === fullDate) {
