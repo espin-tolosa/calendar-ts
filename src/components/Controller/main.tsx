@@ -109,6 +109,7 @@ export const CreateEvent = () => {
     >
       {/* new button */}
       <tw_Controller.button
+        id={"save"}
         $display={true}
         type="submit"
         value={eventSelected ? "Copy" : "Save"}
@@ -161,6 +162,7 @@ export const CreateEvent = () => {
       {/* client field */}
       <StyledSelect
         value={client}
+        id={"select"}
         onChange={(e) =>
           dispatchController({
             type: "setClient",

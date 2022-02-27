@@ -60,7 +60,8 @@ export function Configuration() {
 }
 
 const TW_button = tw.button<{ $display: boolean }>`
-                 w-8 hover:bg-slate-400 transition-colors
+  
+	w-8 hover:bg-slate-400 transition-colors outline-none
 
   ${({ $display }) =>
     ($display && "bg-slate-200") ||

@@ -94,8 +94,15 @@ export default function App() {
           selectField?.focus();
         }
       } else if (e.key === "Tab") {
-        const selectField = document.querySelector("select");
-        selectField?.focus();
+        const selectField = document.getElementById("select");
+        const jobField = document.getElementById("job");
+        //const save = document.getElementById("save");
+        //TODO: state machine to traverse each editable option of the controller
+        if ("job" === document.activeElement?.id) {
+          jobField?.focus();
+        } else {
+          selectField?.focus();
+        }
       }
     };
 
