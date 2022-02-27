@@ -3,6 +3,7 @@ import React, {
   Dispatch,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -45,7 +46,7 @@ export const EventInController: composition = ({ children }) => {
   );
 };
 
-export const CreateEvent = () => {
+const CreateEvent = () => {
   const eventSelected = useEventSelected();
   const events = useEventState();
   //const [id, setId] = useState(0);
@@ -329,3 +330,5 @@ const JobField = ({
     />
   );
 };
+
+export const CreateEventMemo = React.memo(CreateEvent);
