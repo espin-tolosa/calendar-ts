@@ -107,7 +107,7 @@ export default function App() {
         );
         if (spread < 0) return;
         eventDispatcher({
-          type: "deletebyid_test",
+          type: "deletebyid",
           payload: [
             {
               id: event.id,
@@ -164,7 +164,7 @@ export default function App() {
           })
           .then((json) => {
             eventDispatcher({
-              type: "deletebyid_test",
+              type: "deletebyid",
               payload: [
                 {
                   id: event.id,
@@ -182,7 +182,7 @@ export default function App() {
           })
           .catch((error) => {
             eventDispatcher({
-              type: "deletebyid_test",
+              type: "deletebyid",
               payload: [
                 {
                   id: event.id,

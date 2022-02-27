@@ -9,7 +9,7 @@ import { isValidEvent } from "@/utils/ValidateEvent";
 type State = Array<event>;
 type Action =
   | {
-      type: "appendarray" | "deletebyid" | "replacebyid" | "deletebyid_test";
+      type: "appendarray" | "deletebyid" | "replacebyid";
       payload: State;
     }
   | { type: "default" };
@@ -52,22 +52,13 @@ function reducerEvents(state: State, action: Action) {
       return newState;
     }
     //
-    case "deletebyid_test": {
-      const newState = state.filter(
-        (toDelete) => Math.abs(action.payload[0].id) !== Math.abs(toDelete.id)
-      );
-      //
-      return newState;
-    }
     case "deletebyid": {
-      const newState = [...state];
+      let newState = [...state];
       action.payload.forEach((toReplace) => {
-        newState.splice(
-          newState.findIndex((event) => event.id === toReplace.id),
-          1 //only delete the single one found event
+        newState = newState.filter(
+          (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
         );
       });
-      //
       return newState;
     }
     //
