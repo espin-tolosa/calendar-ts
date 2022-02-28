@@ -9,6 +9,7 @@ import { event } from "@/interfaces";
 import { useEventDispatch } from "@/hooks/useEventsApi";
 
 import { api } from "@/static/apiRoutes";
+import { zeroPadd } from "@/utils/zeroPadd";
 
 type iMonth = {
   id: string;
@@ -66,7 +67,9 @@ const Month = ({ id, year, month }: iMonth) => {
     <StyledMonth.TWflexColLayout className="relative">
       <div className="text-transparent h-0"></div>
       {/*month-header*/}
-      <StyledMonth.TWheader>{date.dateFormat}</StyledMonth.TWheader>
+      <StyledMonth.TWheader id={`month-${date.year}-${zeroPadd(date.month)}`}>
+        {date.dateFormat}
+      </StyledMonth.TWheader>
 
       {/*board container*/}
       <StyledMonth.TWdaysBoard>

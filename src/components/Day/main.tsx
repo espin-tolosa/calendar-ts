@@ -51,6 +51,7 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
         <StyledDay.TWsizedContainer
           {...provided.droppableProps}
           ref={provided.innerRef}
+          id={`day-${fullDate}`}
           $isLock={isLocked}
           $isWeekend={isWeekend}
           $showWeekend={localState.showWeekends}
