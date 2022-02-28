@@ -25,6 +25,7 @@ import { useListenWindowSize } from "@/hooks/useResponsiveLayout";
 import { useControllerStateDates } from "@/hooks/useControllerDate";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { zeroPadd } from "@/utils/zeroPadd";
+import { scrollToDay } from "@/utils/scrollToDay";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -263,18 +264,23 @@ const CreateEvent = () => {
       <JobField
         value={job}
         setValue={(job: string) => {
-          const [year, month] = start.split("-"); //Autoscroll when job field is user input to end day of month //TODO: create custom hook
-          const dt = DateService.GetDate(parseInt(year), parseInt(month));
-          const lastDay = DateService.GetLastDayMonth(dt);
-          const startDay = document.getElementById(
-            `day-${year}-${zeroPadd(parseInt(month))}-${lastDay}`
-          );
-          setTimeout(() => {
-            startDay?.scrollIntoView({
-              block: "end",
-              inline: "end",
-            });
-          }, 10);
+          // const dt = DateService.GetDate();
+          // const [year, month] = DateService.FormatDate(dt).split("-");
+          // const date = `${year}-${month}-01`;
+          scrollToDay(start);
+
+          //      const [year, month] = start.split("-"); //Autoscroll when job field is user input to end day of month //TODO: create custom hook
+          //      const dt = DateService.GetDate(parseInt(year), parseInt(month));
+          //      const lastDay = DateService.GetLastDayMonth(dt);
+          //      const startDay = document.getElementById(
+          //        `day-${year}-${zeroPadd(parseInt(month))}-${lastDay}`
+          //      );
+          //      setTimeout(() => {
+          //        startDay?.scrollIntoView({
+          //          block: "end",
+          //          inline: "end",
+          //        });
+          //      }, 10);
           dispatchController({
             type: "setJob",
             payload: {

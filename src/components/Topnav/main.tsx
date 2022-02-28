@@ -1,5 +1,6 @@
 import { useUserSession } from "@/hooks/useUserSession";
 import { DateService } from "@/utils/Date";
+import { scrollToDay } from "@/utils/scrollToDay";
 import * as StyledTopnav from "./tw";
 
 export const TOPNAV_ID = "Topnav";
@@ -12,7 +13,14 @@ export const Topnav = () => {
       {/*left-header*/}
       <StyledTopnav.TWlogo>JH Diary</StyledTopnav.TWlogo>
       {/*center-header*/}{" "}
-      <StyledTopnav.TWtitle>
+      <StyledTopnav.TWtitle
+        onClick={() => {
+          const dt = DateService.GetDate();
+          const [year, month] = DateService.FormatDate(dt).split("-");
+          const date = `${year}-${month}-01`;
+          scrollToDay(date);
+        }}
+      >
         {DateService.GetTodayDateFormat()}
       </StyledTopnav.TWtitle>
       {/*right-header*/}

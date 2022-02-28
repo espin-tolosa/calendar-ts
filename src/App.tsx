@@ -13,7 +13,11 @@ import {
   useEventSelected,
   useSetEventSelected,
 } from "./components/Controller/main";
-import { useControllerDispatch } from "./hooks/useController";
+import {
+  useControllerDispatch,
+  useControllerState,
+} from "./hooks/useController";
+
 import {
   useControllerDispatchDates,
   useControllerStateDates,
@@ -39,6 +43,7 @@ export default function App() {
   const { value } = useUserSession();
   const eventDispatcher = useEventDispatch();
   const allEvents = useEventState();
+  const controllerState = useControllerState();
   const eventStartDragging = useRef<event>({
     id: 0,
     client: "",
@@ -91,9 +96,7 @@ export default function App() {
         const jobField = document.getElementById("job");
         const selectField = document.querySelector("select");
 
-        if (jobField === document.activeElement) {
-          console.log("jobField has focus!");
-        } else {
+        if (jobField !== document.activeElement) {
           dispatchController({
             type: "setClient",
             payload: {
