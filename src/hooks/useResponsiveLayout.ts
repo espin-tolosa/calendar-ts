@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-const LARGE_WINDOW_SIZE = 1280; /*px*/
+const LARGE_WINDOW_SIZE = 640; /*px*/
 
 export const useListenWindowSize = () => {
   const width = window.innerWidth;
