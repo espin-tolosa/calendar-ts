@@ -134,7 +134,6 @@ const CreateEvent = () => {
             });
             dispatchControllerDates({
               type: "clearDates",
-              payload: { start: "", end: "" },
             });
 
             setEventController(null);
@@ -182,12 +181,10 @@ const CreateEvent = () => {
             });
 
           dispatchController({
-            type: "setController",
-            payload: { id: 0, client: "default", job: "" },
+            type: "resetController",
           });
           dispatchControllerDates({
             type: "clearDates",
-            payload: { start: "", end: "" },
           });
 
           setEventController(null);
@@ -218,7 +215,6 @@ const CreateEvent = () => {
               });
               dispatchControllerDates({
                 type: "clearDates",
-                payload: { start: "", end: "" },
               });
             }
           });
@@ -241,9 +237,7 @@ const CreateEvent = () => {
           dispatchController({
             type: "setClient",
             payload: {
-              id: 0,
               client: e.target.value,
-              job: "",
             },
           });
         }}
@@ -284,8 +278,6 @@ const CreateEvent = () => {
           dispatchController({
             type: "setJob",
             payload: {
-              id: 0,
-              client: "",
               job,
             },
           });
@@ -334,7 +326,6 @@ const CreateEvent = () => {
             setEventController(null);
             dispatchControllerDates({
               type: "clearDates",
-              payload: { start: "", end: "" },
             });
           }}
         />

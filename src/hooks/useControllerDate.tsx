@@ -1,4 +1,4 @@
-import { composition, event } from "@/interfaces";
+import { composition } from "@/interfaces";
 import { DateService } from "@/utils/Date";
 import React, { createContext, useContext, useReducer } from "react";
 const init = { start: "", end: "" };
@@ -9,22 +9,15 @@ const cControllerDispatch = createContext<React.Dispatch<Action>>(() => {});
 /* to consume in controller and other  components that wants to dispatch to controller */
 export const useControllerStateDates = () => useContext(cControllerState);
 export const useControllerDispatchDates = () => useContext(cControllerDispatch);
+type dates = { start: string; end: string };
 
 type Action =
-  | {
-      type:
-        | "setDates"
-        | "setDatesForce"
-        | "clearDates"
-        | "backSlash"
-        | "onChange";
-      payload: typeof init;
-    }
-  | { type: "default" };
+  | { type: "updateDates" | "setDates"; payload: dates }
+  | { type: "clearDates" };
 
-function reducerController(state: typeof init, action: Action) {
+function reducerController(state: dates, action: Action) {
   switch (action.type) {
-    case "setDates": {
+    case "updateDates": {
       if (
         state.end === action.payload.end &&
         state.start === action.payload.start
@@ -36,7 +29,7 @@ function reducerController(state: typeof init, action: Action) {
       }
       return { start: action.payload.start, end: action.payload.end };
     }
-    case "setDatesForce": {
+    case "setDates": {
       return { start: action.payload.start, end: action.payload.end };
     }
     case "clearDates": {

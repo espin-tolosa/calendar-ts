@@ -69,7 +69,7 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
               }, 100);
             }
             dispatchControllerDates({
-              type: "setDates",
+              type: "updateDates",
               payload: { start: fullDate, end: fullDate },
             });
 

@@ -8,7 +8,7 @@ import { useEventDispatch, useEventState } from "@/hooks/useEventsApi";
 import { api } from "@/static/apiRoutes";
 import { event, objectKeys } from "@interfaces/index";
 import { DateService } from "./utils/Date";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   useEventSelected,
   useSetEventSelected,
@@ -40,6 +40,8 @@ async function fetchEvent(
 }
 
 export default function App() {
+  const [month, setMonth] = useState(0);
+
   const { value } = useUserSession();
   const eventDispatcher = useEventDispatch();
   const allEvents = useEventState();
@@ -77,7 +79,6 @@ export default function App() {
             });
             dispatchControllerDates({
               type: "clearDates",
-              payload: { start: "", end: "" },
             });
           }
         });
@@ -90,7 +91,6 @@ export default function App() {
         });
         dispatchControllerDates({
           type: "clearDates",
-          payload: { start: "", end: "" },
         });
       } else if (!isNaN(parseInt(e.key))) {
         const jobField = document.getElementById("job");
@@ -100,9 +100,7 @@ export default function App() {
           dispatchController({
             type: "setClient",
             payload: {
-              id: 0,
               client: `Client_${e.key}`,
-              job: "",
             },
           });
           selectField?.focus();

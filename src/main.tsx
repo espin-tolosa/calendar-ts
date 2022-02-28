@@ -8,7 +8,7 @@ import { UserPreferences } from "@/hooks/useLocalUserPreferences";
 import { EventInController } from "@components/Controller/main";
 import { ControllerProvider } from "@/hooks/useController";
 import { ControllerProviderDates } from "@/hooks/useControllerDate";
-import { DayLock } from "./hooks/useDayLock";
+import { DayLock } from "@/hooks/useDayLock";
 
 ReactDOM.render(
   <React.StrictMode>

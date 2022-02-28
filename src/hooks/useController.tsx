@@ -1,7 +1,14 @@
-import { composition, event } from "@/interfaces";
-import { DateService } from "@/utils/Date";
+import { composition } from "@/interfaces";
 import React, { createContext, useContext, useReducer } from "react";
 const init = { id: 0, client: "", job: "" };
+type Action =
+  | { type: "setClient"; payload: { client: string } }
+  | { type: "setJob"; payload: { job: string } }
+  | {
+      type: "setController";
+      payload: { id: number; client: string; job: string };
+    }
+  | { type: "resetController" };
 
 const cControllerState = createContext(init);
 const cControllerDispatch = createContext<React.Dispatch<Action>>(() => {});
@@ -10,18 +17,8 @@ const cControllerDispatch = createContext<React.Dispatch<Action>>(() => {});
 export const useControllerState = () => useContext(cControllerState);
 export const useControllerDispatch = () => useContext(cControllerDispatch);
 
-type Action =
-  | {
-      type: "setClient" | "setJob" | "setId" | "setController";
-      payload: typeof init;
-    }
-  | { type: "default" };
-
 function reducerController(state: typeof init, action: Action) {
   switch (action.type) {
-    case "setId": {
-      return { ...state, id: action.payload.id };
-    }
     case "setClient": {
       return { ...state, client: action.payload.client };
     }
@@ -30,6 +27,9 @@ function reducerController(state: typeof init, action: Action) {
     }
     case "setController": {
       return { ...action.payload };
+    }
+    case "resetController": {
+      return { id: 0, client: "default", job: "" };
     }
 
     default: {

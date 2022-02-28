@@ -27,8 +27,8 @@ export const Event = ({ event }: { event: event }) => {
     const eventRoot = events.find((e) => e.id === event.id);
 
     dispatchControllerDates({
-      type: "setDatesForce",
-      payload: { start: eventRoot?.start || "", end: eventRoot?.end || "" },
+      type: "setDates",
+      payload: { start: eventRoot?.start!, end: eventRoot?.end! },
     });
     dispatchController({
       type: "setController",
