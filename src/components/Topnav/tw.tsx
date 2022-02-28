@@ -9,7 +9,7 @@ export const TWlogo = tw.div`
 `;
 
 export const TWtitle = tw.div`
-	overflow-hidden whitespace-nowrap text-ellipsis portrait:mr-2
+	overflow-hidden whitespace-nowrap text-ellipsis portrait:mr-2 text-white
 `;
 
 export const TWlogout = tw.button`
