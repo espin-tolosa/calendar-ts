@@ -51,13 +51,8 @@ export const EventInController: composition = ({ children }) => {
 
 const CreateEvent = () => {
   const eventSelected = useEventSelected();
-  const events = useEventState();
-  //const [id, setId] = useState(0);
-  //const [client, setClient] = useState("");
-  //const [job, setJob] = useState("");
   const { id, client, job } = useControllerState();
   const { start, end } = useControllerStateDates();
-  //const [description, setDescription] = useState("");
   const setEventController = useSetEventSelected();
 
   /*  parallel change consume date context */
@@ -68,28 +63,15 @@ const CreateEvent = () => {
   const initDate = useRef(false);
   const isLargeWindow = useListenWindowSize();
 
-  useEffect(() => {
-    const id = eventSelected?.id || 0;
-    const client = eventSelected?.client || "";
-    const job = eventSelected?.job || "";
-    const start = eventSelected?.start || "";
-    const end = eventSelected?.end || "";
-    dispatchController({
-      type: "setController",
-      payload: { id, client, job },
-    });
-    dispatchControllerDates({
-      type: "setDates",
-      payload: {
-        start,
-        end,
-      },
-    });
-  }, [eventSelected]);
-
   const isDateForm = start !== "" && end !== "";
   const initState = initDate.current;
   useEffect(() => {
+    if (!isDateForm) {
+      dispatchController({
+        type: "setController",
+        payload: { id: 0, client: "default", job: "" },
+      });
+    }
     initState && isDateForm && dispatchLocalState({ type: "toggleController" });
     initDate.current = true;
     return () => {
@@ -98,13 +80,6 @@ const CreateEvent = () => {
   }, [start, end]);
 
   const eventDispatcher = useEventDispatch();
-  const event: event = {
-    id: 1,
-    client: "Test Fetch",
-    job: "Post",
-    start: "2022-02-01",
-    end: "2022-02-02",
-  };
 
   return (
     <tw_Controller.form
@@ -113,6 +88,56 @@ const CreateEvent = () => {
         event.preventDefault();
       }}
     >
+      {/* update button */}
+      <tw_Controller.button
+        id={"update"}
+        $display={eventSelected ? true : false}
+        type="submit"
+        value={"Update"}
+        title={`Update event from ${eventSelected?.client || ""}`}
+        onClick={() => {
+          // TODO: check if is valid event
+          if (!isValidEvent) {
+            return;
+          }
+
+          const result = fetchEvent("PUT", {
+            id,
+            client,
+            job,
+            start,
+            end,
+          });
+          result.then((res) => {
+            console.log(res);
+            if (res.status === 203) {
+              eventDispatcher({
+                type: "replacebyid",
+                payload: [
+                  {
+                    id,
+                    client,
+                    job,
+                    start,
+                    end,
+                  },
+                ],
+              });
+            }
+          });
+
+          dispatchController({
+            type: "setController",
+            payload: { id: 0, client: "default", job: "" },
+          });
+          dispatchControllerDates({
+            type: "clearDates",
+            payload: { start: "", end: "" },
+          });
+
+          setEventController(null);
+        }}
+      />
       {/* new button */}
       <tw_Controller.button
         id={"save"}
@@ -162,6 +187,39 @@ const CreateEvent = () => {
           setEventController(null);
         }}
       />
+      {/* delete button */}
+      <tw_Controller.button
+        id={"delete"}
+        $display={eventSelected ? true : false}
+        type="submit"
+        value={"Delete"}
+        title={`Delete event from ${eventSelected?.client || ""}`}
+        onClick={() => {
+          // TODO: check if is valid event
+          if (!isValidEvent) {
+            return;
+          }
+          const result = fetchEvent("DELETE", eventSelected!);
+          result.then((res) => {
+            if (res.status === 204) {
+              eventDispatcher({
+                type: "deletebyid",
+                payload: [eventSelected!],
+              });
+              dispatchController({
+                type: "setController",
+                payload: { id: 0, client: "", job: "" },
+              });
+              dispatchControllerDates({
+                type: "clearDates",
+                payload: { start: "", end: "" },
+              });
+            }
+          });
+
+          setEventController(null);
+        }}
+      />
       <tw_Controller.startEnd>
         {/* start field */}
         <DateField date={start} name="start" autoFocus={false} />
@@ -206,7 +264,6 @@ const CreateEvent = () => {
           const startDay = document.getElementById(
             `day-${year}-${zeroPadd(parseInt(month))}-${lastDay}`
           );
-          console.log(startDay);
           setTimeout(() => {
             startDay?.scrollIntoView({
               block: "end",

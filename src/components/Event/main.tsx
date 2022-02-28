@@ -4,9 +4,19 @@ import { event } from "@interfaces/index";
 import { DateService } from "@/utils/Date";
 import { useSetEventSelected } from "../Controller/main";
 import { Draggable } from "react-beautiful-dnd";
+import { useControllerDispatchDates } from "@/hooks/useControllerDate";
+import {
+  useControllerDispatch,
+  useControllerState,
+} from "@/hooks/useController";
+import { useEventState } from "@/hooks/useEventsApi";
 
 export const Event = ({ event }: { event: event }) => {
   const setEventController = useSetEventSelected();
+  const dispatchControllerDates = useControllerDispatchDates();
+  const dispatchController = useControllerDispatch();
+  const events = useEventState();
+
   const cells = Math.min(
     1 + DateService.DaysFromStartToEnd(event.start, event.end),
     8 //TODO
@@ -14,6 +24,18 @@ export const Event = ({ event }: { event: event }) => {
 
   const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
+    const eventRoot = events.find((e) => e.id === event.id);
+
+    dispatchControllerDates({
+      type: "setDatesForce",
+      payload: { start: eventRoot?.start || "", end: eventRoot?.end || "" },
+    });
+    dispatchController({
+      type: "setController",
+      payload: { id: event.id, client: event.client, job: event.job },
+    });
+
+    //}
     setEventController(event);
   };
   return (

@@ -12,7 +12,12 @@ export const useControllerDispatchDates = () => useContext(cControllerDispatch);
 
 type Action =
   | {
-      type: "setDates" | "clearDates" | "backSlash" | "onChange";
+      type:
+        | "setDates"
+        | "setDatesForce"
+        | "clearDates"
+        | "backSlash"
+        | "onChange";
       payload: typeof init;
     }
   | { type: "default" };
@@ -29,6 +34,9 @@ function reducerController(state: typeof init, action: Action) {
       if (DateService.DaysFromStartToEnd(state.end, action.payload.end) > 0) {
         return { ...state, end: action.payload.end };
       }
+      return { start: action.payload.start, end: action.payload.end };
+    }
+    case "setDatesForce": {
       return { start: action.payload.start, end: action.payload.end };
     }
     case "clearDates": {
