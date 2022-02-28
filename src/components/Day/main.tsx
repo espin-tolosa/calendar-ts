@@ -9,6 +9,10 @@ import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences"
 import { Droppable } from "react-beautiful-dnd";
 import { useDayLock, useDayLockDispatcher } from "@/hooks/useDayLock";
 import { useEventSelected, useSetEventSelected } from "../Controller/main";
+import {
+  useControllerStateDates,
+  useControllerDispatchDates,
+} from "@/hooks/useControllerDate";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -22,19 +26,17 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
   const lockedDays = useDayLock();
   const lockedDaysDispatcher = useDayLockDispatcher();
   const isLocked = lockedDays.find((lock) => lock === fullDate) === fullDate;
-  const dispatchController = useControllerDispatch();
   const { localState } = useLocalUserPreferencesContext();
   const eventSelected = useEventSelected();
   const setEventController = useSetEventSelected();
-  const { start, end } = useControllerState();
+  const { start, end } = useControllerStateDates();
+  const dispatchControllerDates = useControllerDispatchDates();
 
   const dayName = DateService.GetMonthDayKey(new Date(fullDate));
   const isWeekend = dayName === "Sunday" || dayName === "Saturday";
 
-  const controllerState = useControllerState();
-
-  const left = DateService.DaysFromStartToEnd(controllerState.start, fullDate);
-  const right = DateService.DaysFromStartToEnd(controllerState.end, fullDate);
+  const left = DateService.DaysFromStartToEnd(start, fullDate);
+  const right = DateService.DaysFromStartToEnd(end, fullDate);
   let isSelected = false;
 
   if (left >= 0 && right <= 0) {
@@ -65,17 +67,11 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
                 //});
               }, 100);
             }
-
-            dispatchController({
+            dispatchControllerDates({
               type: "setDates",
-              payload: {
-                id: 0,
-                client: "",
-                job: "",
-                start: fullDate,
-                end: fullDate,
-              },
+              payload: { start: fullDate, end: fullDate },
             });
+
             setTimeout(() => {
               if (start === fullDate && end === fullDate) {
                 setEventController(null);
@@ -111,4 +107,8 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
   );
 }
 
-export const MemoIDay = memo(IDay);
+function moviePropsAreEqual(prev: any, next: any) {
+  console.log("prev", prev);
+  return prev === next;
+}
+export const MemoIDay = memo(IDay, moviePropsAreEqual);

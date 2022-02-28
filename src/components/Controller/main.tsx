@@ -22,6 +22,8 @@ import { useUserSession } from "@/hooks/useUserSession";
 import { api } from "@/static/apiRoutes";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
 import { useListenWindowSize } from "@/hooks/useResponsiveLayout";
+import { useControllerStateDates } from "@/hooks/useControllerDate";
+import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -52,12 +54,15 @@ const CreateEvent = () => {
   //const [id, setId] = useState(0);
   //const [client, setClient] = useState("");
   //const [job, setJob] = useState("");
-  const { id, client, job, start, end } = useControllerState();
+  const { id, client, job } = useControllerState();
+  const { start, end } = useControllerStateDates();
   //const [description, setDescription] = useState("");
   const setEventController = useSetEventSelected();
 
   /*  parallel change consume date context */
   const dispatchController = useControllerDispatch();
+  const dispatchControllerDates = useControllerDispatchDates();
+
   const { dispatchLocalState } = useLocalUserPreferencesContext();
   const initDate = useRef(false);
   const isLargeWindow = useListenWindowSize();
@@ -66,18 +71,17 @@ const CreateEvent = () => {
     const id = eventSelected?.id || 0;
     const client = eventSelected?.client || "";
     const job = eventSelected?.job || "";
+    const start = eventSelected?.start || "";
+    const end = eventSelected?.end || "";
     dispatchController({
       type: "setController",
-      payload: { id, client, job, start: "", end: "" },
+      payload: { id, client, job },
     });
-    dispatchController({
+    dispatchControllerDates({
       type: "setDates",
       payload: {
-        id: 0,
-        client: "",
-        job: "",
-        start: eventSelected?.start || "",
-        end: eventSelected?.end || "",
+        start,
+        end,
       },
     });
   }, [eventSelected]);
@@ -147,7 +151,11 @@ const CreateEvent = () => {
 
           dispatchController({
             type: "setController",
-            payload: { id: 0, client: "default", job: "", start: "", end: "" },
+            payload: { id: 0, client: "default", job: "" },
+          });
+          dispatchControllerDates({
+            type: "clearDates",
+            payload: { start: "", end: "" },
           });
 
           setEventController(null);
@@ -164,18 +172,16 @@ const CreateEvent = () => {
       <StyledSelect
         value={client}
         id={"select"}
-        onChange={(e) =>
+        onChange={(e) => {
           dispatchController({
             type: "setClient",
             payload: {
               id: 0,
               client: e.target.value,
               job: "",
-              start: "",
-              end: "",
             },
-          })
-        }
+          });
+        }}
       >
         <option value="default" hidden>
           Select Client
@@ -199,8 +205,6 @@ const CreateEvent = () => {
               id: 0,
               client: "",
               job,
-              start: "",
-              end: "",
             },
           });
         }}
@@ -227,9 +231,9 @@ const CreateEvent = () => {
           title="Close control panel"
           onClick={() => {
             setEventController(null);
-            dispatchController({
+            dispatchControllerDates({
               type: "clearDates",
-              payload: { id: 0, client: "", job: "", start: "", end: "" },
+              payload: { start: "", end: "" },
             });
           }}
         />
@@ -310,25 +314,21 @@ const DateField = ({
   );
 };
 
-const JobField = ({
-  value,
-  setValue,
-}: {
-  value: string;
-  setValue: (job: string) => void;
-}) => {
-  return (
-    <tw_Controller.job
-      onChange={(e) => {
-        setValue(e.target.value);
-      }}
-      type="text"
-      name="job"
-      id="job"
-      value={value}
-      placeholder="Job"
-    />
-  );
-};
+const JobField = React.memo(
+  ({ value, setValue }: { value: string; setValue: (job: string) => void }) => {
+    return (
+      <tw_Controller.job
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+        type="text"
+        name="job"
+        id="job"
+        value={value}
+        placeholder="Job"
+      />
+    );
+  }
+);
 
 export const CreateEventMemo = React.memo(CreateEvent);

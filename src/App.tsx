@@ -14,6 +14,10 @@ import {
   useSetEventSelected,
 } from "./components/Controller/main";
 import { useControllerDispatch } from "./hooks/useController";
+import {
+  useControllerDispatchDates,
+  useControllerStateDates,
+} from "./hooks/useControllerDate";
 
 async function fetchEvent(
   action: string,
@@ -50,6 +54,7 @@ export default function App() {
   const eventSelected = useEventSelected();
   const setEventController = useSetEventSelected();
   const dispatchController = useControllerDispatch();
+  const dispatchControllerDates = useControllerDispatchDates();
 
   useEffect(() => {
     const hOnKeyDown = (e: any) => {
@@ -63,7 +68,11 @@ export default function App() {
             });
             dispatchController({
               type: "setController",
-              payload: { id: 0, client: "", job: "", start: "", end: "" },
+              payload: { id: 0, client: "", job: "" },
+            });
+            dispatchControllerDates({
+              type: "clearDates",
+              payload: { start: "", end: "" },
             });
           }
         });
@@ -72,7 +81,11 @@ export default function App() {
 
         dispatchController({
           type: "setController",
-          payload: { id: 0, client: "", job: "", start: "", end: "" },
+          payload: { id: 0, client: "", job: "" },
+        });
+        dispatchControllerDates({
+          type: "clearDates",
+          payload: { start: "", end: "" },
         });
       } else if (!isNaN(parseInt(e.key))) {
         const jobField = document.getElementById("job");
@@ -87,8 +100,6 @@ export default function App() {
               id: 0,
               client: `Client_${e.key}`,
               job: "",
-              start: "",
-              end: "",
             },
           });
           selectField?.focus();
