@@ -12,12 +12,13 @@ export const useConfigColumns = () => {
 
   const scrollTarget = useAutoScroll();
   useEffect(() => {
+    /* Automatic scroll when columns changes */ //TODO: merge with autoScroll hook
     document.documentElement.style.setProperty(ROOT_TARGET, `${columns}`);
 
     if (columns <= PREV_MONTHS) {
       setTimeout(() => {
         handleScroll(scrollTarget);
-      }, 200);
+      }, 400);
 
       const handleScroll = (target: string) => {
         const top = document.getElementById(target)!;

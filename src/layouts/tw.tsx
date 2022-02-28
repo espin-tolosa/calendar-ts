@@ -19,7 +19,7 @@ sm:grid sm:landscape:grid flex flex-col custombp:text-landscape
 
 export const TWcontroller = tw.div<{ $display: boolean }>`
 ${({ $display }) =>
-  ($display && "max-h-[95vh] customtp:max-h-[35vh] custombp:max-h-[88vh]") ||
+  ($display && "max-h-[95vh] customtp:max-h-[38vh] custombp:max-h-[88vh]") ||
   (!$display && "max-h-0") ||
   ""}	
 rounded-b-lg mt-1

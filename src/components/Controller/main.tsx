@@ -89,55 +89,60 @@ const CreateEvent = () => {
       }}
     >
       {/* update button */}
-      <tw_Controller.button
-        id={"update"}
-        $display={eventSelected ? true : false}
-        type="submit"
-        value={"Update"}
-        title={`Update event from ${eventSelected?.client || ""}`}
-        onClick={() => {
-          // TODO: check if is valid event
-          if (!isValidEvent) {
-            return;
-          }
-
-          const result = fetchEvent("PUT", {
-            id,
-            client,
-            job,
-            start,
-            end,
-          });
-          result.then((res) => {
-            console.log(res);
-            if (res.status === 203) {
-              eventDispatcher({
-                type: "replacebyid",
-                payload: [
-                  {
-                    id,
-                    client,
-                    job,
-                    start,
-                    end,
-                  },
-                ],
-              });
+      {eventSelected ? (
+        <tw_Controller.button
+          id={"update"}
+          $display={eventSelected ? true : false}
+          type="submit"
+          value={"Update"}
+          title={`Update event from ${eventSelected?.client || ""}`}
+          onClick={() => {
+            // TODO: check if is valid event
+            if (!isValidEvent) {
+              return;
             }
-          });
 
-          dispatchController({
-            type: "setController",
-            payload: { id: 0, client: "default", job: "" },
-          });
-          dispatchControllerDates({
-            type: "clearDates",
-            payload: { start: "", end: "" },
-          });
+            const result = fetchEvent("PUT", {
+              id,
+              client,
+              job,
+              start,
+              end,
+            });
+            result.then((res) => {
+              console.log(res);
+              if (res.status === 203) {
+                eventDispatcher({
+                  type: "replacebyid",
+                  payload: [
+                    {
+                      id,
+                      client,
+                      job,
+                      start,
+                      end,
+                    },
+                  ],
+                });
+              }
+            });
 
-          setEventController(null);
-        }}
-      />
+            dispatchController({
+              type: "setController",
+              payload: { id: 0, client: "default", job: "" },
+            });
+            dispatchControllerDates({
+              type: "clearDates",
+              payload: { start: "", end: "" },
+            });
+
+            setEventController(null);
+          }}
+        />
+      ) : (
+        <></>
+      )}
+
       {/* new button */}
       <tw_Controller.button
         id={"save"}

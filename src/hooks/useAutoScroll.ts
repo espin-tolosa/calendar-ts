@@ -15,7 +15,7 @@ return (
 )
 
 */
-export const useAutoScroll = (delay_ms = 500) => {
+export const useAutoScroll = (delay_ms = 1000) => {
   const scrollTarget = "AutoScrollTarget_OnlyOneUniqueId";
   useLayoutEffect(() => {
     setTimeout(() => {
@@ -23,7 +23,7 @@ export const useAutoScroll = (delay_ms = 500) => {
     }, delay_ms);
     setTimeout(() => {
       handleScroll(scrollTarget);
-    }, 1000);
+    }, delay_ms + 200);
   }, []);
 
   return scrollTarget;
