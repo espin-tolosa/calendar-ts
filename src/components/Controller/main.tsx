@@ -299,6 +299,25 @@ const CreateEvent = () => {
 	</tw_Controller.description_wrap>
 	
 	*/}
+      {/* full screen button */}
+      {
+        //      <tw_Controller.button
+        //        id={"full-screen"}
+        //        $display={true}
+        //        type="button"
+        //        value={"Full Screen"}
+        //        title={"Go to fullscreen mode"}
+        //        onClick={() => {
+        //          document.documentElement.requestFullscreen().then((res) => {
+        //            setEventController(null);
+        //            dispatchControllerDates({
+        //              type: "clearDates",
+        //              payload: { start: "", end: "" },
+        //            });
+        //          });
+        //        }}
+        //      />
+      }
       {!isLargeWindow && (
         <tw_Controller.button
           $display={true}

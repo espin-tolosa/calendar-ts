@@ -2,6 +2,7 @@ import { useUserSession } from "@/hooks/useUserSession";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { TWloginButton, TWloginForm, TWloginInput, TWloginWrapper } from "./tw";
+import { useListenWindowSize } from "@/hooks/useResponsiveLayout";
 
 export default function Login() {
   const {
@@ -16,10 +17,18 @@ export default function Login() {
     clearLoginSession();
   }, []);
 
+  const isLargeWindow = useListenWindowSize();
+
   const onSubmitLogin = (payload: any) => {
     //TODO: fix any, understand handleSubmit
     //fakeLogin(payload);
-    fetchLogin(payload);
+    if (document.fullscreenEnabled && !isLargeWindow) {
+      document.documentElement.requestFullscreen().then((res) => {
+        fetchLogin(payload);
+      });
+    } else {
+      fetchLogin(payload);
+    }
   };
   return (
     <TWloginWrapper>
