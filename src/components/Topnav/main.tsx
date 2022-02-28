@@ -1,17 +1,19 @@
 import { useUserSession } from "@/hooks/useUserSession";
 import { DateService } from "@/utils/Date";
 import { scrollToDay } from "@/utils/scrollToDay";
+import { useToken } from "@/hooks/useToken";
 import * as StyledTopnav from "./tw";
 
 export const TOPNAV_ID = "Topnav";
 
 export const Topnav = () => {
   const setSession = useUserSession();
+  const { usr } = useToken();
 
   return (
     <StyledTopnav.TWcontainer id={TOPNAV_ID}>
       {/*left-header*/}
-      <StyledTopnav.TWlogo>JH Diary</StyledTopnav.TWlogo>
+      <StyledTopnav.TWlogo>{`JH Diary | user: ${usr}`}</StyledTopnav.TWlogo>
       {/*center-header*/}{" "}
       <StyledTopnav.TWtitle
         onClick={() => {
