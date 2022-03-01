@@ -1,5 +1,6 @@
 import { createContext, Dispatch, useContext, useReducer } from "react";
-import { composition } from "@/interfaces";
+import { composition, Date } from "@/interfaces";
+import { DateService } from "@/utils/Date";
 
 const cDayLock = createContext<Array<string>>([]);
 const cDayLockDispatcher = createContext<Dispatch<Action>>(() => {});
@@ -11,18 +12,25 @@ export const useDayLockDispatcher = () => {
   return useContext(cDayLockDispatcher);
 };
 
-type Action =
-  | {
-      type: "addlock" | "deletelock";
-      payload: string;
-    }
-  | { type: "default" };
+type Action = {
+  type: "update" | "deletelock";
+  date: Date;
+};
 
-function reducerLockedDays(state: Array<string>, action: Action) {
-  switch (action.type) {
+function reducerLockedDays(state: Array<string>, { type, date }: Action) {
+  switch (type) {
     //
-    case "addlock": {
-      const newState = [...state, action.payload];
+    case "update": {
+      const newState = [...state];
+      const day = state.findIndex((current) => current === date);
+      if (day < 0) {
+        newState.push(date);
+      } else {
+        newState.splice(day, 1);
+      }
+      newState.sort((first, second) =>
+        DateService.DaysFromStartToEnd(second, first)
+      );
       return newState;
     }
     //

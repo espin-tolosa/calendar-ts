@@ -94,7 +94,7 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
             $isWeekend={isWeekend}
             onClick={(e) => {
               e.stopPropagation();
-              lockedDaysDispatcher({ type: "addlock", payload: fullDate });
+              lockedDaysDispatcher({ type: "update", date: fullDate });
             }}
           >
             <StyledDay.TWdaySpot $isToday={isToday}>
