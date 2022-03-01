@@ -10,12 +10,19 @@ import {
   useControllerState,
 } from "@/hooks/useController";
 import { useEventState } from "@/hooks/useEventsApi";
+import { useEffect, useState } from "react";
 
 export const Event = ({ event }: { event: event }) => {
   const setEventController = useSetEventSelected();
   const dispatchControllerDates = useControllerDispatchDates();
   const dispatchController = useControllerDispatch();
   const events = useEventState();
+  const [justThrown, setJustThrown] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setJustThrown(false);
+    }, 1000);
+  }, []);
 
   const cells = Math.min(
     1 + DateService.DaysFromStartToEnd(event.start, event.end),
@@ -41,7 +48,8 @@ export const Event = ({ event }: { event: event }) => {
   return (
     <StyledEvent.TWflexContainer>
       <StyledEvent.TWtextContent
-        style={giveMeColor(event.client)}
+        $justThrown={justThrown}
+        style={!justThrown ? giveMeColor(event.client) : {}}
         key={event.id}
         $cells={cells}
         onClick={hOnClick}

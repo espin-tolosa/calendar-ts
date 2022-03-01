@@ -12,6 +12,7 @@ export const giveMeColor = (search: string) => {
     {
       name: "Client_1",
       style: {
+        transition: "background-color 0.5s ease",
         background: linearGradientTemplate(10),
         color: highContrastText(10),
       },
@@ -19,6 +20,7 @@ export const giveMeColor = (search: string) => {
     {
       name: "Client_2",
       style: {
+        transition: "background-color 0.5s ease",
         background: linearGradientTemplate(20),
         color: highContrastText(20),
       },
@@ -26,6 +28,7 @@ export const giveMeColor = (search: string) => {
     {
       name: "Client_3",
       style: {
+        transition: "background-color 0.5s ease",
         background: linearGradientTemplate(30),
         color: highContrastText(30),
       },
@@ -33,6 +36,7 @@ export const giveMeColor = (search: string) => {
     {
       name: "Client_4",
       style: {
+        transition: "background-color 0.5s ease",
         background: linearGradientTemplate(40),
         color: highContrastText(40),
       },
@@ -40,6 +44,7 @@ export const giveMeColor = (search: string) => {
     {
       name: "Client_5",
       style: {
+        transition: "background-color 0.5s ease",
         background: linearGradientTemplate(50),
         color: highContrastText(50),
       },
@@ -47,6 +52,7 @@ export const giveMeColor = (search: string) => {
     {
       name: "Client_6",
       style: {
+        transition: "background-color 0.5s ease",
         background: linearGradientTemplate(60),
         color: highContrastText(60),
       },
@@ -54,6 +60,7 @@ export const giveMeColor = (search: string) => {
     {
       name: "Client_7",
       style: {
+        transition: "background-color 0.5s ease",
         background: linearGradientTemplate(70),
         color: highContrastText(70),
       },
@@ -61,6 +68,7 @@ export const giveMeColor = (search: string) => {
     {
       name: "Client_8",
       style: {
+        transition: "background-color 0.5s ease",
         background: linearGradientTemplate(80),
         color: highContrastText(80),
       },
@@ -68,6 +76,7 @@ export const giveMeColor = (search: string) => {
     {
       name: "Client_9",
       style: {
+        transition: "background-color 0.5s ease",
         background: linearGradientTemplate(90),
         color: highContrastText(90),
       },

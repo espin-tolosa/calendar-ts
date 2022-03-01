@@ -1,10 +1,11 @@
 import tw from "tailwind-styled-components";
 
 export const TWflexContainer = tw.div`
-  flex flex-col justify-start my-1`;
+  flex flex-col justify-start my-1 transition-colors
+	`;
 
-export const TWtextContent = tw.div<{ $cells: number }>`
-	absolute whitespace-nowrap overflow-hidden overflow-ellipsis pl-2 text-white rounded-l-full ml-[0.1rem]
+export const TWtextContent = tw.div<{ $cells: number; $justThrown: boolean }>`
+	absolute whitespace-nowrap overflow-hidden overflow-ellipsis pl-2 text-white active:text-black rounded-l-full ml-[0.1rem] transition-colors
 	${({ $cells }) =>
     ($cells === 1 && "event-span-1") ||
     ($cells === 2 && "event-span-2") ||
@@ -15,12 +16,15 @@ export const TWtextContent = tw.div<{ $cells: number }>`
     ($cells === 7 && "event-span-7") ||
     ($cells === 8 && "event-span-8") ||
     "extend-event-1"}
+		
+	${({ $justThrown }) => ($justThrown && "text-slate-400 bg-slate-200") || ""}
 
 	${({ $cells }) => ($cells <= 7 && "rounded-r-full") || "rounded-r-none"}
 `;
 
 export const TWextend = tw.div<{ $cells: number }>`
 	absolute text-transparent	cursor-e-resize	min-w-[7.14%]	z-ExtendEvent
+
 	${({ $cells }) =>
     ($cells === 1 && "extend-event-1") ||
     ($cells === 2 && "extend-event-2") ||
