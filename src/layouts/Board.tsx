@@ -25,8 +25,8 @@ export const LayoutBoard = () => {
   //*--------------------------*/
   return (
     <TWboard id={"Board"}>
-      <MemoMonth id={"Past-1"} year={2021} month={12} />
-      <MemoMonth id={autoScrollTarget} year={2022} month={1} />
+      <MemoMonth id={"Past-1"} year={2022} month={1} />
+      <MemoMonth id={autoScrollTarget} year={2022} month={2} />
       {monthKeys.map((month_entry, index) => {
         return (
           <MemoMonth
