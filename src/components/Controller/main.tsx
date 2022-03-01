@@ -148,7 +148,7 @@ const CreateEvent = () => {
         id={"save"}
         $display={true}
         type="submit"
-        value={eventSelected ? "Copy" : "Save"}
+        value={eventSelected ? "Save a copy" : "Save"}
         title="Testing to new dispatch event"
         onClick={() => {
           // TODO: check if is valid event
@@ -166,6 +166,7 @@ const CreateEvent = () => {
           result
             .then((res: any) => res.json())
             .then((json) => {
+              scrollToDay(start);
               eventDispatcher({
                 type: "appendarray",
                 payload: [
