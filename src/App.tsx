@@ -22,6 +22,7 @@ import {
   useControllerDispatchDates,
   useControllerStateDates,
 } from "./hooks/useControllerDate";
+import { useIsDragging } from "./hooks/useIsDragging";
 
 async function fetchEvent(
   action: string,
@@ -41,6 +42,7 @@ async function fetchEvent(
 
 export default function App() {
   const [month, setMonth] = useState(0);
+  const isDragging = useIsDragging();
 
   const { value } = useUserSession();
   const eventDispatcher = useEventDispatch();
@@ -135,6 +137,7 @@ export default function App() {
           (e) => e.id === parseInt(result.draggableId)
         )!;
         eventStartDragging.current = event;
+        isDragging.setState(true);
       }}
       onDragUpdate={(result) => {
         const { source, destination } = result;
@@ -147,29 +150,16 @@ export default function App() {
           destination?.droppableId!
         );
         if (spread < 0) return;
+        const newEvent = {
+          id: event.id,
+          client: event.client,
+          job: event.job,
+          start: event.start,
+          end: destination?.droppableId!,
+        };
         eventDispatcher({
-          type: "deletebyid",
-          payload: [
-            {
-              id: event.id,
-              client: event.client,
-              job: event.job,
-              start: event.start,
-              end: destination?.droppableId!,
-            },
-          ],
-        });
-        eventDispatcher({
-          type: "appendarray",
-          payload: [
-            {
-              id: event.id,
-              client: event.client,
-              job: event.job,
-              start: event.start,
-              end: destination?.droppableId!,
-            },
-          ],
+          type: "replacebyid",
+          payload: [newEvent],
         });
       }}
       onDragEnd={(result) => {
@@ -188,13 +178,16 @@ export default function App() {
 
         if (spread < 0) return;
         if (endTarget === 0) return;
-        const fetchResultPUT = fetchEvent("PUT", {
+
+        const newEvent = {
           id: event.id,
           client: event.client,
           job: event.job,
           start: event.start,
           end: destination?.droppableId!,
-        });
+        };
+
+        const fetchResultPUT = fetchEvent("PUT", newEvent);
 
         fetchResultPUT
           .then((res) => {
@@ -203,41 +196,14 @@ export default function App() {
             }
             return res.json();
           })
-          .then((json) => {
+          .catch(() => {
             eventDispatcher({
-              type: "deletebyid",
-              payload: [
-                {
-                  id: event.id,
-                  client: event.client,
-                  job: event.job,
-                  start: event.start,
-                  end: destination?.droppableId!,
-                },
-              ],
-            });
-            eventDispatcher({
-              type: "appendarray",
-              payload: [json[0]],
-            });
-          })
-          .catch((error) => {
-            eventDispatcher({
-              type: "deletebyid",
-              payload: [
-                {
-                  id: event.id,
-                  client: event.client,
-                  job: event.job,
-                  start: event.start,
-                  end: destination?.droppableId!,
-                },
-              ],
-            });
-            eventDispatcher({
-              type: "appendarray",
+              type: "replacebyid",
               payload: [eventStartDragging.current],
             });
+          })
+          .finally(() => {
+            isDragging.setState(false);
           });
       }}
     >

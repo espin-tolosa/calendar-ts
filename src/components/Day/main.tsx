@@ -13,6 +13,7 @@ import {
   useControllerStateDates,
   useControllerDispatchDates,
 } from "@/hooks/useControllerDate";
+import { useIsDragging } from "@/hooks/useIsDragging";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -31,6 +32,7 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
   const setEventController = useSetEventSelected();
   const { start, end } = useControllerStateDates();
   const dispatchControllerDates = useControllerDispatchDates();
+  const isDragging = useIsDragging();
 
   const dayName = DateService.GetMonthDayKey(new Date(fullDate));
   const isWeekend = dayName === "Sunday" || dayName === "Saturday";
@@ -58,31 +60,23 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
           $isSelected={isSelected}
           $restDays={restDays}
           onClick={() => {
-            console.log("Day: event id;", eventSelected?.id || 0);
-            if (eventSelected !== null) {
-              setTimeout(() => {
-                //setEventController(null);
-                //dispatchController({
-                //  type: "setDates",
-                //  payload: { start: "", end: "" },
-                //});
-              }, 100);
+            if (isDragging.state) {
+              return;
             }
+            console.log("Day: event id;", eventSelected?.id || 0);
             dispatchControllerDates({
               type: "updateDates",
               payload: { start: fullDate, end: fullDate },
             });
 
-            setTimeout(() => {
-              if (start === fullDate && end === fullDate) {
-                setEventController(null);
-              }
-            }, 100);
+            if (start === fullDate && end === fullDate) {
+              setEventController(null);
+            }
           }}
           onMouseUp={() => {
-            //console.log("leaving action at day:", dayPadd);
+            //console.info("leaving action at day:", dayPadd);
           }}
-          onMouseEnter={() => console.log("passing over:", dayPadd)}
+          onMouseEnter={() => console.info("passing over:", dayPadd)}
         >
           <StyledDay.TWheader
             $isLock={isLocked}
@@ -107,9 +101,9 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
     </Droppable>
   );
 }
-
+//comparing props//TODO: improve criteria
 function moviePropsAreEqual(prev: any, next: any) {
-  console.log("prev", prev);
+  console.info("prev", prev);
   return prev === next;
 }
 export const MemoIDay = memo(IDay, moviePropsAreEqual);

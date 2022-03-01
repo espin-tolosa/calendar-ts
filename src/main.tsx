@@ -9,24 +9,27 @@ import { EventInController } from "@components/Controller/main";
 import { ControllerProvider } from "@/hooks/useController";
 import { ControllerProviderDates } from "@/hooks/useControllerDate";
 import { DayLock } from "@/hooks/useDayLock";
+import { IsDraggingEvent } from "./hooks/useIsDragging";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ControllerProvider>
-      <ControllerProviderDates>
-        <UserPreferences>
-          <DayLock>
-            <EventsDispatcher>
-              <EventInController>
-                <UserSession>
-                  <App />
-                </UserSession>
-              </EventInController>
-            </EventsDispatcher>
-          </DayLock>
-        </UserPreferences>
-      </ControllerProviderDates>
-    </ControllerProvider>
+    <IsDraggingEvent>
+      <ControllerProvider>
+        <ControllerProviderDates>
+          <UserPreferences>
+            <DayLock>
+              <EventsDispatcher>
+                <EventInController>
+                  <UserSession>
+                    <App />
+                  </UserSession>
+                </EventInController>
+              </EventsDispatcher>
+            </DayLock>
+          </UserPreferences>
+        </ControllerProviderDates>
+      </ControllerProvider>
+    </IsDraggingEvent>
   </React.StrictMode>,
   document.getElementById("root")
 );

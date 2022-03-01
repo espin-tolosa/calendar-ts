@@ -14,6 +14,8 @@ type Action =
     }
   | { type: "default" };
 
+const sortCriteriaFIFO = (a: number, b: number) => Math.abs(a) - Math.abs(b);
+
 function reducerEvents(state: State, action: Action) {
   switch (action.type) {
     //
@@ -48,6 +50,7 @@ function reducerEvents(state: State, action: Action) {
 
       const spread = eventSpreader(event);
       const newState = [...state, event, ...spread];
+      newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       //
       return newState;
     }
@@ -59,30 +62,24 @@ function reducerEvents(state: State, action: Action) {
           (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
         );
       });
+      newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       return newState;
     }
     //
     case "replacebyid": {
-      const eventWithDayHour = action.payload[0]; // by now I can only manage first item
-      const event = {
-        id: eventWithDayHour.id,
-        client: eventWithDayHour.client,
-        job: eventWithDayHour.job,
-        start: eventWithDayHour.start.split(" ")[0],
-        end: eventWithDayHour.end.split(" ")[0],
-      };
+      const event = action.payload[0];
       const spread = eventSpreader(event);
-
-      const newState = [...state, ...spread];
+      let newState = [...state];
       action.payload.forEach((toReplace) => {
-        newState.splice(
-          newState.findIndex((event) => event.id === toReplace.id),
-          1, //the update only affects to this one entry position
-          toReplace
+        newState = newState.filter(
+          (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
         );
       });
-      //
-      return newState;
+
+      const result = [...newState, event, ...spread];
+
+      result.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
+      return result;
     }
     default: {
       console.warn("reducer option not implemented");
