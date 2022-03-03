@@ -187,6 +187,19 @@ const CreateEvent = () => {
           dispatchControllerDates({
             type: "clearDates",
           });
+          //delete temporary event created to give user feeback
+          eventDispatcher({
+            type: "deletebyid",
+            payload: [
+              {
+                id: parseInt(start.split("-")[2]),
+                client,
+                job,
+                start,
+                end,
+              },
+            ],
+          });
 
           setEventController(null);
         }}
@@ -282,11 +295,12 @@ const CreateEvent = () => {
               job,
             },
           });
+          const id = eventSelected?.id || parseInt(start.split("-")[2]);
           eventDispatcher({
             type: "update",
             payload: [
               {
-                id: parseInt(start.split("-")[2]),
+                id,
                 client,
                 job,
                 start,

@@ -68,12 +68,16 @@ export default function App() {
   useEffect(() => {
     const hOnKeyDown = (e: any) => {
       if (eventSelected && e.key === "Delete") {
-        const result = fetchEvent("DELETE", eventSelected);
+        // TODO: check if is valid event
+        //if (!isValidEvent) {
+        //  return;
+        //}
+        const result = fetchEvent("DELETE", eventSelected!);
         result.then((res) => {
           if (res.status === 204) {
             eventDispatcher({
               type: "deletebyid",
-              payload: [eventSelected],
+              payload: [eventSelected!],
             });
             dispatchController({
               type: "setController",
@@ -84,6 +88,8 @@ export default function App() {
             });
           }
         });
+
+        setEventController(null);
       } else if (e.key === "Escape") {
         setEventController(null);
 
