@@ -109,6 +109,7 @@ export const Event = ({ event }: { event: event }) => {
             {...provided.dragHandleProps}
             ref={provided.innerRef}
             $cells={cells}
+            onClick={hOnClick}
             onMouseDownCapture={(e) => {
               //console.log("extend event:", event.id);
             }}
