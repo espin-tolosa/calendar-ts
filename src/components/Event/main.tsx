@@ -60,8 +60,11 @@ export const Event = ({ event }: { event: event }) => {
   if (clientID === 6) {
     mapClientToColor -= 15;
   }
-  const [r, g, b] = ClientColorStyles(mapClientToColor, 1, 0.35);
-  const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 1, 0.5);
+  if (clientID === 9) {
+    mapClientToColor += 15;
+  }
+  const [r, g, b] = ClientColorStyles(mapClientToColor, 1, 0.6);
+  const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.6, 0.5);
 
   return (
     <StyledEvent.TWflexContainer
@@ -82,10 +85,14 @@ export const Event = ({ event }: { event: event }) => {
             ? { background: "gray" }
             : !hover
             ? {
-                backgroundColor: `rgb(${r_h},${g_h},${b_h})`,
-                color: "rgb(15, 23, 42)",
+                backgroundColor: `rgb(${r},${g},${b})`,
+                color: "black",
               }
-            : { backgroundColor: `rgb(${r},${g},${b})`, color: "white" }
+            : {
+                backgroundColor: `rgb(${r_h},${g_h},${b_h})`,
+                border: "1px solid black",
+                color: "white",
+              }
         }
         key={event.id}
         $cells={cells}
