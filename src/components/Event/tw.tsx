@@ -4,7 +4,11 @@ export const TWflexContainer = tw.div`
   flex flex-col justify-start my-1 transition-colors
 	`;
 
-export const TWtextContent = tw.div<{ $cells: number; $justThrown: boolean }>`
+export const TWtextContent = tw.div<{
+  $cells: number;
+  $justThrown: boolean;
+  $clientTheme?: { color: string };
+}>`
 	absolute whitespace-nowrap overflow-hidden overflow-ellipsis pl-2 text-white active:text-black rounded-l-full ml-[0.1rem] transition-colors
 	${({ $cells }) =>
     ($cells === 1 && "event-span-1") ||
@@ -17,7 +21,10 @@ export const TWtextContent = tw.div<{ $cells: number; $justThrown: boolean }>`
     ($cells === 8 && "event-span-8") ||
     "extend-event-1"}
 		
-	${({ $justThrown }) => ($justThrown && "text-slate-400 bg-slate-200") || ""}
+	${({ $justThrown, $clientTheme }) =>
+    ($justThrown && "text-slate-400 bg-slate-200") ||
+    $clientTheme?.color ||
+    "bg-red-200"}
 
 	${({ $cells }) => ($cells <= 7 && "rounded-r-full") || "rounded-r-none"}
 `;

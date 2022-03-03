@@ -14,36 +14,59 @@ import {
   useControllerDispatchDates,
 } from "@/hooks/useControllerDate";
 import { useIsDragging } from "@/hooks/useIsDragging";
+import { event } from "@/interfaces";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
   daynumber: number;
   fullDate: string;
   restDays: boolean;
+  start: string;
+  end: string;
+  isLocked: boolean;
+  isWeekend: boolean;
 }>;
-export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
+
+// Used Context in Day Component:
+//
+// cDayLock
+// cDayLockDispatcher
+// cUseLocalUserPreferences
+// cEventSelected
+// cSetEventSelected
+// cControllerState - start,end
+// cControllerState - id,client,job
+
+export function IDay({
+  children,
+  daynumber,
+  fullDate,
+  restDays,
+  start,
+  end,
+  isLocked,
+  isWeekend,
+}: IDayProps) {
   const tempDay = String(daynumber);
   const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
-  const lockedDays = useDayLock();
   const lockedDaysDispatcher = useDayLockDispatcher();
-  const isLocked = lockedDays.find((lock) => lock === fullDate) === fullDate;
-  const { localState } = useLocalUserPreferencesContext();
-  const eventSelected = useEventSelected();
+
   const setEventController = useSetEventSelected();
-  const { start, end } = useControllerStateDates();
+
+  //const { id } = useControllerState();
+
   const dispatchControllerDates = useControllerDispatchDates();
   const isDragging = useIsDragging();
 
-  const dayName = DateService.GetMonthDayKey(new Date(fullDate));
-  const isWeekend = dayName === "Sunday" || dayName === "Saturday";
+  const isSelected = (start: string, today: string, end: string) => {
+    const left = DateService.DaysFromStartToEnd(start, today);
+    const right = DateService.DaysFromStartToEnd(end, today);
 
-  const left = DateService.DaysFromStartToEnd(start, fullDate);
-  const right = DateService.DaysFromStartToEnd(end, fullDate);
-  let isSelected = false;
-
-  if (left >= 0 && right <= 0) {
-    isSelected = true;
-  }
+    if (left >= 0 && right <= 0) {
+      return true;
+    }
+    return false;
+  };
 
   const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
 
@@ -56,14 +79,12 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
           id={`day-${fullDate}`}
           $isLock={isLocked}
           $isWeekend={isWeekend}
-          $showWeekend={localState.showWeekends}
-          $isSelected={isSelected}
+          $isSelected={isSelected(start, fullDate, end)}
           $restDays={restDays}
           onClick={() => {
             if (isDragging.state) {
               return;
             }
-            console.log("Day: event id;", eventSelected?.id || 0);
             dispatchControllerDates({
               type: "updateDates",
               payload: { start: fullDate, end: fullDate },
@@ -80,7 +101,6 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
         >
           <StyledDay.TWheader
             $isLock={isLocked}
-            $showWeekend={localState.showWeekends}
             $restDays={restDays}
             title={(() => {
               return (isLocked ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
@@ -104,6 +124,28 @@ export function IDay({ children, daynumber, fullDate, restDays }: IDayProps) {
 //comparing props//TODO: improve criteria
 function moviePropsAreEqual(prev: any, next: any) {
   console.info("prev", prev);
-  return prev === next;
+  const randomBool = Math.random() < 0.5;
+  return false;
 }
-export const MemoIDay = memo(IDay, moviePropsAreEqual);
+const isSelected = (start: string, today: string, end: string) => {
+  const left = DateService.DaysFromStartToEnd(start, today);
+  const right = DateService.DaysFromStartToEnd(end, today);
+
+  if (left >= 0 && right <= 0) {
+    return true;
+  }
+  return false;
+};
+
+export const MemoIDay = memo(IDay, (prev, next) => {
+  const prevSelection = isSelected(prev.start, prev.fullDate, prev.end);
+  const nextSelection = isSelected(next.start, next.fullDate, next.end);
+
+  const datesSelectionEqual = prevSelection === nextSelection;
+
+  const isLockedEqual = prev.isLocked === next.isLocked;
+
+  const showWeekendEqual = prev.isWeekend === next.isWeekend;
+
+  return datesSelectionEqual && isLockedEqual && showWeekendEqual;
+});

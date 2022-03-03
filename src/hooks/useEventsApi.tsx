@@ -9,7 +9,7 @@ import { isValidEvent } from "@/utils/ValidateEvent";
 type State = Array<event>;
 type Action =
   | {
-      type: "appendarray" | "deletebyid" | "replacebyid";
+      type: "appendarray" | "deletebyid" | "replacebyid" | "update";
       payload: State;
     }
   | { type: "default" };
@@ -80,6 +80,56 @@ function reducerEvents(state: State, action: Action) {
 
       result.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       return result;
+    }
+    case "update": {
+      const event = action.payload[0];
+
+      const isEvent = state.findIndex((e) => e.id === event.id) >= 0;
+
+      if (isEvent) {
+        const event = action.payload[0];
+        const spread = eventSpreader(event);
+        let newState = [...state];
+        action.payload.forEach((toReplace) => {
+          newState = newState.filter(
+            (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
+          );
+        });
+
+        const result = [...newState, event, ...spread];
+
+        result.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
+        return result;
+      } else {
+        const isEventInState = state.findIndex(
+          (inner) => inner.id === event.id
+        );
+        if (isEventInState >= 0) {
+          return state;
+        }
+
+        //checks the case of end begins before the start
+        const daysSpread = DateService.DaysFromStartToEnd(
+          event.start,
+          event.end
+        );
+        if (daysSpread < 0) {
+          return state;
+        }
+
+        //check if start and end day exists
+
+        //TODO: extract to a function
+        if (!isValidEvent) {
+          return state;
+        }
+
+        const spread = eventSpreader(event);
+        const newState = [...state, event, ...spread];
+        newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
+        //
+        return newState;
+      }
     }
     default: {
       console.warn("reducer option not implemented");

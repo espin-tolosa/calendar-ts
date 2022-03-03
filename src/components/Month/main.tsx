@@ -1,7 +1,7 @@
 import { memo, useEffect } from "react";
 import { useMonthDate } from "@/hooks/useMonthDate";
 import { MemoIDay } from "@components/Day/main";
-import { IDayHolder } from "@components/DayHolder/main";
+import { MemoIDayHolder } from "@components/DayHolder/main";
 import * as StyledMonth from "./tw";
 import { EventsThrower } from "../EventsThrower/main";
 import { DateService } from "@/utils/Date";
@@ -10,6 +10,9 @@ import { useEventDispatch } from "@/hooks/useEventsApi";
 
 import { api } from "@/static/apiRoutes";
 import { zeroPadd } from "@/utils/zeroPadd";
+import { useControllerStateDates } from "@/hooks/useControllerDate";
+import { useDayLock } from "@/hooks/useDayLock";
+import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
 
 type iMonth = {
   id: string;
@@ -19,6 +22,16 @@ type iMonth = {
 const Month = ({ id, year, month }: iMonth) => {
   const date = useMonthDate(year, month);
   const eventsDispatcher = useEventDispatch();
+
+  //Context processing to pass to Day component
+  //1. start,end dates
+  const controllerDates = useControllerStateDates();
+
+  //2. locked days
+  const lockedDays = useDayLock();
+
+  //3. user preferences
+  const { showWeekends } = useLocalUserPreferencesContext().localState;
 
   useEffect(() => {
     const result = fetchEvent("GET_FROM", {
@@ -76,7 +89,7 @@ const Month = ({ id, year, month }: iMonth) => {
         <StyledMonth.TWdayShift $weekday={"mon"} />
 
         {left //previous days
-          .map((day) => <IDayHolder key={"l" + day}></IDayHolder>)
+          .map((day) => <MemoIDayHolder key={"l" + day}></MemoIDayHolder>)
           .concat(
             date.daysList.map((day) => (
               <MemoIDay
@@ -84,16 +97,37 @@ const Month = ({ id, year, month }: iMonth) => {
                 daynumber={day}
                 fullDate={DateService.ComposeDate(year, month, day)}
                 restDays={false}
+                start={controllerDates.start}
+                end={controllerDates.end}
+                isLocked={
+                  lockedDays.find(
+                    (lock) => lock === DateService.ComposeDate(year, month, day)
+                  ) === DateService.ComposeDate(year, month, day)
+                }
+                isWeekend={
+                  (!showWeekends &&
+                    DateService.GetMonthDayKey(
+                      new Date(DateService.ComposeDate(year, month, day))
+                    ) === "Sunday") ||
+                  (!showWeekends &&
+                    DateService.GetMonthDayKey(
+                      new Date(DateService.ComposeDate(year, month, day))
+                    ) === "Saturday")
+                }
               >
-                <EventsThrower
-                  day={DateService.ComposeDate(year, month, day)}
-                />
+                {true ? (
+                  <EventsThrower
+                    day={DateService.ComposeDate(year, month, day)}
+                  />
+                ) : (
+                  <></>
+                )}
               </MemoIDay>
             ))
           )
           .concat(
             //rest days
-            rest.map((day) => <IDayHolder key={"r" + day}></IDayHolder>)
+            rest.map((day) => <MemoIDayHolder key={"r" + day}></MemoIDayHolder>)
           )}
       </StyledMonth.TWdaysBoard>
       <div

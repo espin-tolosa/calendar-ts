@@ -282,6 +282,18 @@ const CreateEvent = () => {
               job,
             },
           });
+          eventDispatcher({
+            type: "update",
+            payload: [
+              {
+                id: parseInt(start.split("-")[2]),
+                client,
+                job,
+                start,
+                end,
+              },
+            ],
+          });
         }}
       />
       {/*

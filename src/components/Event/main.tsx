@@ -1,5 +1,5 @@
 import * as StyledEvent from "./tw";
-import { giveMeColor } from "@/utils/giveMeColor";
+import { ClientColorStyles, giveMeColor } from "@/utils/giveMeColor";
 import { event } from "@interfaces/index";
 import { DateService } from "@/utils/Date";
 import { useSetEventSelected } from "../Controller/main";
@@ -11,18 +11,29 @@ import {
 } from "@/hooks/useController";
 import { useEventState } from "@/hooks/useEventsApi";
 import { useEffect, useState } from "react";
+import { useController } from "react-hook-form";
 
 export const Event = ({ event }: { event: event }) => {
   const setEventController = useSetEventSelected();
+  const controllerState = useControllerState();
   const dispatchControllerDates = useControllerDispatchDates();
   const dispatchController = useControllerDispatch();
   const events = useEventState();
+  const [hover, setHover] = useState(false);
   const [justThrown, setJustThrown] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       setJustThrown(false);
-    }, 1000);
+    }, 200);
   }, []);
+
+  useEffect(() => {
+    if (Math.abs(controllerState.id) === Math.abs(event.id)) {
+      setHover(true);
+    } else {
+      setHover(false);
+    }
+  }, [controllerState.id]);
 
   const cells = Math.min(
     1 + DateService.DaysFromStartToEnd(event.start, event.end),
@@ -42,14 +53,40 @@ export const Event = ({ event }: { event: event }) => {
       payload: { id: event.id, client: event.client, job: event.job },
     });
 
-    //}
     setEventController(event);
   };
+  const clientID = parseInt(event.client.split("_")[1]);
+  let mapClientToColor = (360 * clientID) / 9;
+  if (clientID === 6) {
+    mapClientToColor -= 15;
+  }
+  const [r, g, b] = ClientColorStyles(mapClientToColor, 1, 0.35);
+  const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 1, 0.5);
+
   return (
-    <StyledEvent.TWflexContainer>
+    <StyledEvent.TWflexContainer
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => {
+        if (controllerState.id !== event.id) {
+          setHover(false);
+        }
+      }}
+    >
       <StyledEvent.TWtextContent
         $justThrown={justThrown}
-        style={!justThrown ? giveMeColor(event.client) : {}}
+        //$clientTheme={{ color: `bg-[rgb(${r},${b},${g})]` }}
+        //style={!justThrown ? giveMeColor(event.client) : {}}
+        // className={hover ? "textAnimation" : ""}
+        style={
+          justThrown
+            ? { background: "gray" }
+            : !hover
+            ? {
+                backgroundColor: `rgb(${r_h},${g_h},${b_h})`,
+                color: "rgb(15, 23, 42)",
+              }
+            : { backgroundColor: `rgb(${r},${g},${b})`, color: "white" }
+        }
         key={event.id}
         $cells={cells}
         onClick={hOnClick}

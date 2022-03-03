@@ -166,6 +166,30 @@
 }
 
 @layer utilities {
+  .textAnimation {
+    animation: color-change 2s infinite;
+  }
+
+  @keyframes color-change {
+    0% {
+      color: white;
+    }
+    40% {
+      color: white;
+    }
+    50% {
+      color: black;
+    }
+    90% {
+      color: black;
+    }
+    100% {
+      color: white;
+    }
+  }
+}
+
+@layer utilities {
   .utility-smooth {
     overflow: hidden;
     transition-property: max-height;

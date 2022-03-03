@@ -10,7 +10,6 @@ export const TWsizedContainer = tw.div<{
   $isLock: boolean;
   $isSelected: boolean;
   $isWeekend: boolean;
-  $showWeekend: boolean;
   $restDays: boolean;
 }>`
 	landscape:min-h-[17vh] portrait:min-h-[8vh] transition-colors
@@ -19,20 +18,21 @@ export const TWsizedContainer = tw.div<{
 
 	${({ $isLock }) =>
     ($isLock && "bg-slate-300 z-Dayoff cursor-not-allowed ") ||
-    (!$isLock && "bg-white day active:bg-green-200 cursor-pointer") ||
+    (!$isLock && "bg-white day cursor-pointer") ||
     ""}	
-	${({ $isSelected }) =>
-    ($isSelected && "border-2 bg-green-100") || (!$isSelected && "") || ""}	
+	${({ $isSelected, $isWeekend }) =>
+    ($isSelected && !$isWeekend && "border-2 bg-green-100") ||
+    (!$isSelected && "") ||
+    ""}	
 
-	${({ $isWeekend, $showWeekend }) =>
-    ($isWeekend &&
-      !$showWeekend &&
-      "bg-slate-300 outline outline-[1px] outline-slate-100 ") ||
+	//${({ $isWeekend }) => (!$isWeekend && "active:bg-green-200") || ""}
+
+	${({ $isWeekend }) =>
+    ($isWeekend && "bg-slate-300 outline outline-[1px] outline-slate-100 ") ||
     (!$isWeekend && "outline outline-[1px] outline-slate-300 ") ||
     ""}	
 
-	${({ $isWeekend, $showWeekend }) =>
-    ($isWeekend && !$showWeekend && "z-Dayoff") || ""}	
+	${({ $isWeekend }) => ($isWeekend && "z-Dayoff") || ""}	
 
 		${({ $restDays }) => ($restDays && "bg-slate-50 z-Dayoff text-slate-50") || ""}
 
@@ -41,15 +41,14 @@ export const TWsizedContainer = tw.div<{
 export const TWheader = tw.div<{
   $isLock: boolean;
   $isWeekend: boolean;
-  $showWeekend: boolean;
   $restDays: boolean;
 }>`
 border-b-[1px] border-slate-200 day-header flex sm:justify-end justify-center bg-white
 	
 	${({ $isLock }) => ($isLock && "bg-slate-300 z-Dayoff bg-opacity-50 ") || ""}	
 
-	${({ $isWeekend, $showWeekend }) =>
-    ($isWeekend && !$showWeekend && "bg-slate-300 hover:bg-slate-50 ") ||
+	${({ $isWeekend }) =>
+    ($isWeekend && "bg-slate-300 hover:bg-slate-50 ") ||
     (!$isWeekend && "") ||
     ""}	
 

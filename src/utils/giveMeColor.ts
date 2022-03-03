@@ -1,3 +1,7 @@
+export const ClientColorStyles = (h: number, s: number, l: number) => {
+  return hsl2rgb(h, s, l);
+};
+
 export const giveMeColor = (search: string) => {
   const linearGradientTemplate = (color: number) => {
     return `linear-gradient(0.25turn, hsl(${color}, 40%, 40%), hsl(${color},50%,50%),  hsl(${color}, 60%, 60%))`;
@@ -92,3 +96,10 @@ export const giveMeColor = (search: string) => {
         color: highContrastText(350),
       };
 };
+
+function hsl2rgb(h: number, s: number, l: number) {
+  let a = s * Math.min(l, 1 - l);
+  let f = (n: number, k = (n + h / 30) % 12) =>
+    Math.floor(255 * (l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)));
+  return [f(0), f(8), f(4)];
+}
