@@ -43,6 +43,7 @@ async function fetchEvent(
 export default function App() {
   const [month, setMonth] = useState(0);
   const isDragging = useIsDragging();
+  const draggableType = useRef("");
 
   const { value } = useUserSession();
   const eventDispatcher = useEventDispatch();
@@ -65,152 +66,164 @@ export default function App() {
   const dispatchController = useControllerDispatch();
   const dispatchControllerDates = useControllerDispatchDates();
 
-  useEffect(() => {
-    const hOnKeyDown = (e: any) => {
-      if (eventSelected && e.key === "Delete") {
-        // TODO: check if is valid event
-        //if (!isValidEvent) {
-        //  return;
-        //}
-        const result = fetchEvent("DELETE", eventSelected!);
-        result.then((res) => {
-          if (res.status === 204) {
-            eventDispatcher({
-              type: "deletebyid",
-              payload: [eventSelected!],
-            });
-            dispatchController({
-              type: "setController",
-              payload: { id: 0, client: "", job: "" },
-            });
-            dispatchControllerDates({
-              type: "clearDates",
-            });
-          }
-        });
-
-        setEventController(null);
-      } else if (e.key === "Escape") {
-        setEventController(null);
-
-        dispatchController({
-          type: "setController",
-          payload: { id: 0, client: "", job: "" },
-        });
-        dispatchControllerDates({
-          type: "clearDates",
-        });
-      } else if (!isNaN(parseInt(e.key))) {
-        const jobField = document.getElementById("job");
-        const selectField = document.querySelector("select");
-
-        if (jobField !== document.activeElement) {
-          dispatchController({
-            type: "setClient",
-            payload: {
-              client: `Client_${e.key}`,
-            },
-          });
-          selectField?.focus();
-        }
-      } else if (e.key === "Tab") {
-        const selectField = document.getElementById("select");
-        const jobField = document.getElementById("job");
-        //const save = document.getElementById("save");
-        //TODO: state machine to traverse each editable option of the controller
-        if ("job" === document.activeElement?.id) {
-          jobField?.focus();
-        } else {
-          selectField?.focus();
-        }
-      }
-    };
-
-    document.querySelector("html")?.addEventListener("keydown", hOnKeyDown);
-    return () => {
-      document
-        .querySelector("html")
-        ?.removeEventListener("keydown", hOnKeyDown);
-    };
-  }, [eventSelected]);
+  //  useEffect(() => {
+  //    const hOnKeyDown = (e: any) => {
+  //      if (eventSelected && e.key === "Delete") {
+  //        // TODO: check if is valid event
+  //        //if (!isValidEvent) {
+  //        //  return;
+  //        //}
+  //        const result = fetchEvent("DELETE", eventSelected!);
+  //        result.then((res) => {
+  //          if (res.status === 204) {
+  //            eventDispatcher({
+  //              type: "deletebyid",
+  //              payload: [eventSelected!],
+  //            });
+  //            dispatchController({
+  //              type: "setController",
+  //              payload: { id: 0, client: "", job: "" },
+  //            });
+  //            dispatchControllerDates({
+  //              type: "clearDates",
+  //            });
+  //          }
+  //        });
+  //
+  //        setEventController(null);
+  //      } else if (e.key === "Escape") {
+  //        setEventController(null);
+  //
+  //        dispatchController({
+  //          type: "setController",
+  //          payload: { id: 0, client: "", job: "" },
+  //        });
+  //        dispatchControllerDates({
+  //          type: "clearDates",
+  //        });
+  //      } else if (!isNaN(parseInt(e.key))) {
+  //        const jobField = document.getElementById("job");
+  //        const selectField = document.querySelector("select");
+  //
+  //        if (jobField !== document.activeElement) {
+  //          dispatchController({
+  //            type: "setClient",
+  //            payload: {
+  //              client: `Client_${e.key}`,
+  //            },
+  //          });
+  //          selectField?.focus();
+  //        }
+  //      } else if (e.key === "Tab") {
+  //        const selectField = document.getElementById("select");
+  //        const jobField = document.getElementById("job");
+  //        //const save = document.getElementById("save");
+  //        //TODO: state machine to traverse each editable option of the controller
+  //        if ("job" === document.activeElement?.id) {
+  //          jobField?.focus();
+  //        } else {
+  //          selectField?.focus();
+  //        }
+  //      }
+  //    };
+  //
+  //    document.querySelector("html")?.addEventListener("keydown", hOnKeyDown);
+  //    return () => {
+  //      document
+  //        .querySelector("html")
+  //        ?.removeEventListener("keydown", hOnKeyDown);
+  //    };
+  //  }, [eventSelected]);
 
   return !value() ? (
     <Login />
   ) : (
     <DragDropContext
       onBeforeCapture={(result) => {
-        const event = allEvents.find(
-          (e) => e.id === parseInt(result.draggableId)
-        )!;
+        const { draggableId } = result;
+        draggableType.current = draggableId.split("-")[0];
+        const idEvent = draggableId.split("-")[1];
+
+        const event = allEvents.find((e) => e.id === parseInt(idEvent))!;
         eventStartDragging.current = event;
         isDragging.setState(true);
       }}
       onDragUpdate={(result) => {
         const { source, destination } = result;
-        const event = allEvents.find((e) => e.id === source.index)!;
-        if (destination === null) {
-          return;
+        if (draggableType.current === "event") {
+          console.log("event", source);
+        } else if (draggableType.current === "extend") {
+          const event = allEvents.find((e) => e.id === source.index)!;
+          if (destination === null) {
+            return;
+          }
+          const spread = DateService.DaysFromStartToEnd(
+            event.start,
+            destination?.droppableId!
+          );
+          if (spread < 0) return;
+          const newEvent = {
+            id: event.id,
+            client: event.client,
+            job: event.job,
+            start: event.start,
+            end: destination?.droppableId!,
+          };
+          eventDispatcher({
+            type: "replacebyid",
+            payload: [newEvent],
+          });
         }
-        const spread = DateService.DaysFromStartToEnd(
-          event.start,
-          destination?.droppableId!
-        );
-        if (spread < 0) return;
-        const newEvent = {
-          id: event.id,
-          client: event.client,
-          job: event.job,
-          start: event.start,
-          end: destination?.droppableId!,
-        };
-        eventDispatcher({
-          type: "replacebyid",
-          payload: [newEvent],
-        });
       }}
       onDragEnd={(result) => {
         const { source, destination } = result;
-        if (destination === null) return;
+        const type = draggableType.current;
+        console.log("Drag end");
+        if (type === "event") {
+          console.log("dragEnd", source);
+        } else if (type === "extend") {
+          if (destination === null) return;
 
-        const event = allEvents.find((e) => e.id === source.index)!;
-        const spread = DateService.DaysFromStartToEnd(
-          event.start,
-          destination?.droppableId!
-        );
-        const endTarget = DateService.DaysFromStartToEnd(
-          eventStartDragging.current.end,
-          destination?.droppableId!
-        );
+          const event = allEvents.find((e) => e.id === source.index)!;
+          const spread = DateService.DaysFromStartToEnd(
+            event.start,
+            destination?.droppableId!
+          );
+          const endTarget = DateService.DaysFromStartToEnd(
+            eventStartDragging.current.end,
+            destination?.droppableId!
+          );
 
-        if (spread < 0) return;
-        if (endTarget === 0) return;
+          if (spread < 0) return;
+          if (endTarget === 0) return;
 
-        const newEvent = {
-          id: event.id,
-          client: event.client,
-          job: event.job,
-          start: event.start,
-          end: destination?.droppableId!,
-        };
+          const newEvent = {
+            id: event.id,
+            client: event.client,
+            job: event.job,
+            start: event.start,
+            end: destination?.droppableId!,
+          };
 
-        const fetchResultPUT = fetchEvent("PUT", newEvent);
+          const fetchResultPUT = fetchEvent("PUT", newEvent);
 
-        fetchResultPUT
-          .then((res) => {
-            if (res.status !== 203) {
-              throw new Error("Error code differs from expected");
-            }
-            return res.json();
-          })
-          .catch(() => {
-            eventDispatcher({
-              type: "replacebyid",
-              payload: [eventStartDragging.current],
+          fetchResultPUT
+            .then((res) => {
+              if (res.status !== 203) {
+                throw new Error("Error code differs from expected");
+              }
+              return res.json();
+            })
+            .catch(() => {
+              eventDispatcher({
+                type: "replacebyid",
+                payload: [eventStartDragging.current],
+              });
+            })
+            .finally(() => {
+              isDragging.setState(false);
             });
-          })
-          .finally(() => {
-            isDragging.setState(false);
-          });
+        }
       }}
     >
       <Codelink />

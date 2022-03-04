@@ -65,6 +65,18 @@ export const Event = ({ event }: { event: event }) => {
   }
   const [r, g, b] = ClientColorStyles(mapClientToColor, 1, 0.6);
   const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.6, 0.5);
+  const thrownStyle = justThrown
+    ? { background: "gray" }
+    : !hover
+    ? {
+        backgroundColor: `rgb(${r},${g},${b})`,
+        color: "black",
+      }
+    : {
+        backgroundColor: `rgb(${r_h},${g_h},${b_h})`,
+        border: "1px solid black",
+        color: "white",
+      };
 
   return (
     <StyledEvent.TWflexContainer
@@ -75,38 +87,33 @@ export const Event = ({ event }: { event: event }) => {
         }
       }}
     >
-      <StyledEvent.TWtextContent
-        $justThrown={justThrown}
-        //$clientTheme={{ color: `bg-[rgb(${r},${b},${g})]` }}
-        //style={!justThrown ? giveMeColor(event.client) : {}}
-        // className={hover ? "textAnimation" : ""}
-        style={
-          justThrown
-            ? { background: "gray" }
-            : !hover
-            ? {
-                backgroundColor: `rgb(${r},${g},${b})`,
-                color: "black",
-              }
-            : {
-                backgroundColor: `rgb(${r_h},${g_h},${b_h})`,
-                border: "1px solid black",
-                color: "white",
-              }
-        }
-        key={event.id}
-        $cells={cells}
-        onClick={hOnClick}
-        title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
-      >
-        {`${event.client}: ${event.job}`}
-      </StyledEvent.TWtextContent>
-      <Draggable draggableId={String(event.id)} index={event.id}>
+      <Draggable draggableId={"event-" + String(event.id)} index={event.id}>
         {(provided, snapshot) => (
-          <StyledEvent.TWextend
-            style={{ cursor: "cursor-e-resize" }}
+          <StyledEvent.TWtextContent
+            className={"text-event"}
+            $justThrown={justThrown}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
+            ref={provided.innerRef}
+            style={thrownStyle}
+            key={event.id}
+            $cells={cells}
+            onClick={hOnClick}
+            title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
+          >
+            {`${event.client}: ${event.job}`}
+          </StyledEvent.TWtextContent>
+        )}
+      </Draggable>
+      <Draggable
+        draggableId={"extend-" + String(event.id)}
+        index={event.id + 1}
+      >
+        {(provided, snapshot) => (
+          <StyledEvent.TWextend
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            className={"extend-event"}
             ref={provided.innerRef}
             $cells={cells}
             onClick={hOnClick}

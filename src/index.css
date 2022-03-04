@@ -24,7 +24,10 @@
     outline: 1px solid gray;
   }
 
-  [data-rbd-drag-handle-context-id="0"] {
+  .text-event {
+    cursor: grab !important; /* the way I find to */
+  }
+  .extend-event {
     cursor: e-resize !important; /* the way I find to */
   }
 }
