@@ -15,6 +15,7 @@ import {
   useEventsStatus,
   useEventsStatusDispatcher,
 } from "@/hooks/useEventsStatus";
+import { getHeapSnapshot } from "v8";
 
 export const Event = ({ event }: { event: event }) => {
   const setEventController = useSetEventSelected();
@@ -72,12 +73,12 @@ export const Event = ({ event }: { event: event }) => {
 
   //TODO: avoid magic numbers
   const spreadCells = Math.min(
-    1 + DateService.DaysFromStartToEnd(event.start, event.end),
+    1 + DateService.DaysFrom(event.start, event.end),
     8
   );
   return (
     <Draggable
-      draggableId={String(Math.abs(event.id)) + "-" + event.start}
+      draggableId={`${String(Math.abs(event.id))}:${event.start}`}
       index={Math.abs(event.id)}
     >
       {(provided, snapshot) => (

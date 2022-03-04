@@ -36,7 +36,7 @@ function reducerEvents(state: State, action: Action) {
       }
 
       //checks the case of end begins before the start
-      const daysSpread = DateService.DaysFromStartToEnd(event.start, event.end);
+      const daysSpread = DateService.DaysFrom(event.start, event.end);
       if (daysSpread < 0) {
         return state;
       }
@@ -67,16 +67,15 @@ function reducerEvents(state: State, action: Action) {
     }
     //
     case "replacebyid": {
-      const event = action.payload[0];
-      const spread = eventSpreader(event);
-      let newState = [...state];
-      action.payload.forEach((toReplace) => {
-        newState = newState.filter(
-          (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
-        );
-      });
+      const toReplace = action.payload[0];
+      const target = state.findIndex((event) => event.id === toReplace.id);
+      if (target < 0) return state;
+      const spread = eventSpreader(toReplace);
+      const newState = state.filter(
+        (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
+      );
 
-      const result = [...newState, event, ...spread];
+      const result = [...newState, toReplace, ...spread];
 
       result.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       return result;
@@ -109,10 +108,7 @@ function reducerEvents(state: State, action: Action) {
         }
 
         //checks the case of end begins before the start
-        const daysSpread = DateService.DaysFromStartToEnd(
-          event.start,
-          event.end
-        );
+        const daysSpread = DateService.DaysFrom(event.start, event.end);
         if (daysSpread < 0) {
           return state;
         }
@@ -139,7 +135,7 @@ function reducerEvents(state: State, action: Action) {
   }
 }
 // Context
-const defaultState = month1;
+const defaultState = month0;
 const cEventState = createContext<Array<event>>(defaultState);
 const cEventDispatch = createContext<React.Dispatch<Action>>(() => {});
 

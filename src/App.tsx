@@ -6,7 +6,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import { api } from "@/static/apiRoutes";
 import { event, objectKeys } from "@interfaces/index";
-import { DateService } from "./utils/Date";
+import { DaysFrom } from "./utils/Date";
 import { useEffect, useRef, useState } from "react";
 import {
   useEventSelected,
@@ -17,10 +17,7 @@ import {
   useControllerState,
 } from "./hooks/useController";
 
-import {
-  useControllerDispatchDates,
-  useControllerStateDates,
-} from "./hooks/useControllerDate";
+import { useControllerDispatchDates } from "./hooks/useControllerDate";
 import { useIsDragging } from "./hooks/useIsDragging";
 import { useEventsStatusDispatcher } from "./hooks/useEventsStatus";
 
@@ -142,24 +139,31 @@ export default function App() {
     <DragDropContext
       onBeforeCapture={(result) => {
         const event = allEvents.find(
-          (e) => e.id === parseInt(result.draggableId.split("-")[0])
+          (e) =>
+            e.id === parseInt(result.draggableId.split(":")[0]) &&
+            e.start === result.draggableId.split(":")[1]
         )!;
-        eventStartDragging.current = event;
-        console.log("dispatch hover id", event.id);
+        eventStartDragging.current = {
+          id: 0,
+          client: "",
+          job: "",
+          start: "",
+          end: "",
+        };
         dispatchHoveringId(event.id);
         isDragging.setState(true);
       }}
       onDragUpdate={(result) => {
         const { source, destination } = result;
-        const event = allEvents.find((e) => e.id === source.index)!;
-        if (destination === null) {
-          return;
-        }
-        const spread = DateService.DaysFromStartToEnd(
-          event.start,
-          destination?.droppableId!
-        );
+        const event = allEvents.find(
+          (e) => e.id === parseInt(result.draggableId.split(":")[0])
+        )!;
+        eventStartDragging.current = event;
+        const spread = DaysFrom(event.start, destination?.droppableId!);
+        const isRewind = DaysFrom(event.end, destination?.droppableId!) < 0;
+        if (!destination) return;
         if (spread < 0) return;
+        if (isRewind) return;
         const newEvent = {
           id: event.id,
           client: event.client,
@@ -168,22 +172,18 @@ export default function App() {
           end: destination?.droppableId!,
         };
         eventDispatcher({
-          type: "update",
+          type: "replacebyid",
           payload: [newEvent],
         });
       }}
       onDragEnd={(result) => {
+        if (eventStartDragging.current.id === 0) return;
         const { source, destination } = result;
         if (destination === null) return;
 
-        console.log("source", source);
-
         const event = allEvents.find((e) => e.id === source.index)!;
-        const spread = DateService.DaysFromStartToEnd(
-          event.start,
-          destination?.droppableId!
-        );
-        const endTarget = DateService.DaysFromStartToEnd(
+        const spread = DaysFrom(event.start, destination?.droppableId!);
+        const endTarget = DaysFrom(
           eventStartDragging.current.end,
           destination?.droppableId!
         );
@@ -200,13 +200,14 @@ export default function App() {
         };
 
         const fetchResultPUT = fetchEvent("PUT", newEvent);
+        isDragging.setState(false);
+        dispatchHoveringId(0);
 
         fetchResultPUT
           .then((res) => {
             if (res.status !== 203) {
               throw new Error("Error code differs from expected");
             }
-
             const newEvent = {
               id: event.id,
               client: event.client,
@@ -215,19 +216,15 @@ export default function App() {
               end: destination?.droppableId!,
             };
             eventDispatcher({
-              type: "update",
+              type: "replacebyid",
               payload: [newEvent],
             });
-            return res.json();
           })
           .catch(() => {
             eventDispatcher({
-              type: "update",
+              type: "replacebyid",
               payload: [eventStartDragging.current],
             });
-          })
-          .finally(() => {
-            isDragging.setState(false);
           });
       }}
     >

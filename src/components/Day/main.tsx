@@ -59,8 +59,8 @@ export function IDay({
   const isDragging = useIsDragging();
 
   const isSelected = (start: string, today: string, end: string) => {
-    const left = DateService.DaysFromStartToEnd(start, today);
-    const right = DateService.DaysFromStartToEnd(end, today);
+    const left = DateService.DaysFrom(start, today);
+    const right = DateService.DaysFrom(end, today);
 
     if (left >= 0 && right <= 0) {
       return true;
@@ -129,8 +129,8 @@ function moviePropsAreEqual(prev: any, next: any) {
   return false;
 }
 const isSelected = (start: string, today: string, end: string) => {
-  const left = DateService.DaysFromStartToEnd(start, today);
-  const right = DateService.DaysFromStartToEnd(end, today);
+  const left = DateService.DaysFrom(start, today);
+  const right = DateService.DaysFrom(end, today);
 
   if (left >= 0 && right <= 0) {
     return true;

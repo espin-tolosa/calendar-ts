@@ -7,7 +7,7 @@ export const month1 = [
     client: "Client_1",
     job: "codelink",
     start: "2022-03-01",
-    end: "2022-03-01",
+    end: "2022-03-05",
   },
 ] as Array<event>;
 

@@ -6,7 +6,7 @@ export const eventSpreader = (event: event) => {
 
   let nextDate = DateService.GetNextDayOfDate(event.start);
   let keyNextDate = DateService.FormatDate(nextDate);
-  const eventLength = DateService.DaysFromStartToEnd(event.start, event.end);
+  const eventLength = DateService.DaysFrom(event.start, event.end);
 
   for (let day = 0; day < eventLength; day++) {
     const dayWeek = DateService.GetMonthDayKey(nextDate);
