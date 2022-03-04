@@ -9,7 +9,7 @@ import {
   useControllerDispatch,
   useControllerState,
 } from "@/hooks/useController";
-import { useEventState } from "@/hooks/useEventsApi";
+import { useEventState } from "@/hooks/useEventsState";
 import { useEffect, useState } from "react";
 import {
   useEventsStatus,
@@ -76,37 +76,43 @@ export const Event = ({ event }: { event: event }) => {
     8
   );
   return (
-    <StyledEvent.TWflexContainer
-      onMouseEnter={() => dispatchHoveringId({ id: event.id })}
-      onMouseLeave={() => {
-        dispatchHoveringId({ id: 0 });
-      }}
+    <Draggable
+      draggableId={String(Math.abs(event.id)) + "-" + event.start}
+      index={Math.abs(event.id)}
     >
-      <StyledEvent.TWtextContent
-        $justThrown={justThrown}
-        style={
-          justThrown
-            ? { background: "gray" }
-            : !hover
-            ? {
-                backgroundColor: `rgb(${r},${g},${b})`,
-                color: "black",
-              }
-            : {
-                backgroundColor: `rgb(${r_h},${g_h},${b_h})`,
-                border: "1px solid black",
-                color: "white",
-              }
-        }
-        key={event.id}
-        $cells={spreadCells}
-        onClick={hOnClick}
-        title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
-      >
-        {`${event.client}: ${event.job}`}
-      </StyledEvent.TWtextContent>
-      <Draggable draggableId={String(event.id)} index={event.id}>
-        {(provided, snapshot) => (
+      {(provided, snapshot) => (
+        <StyledEvent.TWflexContainer
+          onMouseEnter={() =>
+            !snapshot.isDragging && dispatchHoveringId(event.id)
+          }
+          onMouseLeave={() => {
+            !snapshot.isDragging && dispatchHoveringId(0);
+          }}
+        >
+          <StyledEvent.TWtextContent
+            $justThrown={justThrown}
+            style={
+              justThrown
+                ? { background: "gray" }
+                : !hover
+                ? {
+                    backgroundColor: `rgb(${r},${g},${b})`,
+                    color: "black",
+                  }
+                : {
+                    backgroundColor: `rgb(${r_h},${g_h},${b_h})`,
+                    border: "1px solid black",
+                    color: "white",
+                  }
+            }
+            key={event.id}
+            $cells={spreadCells}
+            onClick={hOnClick}
+            title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
+          >
+            {`${event.client}: ${event.job}`}
+          </StyledEvent.TWtextContent>
+
           <StyledEvent.TWextend
             style={{ cursor: "cursor-e-resize" }}
             {...provided.draggableProps}
@@ -127,12 +133,13 @@ export const Event = ({ event }: { event: event }) => {
           >
             {"+"}
           </StyledEvent.TWextend>
-        )}
-      </Draggable>
-      <StyledEvent.TWplaceholder key={"p" + event.id}>
-        {"placeholder"}
-      </StyledEvent.TWplaceholder>
-    </StyledEvent.TWflexContainer>
+
+          <StyledEvent.TWplaceholder key={"p" + event.id}>
+            {"placeholder"}
+          </StyledEvent.TWplaceholder>
+        </StyledEvent.TWflexContainer>
+      )}
+    </Draggable>
   );
 };
 

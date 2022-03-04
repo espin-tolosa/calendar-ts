@@ -6,7 +6,7 @@ import * as StyledMonth from "./tw";
 import { EventsThrower } from "../EventsThrower/main";
 import { DateService } from "@/utils/Date";
 import { event } from "@/interfaces";
-import { useEventDispatch } from "@/hooks/useEventsApi";
+import { useEventDispatch } from "@/hooks/useEventsState";
 
 import { api } from "@/static/apiRoutes";
 import { zeroPadd } from "@/utils/zeroPadd";

@@ -1,78 +1,13 @@
 import { event } from "@/interfaces";
 
-export const month0 = [
-  { id: 0, client: "", job: "", start: "", end: "" },
-] as Array<event>;
+export const month0: Array<event> = [] as Array<event>;
 export const month1 = [
   {
     id: 1,
-    client: "John",
+    client: "Client_1",
     job: "codelink",
-    start: "2022-02-01",
-    end: "2022-02-01",
-  },
-  {
-    id: 2,
-    client: "Cristine",
-    job: "Starting 1 - 1",
-    start: "2022-02-01",
-    end: "2022-02-06",
-  },
-  {
-    id: 3,
-    client: "Marcel",
-    job: "Starting 2 - 1",
-    start: "2022-02-03",
-    end: "2022-02-03",
-  },
-  {
-    id: 4,
-    client: "Bob",
-    job: "Starting 3 - 1",
-    start: "2022-02-03",
-    end: "2022-02-05",
-  },
-  {
-    id: 5,
-    client: "Cristine",
-    job: "Starting 4 - 1",
-    start: "2022-02-04",
-    end: "2022-02-06",
-  },
-  {
-    id: 6,
-    client: "Raphael",
-    job: "Starting 5 - 1",
-    start: "2022-02-06",
-    end: "2022-02-06",
-  },
-  {
-    id: 7,
-    client: "Cristine",
-    job: "Spread - 1",
-    start: "2022-02-01",
-    end: "2022-02-01",
-  },
-  {
-    id: 8,
-    client: "Marcel",
-    job: "Long job example",
-    start: "2022-02-02",
-    end: "2022-02-15",
-  },
-  {
-    id: 9,
-    client: "Cristine",
-    job: "job description",
-    start: "2022-02-14",
-    end: "2022-02-17",
-  },
-  {
-    id: 10,
-    client: "Cristine",
-    job: "Starting - 1",
-    start: "2022-02-04",
-    end: "2022-02-06",
+    start: "2022-03-01",
+    end: "2022-03-01",
   },
 ] as Array<event>;
 

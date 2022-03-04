@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "@/index.css";
 import App from "./App";
 import { UserSession } from "@/hooks/useUserSession";
-import { EventsDispatcher } from "@/hooks/useEventsApi";
+import { EventsDispatcher } from "@/hooks/useEventsState";
 import { UserPreferences } from "@/hooks/useLocalUserPreferences";
 import { EventInController } from "@components/Controller/main";
 import { ControllerProvider } from "@/hooks/useController";

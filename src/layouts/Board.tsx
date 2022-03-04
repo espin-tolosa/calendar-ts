@@ -1,9 +1,9 @@
 import { TWboard } from "./tw";
 import { MemoMonth } from "@/components/Month/main";
 import { useBoardScroll } from "@/hooks/useBoardScroll";
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect } from "react";
 import { month0 } from "@/static/initEvents";
-import { useEventDispatch } from "@/hooks/useEventsApi";
+import { useEventDispatch } from "@/hooks/useEventsState";
 import { useAutoScroll } from "@/hooks/useAutoScroll";
 
 export const LayoutBoard = () => {

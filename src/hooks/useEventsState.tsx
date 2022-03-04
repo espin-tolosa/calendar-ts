@@ -139,7 +139,8 @@ function reducerEvents(state: State, action: Action) {
   }
 }
 // Context
-const cEventState = createContext<Array<event>>(month1);
+const defaultState = month1;
+const cEventState = createContext<Array<event>>(defaultState);
 const cEventDispatch = createContext<React.Dispatch<Action>>(() => {});
 
 export function useEventState(day?: string) {
@@ -153,7 +154,7 @@ export function useEventDispatch() {
 // Context Dispatcher of Event Reducer
 
 export const EventsDispatcher: composition = ({ children }) => {
-  const [state, dispatch] = useReducer(reducerEvents, month0);
+  const [state, dispatch] = useReducer(reducerEvents, defaultState);
 
   /*
         onClick={() => {

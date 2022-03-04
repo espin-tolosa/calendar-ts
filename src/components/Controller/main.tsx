@@ -3,14 +3,12 @@ import React, {
   Dispatch,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
 import * as tw_Controller from "./tw";
-import { useEventDispatch, useEventState } from "@/hooks/useEventsApi";
+import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import { composition, event } from "@/interfaces";
-import { Event } from "@/components/Event/main";
 import tw from "tailwind-styled-components";
 import {
   useControllerDispatch,
@@ -450,4 +448,5 @@ const JobField = React.memo(
   }
 );
 
-export const CreateEventMemo = React.memo(CreateEvent);
+//export const CreateEventMemo = React.memo(CreateEvent); //!Memo doesn't work if I consume context
+export const CreateEventMemo = CreateEvent;

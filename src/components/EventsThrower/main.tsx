@@ -1,5 +1,5 @@
 import { Event, EventHolder } from "@components/Event/main";
-import { useEventState } from "@/hooks/useEventsApi";
+import { useEventState } from "@/hooks/useEventsState";
 import { useDayLock } from "@/hooks/useDayLock";
 import {
   bubblingAlgo,
