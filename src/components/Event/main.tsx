@@ -11,7 +11,10 @@ import {
 } from "@/hooks/useController";
 import { useEventState } from "@/hooks/useEventsApi";
 import { useEffect, useState } from "react";
-import { useController } from "react-hook-form";
+import {
+  useEventsStatus,
+  useEventsStatusDispatcher,
+} from "@/hooks/useEventsStatus";
 
 export const Event = ({ event }: { event: event }) => {
   const setEventController = useSetEventSelected();
@@ -19,26 +22,27 @@ export const Event = ({ event }: { event: event }) => {
   const dispatchControllerDates = useControllerDispatchDates();
   const dispatchController = useControllerDispatch();
   const events = useEventState();
-  const [hover, setHover] = useState(false);
+
   const [justThrown, setJustThrown] = useState(true);
   useEffect(() => {
-    setTimeout(() => {
-      setJustThrown(false);
-    }, 200);
+    const relaxTime = 200; /*ms*/
+    const timeoutHandler = setTimeout(() => setJustThrown(false), relaxTime);
+    return () => {
+      clearTimeout(timeoutHandler);
+    };
   }, []);
 
+  //TODO: custom hook to mark as selected an event when is hover any of its items or it is selected in the controller
+  const [hover, setHover] = useState(false);
+  const onHover = useEventsStatus();
+  const dispatchHoveringId = useEventsStatusDispatcher();
   useEffect(() => {
-    if (Math.abs(controllerState.id) === Math.abs(event.id)) {
-      setHover(true);
-    } else {
-      setHover(false);
-    }
-  }, [controllerState.id]);
-
-  const cells = Math.min(
-    1 + DateService.DaysFromStartToEnd(event.start, event.end),
-    8 //TODO
-  );
+    const fromController = controllerState.id;
+    const fromEventHover = onHover.id;
+    const id = event.id;
+    const idSelected = fromController === id || fromEventHover === event.id;
+    setHover(idSelected);
+  }, [controllerState.id, onHover.id]);
 
   const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
@@ -66,20 +70,20 @@ export const Event = ({ event }: { event: event }) => {
   const [r, g, b] = ClientColorStyles(mapClientToColor, 1, 0.6);
   const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.6, 0.5);
 
+  //TODO: avoid magic numbers
+  const spreadCells = Math.min(
+    1 + DateService.DaysFromStartToEnd(event.start, event.end),
+    8
+  );
   return (
     <StyledEvent.TWflexContainer
-      onMouseEnter={() => setHover(true)}
+      onMouseEnter={() => dispatchHoveringId({ id: event.id })}
       onMouseLeave={() => {
-        if (controllerState.id !== event.id) {
-          setHover(false);
-        }
+        dispatchHoveringId({ id: 0 });
       }}
     >
       <StyledEvent.TWtextContent
         $justThrown={justThrown}
-        //$clientTheme={{ color: `bg-[rgb(${r},${b},${g})]` }}
-        //style={!justThrown ? giveMeColor(event.client) : {}}
-        // className={hover ? "textAnimation" : ""}
         style={
           justThrown
             ? { background: "gray" }
@@ -95,7 +99,7 @@ export const Event = ({ event }: { event: event }) => {
               }
         }
         key={event.id}
-        $cells={cells}
+        $cells={spreadCells}
         onClick={hOnClick}
         title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
       >
@@ -108,7 +112,7 @@ export const Event = ({ event }: { event: event }) => {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
-            $cells={cells}
+            $cells={spreadCells}
             onClick={hOnClick}
             onMouseDownCapture={(e) => {
               //console.log("extend event:", event.id);

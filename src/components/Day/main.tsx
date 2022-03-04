@@ -116,6 +116,7 @@ export function IDay({
             </StyledDay.TWdaySpot>
           </StyledDay.TWheader>
           {children}
+          {provided.placeholder}
         </StyledDay.TWsizedContainer>
       )}
     </Droppable>
