@@ -5,7 +5,7 @@ import { useUserSession } from "./hooks/useUserSession";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import { api } from "@/static/apiRoutes";
-import { event, objectKeys } from "@interfaces/index";
+import { event } from "@interfaces/index";
 import { DaysFrom } from "./utils/Date";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -38,13 +38,13 @@ async function fetchEvent(
 }
 
 export default function App() {
-  const [month, setMonth] = useState(0);
+  //const [month, setMonth] = useState(0);
   const isDragging = useIsDragging();
 
   const { value } = useUserSession();
   const eventDispatcher = useEventDispatch();
   const allEvents = useEventState();
-  const controllerState = useControllerState();
+  //const controllerState = useControllerState();
   const dispatchHoveringId = useEventsStatusDispatcher();
 
   const eventStartDragging = useRef<event>({

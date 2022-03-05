@@ -181,6 +181,36 @@ export function GetDayNumberOfDay(name: string) {
   return names.findIndex((n) => n === name) + 1;
 }
 
+export function GetPrevDate(startDate: { year: number; month: number }) {
+  const state = { ...startDate };
+  const substractOneYear = () => {
+    state.year -= 1;
+    state.month = 12;
+  };
+  const substractOneMonth = () => {
+    state.month -= 1;
+  };
+
+  return () => {
+    state.month === 1 ? substractOneYear() : substractOneMonth();
+    return { ...state };
+  };
+}
+type yearMonth = { year: number; month: number };
+
+export function ListPrevDates(
+  start: yearMonth,
+  length: number
+): Array<yearMonth> {
+  const prevState = GetPrevDate(start);
+  const result: Array<yearMonth> = [];
+  for (let i = 0; i != length; i++) {
+    result.push(prevState());
+  }
+
+  return result;
+}
+
 export const DateService = {
   GetDate,
   GetTodayDateFormat,
@@ -199,4 +229,5 @@ export const DateService = {
   isValidKeyDate,
   ExportDateToControllerValue,
   GetDayNumberOfDay,
+  GetPrevDate,
 };
