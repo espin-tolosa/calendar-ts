@@ -13,6 +13,7 @@ import { zeroPadd } from "@/utils/zeroPadd";
 import { useControllerStateDates } from "@/hooks/useControllerDate";
 import { useDayLock } from "@/hooks/useDayLock";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
+import { useIsFetchingEvents } from "@/hooks/useIsFetchingEvents";
 
 type iMonth = {
   id: string;
@@ -33,7 +34,12 @@ const Month = ({ id, year, month }: iMonth) => {
   //3. user preferences
   const { showWeekends } = useLocalUserPreferencesContext().localState;
 
+  //
+  const { setIsFetching } = useIsFetchingEvents();
+
   useEffect(() => {
+    console.log("SEtfetchto true");
+    setIsFetching(true);
     const result = fetchEvent("GET_FROM", {
       id: 0,
       client: "",
@@ -57,6 +63,7 @@ const Month = ({ id, year, month }: iMonth) => {
               },
             ],
           });
+          setIsFetching(false);
         })
       );
   }, []);

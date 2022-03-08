@@ -11,28 +11,31 @@ import { ControllerProviderDates } from "@/hooks/useControllerDate";
 import { DayLock } from "@/hooks/useDayLock";
 import { IsDraggingEvent } from "./hooks/useIsDragging";
 import { EventsStatus } from "./hooks/useEventsStatus";
+import { IsFetchingEvents } from "./hooks/useIsFetchingEvents";
 
 ReactDOM.render(
   <React.StrictMode>
-    <IsDraggingEvent>
-      <ControllerProvider>
-        <ControllerProviderDates>
-          <UserPreferences>
-            <DayLock>
-              <EventsDispatcher>
-                <EventInController>
-                  <EventsStatus>
-                    <UserSession>
-                      <App />
-                    </UserSession>
-                  </EventsStatus>
-                </EventInController>
-              </EventsDispatcher>
-            </DayLock>
-          </UserPreferences>
-        </ControllerProviderDates>
-      </ControllerProvider>
-    </IsDraggingEvent>
+    <IsFetchingEvents>
+      <IsDraggingEvent>
+        <ControllerProvider>
+          <ControllerProviderDates>
+            <UserPreferences>
+              <DayLock>
+                <EventsDispatcher>
+                  <EventInController>
+                    <EventsStatus>
+                      <UserSession>
+                        <App />
+                      </UserSession>
+                    </EventsStatus>
+                  </EventInController>
+                </EventsDispatcher>
+              </DayLock>
+            </UserPreferences>
+          </ControllerProviderDates>
+        </ControllerProvider>
+      </IsDraggingEvent>
+    </IsFetchingEvents>
   </React.StrictMode>,
   document.getElementById("root")
 );
