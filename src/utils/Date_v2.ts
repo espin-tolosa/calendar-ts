@@ -70,7 +70,7 @@ type day =
   | "30"
   | "31";
 
-type ProcessDate = [month, day, year];
+type ProcessDate = [year, month, day];
 type FormattedDate = `${year}-${month}-${day}`;
 
 // function _composeDate
@@ -78,7 +78,7 @@ function _composeDate(date: ProcessDate): FormattedDate {
   if (date.length !== 3) {
     throw Error("composeDate recieved wrong input date");
   }
-  return `${date[2]}-${date[0]}-${date[1]}`;
+  return `${date[0]}-${date[1]}-${date[2]}`;
 }
 
 function _rangeChecker(
@@ -94,17 +94,15 @@ function _rangeChecker(
 }
 
 function _processDate(dt: Date): ProcessDate {
-  return dt
-    .toLocaleString()
-    .split(",") //cleans hour
-    .at(0)! //recover m/d/y
-    .split("/")
-    .map((value) => zeroPadd(parseInt(value))) as ProcessDate;
+  const yyyy = dt.getFullYear().toString();
+  const mm = zeroPadd(dt.getMonth() + 1);
+  const dd = zeroPadd(dt.getDate());
+  return [yyyy, mm, dd] as ProcessDate;
 }
 function _getTodayDay() {
   const today = new Date();
   const p = _processDate(today);
-  return parseInt(p.at(1)!);
+  return parseInt(p.at(2)!);
 }
 
 export function _renderToday() {

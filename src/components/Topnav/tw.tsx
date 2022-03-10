@@ -1,7 +1,7 @@
 import tw from "tailwind-styled-components";
 
 export const TWcontainer = tw.div`
-	sm:font-extrabold sm:text-lg font-extrabold custombp:text-xs customtp:text-xs flex justify-between items-center
+	bg-slate-900 sm:font-extrabold sm:text-lg font-extrabold custombp:text-xs customtp:text-xs flex justify-between items-center
 `;
 
 export const TWlogo = tw.div`

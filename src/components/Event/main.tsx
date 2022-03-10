@@ -62,14 +62,20 @@ export const Event = ({ event }: { event: event }) => {
   };
   const clientID = parseInt(event.client.split("_")[1]);
   let mapClientToColor = (360 * clientID) / 9;
+  if (clientID === 1) {
+    mapClientToColor -= 10;
+  }
+  if (clientID === 2) {
+    mapClientToColor -= 15;
+  }
+  if (clientID === 4) {
+    mapClientToColor += 15;
+  }
   if (clientID === 6) {
     mapClientToColor -= 15;
   }
-  if (clientID === 9) {
-    mapClientToColor += 15;
-  }
-  const [r, g, b] = ClientColorStyles(mapClientToColor, 1, 0.6);
-  const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.6, 0.5);
+  const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
+  const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.6, 0.7);
 
   //TODO: avoid magic numbers
   const spreadCells = Math.min(

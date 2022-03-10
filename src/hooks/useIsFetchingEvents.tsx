@@ -7,7 +7,7 @@ type IsFetchingType = {
 };
 
 const cIsFetchingEvents = createContext<IsFetchingType>({
-  isFetching: false,
+  isFetching: true,
   setIsFetching: () => {},
 });
 
@@ -16,7 +16,7 @@ export const useIsFetchingEvents = () => {
 };
 
 export const IsFetchingEvents: composition = ({ children }) => {
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
   return (
     <cIsFetchingEvents.Provider value={{ isFetching, setIsFetching }}>

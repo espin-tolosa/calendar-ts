@@ -12,7 +12,11 @@ export const TWsizedContainer = tw.div<{
   $isWeekend: boolean;
   $restDays: boolean;
 }>`
-	landscape:min-h-[17vh] portrait:min-h-[8vh] transition-colors
+// TopNav represents around  3vh
+// Month header is around 2vh
+// Max num of possible columns in a month is 6
+// choosen min height = (100-3-2) / 6 ~= 15vh 
+	min-h-[15vh] transition-colors
 	font-light
  	shadow-[0px_0px_1px_rgb(226,232,240)]
 

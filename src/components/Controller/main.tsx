@@ -146,7 +146,7 @@ const CreateEvent = () => {
         id={"save"}
         $display={true}
         type="submit"
-        value={eventSelected ? "Save a copy" : "Save"}
+        value={eventSelected ? "Copy" : "Save"}
         title="Testing to new dispatch event"
         onClick={() => {
           // TODO: check if is valid event

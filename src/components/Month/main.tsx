@@ -1,4 +1,12 @@
-import { memo, useEffect } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useMonthDate } from "@/hooks/useMonthDate";
 import { MemoIDay } from "@components/Day/main";
 import { MemoIDayHolder } from "@components/DayHolder/main";
@@ -14,15 +22,55 @@ import { useControllerStateDates } from "@/hooks/useControllerDate";
 import { useDayLock } from "@/hooks/useDayLock";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
 import { useIsFetchingEvents } from "@/hooks/useIsFetchingEvents";
+import { useCtxCurrentMonthRef } from "@/globalStorage/currentMonthReference";
+import { isToday } from "@/utils/Date_v2";
+import { TopNavRef, useCtxTopNavRef } from "@/globalStorage/topNavSize";
+import { start } from "repl";
+import { DOMRefs } from "@/globalStorage/DOMRefs";
+import { useOnce } from "@/hooks/useOnce";
 
 type iMonth = {
-  id: string;
   year: number;
   month: number;
 };
-const Month = ({ id, year, month }: iMonth) => {
+const Month = ({ year, month }: iMonth) => {
   const date = useMonthDate(year, month);
   const eventsDispatcher = useEventDispatch();
+  const monthRef = useCtxCurrentMonthRef();
+  const topNavRef = useCtxTopNavRef();
+  const dispatchDOMRef = DOMRefs.useDispatch();
+  const { isFetching } = useIsFetchingEvents();
+
+  const [topNavHeight, setTopNavHeight] = useState({ top: "" });
+  useLayoutEffect(() => {
+    if (!isToday(year, month)) {
+      return;
+    }
+    const height = topNavRef?.current?.clientHeight!;
+    const border = 3; /*px*/
+    const style = { top: `-${height + border}px` };
+    setTopNavHeight(style);
+    window.scrollTo(0, 0);
+  }, []);
+
+  //TODO:Give a name to this custom hook
+  useEffect(() => {
+    if (!isToday(year, month)) {
+      return;
+    }
+    //   //
+    const isAnchorReady = topNavHeight.top !== "";
+
+    if (isAnchorReady) {
+      dispatchDOMRef({ type: "update", payload: monthRef });
+
+      monthRef?.current?.scrollIntoView()!;
+    }
+
+    //   //
+    //   //
+    //   //monthRef?.current?.scrollIntoView()!;
+  }, [topNavHeight]); //TODO: use ref state context as it was created to access TopNav Ref after it is rendered
 
   //Context processing to pass to Day component
   //1. start,end dates
@@ -38,7 +86,6 @@ const Month = ({ id, year, month }: iMonth) => {
   const { setIsFetching } = useIsFetchingEvents();
 
   useEffect(() => {
-    console.log("SEtfetchto true");
     setIsFetching(true);
     const result = fetchEvent("GET_FROM", {
       id: 0,
@@ -63,6 +110,7 @@ const Month = ({ id, year, month }: iMonth) => {
               },
             ],
           });
+          console.log("is fetching to false from:", isFetching);
           setIsFetching(false);
         })
       );
@@ -82,6 +130,8 @@ const Month = ({ id, year, month }: iMonth) => {
   };
 
   const [left, rest] = totalCellsInLastRow(date.start, date.daysList.length);
+
+  console.log(`Month ${year}-${month}`, isToday(year, month));
 
   return (
     <StyledMonth.TWflexColLayout className="relative">
@@ -137,10 +187,14 @@ const Month = ({ id, year, month }: iMonth) => {
             rest.map((day) => <MemoIDayHolder key={"r" + day}></MemoIDayHolder>)
           )}
       </StyledMonth.TWdaysBoard>
-      <div
-        id={id}
-        className="absolute w-0 h-0 bg-transparent bottom-8 customtp:bottom-6 custombp:bottom-6 z-TopLayer "
-      ></div>
+      {isToday(year, month) && (
+        <div
+          id={"Current-Month"}
+          ref={monthRef}
+          style={topNavHeight}
+          className="absolute"
+        ></div>
+      )}
     </StyledMonth.TWflexColLayout>
     /* Month container: header | board */
   );

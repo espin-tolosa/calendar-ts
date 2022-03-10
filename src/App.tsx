@@ -7,7 +7,7 @@ import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import { api } from "@/static/apiRoutes";
 import { event } from "@interfaces/index";
 import { DaysFrom } from "./utils/Date";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   useEventSelected,
   useSetEventSelected,
@@ -38,6 +38,8 @@ async function fetchEvent(
 }
 
 export default function App() {
+  console.log("Process");
+  //Contexts
   //const [month, setMonth] = useState(0);
   const isDragging = useIsDragging();
 
@@ -46,6 +48,10 @@ export default function App() {
   const allEvents = useEventState();
   //const controllerState = useControllerState();
   const dispatchHoveringId = useEventsStatusDispatcher();
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const eventStartDragging = useRef<event>({
     id: 0,

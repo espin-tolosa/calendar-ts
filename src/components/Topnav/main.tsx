@@ -6,6 +6,10 @@ import * as StyledTopnav from "./tw";
 import { useSetEventSelected } from "../Controller/main";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useControllerDispatch } from "@/hooks/useController";
+import { useCtxCurrentMonthRef } from "@/globalStorage/currentMonthReference";
+import { useCtxTopNavRef } from "@/globalStorage/topNavSize";
+import { useEffect } from "react";
+import { DOMRefs } from "@/globalStorage/DOMRefs";
 
 export const TOPNAV_ID = "Topnav";
 
@@ -13,22 +17,26 @@ export const Topnav = () => {
   const setSession = useUserSession();
   const { usr } = useToken();
   const setEventController = useSetEventSelected();
+  const topNavRef = useCtxTopNavRef();
+  const dispatchDOMRef = DOMRefs.useDispatch();
 
   /*  parallel change consume date context */
   const dispatchController = useControllerDispatch();
   const dispatchControllerDates = useControllerDispatchDates();
+  const monthRef = useCtxCurrentMonthRef();
+
+  useEffect(() => {
+    dispatchDOMRef({ type: "update", payload: topNavRef });
+  }, []);
 
   return (
-    <StyledTopnav.TWcontainer id={TOPNAV_ID}>
+    <StyledTopnav.TWcontainer id={TOPNAV_ID} ref={topNavRef}>
       {/*left-header*/}
       <StyledTopnav.TWlogo>{`JH Diary | user: ${usr}`}</StyledTopnav.TWlogo>
       {/*center-header*/}{" "}
       <StyledTopnav.TWtitle
         onClick={() => {
-          const dt = DateService.GetDate();
-          const [year, month] = DateService.FormatDate(dt).split("-");
-          const date = `${year}-${month}-01`;
-          scrollToDay(date);
+          monthRef?.current?.scrollIntoView({ behavior: "smooth" })!;
         }}
       >
         {DateService.GetTodayDateFormat()}
