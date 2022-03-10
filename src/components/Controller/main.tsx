@@ -24,6 +24,7 @@ import { useControllerStateDates } from "@/hooks/useControllerDate";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { zeroPadd } from "@/utils/zeroPadd";
 import { scrollToDay } from "@/utils/scrollToDay";
+import { fetchEvent_Controller } from "@/utils/fetchEvent";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -101,8 +102,8 @@ const CreateEvent = () => {
             if (!isValidEvent) {
               return;
             }
-
-            const result = fetchEvent("PUT", {
+            // Controller 106
+            const result = fetchEvent_Controller("PUT", {
               id,
               client,
               job,
@@ -154,7 +155,8 @@ const CreateEvent = () => {
             return;
           }
 
-          const result = fetchEvent("POST", {
+          // Controller 158
+          const result = fetchEvent_Controller("POST", {
             id: Math.floor(Math.random() * 1000),
             client,
             job,
@@ -214,7 +216,9 @@ const CreateEvent = () => {
           if (!isValidEvent) {
             return;
           }
-          const result = fetchEvent("DELETE", eventSelected!);
+
+          //Controller 220
+          const result = fetchEvent_Controller("DELETE", eventSelected!);
           result.then((res) => {
             if (res.status === 204) {
               eventDispatcher({
@@ -384,19 +388,6 @@ const CLIENTS = [
 const StyledSelect = tw.select`
   border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer outline-none
 `;
-
-async function fetchEvent(
-  action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" }
-) {
-  const data = new FormData();
-  const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
-  data.append("json", dataJSON);
-  return fetch(api.routes.events, {
-    method: "POST",
-    body: data,
-  });
-}
 
 function ControllerButton({
   onClick,

@@ -12,30 +12,13 @@ import {
   useEventSelected,
   useSetEventSelected,
 } from "./components/Controller/main";
-import {
-  useControllerDispatch,
-  useControllerState,
-} from "./hooks/useController";
+import { useControllerDispatch } from "./hooks/useController";
 
 import { useControllerDispatchDates } from "./hooks/useControllerDate";
 import { useIsDragging } from "./hooks/useIsDragging";
 import { useEventsStatusDispatcher } from "./hooks/useEventsStatus";
 
-async function fetchEvent(
-  action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" }
-) {
-  const data = new FormData();
-  if (typeof event === "undefined") {
-    data.append("json", JSON.stringify({ action }));
-  } else {
-    data.append("json", JSON.stringify({ action, ...event }));
-  }
-  return fetch(api.routes.events, {
-    method: "POST",
-    body: data,
-  });
-}
+import { fetchEvent_App } from "./utils/fetchEvent";
 
 export default function App() {
   //Contexts
@@ -76,7 +59,7 @@ export default function App() {
         //if (!isValidEvent) {
         //  return;
         //}
-        const result = fetchEvent("DELETE", eventSelected!);
+        const result = fetchEvent_App("DELETE", eventSelected!);
         result.then((res) => {
           if (res.status === 204) {
             eventDispatcher({
@@ -208,7 +191,7 @@ export default function App() {
           end: destination?.droppableId!,
         };
 
-        const fetchResultPUT = fetchEvent("PUT", newEvent);
+        const fetchResultPUT = fetchEvent_App("PUT", newEvent);
         isDragging.setState(false);
         dispatchHoveringId(0);
 

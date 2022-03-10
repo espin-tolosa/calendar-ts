@@ -29,6 +29,7 @@ import { start } from "repl";
 import { DOMRefs } from "@/globalStorage/DOMRefs";
 import { useOnce } from "@/hooks/useOnce";
 import { useCleanSession } from "@/hooks/useCleanSession";
+import { fetchEvent_Month } from "@/utils/fetchEvent";
 
 type iMonth = {
   year: number;
@@ -89,7 +90,7 @@ const Month = ({ year, month }: iMonth) => {
 
   useEffect(() => {
     setIsFetching(true);
-    const result = fetchEvent("GET_FROM", {
+    const result = fetchEvent_Month("GET_FROM", {
       id: 0,
       client: "",
       job: "",
@@ -208,16 +209,3 @@ const Month = ({ year, month }: iMonth) => {
 };
 
 export const MemoMonth = memo(Month);
-
-async function fetchEvent(
-  action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" }
-) {
-  const data = new FormData();
-  const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
-  data.append("json", dataJSON);
-  return fetch(api.routes.events, {
-    method: "POST",
-    body: data,
-  });
-}
