@@ -10,7 +10,13 @@ import {
   useControllerState,
 } from "@/hooks/useController";
 import { useEventState } from "@/hooks/useEventsState";
-import { useEffect, useState } from "react";
+import {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   useEventsStatus,
   useEventsStatusDispatcher,
@@ -40,7 +46,7 @@ export const Event = ({ event }: { event: event }) => {
   useEffect(() => {
     const fromController = controllerState.id;
     const fromEventHover = onHover.id;
-    const id = event.id;
+    const id = Math.abs(event.id);
     const idSelected = fromController === id || fromEventHover === event.id;
     setHover(idSelected);
   }, [controllerState.id, onHover.id]);
@@ -60,23 +66,47 @@ export const Event = ({ event }: { event: event }) => {
 
     setEventController(event);
   };
-  const clientID = parseInt(event.client.split("_")[1]);
-  const CLIENTS_LENGTH = 9;
-  const EXTRA_COLORS = 1;
 
-  //Initialize with color error
-  let mapClientToColor = (360 * (10 - 1)) / (CLIENTS_LENGTH + EXTRA_COLORS);
-  //then if client parses properly -> map to client color
-  if (!isNaN(clientID) && clientID <= 5) {
-    mapClientToColor = (360 * (clientID - 1)) / 5;
-  } else if (!isNaN(clientID) && clientID > 5) {
-    mapClientToColor = (360 * (clientID - 6)) / 5 + 180 / 5;
-  } else {
-    console.error("Extrange client", event);
-  }
+  const eventInlineStyle: any = useMemo(() => {
+    //TODO: Memoize this object and only recalculate when hover
+    console.log("Memoized component");
+    const clientID = parseInt(event.client.split("_")[1]);
+    const CLIENTS_LENGTH = 9;
+    const EXTRA_COLORS = 1;
 
-  const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
-  const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.6, 0.7);
+    //Initialize with color error
+    let mapClientToColor = (360 * (10 - 1)) / (CLIENTS_LENGTH + EXTRA_COLORS);
+    //then if client parses properly -> map to client color
+    if (!isNaN(clientID) && clientID <= 5) {
+      mapClientToColor = (360 * (clientID - 1)) / 5;
+    } else if (!isNaN(clientID) && clientID > 5) {
+      mapClientToColor = (360 * (clientID - 6)) / 5 + 180 / 5;
+    } else {
+      console.error("Extrange client", event);
+    }
+
+    const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
+    const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.6, 0.7);
+    return justThrown
+      ? {
+          background: "gray",
+          border: "1px solid transparent",
+          color: "black",
+        }
+      : !hover
+      ? {
+          background: `rgb(${r},${g},${b})`,
+          border: "1px solid transparent",
+          color: "black",
+        }
+      : {
+          background: `rgb(${r_h},${g_h},${b_h})`,
+          border: "1px solid black",
+          color: "white",
+        };
+  }, [justThrown, hover]);
+
+  //[justThrown, hover])
 
   //TODO: avoid magic numbers
   const spreadCells = Math.min(
@@ -99,20 +129,7 @@ export const Event = ({ event }: { event: event }) => {
         >
           <StyledEvent.TWtextContent
             $justThrown={justThrown}
-            style={
-              justThrown
-                ? { background: "gray" }
-                : !hover
-                ? {
-                    backgroundColor: `rgb(${r},${g},${b})`,
-                    color: "black",
-                  }
-                : {
-                    backgroundColor: `rgb(${r_h},${g_h},${b_h})`,
-                    border: "1px solid black",
-                    color: "white",
-                  }
-            }
+            style={eventInlineStyle}
             key={event.id}
             $cells={spreadCells}
             onClick={hOnClick}

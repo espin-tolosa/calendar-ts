@@ -53,6 +53,7 @@ const CreateEvent = () => {
   const { id, client, job } = useControllerState();
   const { start, end } = useControllerStateDates();
   const setEventController = useSetEventSelected();
+  const eventState = useEventState();
 
   /*  parallel change consume date context */
   const dispatchController = useControllerDispatch();
@@ -232,6 +233,17 @@ const CreateEvent = () => {
           });
 
           setEventController(null);
+        }}
+      />
+      {/* Log button */}
+      <tw_Controller.button
+        id={"debug"}
+        $display={true}
+        type="button"
+        value={"Debug"}
+        onClick={() => {
+          const onlyEvents = eventState.filter((event) => event.id > 0);
+          console.log(onlyEvents);
         }}
       />
       <tw_Controller.startEnd>
