@@ -61,19 +61,20 @@ export const Event = ({ event }: { event: event }) => {
     setEventController(event);
   };
   const clientID = parseInt(event.client.split("_")[1]);
-  let mapClientToColor = (360 * clientID) / 9;
-  if (clientID === 1) {
-    mapClientToColor -= 10;
+  const CLIENTS_LENGTH = 9;
+  const EXTRA_COLORS = 1;
+
+  //Initialize with color error
+  let mapClientToColor = (360 * (10 - 1)) / (CLIENTS_LENGTH + EXTRA_COLORS);
+  //then if client parses properly -> map to client color
+  if (!isNaN(clientID) && clientID <= 5) {
+    mapClientToColor = (360 * (clientID - 1)) / 5;
+  } else if (!isNaN(clientID) && clientID > 5) {
+    mapClientToColor = (360 * (clientID - 6)) / 5 + 180 / 5;
+  } else {
+    console.error("Extrange client", event);
   }
-  if (clientID === 2) {
-    mapClientToColor -= 15;
-  }
-  if (clientID === 4) {
-    mapClientToColor += 15;
-  }
-  if (clientID === 6) {
-    mapClientToColor -= 15;
-  }
+
   const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
   const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.6, 0.7);
 

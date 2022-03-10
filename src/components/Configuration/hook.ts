@@ -20,7 +20,7 @@ export const useScrollToCurrentMonth = () => {
   const references = DOMRefs.useState();
   //
   const hSmoothScroll = () => {
-    //monthRef?.current?.scrollIntoView({ behavior: "smooth" })!;
+    monthRef?.current?.scrollIntoView({ behavior: "smooth" })!;
     //setTimeout(() => {
     //  monthRef?.current?.scrollIntoView()!;
     //}, SECOND_SCROLL);

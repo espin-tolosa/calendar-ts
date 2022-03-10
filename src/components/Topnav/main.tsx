@@ -8,31 +8,40 @@ import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useControllerDispatch } from "@/hooks/useController";
 import { useCtxCurrentMonthRef } from "@/globalStorage/currentMonthReference";
 import { useCtxTopNavRef } from "@/globalStorage/topNavSize";
-import { useEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { DOMRefs } from "@/globalStorage/DOMRefs";
+import { useCleanSession } from "@/hooks/useCleanSession";
 
 export const TOPNAV_ID = "Topnav";
 
 export const Topnav = () => {
-  const setSession = useUserSession();
-  const { usr } = useToken();
-  const setEventController = useSetEventSelected();
+  const token = useToken();
+  const user = token.data.usr || "not logged";
   const topNavRef = useCtxTopNavRef();
   const dispatchDOMRef = DOMRefs.useDispatch();
 
+  //Custom hook to clean session, gives a handler to set to true when session is to clean
+  const setSessionIsToClean = useCleanSession();
   /*  parallel change consume date context */
-  const dispatchController = useControllerDispatch();
-  const dispatchControllerDates = useControllerDispatchDates();
+
   const monthRef = useCtxCurrentMonthRef();
 
   useEffect(() => {
     dispatchDOMRef({ type: "update", payload: topNavRef });
   }, []);
 
+  //If useToken returns a nullToken user the component clears session in the same way of the logout button
+  useEffect(() => {
+    //TODO effect not tested yet
+    if (!token.exp || !token.data.usr) {
+      setSessionIsToClean(true);
+    }
+  }, []);
+
   return (
     <StyledTopnav.TWcontainer id={TOPNAV_ID} ref={topNavRef}>
       {/*left-header*/}
-      <StyledTopnav.TWlogo>{`JH Diary | user: ${usr}`}</StyledTopnav.TWlogo>
+      <StyledTopnav.TWlogo>{`JH Diary | user: ${user}`}</StyledTopnav.TWlogo>
       {/*center-header*/}{" "}
       <StyledTopnav.TWtitle
         onClick={() => {
@@ -46,16 +55,7 @@ export const Topnav = () => {
         title={"Cleans up your session token | Ctrl+Alt+q"}
         onClick={(evt) => {
           evt.stopPropagation();
-          setSession.clearLoginSession();
-          setEventController(null);
-
-          dispatchController({
-            type: "setController",
-            payload: { id: 0, client: "", job: "" },
-          });
-          dispatchControllerDates({
-            type: "clearDates",
-          });
+          setSessionIsToClean(true);
         }}
       >
         Logout

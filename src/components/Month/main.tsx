@@ -23,11 +23,12 @@ import { useDayLock } from "@/hooks/useDayLock";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
 import { useIsFetchingEvents } from "@/hooks/useIsFetchingEvents";
 import { useCtxCurrentMonthRef } from "@/globalStorage/currentMonthReference";
-import { isToday } from "@/utils/Date_v2";
+import { isToday, _renderDate } from "@/utils/Date_v2";
 import { TopNavRef, useCtxTopNavRef } from "@/globalStorage/topNavSize";
 import { start } from "repl";
 import { DOMRefs } from "@/globalStorage/DOMRefs";
 import { useOnce } from "@/hooks/useOnce";
+import { useCleanSession } from "@/hooks/useCleanSession";
 
 type iMonth = {
   year: number;
@@ -40,6 +41,7 @@ const Month = ({ year, month }: iMonth) => {
   const topNavRef = useCtxTopNavRef();
   const dispatchDOMRef = DOMRefs.useDispatch();
   const { isFetching } = useIsFetchingEvents();
+  const setSessionIsToClean = useCleanSession();
 
   const [topNavHeight, setTopNavHeight] = useState({ top: "" });
   useLayoutEffect(() => {
@@ -87,15 +89,20 @@ const Month = ({ year, month }: iMonth) => {
 
   useEffect(() => {
     setIsFetching(true);
-    const result = fetchEvent("GET_FROM", {
-      id: 0,
-      client: "",
-      job: "",
-      start: `${year}-${month}-01`,
-      end: "",
-    });
+    console.log("Fetching from", _renderDate(year, month));
+    const result = fetchEvent(
+      "GET_FROM",
+      {
+        id: 0,
+        client: "",
+        job: "",
+        start: `${year}-${month}-01`,
+        end: "",
+      },
+      `Calling fetchEvent from Month with GET_FROM: ${year}-${month}`
+    );
     result
-      .then((res: any) => res.json())
+      .then((res) => res.json())
       .then((json: Array<event>) =>
         json.forEach((event: event) => {
           eventsDispatcher({
@@ -113,7 +120,15 @@ const Month = ({ year, month }: iMonth) => {
           console.log("is fetching to false from:", isFetching);
           setIsFetching(false);
         })
-      );
+      )
+      .catch((e) => {
+        console.error("Possible invalid token", e);
+
+        let text = "Your credentials has expired, logout?";
+        if (window.confirm(text) == true) {
+          setSessionIsToClean(true);
+        }
+      });
   }, []);
   const totalCellsInLastRow = (start: string, length: number) => {
     const DayStart = DateService.GetDayNumberOfDay(start);
@@ -204,8 +219,10 @@ export const MemoMonth = memo(Month);
 
 async function fetchEvent(
   action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" }
+  event: event = { id: 0, client: "", job: "", start: "", end: "" },
+  debug: string
 ) {
+  console.debug(debug);
   const data = new FormData();
   const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
   data.append("json", dataJSON);
