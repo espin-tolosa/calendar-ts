@@ -97,6 +97,10 @@ export default function App() {
         setEventController(null);
       } else if (e.key === "Escape") {
         setEventController(null);
+        eventDispatcher({
+          type: "deletebyid",
+          payload: [{ ...eventSelected!, id: 101010 }],
+        });
 
         dispatchController({
           type: "setController",

@@ -305,7 +305,7 @@ const CreateEvent = () => {
               job,
             },
           });
-          const id = eventSelected?.id || parseInt(start.split("-")[2]);
+          const id = eventSelected?.id || 101010;
           eventDispatcher({
             type: "update",
             payload: [
