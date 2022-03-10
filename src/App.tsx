@@ -78,10 +78,17 @@ export default function App() {
 
         setEventController(null);
       } else if (e.key === "Escape") {
+        const getUnusedId = () => {
+          //TODO: create a temporary state fot un-fetched events. In the middle, 1 is reserved id for temporal events
+          // I just recover the last id from the array as it is already sorted by id and adds one
+          //const lastId = eventState[eventState.length - 1].id + 1;
+          const lastId = 100000;
+          return lastId;
+        };
         setEventController(null);
         eventDispatcher({
           type: "deletebyid",
-          payload: [{ ...eventSelected!, id: 1 }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
+          payload: [{ ...eventSelected!, id: getUnusedId() }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
         });
 
         dispatchController({

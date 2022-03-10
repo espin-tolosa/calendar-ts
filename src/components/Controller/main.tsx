@@ -308,9 +308,16 @@ const CreateEvent = () => {
               job,
             },
           });
-          const id = eventSelected?.id || 1; //TODO: create a temporary state fot un-fetched events. In the middle, 1 is reserved id for temporal events
+          const getUnusedId = () => {
+            //TODO: create a temporary state fot un-fetched events. In the middle, 1 is reserved id for temporal events
+            // I just recover the last id from the array as it is already sorted by id and adds one
+            //const lastId = eventState[eventState.length - 1].id + 1;
+            const lastId = 100000;
+            return lastId;
+          };
+          const id = eventSelected?.id || getUnusedId();
           eventDispatcher({
-            type: "appendarray",
+            type: "update",
             payload: [
               {
                 id,
