@@ -122,12 +122,6 @@ export function IDay({
     </Droppable>
   );
 }
-//comparing props//TODO: improve criteria
-function moviePropsAreEqual(prev: any, next: any) {
-  console.info("prev", prev);
-  const randomBool = Math.random() < 0.5;
-  return false;
-}
 const isSelected = (start: string, today: string, end: string) => {
   const left = DateService.DaysFrom(start, today);
   const right = DateService.DaysFrom(end, today);

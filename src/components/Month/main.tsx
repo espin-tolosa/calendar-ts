@@ -89,18 +89,13 @@ const Month = ({ year, month }: iMonth) => {
 
   useEffect(() => {
     setIsFetching(true);
-    console.log("Fetching from", _renderDate(year, month));
-    const result = fetchEvent(
-      "GET_FROM",
-      {
-        id: 0,
-        client: "",
-        job: "",
-        start: `${year}-${month}-01`,
-        end: "",
-      },
-      `Calling fetchEvent from Month with GET_FROM: ${year}-${month}`
-    );
+    const result = fetchEvent("GET_FROM", {
+      id: 0,
+      client: "",
+      job: "",
+      start: `${year}-${month}-01`,
+      end: "",
+    });
     result
       .then((res) => res.json())
       .then((json: Array<event>) =>
@@ -117,7 +112,6 @@ const Month = ({ year, month }: iMonth) => {
               },
             ],
           });
-          console.log("is fetching to false from:", isFetching);
           setIsFetching(false);
         })
       )
@@ -145,8 +139,6 @@ const Month = ({ year, month }: iMonth) => {
   };
 
   const [left, rest] = totalCellsInLastRow(date.start, date.daysList.length);
-
-  console.log(`Month ${year}-${month}`, isToday(year, month));
 
   return (
     <StyledMonth.TWflexColLayout className="relative">
@@ -219,10 +211,8 @@ export const MemoMonth = memo(Month);
 
 async function fetchEvent(
   action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" },
-  debug: string
+  event: event = { id: 0, client: "", job: "", start: "", end: "" }
 ) {
-  console.debug(debug);
   const data = new FormData();
   const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
   data.append("json", dataJSON);

@@ -1,24 +1,22 @@
 import { composition } from "@/interfaces";
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { event } from "@interfaces/index";
-import { month0, month1 } from "@/static/initEvents";
+import { month0 } from "@/static/initEvents";
 import { eventSpreader } from "@/algorithms/eventSpreader";
 import { DateService } from "@/utils/Date";
 import { isValidEvent } from "@/utils/ValidateEvent";
 
 type State = Array<event>;
-type Action =
-  | {
-      type: "appendarray" | "deletebyid" | "replacebyid" | "update";
-      payload: State;
-    }
-  | { type: "default" };
+type Action = {
+  type: "appendarray" | "deletebyid" | "replacebyid" | "update";
+  payload: State;
+};
 
 const sortCriteriaFIFO = (a: number, b: number) => Math.abs(a) - Math.abs(b);
 
 function reducerEvents(state: State, action: Action) {
   switch (action.type) {
-    //
+    // Add new event coming from database, it doesn't allow to add events with duplicated id's
     case "appendarray": {
       const eventWithDayHour = action.payload[0]; // by now I can only manage first item
       const event = {
@@ -126,11 +124,6 @@ function reducerEvents(state: State, action: Action) {
         //
         return newState;
       }
-    }
-    default: {
-      console.warn("reducer option not implemented");
-      //
-      return state;
     }
   }
 }

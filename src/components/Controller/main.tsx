@@ -110,7 +110,6 @@ const CreateEvent = () => {
               end,
             });
             result.then((res) => {
-              console.log(res);
               if (res.status === 203) {
                 eventDispatcher({
                   type: "replacebyid",
@@ -243,7 +242,7 @@ const CreateEvent = () => {
         value={"Debug"}
         onClick={() => {
           const onlyEvents = eventState.filter((event) => event.id > 0);
-          console.log(onlyEvents);
+          console.info(onlyEvents);
         }}
       />
       <tw_Controller.startEnd>
@@ -305,9 +304,9 @@ const CreateEvent = () => {
               job,
             },
           });
-          const id = eventSelected?.id || 101010;
+          const id = eventSelected?.id || 1; //TODO: create a temporary state fot un-fetched events. In the middle, 1 is reserved id for temporal events
           eventDispatcher({
-            type: "update",
+            type: "appendarray",
             payload: [
               {
                 id,

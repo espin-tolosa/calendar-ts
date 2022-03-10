@@ -38,7 +38,6 @@ async function fetchEvent(
 }
 
 export default function App() {
-  console.log("Process");
   //Contexts
   //const [month, setMonth] = useState(0);
   const isDragging = useIsDragging();
@@ -99,7 +98,7 @@ export default function App() {
         setEventController(null);
         eventDispatcher({
           type: "deletebyid",
-          payload: [{ ...eventSelected!, id: 101010 }],
+          payload: [{ ...eventSelected!, id: 1 }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
         });
 
         dispatchController({

@@ -98,7 +98,6 @@ export const giveMeColor = (search: string) => {
 };
 
 function hsl2rgb(h: number, s: number, l: number) {
-  console.log("Color angle", h);
   let a = s * Math.min(l, 1 - l);
   let f = (n: number, k = (n + h / 30) % 12) =>
     Math.floor(255 * (l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)));

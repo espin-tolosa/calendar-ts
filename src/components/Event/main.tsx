@@ -69,7 +69,6 @@ export const Event = ({ event }: { event: event }) => {
 
   const eventInlineStyle: any = useMemo(() => {
     //TODO: Memoize this object and only recalculate when hover
-    console.log("Memoized component");
     const clientID = parseInt(event.client.split("_")[1]);
     const CLIENTS_LENGTH = 9;
     const EXTRA_COLORS = 1;
@@ -81,8 +80,6 @@ export const Event = ({ event }: { event: event }) => {
       mapClientToColor = (360 * (clientID - 1)) / 5;
     } else if (!isNaN(clientID) && clientID > 5) {
       mapClientToColor = (360 * (clientID - 6)) / 5 + 180 / 5;
-    } else {
-      console.error("Extrange client", event);
     }
 
     const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
