@@ -47,15 +47,21 @@ export const Event = ({ event }: { event: event }) => {
 
   const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
+
     const eventRoot = events.find((e) => e.id === event.id);
 
     dispatchControllerDates({
       type: "setDates",
       payload: { start: eventRoot?.start!, end: eventRoot?.end! },
     });
+
     dispatchController({
       type: "setController",
-      payload: { id: event.id, client: event.client, job: event.job },
+      payload: {
+        id: eventRoot?.id!,
+        client: eventRoot?.client!,
+        job: eventRoot?.job!,
+      },
     });
 
     setEventController(event);
