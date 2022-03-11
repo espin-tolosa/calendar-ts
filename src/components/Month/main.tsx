@@ -29,7 +29,7 @@ import { start } from "repl";
 import { DOMRefs } from "@/globalStorage/DOMRefs";
 import { useOnce } from "@/hooks/useOnce";
 import { useCleanSession } from "@/hooks/useCleanSession";
-import { fetchEvent_Month } from "@/utils/fetchEvent";
+import { fetchEvent } from "@/utils/fetchEvent";
 
 type iMonth = {
   year: number;
@@ -90,7 +90,7 @@ const Month = ({ year, month }: iMonth) => {
 
   useEffect(() => {
     setIsFetching(true);
-    const result = fetchEvent_Month("GET_FROM", {
+    const result = fetchEvent("GET_FROM", {
       id: 0,
       client: "",
       job: "",

@@ -1,58 +1,14 @@
+import { CustomTypes, CustomValues } from "@/customTypes";
 import { event } from "@/interfaces";
 import { api } from "@/static/apiRoutes";
 
-export async function fetchEvent_App(
-  action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" }
-) {
-  const data = new FormData();
-  if (typeof event === "undefined") {
-    data.append("json", JSON.stringify({ action }));
-  } else {
-    data.append("json", JSON.stringify({ action, ...event }));
-  }
-  return fetch(api.routes.events, {
-    method: "POST",
-    body: data,
-  });
-}
-
-export async function fetchEvent_Month(
-  action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" }
-) {
-  const data = new FormData();
-  const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
-  data.append("json", dataJSON);
-  return fetch(api.routes.events, {
-    method: "POST",
-    body: data,
-  });
-}
-
-export async function fetchEvent_Controller(
-  action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" }
-) {
-  const data = new FormData();
-  const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
-  data.append("json", dataJSON);
-  return fetch(api.routes.events, {
-    method: "POST",
-    body: data,
-  });
-}
-
 export async function fetchEvent(
-  action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" }
+  action: CustomTypes.OptionsEventsAPI,
+  event: event = CustomValues.nullEvent
 ) {
   const data = new FormData();
-  if (typeof event === "undefined") {
-    data.append("json", JSON.stringify({ action }));
-  } else {
-    data.append("json", JSON.stringify({ action, ...event }));
-  }
+  const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
+  data.append("json", dataJSON);
   return fetch(api.routes.events, {
     method: "POST",
     body: data,

@@ -4,11 +4,12 @@ import { event } from "@interfaces/index";
 import { month0 } from "@/static/initEvents";
 import { eventSpreader } from "@/algorithms/eventSpreader";
 import { DateService } from "@/utils/Date";
-import { isValidEvent } from "@/utils/ValidateEvent";
+import { isReadyToSubmit } from "@/utils/ValidateEvent";
+import { CustomTypes } from "@/customTypes";
 
-type State = Array<event>;
+export type State = Array<event>;
 type Action = {
-  type: "appendarray" | "deletebyid" | "replacebyid" | "update";
+  type: CustomTypes.DispatchLocalStateEvents;
   payload: State;
 };
 
@@ -42,7 +43,7 @@ function reducerEvents(state: State, action: Action) {
       //check if start and end day exists
 
       //TODO: extract to a function
-      if (!isValidEvent) {
+      if (!isReadyToSubmit) {
         return state;
       }
 
@@ -114,7 +115,7 @@ function reducerEvents(state: State, action: Action) {
         //check if start and end day exists
 
         //TODO: extract to a function
-        if (!isValidEvent) {
+        if (!isReadyToSubmit) {
           return state;
         }
 

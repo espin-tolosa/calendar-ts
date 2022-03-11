@@ -15,7 +15,7 @@ import {
   useControllerState,
 } from "@/hooks/useController";
 import { DateService } from "@/utils/Date";
-import { isValidEvent } from "@/utils/ValidateEvent";
+import { isReadyToSubmit } from "@/utils/ValidateEvent";
 import { useUserSession } from "@/hooks/useUserSession";
 import { api } from "@/static/apiRoutes";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
@@ -24,7 +24,7 @@ import { useControllerStateDates } from "@/hooks/useControllerDate";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { zeroPadd } from "@/utils/zeroPadd";
 import { scrollToDay } from "@/utils/scrollToDay";
-import { fetchEvent_Controller } from "@/utils/fetchEvent";
+import { fetchEvent } from "@/utils/fetchEvent";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -99,11 +99,11 @@ const CreateEvent = () => {
           title={`Update event from ${eventSelected?.client || ""}`}
           onClick={() => {
             // TODO: check if is valid event
-            if (!isValidEvent) {
+            if (!isReadyToSubmit) {
               return;
             }
             // Controller 106
-            const result = fetchEvent_Controller("PUT", {
+            const result = fetchEvent("PUT", {
               id,
               client,
               job,
@@ -151,12 +151,12 @@ const CreateEvent = () => {
         title="Testing to new dispatch event"
         onClick={() => {
           // TODO: check if is valid event
-          if (!isValidEvent) {
+          if (!isReadyToSubmit) {
             return;
           }
 
           // Controller 158
-          const result = fetchEvent_Controller("POST", {
+          const result = fetchEvent("POST", {
             id: Math.floor(Math.random() * 1000),
             client,
             job,
@@ -213,12 +213,12 @@ const CreateEvent = () => {
         title={`Delete event from ${eventSelected?.client || ""}`}
         onClick={() => {
           // TODO: check if is valid event
-          if (!isValidEvent) {
+          if (!isReadyToSubmit) {
             return;
           }
 
           //Controller 220
-          const result = fetchEvent_Controller("DELETE", eventSelected!);
+          const result = fetchEvent("DELETE", eventSelected!);
           result.then((res) => {
             if (res.status === 204) {
               eventDispatcher({

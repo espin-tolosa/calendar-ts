@@ -18,7 +18,7 @@ import { useControllerDispatchDates } from "./hooks/useControllerDate";
 import { useIsDragging } from "./hooks/useIsDragging";
 import { useEventsStatusDispatcher } from "./hooks/useEventsStatus";
 
-import { fetchEvent_App } from "./utils/fetchEvent";
+import { fetchEvent } from "./utils/fetchEvent";
 
 export default function App() {
   //Contexts
@@ -56,10 +56,10 @@ export default function App() {
     const hOnKeyDown = (e: any) => {
       if (eventSelected && e.key === "Delete") {
         // TODO: check if is valid event
-        //if (!isValidEvent) {
+        //if (!isReadyToSubmit) {
         //  return;
         //}
-        const result = fetchEvent_App("DELETE", eventSelected!);
+        const result = fetchEvent("DELETE", eventSelected!);
         result.then((res) => {
           if (res.status === 204) {
             eventDispatcher({
@@ -198,7 +198,7 @@ export default function App() {
           end: destination?.droppableId!,
         };
 
-        const fetchResultPUT = fetchEvent_App("PUT", newEvent);
+        const fetchResultPUT = fetchEvent("PUT", newEvent);
         isDragging.setState(false);
         dispatchHoveringId(0);
 
