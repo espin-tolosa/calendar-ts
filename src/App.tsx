@@ -26,7 +26,7 @@ export default function App() {
   //Contexts
   //const [month, setMonth] = useState(0);
   const isDragging = useIsDragging();
-  const draggableType = useRef("");
+  const draggableBackup = useRef<event>(CustomValues.nullEvent);
 
   const { value } = useUserSession();
   const eventDispatcher = useEventDispatch();
@@ -98,10 +98,20 @@ export default function App() {
       onBeforeCapture={(result) => {
         console.log("Result", result);
         const [id, date] = result.draggableId.split(":");
-        const event = allEvents.find(
-          (e) => e.id === parseInt(id) && e.start === date
-        )!;
+        console.log("draggable id", result.draggableId);
+
+        console.log("State before filter childrens", allEvents);
+        const allEventsNoChild = allEvents.filter(
+          (e) => e.job !== "#isChildren"
+        );
+        console.log("State after filter children", allEventsNoChild);
+
+        const event = allEventsNoChild.find((e) => e.id === parseInt(id))!;
         eventStartDragging.current = CustomValues.nullEvent;
+
+        // I store the initial event as a backup, so I can restablish it if query fails
+        draggableBackup.current = event;
+
         dispatchHoveringId(event.id);
         isDragging.setState(true);
       }}
@@ -131,7 +141,6 @@ export default function App() {
         });
       }}
       onDragEnd={(result) => {
-        console.log("on drag end", eventStartDragging);
         if (eventStartDragging.current.id === 0) return;
         const { source, destination } = result;
 
@@ -154,6 +163,10 @@ export default function App() {
           start: event.start,
           end: destination?.droppableId!,
         };
+        eventDispatcher({
+          type: "replacebyid",
+          payload: [newEvent],
+        });
 
         const fetchResultPUT = fetchEvent("PUT", newEvent);
         isDragging.setState(false);
@@ -162,25 +175,16 @@ export default function App() {
         fetchResultPUT
           .then((res) => {
             if (res.status !== 203) {
-              throw new Error("Error code differs from expected");
+              throw Error("Error code differs from expected");
             }
-            const newEvent = {
-              id: event.id,
-              client: event.client,
-              job: event.job,
-              start: event.start,
-              end: destination?.droppableId!,
-            };
-            eventDispatcher({
-              type: "replacebyid",
-              payload: [newEvent],
-            });
           })
           .catch(() => {
+            console.log("restoring", draggableBackup.current);
             eventDispatcher({
               type: "replacebyid",
-              payload: [eventStartDragging.current],
+              payload: [draggableBackup.current],
             });
+            draggableBackup.current = CustomValues.nullEvent;
           });
       }}
     >
