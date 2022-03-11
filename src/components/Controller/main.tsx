@@ -188,17 +188,17 @@ const CreateEvent = () => {
             type: "clearDates",
           });
           //delete temporary event created to give user feeback
+          const getUnusedId = () => {
+            //TODO: create a temporary state fot un-fetched events. In the middle, 1 is reserved id for temporal events
+            // I just recover the last id from the array as it is already sorted by id and adds one
+            //const lastId = eventState[eventState.length - 1].id + 1;
+            const lastId = 100000;
+            return lastId;
+          };
+          setEventController(null);
           eventDispatcher({
             type: "deletebyid",
-            payload: [
-              {
-                id: parseInt(start.split("-")[2]),
-                client,
-                job,
-                start,
-                end,
-              },
-            ],
+            payload: [{ ...eventSelected!, id: getUnusedId() }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
           });
 
           setEventController(null);
