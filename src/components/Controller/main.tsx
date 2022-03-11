@@ -3,21 +3,19 @@ import React, {
   Dispatch,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
 import * as tw_Controller from "./tw";
-import { useEventDispatch, useEventState } from "@/hooks/useEventsApi";
+import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import { composition, event } from "@/interfaces";
-import { Event } from "@/components/Event/main";
 import tw from "tailwind-styled-components";
 import {
   useControllerDispatch,
   useControllerState,
 } from "@/hooks/useController";
 import { DateService } from "@/utils/Date";
-import { isValidEvent } from "@/utils/ValidateEvent";
+import { isReadyToSubmit } from "@/utils/ValidateEvent";
 import { useUserSession } from "@/hooks/useUserSession";
 import { api } from "@/static/apiRoutes";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
@@ -26,6 +24,7 @@ import { useControllerStateDates } from "@/hooks/useControllerDate";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { zeroPadd } from "@/utils/zeroPadd";
 import { scrollToDay } from "@/utils/scrollToDay";
+import { fetchEvent } from "@/utils/fetchEvent";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -55,6 +54,7 @@ const CreateEvent = () => {
   const { id, client, job } = useControllerState();
   const { start, end } = useControllerStateDates();
   const setEventController = useSetEventSelected();
+  const eventState = useEventState();
 
   /*  parallel change consume date context */
   const dispatchController = useControllerDispatch();
@@ -99,10 +99,10 @@ const CreateEvent = () => {
           title={`Update event from ${eventSelected?.client || ""}`}
           onClick={() => {
             // TODO: check if is valid event
-            if (!isValidEvent) {
+            if (!isReadyToSubmit) {
               return;
             }
-
+            // Controller 106
             const result = fetchEvent("PUT", {
               id,
               client,
@@ -111,7 +111,6 @@ const CreateEvent = () => {
               end,
             });
             result.then((res) => {
-              console.log(res);
               if (res.status === 203) {
                 eventDispatcher({
                   type: "replacebyid",
@@ -148,14 +147,15 @@ const CreateEvent = () => {
         id={"save"}
         $display={true}
         type="submit"
-        value={eventSelected ? "Save a copy" : "Save"}
+        value={eventSelected ? "Copy" : "Save"}
         title="Testing to new dispatch event"
         onClick={() => {
           // TODO: check if is valid event
-          if (!isValidEvent) {
+          if (!isReadyToSubmit) {
             return;
           }
 
+          // Controller 158
           const result = fetchEvent("POST", {
             id: Math.floor(Math.random() * 1000),
             client,
@@ -188,17 +188,17 @@ const CreateEvent = () => {
             type: "clearDates",
           });
           //delete temporary event created to give user feeback
+          const getUnusedId = () => {
+            //TODO: create a temporary state fot un-fetched events. In the middle, 1 is reserved id for temporal events
+            // I just recover the last id from the array as it is already sorted by id and adds one
+            //const lastId = eventState[eventState.length - 1].id + 1;
+            const lastId = 100000;
+            return lastId;
+          };
+          setEventController(null);
           eventDispatcher({
             type: "deletebyid",
-            payload: [
-              {
-                id: parseInt(start.split("-")[2]),
-                client,
-                job,
-                start,
-                end,
-              },
-            ],
+            payload: [{ ...eventSelected!, id: getUnusedId() }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
           });
 
           setEventController(null);
@@ -213,9 +213,11 @@ const CreateEvent = () => {
         title={`Delete event from ${eventSelected?.client || ""}`}
         onClick={() => {
           // TODO: check if is valid event
-          if (!isValidEvent) {
+          if (!isReadyToSubmit) {
             return;
           }
+
+          //Controller 220
           const result = fetchEvent("DELETE", eventSelected!);
           result.then((res) => {
             if (res.status === 204) {
@@ -234,6 +236,17 @@ const CreateEvent = () => {
           });
 
           setEventController(null);
+        }}
+      />
+      {/* Log button */}
+      <tw_Controller.button
+        id={"debug"}
+        $display={false}
+        type="button"
+        value={"Debug"}
+        onClick={() => {
+          const onlyEvents = eventState.filter((event) => event.id > 0);
+          console.info(onlyEvents);
         }}
       />
       <tw_Controller.startEnd>
@@ -295,7 +308,14 @@ const CreateEvent = () => {
               job,
             },
           });
-          const id = eventSelected?.id || parseInt(start.split("-")[2]);
+          const getUnusedId = () => {
+            //TODO: create a temporary state fot un-fetched events. In the middle, 1 is reserved id for temporal events
+            // I just recover the last id from the array as it is already sorted by id and adds one
+            //const lastId = eventState[eventState.length - 1].id + 1;
+            const lastId = 100000;
+            return lastId;
+          };
+          const id = eventSelected?.id || getUnusedId();
           eventDispatcher({
             type: "update",
             payload: [
@@ -376,19 +396,6 @@ const StyledSelect = tw.select`
   border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer outline-none
 `;
 
-async function fetchEvent(
-  action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" }
-) {
-  const data = new FormData();
-  const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
-  data.append("json", dataJSON);
-  return fetch(api.routes.events, {
-    method: "POST",
-    body: data,
-  });
-}
-
 function ControllerButton({
   onClick,
   name,
@@ -450,4 +457,5 @@ const JobField = React.memo(
   }
 );
 
-export const CreateEventMemo = React.memo(CreateEvent);
+//export const CreateEventMemo = React.memo(CreateEvent); //!Memo doesn't work if I consume context
+export const CreateEventMemo = CreateEvent;

@@ -1,27 +1,31 @@
 import { event } from "@/interfaces";
 import { DateService } from "@/utils/Date";
-
+/**
+ * Event Spreader extends the local state to represent those events
+ * that spans along multiple days.
+ * @param event: directly fetched from database
+ * @returns event[]: expanded event to incorporate to the local state events context
+ */
 export const eventSpreader = (event: event) => {
   const spreadEvent: Array<event> = [];
 
-  let nextDate = DateService.GetNextDayOfDate(event.start);
-  let keyNextDate = DateService.FormatDate(nextDate);
-  const eventLength = DateService.DaysFromStartToEnd(event.start, event.end);
+  let nextDt = DateService.GetNextDayOfDate(event.start);
+  let nextDay = DateService.FormatDate(nextDt);
+  const eventLength = DateService.DaysFrom(event.start, event.end);
 
   for (let day = 0; day < eventLength; day++) {
-    const dayWeek = DateService.GetMonthDayKey(nextDate);
-    //TODO: Conditions to split a event:
-    // 1. Is monday: ok
-    // 2. Is day 1: ok
-    // 3. Is day after day off: no
+    const dayWeek = DateService.GetMonthDayKey(nextDt);
+    // 			1. Is monday: ok
+    // 			2. Is day 1: ok
+    //TODO: 3. Is day after day off: no
     //TODO: Span event proper size, actually spans-8 (maximun) allways
-    if (isNewRowDay(dayWeek) || keyNextDate.split("-")[2] === "01") {
-      spreadEvent.push(toMonday(event, keyNextDate));
+    if (isNewRowDay(dayWeek) || isFirstMonthDay(nextDay)) {
+      spreadEvent.push(toMonday(event, nextDay));
     } else {
-      spreadEvent.push(toPlaceholder(event, keyNextDate));
+      spreadEvent.push(toPlaceholder(event, nextDay));
     }
-    nextDate = DateService.GetNextDayOfDate(keyNextDate);
-    keyNextDate = DateService.FormatDate(nextDate);
+    nextDt = DateService.GetNextDayOfDate(nextDay);
+    nextDay = DateService.FormatDate(nextDt);
   }
 
   return spreadEvent;
@@ -31,9 +35,15 @@ const toPlaceholder = (event: event, targetDay: string) => {
   return { ...event, id: -event.id, start: targetDay, end: targetDay };
 };
 const toMonday = (event: event, targetDay: string) => {
-  return { ...event, start: targetDay };
+  return { ...event, start: targetDay, job: "#isChildren" };
 };
 
 const isNewRowDay = (dayWeek: string) => {
   return dayWeek.toLocaleLowerCase() === "monday";
+};
+
+const isFirstMonthDay = (dayWeek: string) => {
+  const FirstDayNum = "01";
+  const ExtractedDay = dayWeek.split("-")[2];
+  return ExtractedDay === FirstDayNum;
 };

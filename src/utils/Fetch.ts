@@ -66,7 +66,7 @@ export async function fetchEvent(
   });
 }
 
-export async function apifetch(query: { action: string }) {
+export async function apifetch(query: { action: string; debug: string }) {
   const data = new FormData();
   data.append("json", JSON.stringify(query));
 

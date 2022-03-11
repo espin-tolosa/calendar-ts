@@ -24,7 +24,7 @@ function reducerController(state: dates, action: Action) {
       ) {
         return { start: "", end: "" };
       }
-      if (DateService.DaysFromStartToEnd(state.end, action.payload.end) > 0) {
+      if (DateService.DaysFrom(state.end, action.payload.end) > 0) {
         return { ...state, end: action.payload.end };
       }
       return { start: action.payload.start, end: action.payload.end };

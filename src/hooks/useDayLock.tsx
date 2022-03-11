@@ -28,9 +28,7 @@ function reducerLockedDays(state: Array<string>, { type, date }: Action) {
       } else {
         newState.splice(day, 1);
       }
-      newState.sort((first, second) =>
-        DateService.DaysFromStartToEnd(second, first)
-      );
+      newState.sort((first, second) => DateService.DaysFrom(second, first));
       return newState;
     }
     //

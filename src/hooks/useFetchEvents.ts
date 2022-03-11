@@ -10,12 +10,14 @@ interface UseFetchEvents {
   click: any;
   action: any;
   event: event;
+  debug: string;
 }
 
 export function useFetchEvents({
   isMount,
   click,
   action,
+  debug,
   ...event
 }: UseFetchEvents) {
   //  const { dispatch } = useEventsReducer();
@@ -35,6 +37,7 @@ export function useFetchEvents({
           await apifetch({
             action: action,
             ...event,
+            debug: `useFetchEvents ${debug}`,
           }).then((res: any) => {
             if (!res) {
               return;

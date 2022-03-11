@@ -1,5 +1,5 @@
 import { Event, EventHolder } from "@components/Event/main";
-import { useEventState } from "@/hooks/useEventsApi";
+import { useEventState } from "@/hooks/useEventsState";
 import { useDayLock } from "@/hooks/useDayLock";
 import {
   bubblingAlgo,
@@ -24,7 +24,7 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
   const sortedEvents = bubblingAlgo(dayEvents);
 
   return (
-    <>
+    <div className="flex flex-col gap-1 my-5">
       {sortedEvents.map((event, position) => {
         const keyValue = Math.abs(event.id);
         if (isPlaceholder(event)) {
@@ -36,6 +36,6 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
         sendEndReferencesToPlaceholders(allEvents, event, position);
         return <Event key={`e-${keyValue}`} event={event}></Event>;
       })}
-    </>
+    </div>
   );
 };

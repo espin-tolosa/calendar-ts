@@ -59,8 +59,8 @@ export function IDay({
   const isDragging = useIsDragging();
 
   const isSelected = (start: string, today: string, end: string) => {
-    const left = DateService.DaysFromStartToEnd(start, today);
-    const right = DateService.DaysFromStartToEnd(end, today);
+    const left = DateService.DaysFrom(start, today);
+    const right = DateService.DaysFrom(end, today);
 
     if (left >= 0 && right <= 0) {
       return true;
@@ -82,7 +82,7 @@ export function IDay({
           $isSelected={isSelected(start, fullDate, end)}
           $restDays={restDays}
           onClick={() => {
-            if (isDragging.state) {
+            if (isDragging.state || isLocked || isWeekend) {
               return;
             }
             dispatchControllerDates({
@@ -122,15 +122,9 @@ export function IDay({
     </Droppable>
   );
 }
-//comparing props//TODO: improve criteria
-function moviePropsAreEqual(prev: any, next: any) {
-  console.info("prev", prev);
-  const randomBool = Math.random() < 0.5;
-  return false;
-}
 const isSelected = (start: string, today: string, end: string) => {
-  const left = DateService.DaysFromStartToEnd(start, today);
-  const right = DateService.DaysFromStartToEnd(end, today);
+  const left = DateService.DaysFrom(start, today);
+  const right = DateService.DaysFrom(end, today);
 
   if (left >= 0 && right <= 0) {
     return true;

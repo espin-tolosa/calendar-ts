@@ -1,4 +1,12 @@
-import { memo, useEffect } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useMonthDate } from "@/hooks/useMonthDate";
 import { MemoIDay } from "@components/Day/main";
 import { MemoIDayHolder } from "@components/DayHolder/main";
@@ -6,22 +14,66 @@ import * as StyledMonth from "./tw";
 import { EventsThrower } from "../EventsThrower/main";
 import { DateService } from "@/utils/Date";
 import { event } from "@/interfaces";
-import { useEventDispatch } from "@/hooks/useEventsApi";
+import { useEventDispatch } from "@/hooks/useEventsState";
 
 import { api } from "@/static/apiRoutes";
 import { zeroPadd } from "@/utils/zeroPadd";
 import { useControllerStateDates } from "@/hooks/useControllerDate";
 import { useDayLock } from "@/hooks/useDayLock";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
+import { useIsFetchingEvents } from "@/hooks/useIsFetchingEvents";
+import { useCtxCurrentMonthRef } from "@/globalStorage/currentMonthReference";
+import { isToday, _renderDate } from "@/utils/Date_v2";
+import { TopNavRef, useCtxTopNavRef } from "@/globalStorage/topNavSize";
+import { start } from "repl";
+import { DOMRefs } from "@/globalStorage/DOMRefs";
+import { useOnce } from "@/hooks/useOnce";
+import { useCleanSession } from "@/hooks/useCleanSession";
+import { fetchEvent } from "@/utils/fetchEvent";
 
 type iMonth = {
-  id: string;
   year: number;
   month: number;
 };
-const Month = ({ id, year, month }: iMonth) => {
+const Month = ({ year, month }: iMonth) => {
   const date = useMonthDate(year, month);
   const eventsDispatcher = useEventDispatch();
+  const monthRef = useCtxCurrentMonthRef();
+  const topNavRef = useCtxTopNavRef();
+  const dispatchDOMRef = DOMRefs.useDispatch();
+  const { isFetching } = useIsFetchingEvents();
+  const setSessionIsToClean = useCleanSession();
+
+  const [topNavHeight, setTopNavHeight] = useState({ top: "" });
+  useLayoutEffect(() => {
+    if (!isToday(year, month)) {
+      return;
+    }
+    const height = topNavRef?.current?.clientHeight!;
+    const border = 3; /*px*/
+    const style = { top: `-${height + border}px` };
+    setTopNavHeight(style);
+    window.scrollTo(0, 0);
+  }, []);
+
+  //TODO:Give a name to this custom hook
+  useEffect(() => {
+    if (!isToday(year, month)) {
+      return;
+    }
+    //   //
+    const isAnchorReady = topNavHeight.top !== "";
+
+    if (isAnchorReady) {
+      dispatchDOMRef({ type: "update", payload: monthRef });
+
+      monthRef?.current?.scrollIntoView()!;
+    }
+
+    //   //
+    //   //
+    //   //monthRef?.current?.scrollIntoView()!;
+  }, [topNavHeight]); //TODO: use ref state context as it was created to access TopNav Ref after it is rendered
 
   //Context processing to pass to Day component
   //1. start,end dates
@@ -33,7 +85,11 @@ const Month = ({ id, year, month }: iMonth) => {
   //3. user preferences
   const { showWeekends } = useLocalUserPreferencesContext().localState;
 
+  //
+  const { setIsFetching } = useIsFetchingEvents();
+
   useEffect(() => {
+    setIsFetching(true);
     const result = fetchEvent("GET_FROM", {
       id: 0,
       client: "",
@@ -42,7 +98,7 @@ const Month = ({ id, year, month }: iMonth) => {
       end: "",
     });
     result
-      .then((res: any) => res.json())
+      .then((res) => res.json())
       .then((json: Array<event>) =>
         json.forEach((event: event) => {
           eventsDispatcher({
@@ -57,8 +113,17 @@ const Month = ({ id, year, month }: iMonth) => {
               },
             ],
           });
+          setIsFetching(false);
         })
-      );
+      )
+      .catch((e) => {
+        console.error("Possible invalid token", e);
+
+        let text = "Your credentials has expired, logout?";
+        if (window.confirm(text) == true) {
+          setSessionIsToClean(true);
+        }
+      });
   }, []);
   const totalCellsInLastRow = (start: string, length: number) => {
     const DayStart = DateService.GetDayNumberOfDay(start);
@@ -130,26 +195,17 @@ const Month = ({ id, year, month }: iMonth) => {
             rest.map((day) => <MemoIDayHolder key={"r" + day}></MemoIDayHolder>)
           )}
       </StyledMonth.TWdaysBoard>
-      <div
-        id={id}
-        className="absolute w-0 h-0 bg-transparent bottom-8 customtp:bottom-6 custombp:bottom-6 z-TopLayer "
-      ></div>
+      {isToday(year, month) && (
+        <div
+          id={"Current-Month"}
+          ref={monthRef}
+          style={topNavHeight}
+          className="absolute"
+        ></div>
+      )}
     </StyledMonth.TWflexColLayout>
     /* Month container: header | board */
   );
 };
 
 export const MemoMonth = memo(Month);
-
-async function fetchEvent(
-  action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" }
-) {
-  const data = new FormData();
-  const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
-  data.append("json", dataJSON);
-  return fetch(api.routes.events, {
-    method: "POST",
-    body: data,
-  });
-}

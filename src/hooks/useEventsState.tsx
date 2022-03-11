@@ -1,24 +1,37 @@
 import { composition } from "@/interfaces";
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { event } from "@interfaces/index";
-import { month0, month1 } from "@/static/initEvents";
+import { month0 } from "@/static/initEvents";
 import { eventSpreader } from "@/algorithms/eventSpreader";
 import { DateService } from "@/utils/Date";
-import { isValidEvent } from "@/utils/ValidateEvent";
+import { isReadyToSubmit } from "@/utils/ValidateEvent";
+import { CustomTypes } from "@/customTypes";
 
-type State = Array<event>;
-type Action =
-  | {
-      type: "appendarray" | "deletebyid" | "replacebyid" | "update";
-      payload: State;
-    }
-  | { type: "default" };
+type Action = {
+  type: CustomTypes.DispatchLocalStateEvents;
+  payload: CustomTypes.State;
+};
 
 const sortCriteriaFIFO = (a: number, b: number) => Math.abs(a) - Math.abs(b);
+const diff_byId = (
+  newState: CustomTypes.State,
+  state: CustomTypes.State
+): CustomTypes.State => {
+  const { bigger, lower } =
+    newState.length >= state.length
+      ? { bigger: newState, lower: state }
+      : { bigger: state, lower: newState };
 
-function reducerEvents(state: State, action: Action) {
+  return bigger.filter(
+    ({ id: id1 }) => !lower.some(({ id: id2 }) => id2 === id1)
+  );
+};
+
+function reducerEvents(state: CustomTypes.State, action: Action) {
+  console.log("----------------------------------------------------------");
+  console.log("Reduce action", action.type, action.payload);
   switch (action.type) {
-    //
+    // Add new event coming from database, it doesn't allow to add events with duplicated id's
     case "appendarray": {
       const eventWithDayHour = action.payload[0]; // by now I can only manage first item
       const event = {
@@ -32,19 +45,22 @@ function reducerEvents(state: State, action: Action) {
       // Check if event already exists in the state by its id
       const isEventInState = state.findIndex((inner) => inner.id === event.id);
       if (isEventInState >= 0) {
+        console.log("event already exists");
         return state;
       }
 
       //checks the case of end begins before the start
-      const daysSpread = DateService.DaysFromStartToEnd(event.start, event.end);
+      const daysSpread = DateService.DaysFrom(event.start, event.end);
       if (daysSpread < 0) {
+        console.log("start end dates ill formed");
         return state;
       }
 
       //check if start and end day exists
 
       //TODO: extract to a function
-      if (!isValidEvent) {
+      if (!isReadyToSubmit) {
+        console.log("not ready to submit");
         return state;
       }
 
@@ -52,6 +68,7 @@ function reducerEvents(state: State, action: Action) {
       const newState = [...state, event, ...spread];
       newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       //
+      console.log("success, new state diff:", diff_byId(newState, state));
       return newState;
     }
     //
@@ -63,20 +80,20 @@ function reducerEvents(state: State, action: Action) {
         );
       });
       newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
+      console.log("success, new state diff:", diff_byId(newState, state));
       return newState;
     }
     //
     case "replacebyid": {
-      const event = action.payload[0];
-      const spread = eventSpreader(event);
-      let newState = [...state];
-      action.payload.forEach((toReplace) => {
-        newState = newState.filter(
-          (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
-        );
-      });
+      const toReplace = action.payload[0];
+      const target = state.findIndex((event) => event.id === toReplace.id);
+      if (target < 0) return state;
+      const spread = eventSpreader(toReplace);
+      const newState = state.filter(
+        (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
+      );
 
-      const result = [...newState, event, ...spread];
+      const result = [...newState, toReplace, ...spread];
 
       result.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       return result;
@@ -109,10 +126,7 @@ function reducerEvents(state: State, action: Action) {
         }
 
         //checks the case of end begins before the start
-        const daysSpread = DateService.DaysFromStartToEnd(
-          event.start,
-          event.end
-        );
+        const daysSpread = DateService.DaysFrom(event.start, event.end);
         if (daysSpread < 0) {
           return state;
         }
@@ -120,7 +134,8 @@ function reducerEvents(state: State, action: Action) {
         //check if start and end day exists
 
         //TODO: extract to a function
-        if (!isValidEvent) {
+        if (!isReadyToSubmit) {
+          console.log("not ready to submit");
           return state;
         }
 
@@ -128,18 +143,15 @@ function reducerEvents(state: State, action: Action) {
         const newState = [...state, event, ...spread];
         newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
         //
+        console.log("success, replaced:", diff_byId(newState, state));
         return newState;
       }
-    }
-    default: {
-      console.warn("reducer option not implemented");
-      //
-      return state;
     }
   }
 }
 // Context
-const cEventState = createContext<Array<event>>(month1);
+const defaultState = month0;
+const cEventState = createContext<Array<event>>(defaultState);
 const cEventDispatch = createContext<React.Dispatch<Action>>(() => {});
 
 export function useEventState(day?: string) {
@@ -153,7 +165,7 @@ export function useEventDispatch() {
 // Context Dispatcher of Event Reducer
 
 export const EventsDispatcher: composition = ({ children }) => {
-  const [state, dispatch] = useReducer(reducerEvents, month0);
+  const [state, dispatch] = useReducer(reducerEvents, defaultState);
 
   /*
         onClick={() => {

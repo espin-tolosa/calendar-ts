@@ -130,7 +130,7 @@ export function ToFormattedDate(dt: Idt) {
   }).format(dt);
 }
 
-function DaysFromStartToEnd(start: string, end: string) {
+export function DaysFrom(start: string, end: string) {
   const dtStart = new Date(start);
   const dtEnd = new Date(end);
 
@@ -152,22 +152,22 @@ function DaysFromStartToEnd(start: string, end: string) {
 
 //convert a triad of numbers representing: year, month, day as: 22,12,01
 //in a string fully formatted as: 2022-12-01
-function ComposeDate(year: number, month: number, day: number) {
+export function ComposeDate(year: number, month: number, day: number) {
   return `${fullYear(year, 2000)}-${zeroPadd(month)}-${zeroPadd(day)}`;
 }
 
-function GetNextDayOfDate(today: string) {
+export function GetNextDayOfDate(today: string) {
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
   return tomorrow;
 }
 
-function isValidKeyDate(today: string) {
+export function isValidKeyDate(today: string) {
   const dt = new Date(today);
   return dt.toDateString() !== "Invalid Date";
 }
 
-function GetTodayDateFormat() {
+export function GetTodayDateFormat() {
   const today = GetDate();
   const day = GetMonthDayKey(today);
   const month = GetMonthKeyName(today);
@@ -176,9 +176,39 @@ function GetTodayDateFormat() {
   return `${day} ${number} ${month} ${year}`;
 }
 
-function GetDayNumberOfDay(name: string) {
+export function GetDayNumberOfDay(name: string) {
   const names = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
   return names.findIndex((n) => n === name) + 1;
+}
+
+export function GetPrevDate(startDate: { year: number; month: number }) {
+  const state = { ...startDate };
+  const substractOneYear = () => {
+    state.year -= 1;
+    state.month = 12;
+  };
+  const substractOneMonth = () => {
+    state.month -= 1;
+  };
+
+  return () => {
+    state.month === 1 ? substractOneYear() : substractOneMonth();
+    return { ...state };
+  };
+}
+type yearMonth = { year: number; month: number };
+
+export function ListPrevDates(
+  start: yearMonth,
+  length: number
+): Array<yearMonth> {
+  const prevState = GetPrevDate(start);
+  const result: Array<yearMonth> = [];
+  for (let i = 0; i != length; i++) {
+    result.push(prevState());
+  }
+
+  return result;
 }
 
 export const DateService = {
@@ -193,10 +223,11 @@ export const DateService = {
   GetLastDayMonth,
   ToFormattedMonth,
   GetMonthDayKey,
-  DaysFromStartToEnd,
+  DaysFrom,
   ComposeDate,
   GetNextDayOfDate,
   isValidKeyDate,
   ExportDateToControllerValue,
   GetDayNumberOfDay,
+  GetPrevDate,
 };

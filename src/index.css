@@ -238,56 +238,6 @@
   }
 }
 
-/*text area*/
-@layer utilities {
-  .grow-wrap {
-    /* easy way to plop the elements on top of each other and have them both sized based on the tallest one's height */
-    display: grid;
-  }
-  .grow-wrap::after {
-    /* Note the weird space! Needed to preventy jumpy behavior */
-    content: attr(data-replicated-value) ""; /* I've removed the space to reduce bottom margin on the text box */
-
-    /* This is how textarea text behaves */
-    white-space: pre-wrap;
-
-    /* Hidden from view, clicks, and screen readers */
-    visibility: hidden;
-  }
-  .grow-wrap > textarea {
-    /* You could leave this, but after a user resizes, then it ruins the auto sizing */
-    resize: none;
-    /* Firefox shows scrollbar on growth, you can hide like this. */
-    overflow: hidden;
-  }
-  .grow-wrap > textarea,
-  .grow-wrap::after {
-    /* Identical styling required!! */
-    padding: 2px 1ch 2px 1ch;
-    /* Place on top of each other */
-  }
-
-  textarea {
-    background: rgb(241, 241, 241);
-  }
-
-  textarea:focus {
-    box-shadow: rgba(0, 0, 0, 0.8) 0 0 5px;
-    outline: 1px solid gray;
-  }
-
-  textarea:focus {
-    background: white;
-    color: black;
-    box-shadow: rgba(0, 0, 0, 0.8) 0 0 5px;
-  }
-
-  .has-value {
-    background: white;
-    color: gray;
-  }
-}
-
 @layer utilities {
   .cursor-test {
     /*cursor: url(http://www.javascriptkit.com/dhtmltutors/cursor-hand.gif), auto;*/

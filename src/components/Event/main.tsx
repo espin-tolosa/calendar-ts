@@ -9,9 +9,12 @@ import {
   useControllerDispatch,
   useControllerState,
 } from "@/hooks/useController";
-import { useEventState } from "@/hooks/useEventsApi";
-import { useEffect, useState } from "react";
-import { useController } from "react-hook-form";
+import { useEventState } from "@/hooks/useEventsState";
+import { useEffect, useMemo, useState } from "react";
+import {
+  useEventsStatus,
+  useEventsStatusDispatcher,
+} from "@/hooks/useEventsStatus";
 
 export const Event = ({ event }: { event: event }) => {
   const setEventController = useSetEventSelected();
@@ -19,103 +22,157 @@ export const Event = ({ event }: { event: event }) => {
   const dispatchControllerDates = useControllerDispatchDates();
   const dispatchController = useControllerDispatch();
   const events = useEventState();
-  const [hover, setHover] = useState(false);
+  const isChildren = event.job.includes("#isChildren");
+
   const [justThrown, setJustThrown] = useState(true);
   useEffect(() => {
-    setTimeout(() => {
-      setJustThrown(false);
-    }, 200);
+    const relaxTime = 200; /*ms*/
+    const timeoutHandler = setTimeout(() => setJustThrown(false), relaxTime);
+    return () => {
+      clearTimeout(timeoutHandler);
+    };
   }, []);
 
+  //TODO: custom hook to mark as selected an event when is hover any of its items or it is selected in the controller
+  const [hover, setHover] = useState(false);
+  const onHover = useEventsStatus();
+  const dispatchHoveringId = useEventsStatusDispatcher();
   useEffect(() => {
-    if (Math.abs(controllerState.id) === Math.abs(event.id)) {
-      setHover(true);
-    } else {
-      setHover(false);
-    }
-  }, [controllerState.id]);
-
-  const cells = Math.min(
-    1 + DateService.DaysFromStartToEnd(event.start, event.end),
-    8 //TODO
-  );
+    const fromController = controllerState.id;
+    const fromEventHover = onHover.id;
+    const id = Math.abs(event.id);
+    const idSelected = fromController === id || fromEventHover === event.id;
+    setHover(idSelected);
+  }, [controllerState.id, onHover.id]);
 
   const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
+
     const eventRoot = events.find((e) => e.id === event.id);
 
     dispatchControllerDates({
       type: "setDates",
       payload: { start: eventRoot?.start!, end: eventRoot?.end! },
     });
+
     dispatchController({
       type: "setController",
-      payload: { id: event.id, client: event.client, job: event.job },
+      payload: {
+        id: eventRoot?.id!,
+        client: eventRoot?.client!,
+        job: eventRoot?.job!,
+      },
     });
 
     setEventController(event);
   };
-  const clientID = parseInt(event.client.split("_")[1]);
-  let mapClientToColor = (360 * clientID) / 9;
-  if (clientID === 6) {
-    mapClientToColor -= 15;
-  }
-  if (clientID === 9) {
-    mapClientToColor += 15;
-  }
-  const [r, g, b] = ClientColorStyles(mapClientToColor, 1, 0.6);
-  const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.6, 0.5);
-  const thrownStyle = justThrown
-    ? { background: "gray" }
-    : !hover
-    ? {
-        backgroundColor: `rgb(${r},${g},${b})`,
-        color: "black",
-      }
-    : {
-        backgroundColor: `rgb(${r_h},${g_h},${b_h})`,
-        border: "1px solid black",
-        color: "white",
-      };
+
+  const eventInlineStyle: any = useMemo(() => {
+    //TODO: Memoize this object and only recalculate when hover
+    const clientID = parseInt(event.client.split("_")[1]);
+    const CLIENTS_LENGTH = 9;
+    const EXTRA_COLORS = 1;
+
+    //Initialize with color error
+    let mapClientToColor = (360 * (10 - 1)) / (CLIENTS_LENGTH + EXTRA_COLORS);
+    //then if client parses properly -> map to client color
+    if (!isNaN(clientID) && clientID <= 5) {
+      mapClientToColor = (360 * (clientID - 1)) / 5;
+    } else if (!isNaN(clientID) && clientID > 5) {
+      mapClientToColor = (360 * (clientID - 6)) / 5 + 180 / 5;
+    }
+
+    const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
+    const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.4, 0.7);
+    const [r_b, g_b, b_b] = ClientColorStyles(mapClientToColor, 0.2, 0.4);
+    if (isChildren) {
+      return justThrown
+        ? {
+            background: "gray",
+            border: "1px solid transparent",
+            color: "transparent",
+          }
+        : !hover
+        ? {
+            background: `rgb(${r},${g},${b})`,
+            border: "1px solid transparent",
+            color: "transparent",
+          }
+        : {
+            background: `rgb(${r_h},${g_h},${b_h})`,
+            border: `1px solid rgb(${r_b},${g_b},${b_b})`,
+            color: "transparent",
+          };
+    }
+    return justThrown
+      ? {
+          background: "gray",
+          border: "1px solid transparent",
+          color: "black",
+        }
+      : !hover
+      ? {
+          background: `rgb(${r},${g},${b})`,
+          border: "1px solid transparent",
+          color: "black",
+        }
+      : {
+          background: `rgb(${r_h},${g_h},${b_h})`,
+          border: `1px solid rgb(${r_b},${g_b},${b_b})`,
+          color: "white",
+        };
+  }, [justThrown, hover]);
+
+  //[justThrown, hover])
+
+  //TODO: avoid magic numbers
+  const spreadCells = Math.min(
+    1 + DateService.DaysFrom(event.start, event.end),
+    8
+  );
 
   return (
-    <StyledEvent.TWflexContainer
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => {
-        if (controllerState.id !== event.id) {
-          setHover(false);
-        }
-      }}
+    <Draggable
+      draggableId={`${String(Math.abs(event.id))}:${event.start}`}
+      index={Math.abs(event.id)}
     >
-      <Draggable draggableId={"event-" + String(event.id)} index={event.id}>
-        {(provided, snapshot) => (
+      {(provided, snapshot) => (
+        <StyledEvent.TWflexContainer
+          onMouseEnter={() =>
+            !snapshot.isDragging && dispatchHoveringId(event.id)
+          }
+          onMouseLeave={() => {
+            !snapshot.isDragging && dispatchHoveringId(0);
+          }}
+        >
           <StyledEvent.TWtextContent
-            className={"text-event"}
-            $justThrown={justThrown}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            ref={provided.innerRef}
-            style={thrownStyle}
+            $isChildren={isChildren}
+            $isHover={hover}
+            style={eventInlineStyle}
             key={event.id}
-            $cells={cells}
+            $cells={spreadCells}
             onClick={hOnClick}
             title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
           >
-            {`${event.client}: ${event.job}`}
+            {!isChildren ? (
+              <>
+                <div className="text-md">{event.client}</div>
+                <div className="text-slate-800">{" | "}</div>
+                <div className="">{event.job}</div>
+              </>
+            ) : (
+              <>
+                <div className="text-transparent">{event.client}</div>
+              </>
+            )}
           </StyledEvent.TWtextContent>
-        )}
-      </Draggable>
-      <Draggable
-        draggableId={"extend-" + String(event.id)}
-        index={event.id + 1}
-      >
-        {(provided, snapshot) => (
+
           <StyledEvent.TWextend
+            style={{ cursor: "cursor-e-resize" }}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            className={"extend-event"}
             ref={provided.innerRef}
-            $cells={cells}
+            $cells={spreadCells}
             onClick={hOnClick}
             onMouseDownCapture={(e) => {
               //console.log("extend event:", event.id);
@@ -130,12 +187,13 @@ export const Event = ({ event }: { event: event }) => {
           >
             {"+"}
           </StyledEvent.TWextend>
-        )}
-      </Draggable>
-      <StyledEvent.TWplaceholder key={"p" + event.id}>
-        {"placeholder"}
-      </StyledEvent.TWplaceholder>
-    </StyledEvent.TWflexContainer>
+
+          <StyledEvent.TWplaceholder key={"p" + event.id}>
+            {"placeholder"}
+          </StyledEvent.TWplaceholder>
+        </StyledEvent.TWflexContainer>
+      )}
+    </Draggable>
   );
 };
 
