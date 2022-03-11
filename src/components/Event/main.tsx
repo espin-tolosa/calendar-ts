@@ -10,18 +10,11 @@ import {
   useControllerState,
 } from "@/hooks/useController";
 import { useEventState } from "@/hooks/useEventsState";
-import {
-  CSSProperties,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   useEventsStatus,
   useEventsStatusDispatcher,
 } from "@/hooks/useEventsStatus";
-import { getHeapSnapshot } from "v8";
 
 export const Event = ({ event }: { event: event }) => {
   const setEventController = useSetEventSelected();
@@ -29,6 +22,7 @@ export const Event = ({ event }: { event: event }) => {
   const dispatchControllerDates = useControllerDispatchDates();
   const dispatchController = useControllerDispatch();
   const events = useEventState();
+  const isChildren = event.job.includes("#isChildren");
 
   const [justThrown, setJustThrown] = useState(true);
   useEffect(() => {
@@ -83,7 +77,27 @@ export const Event = ({ event }: { event: event }) => {
     }
 
     const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
-    const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.6, 0.7);
+    const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.4, 0.7);
+    const [r_b, g_b, b_b] = ClientColorStyles(mapClientToColor, 0.2, 0.4);
+    if (isChildren) {
+      return justThrown
+        ? {
+            background: "gray",
+            border: "1px solid transparent",
+            color: "transparent",
+          }
+        : !hover
+        ? {
+            background: `rgb(${r},${g},${b})`,
+            border: "1px solid transparent",
+            color: "transparent",
+          }
+        : {
+            background: `rgb(${r_h},${g_h},${b_h})`,
+            border: `1px solid rgb(${r_b},${g_b},${b_b})`,
+            color: "transparent",
+          };
+    }
     return justThrown
       ? {
           background: "gray",
@@ -98,7 +112,7 @@ export const Event = ({ event }: { event: event }) => {
         }
       : {
           background: `rgb(${r_h},${g_h},${b_h})`,
-          border: "1px solid black",
+          border: `1px solid rgb(${r_b},${g_b},${b_b})`,
           color: "white",
         };
   }, [justThrown, hover]);
@@ -110,6 +124,7 @@ export const Event = ({ event }: { event: event }) => {
     1 + DateService.DaysFrom(event.start, event.end),
     8
   );
+
   return (
     <Draggable
       draggableId={`${String(Math.abs(event.id))}:${event.start}`}
@@ -125,14 +140,25 @@ export const Event = ({ event }: { event: event }) => {
           }}
         >
           <StyledEvent.TWtextContent
-            $justThrown={justThrown}
+            $isChildren={isChildren}
+            $isHover={hover}
             style={eventInlineStyle}
             key={event.id}
             $cells={spreadCells}
             onClick={hOnClick}
             title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
           >
-            {`${event.client}: ${event.job}`}
+            {!isChildren ? (
+              <>
+                <div className="text-md">{event.client}</div>
+                <div className="text-slate-800">{" | "}</div>
+                <div className="">{event.job}</div>
+              </>
+            ) : (
+              <>
+                <div className="text-transparent">{event.client}</div>
+              </>
+            )}
           </StyledEvent.TWtextContent>
 
           <StyledEvent.TWextend

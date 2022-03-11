@@ -6,27 +6,30 @@ export const TWflexContainer = tw.div`
 
 export const TWtextContent = tw.div<{
   $cells: number;
-  $justThrown: boolean;
-  $clientTheme?: { color: string };
+  $isHover: boolean;
+  $isChildren: boolean;
 }>`
-	absolute whitespace-nowrap overflow-hidden overflow-ellipsis pl-2 text-white active:text-black rounded-l-full ml-[0.1rem] transition-colors
-	${({ $cells }) =>
-    ($cells === 1 && "event-span-1") ||
-    ($cells === 2 && "event-span-2") ||
-    ($cells === 3 && "event-span-3") ||
-    ($cells === 4 && "event-span-4") ||
-    ($cells === 5 && "event-span-5") ||
-    ($cells === 6 && "event-span-6") ||
-    ($cells === 7 && "event-span-7") ||
-    ($cells === 8 && "event-span-8") ||
-    "extend-event-1"}
-		
-	${({ $justThrown, $clientTheme }) =>
-    ($justThrown && "text-slate-400 bg-slate-200") ||
-    $clientTheme?.color ||
-    "bg-red-200"}
 
-	${({ $cells }) => ($cells <= 7 && "rounded-r-full") || "rounded-r-none"}
+
+flex flex-row gap-1 items-center absolute whitespace-nowrap overflow-hidden overflow-ellipsis pl-2 active:text-black ml-[0.1rem] transition-colors
+rounded-r-full
+${({ $cells }) =>
+  ($cells === 1 && "event-span-1") ||
+  ($cells === 2 && "event-span-2") ||
+  ($cells === 3 && "event-span-3") ||
+  ($cells === 4 && "event-span-4") ||
+  ($cells === 5 && "event-span-5") ||
+  ($cells === 6 && "event-span-6") ||
+  ($cells === 7 && "event-span-7") ||
+  ($cells === 8 && "event-span-8") ||
+  "extend-event-1"}
+		
+
+${({ $isChildren }) => (!$isChildren && "rounded-l-full") || ""}
+${({ $isHover, $isChildren }) =>
+  ($isHover && !$isChildren && "text-black") ||
+  ($isChildren && "text-transparent") ||
+  ""}
 `;
 
 export const TWextend = tw.div<{ $cells: number }>`
