@@ -82,7 +82,7 @@ export function IDay({
           $isSelected={isSelected(start, fullDate, end)}
           $restDays={restDays}
           onClick={() => {
-            if (isDragging.state) {
+            if (isDragging.state || isLocked || isWeekend) {
               return;
             }
             dispatchControllerDates({
