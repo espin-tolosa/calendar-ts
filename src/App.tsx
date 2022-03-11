@@ -19,6 +19,7 @@ import { useIsDragging } from "./hooks/useIsDragging";
 import { useEventsStatusDispatcher } from "./hooks/useEventsStatus";
 
 import { fetchEvent } from "./utils/fetchEvent";
+import { useGethCancel, useGethDeleteEvent } from "./api/handlers";
 
 export default function App() {
   //Contexts
@@ -49,56 +50,17 @@ export default function App() {
   }
 
   const eventSelected = useEventSelected();
-  const setEventController = useSetEventSelected();
   const dispatchController = useControllerDispatch();
-  const dispatchControllerDates = useControllerDispatchDates();
+
+  const hCancel = useGethCancel();
+  const hDelete = useGethDeleteEvent();
 
   useEffect(() => {
     const hOnKeyDown = (e: any) => {
       if (eventSelected && e.key === "Delete") {
-        // TODO: check if is valid event
-        //if (!isReadyToSubmit) {
-        //  return;
-        //}
-        const result = fetchEvent("DELETE", eventSelected!);
-        result.then((res) => {
-          if (res.status === 204) {
-            eventDispatcher({
-              type: "deletebyid",
-              payload: [eventSelected!],
-            });
-            dispatchController({
-              type: "setController",
-              payload: { id: 0, client: "", job: "" },
-            });
-            dispatchControllerDates({
-              type: "clearDates",
-            });
-          }
-        });
-
-        setEventController(null);
+        hDelete();
       } else if (e.key === "Escape") {
-        const getUnusedId = () => {
-          //TODO: create a temporary state fot un-fetched events. In the middle, 1 is reserved id for temporal events
-          // I just recover the last id from the array as it is already sorted by id and adds one
-          //const lastId = eventState[eventState.length - 1].id + 1;
-          const lastId = 100000;
-          return lastId;
-        };
-        setEventController(null);
-        eventDispatcher({
-          type: "deletebyid",
-          payload: [{ ...eventSelected!, id: getUnusedId() }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
-        });
-
-        dispatchController({
-          type: "setController",
-          payload: { id: 0, client: "", job: "" },
-        });
-        dispatchControllerDates({
-          type: "clearDates",
-        });
+        hCancel();
       } else if (!isNaN(parseInt(e.key))) {
         const jobField = document.getElementById("job");
         const selectField = document.querySelector("select");
@@ -180,7 +142,7 @@ export default function App() {
         if (eventStartDragging.current.id === 0) return;
         const { source, destination } = result;
         const type = draggableType.current;
-        console.log("Drag end");
+        console.log("Drag end", type);
         if (type === "event") {
           console.log("dragEnd", source);
         } else if (type === "extend") {

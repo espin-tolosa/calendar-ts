@@ -25,6 +25,7 @@ import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { zeroPadd } from "@/utils/zeroPadd";
 import { scrollToDay } from "@/utils/scrollToDay";
 import { fetchEvent } from "@/utils/fetchEvent";
+import { useGethCancel } from "@/api/handlers";
 
 const cEventSelected = createContext<event | null>(null);
 const cSetEventSelected = createContext<
@@ -55,6 +56,7 @@ const CreateEvent = () => {
   const { start, end } = useControllerStateDates();
   const setEventController = useSetEventSelected();
   const eventState = useEventState();
+  const hCancelClose = useGethCancel();
 
   /*  parallel change consume date context */
   const dispatchController = useControllerDispatch();
@@ -181,27 +183,7 @@ const CreateEvent = () => {
               });
             });
 
-          dispatchController({
-            type: "resetController",
-          });
-          dispatchControllerDates({
-            type: "clearDates",
-          });
-          //delete temporary event created to give user feeback
-          const getUnusedId = () => {
-            //TODO: create a temporary state fot un-fetched events. In the middle, 1 is reserved id for temporal events
-            // I just recover the last id from the array as it is already sorted by id and adds one
-            //const lastId = eventState[eventState.length - 1].id + 1;
-            const lastId = 100000;
-            return lastId;
-          };
-          setEventController(null);
-          eventDispatcher({
-            type: "deletebyid",
-            payload: [{ ...eventSelected!, id: getUnusedId() }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
-          });
-
-          setEventController(null);
+          hCancelClose();
         }}
       />
       {/* delete button */}
@@ -308,6 +290,7 @@ const CreateEvent = () => {
               job,
             },
           });
+
           const getUnusedId = () => {
             //TODO: create a temporary state fot un-fetched events. In the middle, 1 is reserved id for temporal events
             // I just recover the last id from the array as it is already sorted by id and adds one
@@ -370,10 +353,7 @@ const CreateEvent = () => {
           value={"Close"}
           title="Close control panel"
           onClick={() => {
-            setEventController(null);
-            dispatchControllerDates({
-              type: "clearDates",
-            });
+            hCancelClose();
           }}
         />
       )}
