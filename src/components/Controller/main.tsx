@@ -241,7 +241,7 @@ const CreateEvent = () => {
       {/* Log button */}
       <tw_Controller.button
         id={"debug"}
-        $display={true}
+        $display={false}
         type="button"
         value={"Debug"}
         onClick={() => {
