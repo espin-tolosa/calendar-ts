@@ -8,6 +8,7 @@ export async function fetchEvent(
 ) {
   const data = new FormData();
   const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
+  console.log("Query:", dataJSON);
   data.append("json", dataJSON);
   return fetch(api.routes.events, {
     method: "POST",

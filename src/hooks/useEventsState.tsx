@@ -7,15 +7,29 @@ import { DateService } from "@/utils/Date";
 import { isReadyToSubmit } from "@/utils/ValidateEvent";
 import { CustomTypes } from "@/customTypes";
 
-export type State = Array<event>;
 type Action = {
   type: CustomTypes.DispatchLocalStateEvents;
-  payload: State;
+  payload: CustomTypes.State;
 };
 
 const sortCriteriaFIFO = (a: number, b: number) => Math.abs(a) - Math.abs(b);
+const diff_byId = (
+  newState: CustomTypes.State,
+  state: CustomTypes.State
+): CustomTypes.State => {
+  const { bigger, lower } =
+    newState.length >= state.length
+      ? { bigger: newState, lower: state }
+      : { bigger: state, lower: newState };
 
-function reducerEvents(state: State, action: Action) {
+  return bigger.filter(
+    ({ id: id1 }) => !lower.some(({ id: id2 }) => id2 === id1)
+  );
+};
+
+function reducerEvents(state: CustomTypes.State, action: Action) {
+  console.log("----------------------------------------------------------");
+  console.log("Reduce action", action.type, action.payload);
   switch (action.type) {
     // Add new event coming from database, it doesn't allow to add events with duplicated id's
     case "appendarray": {
@@ -31,12 +45,14 @@ function reducerEvents(state: State, action: Action) {
       // Check if event already exists in the state by its id
       const isEventInState = state.findIndex((inner) => inner.id === event.id);
       if (isEventInState >= 0) {
+        console.log("event already exists");
         return state;
       }
 
       //checks the case of end begins before the start
       const daysSpread = DateService.DaysFrom(event.start, event.end);
       if (daysSpread < 0) {
+        console.log("start end dates ill formed");
         return state;
       }
 
@@ -44,6 +60,7 @@ function reducerEvents(state: State, action: Action) {
 
       //TODO: extract to a function
       if (!isReadyToSubmit) {
+        console.log("not ready to submit");
         return state;
       }
 
@@ -51,6 +68,7 @@ function reducerEvents(state: State, action: Action) {
       const newState = [...state, event, ...spread];
       newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       //
+      console.log("success, new state diff:", diff_byId(newState, state));
       return newState;
     }
     //
@@ -62,6 +80,7 @@ function reducerEvents(state: State, action: Action) {
         );
       });
       newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
+      console.log("success, new state diff:", diff_byId(newState, state));
       return newState;
     }
     //
@@ -116,6 +135,7 @@ function reducerEvents(state: State, action: Action) {
 
         //TODO: extract to a function
         if (!isReadyToSubmit) {
+          console.log("not ready to submit");
           return state;
         }
 
@@ -123,6 +143,7 @@ function reducerEvents(state: State, action: Action) {
         const newState = [...state, event, ...spread];
         newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
         //
+        console.log("success, replaced:", diff_byId(newState, state));
         return newState;
       }
     }
