@@ -168,7 +168,6 @@ export const Event = ({ event }: { event: event }) => {
           </StyledEvent.TWtextContent>
 
           <StyledEvent.TWextend
-            style={{ cursor: "cursor-e-resize" }}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}

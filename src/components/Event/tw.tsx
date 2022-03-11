@@ -33,7 +33,7 @@ ${({ $isHover, $isChildren }) =>
 `;
 
 export const TWextend = tw.div<{ $cells: number }>`
-	absolute text-transparent	cursor-e-resize	min-w-[7.14%]	z-ExtendEvent
+	absolute text-transparent	extend-event min-w-[7.14%] z-ExtendEvent
 
 	${({ $cells }) =>
     ($cells === 1 && "extend-event-1") ||

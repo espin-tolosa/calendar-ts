@@ -239,13 +239,6 @@
 }
 
 @layer utilities {
-  .cursor-test {
-    /*cursor: url(http://www.javascriptkit.com/dhtmltutors/cursor-hand.gif), auto;*/
-    cursor: no-drop;
-  }
-}
-
-@layer utilities {
   .headers-gradient {
     background: rgb(2, 0, 36);
     background: linear-gradient(

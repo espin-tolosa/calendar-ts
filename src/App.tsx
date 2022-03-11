@@ -20,6 +20,7 @@ import { useEventsStatusDispatcher } from "./hooks/useEventsStatus";
 
 import { fetchEvent } from "./utils/fetchEvent";
 import { useGethCancel, useGethDeleteEvent } from "./api/handlers";
+import { CustomValues } from "@/customTypes";
 
 export default function App() {
   //Contexts
@@ -29,6 +30,7 @@ export default function App() {
 
   const { value } = useUserSession();
   const eventDispatcher = useEventDispatch();
+
   const allEvents = useEventState();
   //const controllerState = useControllerState();
   const dispatchHoveringId = useEventsStatusDispatcher();
@@ -37,13 +39,7 @@ export default function App() {
     window.scrollTo(0, 0);
   }, []);
 
-  const eventStartDragging = useRef<event>({
-    id: 0,
-    client: "",
-    job: "",
-    start: "1970-01-01",
-    end: "1970-01-01",
-  });
+  const eventStartDragging = useRef<event>(CustomValues.nullEvent);
 
   {
     /*this code is forcing enter in the calendar automatically*/
@@ -100,25 +96,20 @@ export default function App() {
   ) : (
     <DragDropContext
       onBeforeCapture={(result) => {
+        console.log("Result", result);
+        const [id, date] = result.draggableId.split(":");
         const event = allEvents.find(
-          (e) =>
-            e.id === parseInt(result.draggableId.split(":")[0]) &&
-            e.start === result.draggableId.split(":")[1]
+          (e) => e.id === parseInt(id) && e.start === date
         )!;
-        eventStartDragging.current = {
-          id: 0,
-          client: "",
-          job: "",
-          start: "",
-          end: "",
-        };
+        eventStartDragging.current = CustomValues.nullEvent;
         dispatchHoveringId(event.id);
         isDragging.setState(true);
       }}
       onDragUpdate={(result) => {
-        const { source, destination } = result;
+        const { source, destination, draggableId } = result;
+
         const event = allEvents.find(
-          (e) => e.id === parseInt(result.draggableId.split(":")[0])
+          (e) => e.id === parseInt(draggableId.split(":")[0])
         )!;
         eventStartDragging.current = event;
         const spread = DaysFrom(event.start, destination?.droppableId!);
@@ -133,67 +124,64 @@ export default function App() {
           start: event.start,
           end: destination?.droppableId!,
         };
+
         eventDispatcher({
           type: "replacebyid",
           payload: [newEvent],
         });
       }}
       onDragEnd={(result) => {
+        console.log("on drag end", eventStartDragging);
         if (eventStartDragging.current.id === 0) return;
         const { source, destination } = result;
-        const type = draggableType.current;
-        console.log("Drag end", type);
-        if (type === "event") {
-          console.log("dragEnd", source);
-        } else if (type === "extend") {
-          if (destination === null) return;
 
-          const event = allEvents.find((e) => e.id === source.index)!;
-          const spread = DaysFrom(event.start, destination?.droppableId!);
-          const endTarget = DaysFrom(
-            eventStartDragging.current.end,
-            destination?.droppableId!
-          );
+        if (destination === null) return;
 
-          if (spread < 0) return;
-          if (endTarget === 0) return;
+        const event = allEvents.find((e) => e.id === source.index)!;
+        const spread = DaysFrom(event.start, destination?.droppableId!);
+        const endTarget = DaysFrom(
+          eventStartDragging.current.end,
+          destination?.droppableId!
+        );
 
-          const newEvent = {
-            id: event.id,
-            client: event.client,
-            job: event.job,
-            start: event.start,
-            end: destination?.droppableId!,
-          };
+        if (spread < 0) return;
+        if (endTarget === 0) return;
 
-          const fetchResultPUT = fetchEvent("PUT", newEvent);
-          isDragging.setState(false);
-          dispatchHoveringId(0);
+        const newEvent = {
+          id: event.id,
+          client: event.client,
+          job: event.job,
+          start: event.start,
+          end: destination?.droppableId!,
+        };
 
-          fetchResultPUT
-            .then((res) => {
-              if (res.status !== 203) {
-                throw new Error("Error code differs from expected");
-              }
-              const newEvent = {
-                id: event.id,
-                client: event.client,
-                job: event.job,
-                start: event.start,
-                end: destination?.droppableId!,
-              };
-              eventDispatcher({
-                type: "replacebyid",
-                payload: [newEvent],
-              });
-            })
-            .catch(() => {
-              eventDispatcher({
-                type: "replacebyid",
-                payload: [eventStartDragging.current],
-              });
+        const fetchResultPUT = fetchEvent("PUT", newEvent);
+        isDragging.setState(false);
+        dispatchHoveringId(0);
+
+        fetchResultPUT
+          .then((res) => {
+            if (res.status !== 203) {
+              throw new Error("Error code differs from expected");
+            }
+            const newEvent = {
+              id: event.id,
+              client: event.client,
+              job: event.job,
+              start: event.start,
+              end: destination?.droppableId!,
+            };
+            eventDispatcher({
+              type: "replacebyid",
+              payload: [newEvent],
             });
-        }
+          })
+          .catch(() => {
+            eventDispatcher({
+              type: "replacebyid",
+              payload: [eventStartDragging.current],
+            });
+          });
       }}
     >
       <Codelink />
