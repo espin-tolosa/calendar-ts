@@ -19,7 +19,10 @@ export const eventSpreader = (event: event) => {
     // 			2. Is day 1: ok
     //TODO: 3. Is day after day off: no
     //TODO: Span event proper size, actually spans-8 (maximun) allways
-    if (isNewRowDay(dayWeek) || isFirstMonthDay(nextDay)) {
+    if (
+      !isWeekend(dayWeek) &&
+      (isMonday(dayWeek) || isFirstMonthDay(nextDay))
+    ) {
       spreadEvent.push(toMonday(event, nextDay));
     } else {
       spreadEvent.push(toPlaceholder(event, nextDay));
@@ -38,8 +41,12 @@ const toMonday = (event: event, targetDay: string) => {
   return { ...event, start: targetDay, job: "#isChildren" };
 };
 
-const isNewRowDay = (dayWeek: string) => {
+const isMonday = (dayWeek: string) => {
   return dayWeek.toLocaleLowerCase() === "monday";
+};
+const isWeekend = (dayWeek: string) => {
+  const day = dayWeek.toLocaleLowerCase();
+  return day === "saturday" || day === "sunday";
 };
 
 const isFirstMonthDay = (dayWeek: string) => {
