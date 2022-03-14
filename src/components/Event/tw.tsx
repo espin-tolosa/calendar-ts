@@ -8,11 +8,14 @@ export const TWtextContent = tw.div<{
   $cells: number;
   $isHover: boolean;
   $isChildren: boolean;
+  $client: string;
 }>`
 
 
 flex flex-row gap-1 items-center absolute whitespace-nowrap overflow-hidden overflow-ellipsis pl-2 active:text-black ml-[0.1rem] transition-colors
 rounded-r-full
+printable
+${({ $client }) => $client}
 ${({ $cells }) =>
   ($cells === 1 && "event-span-1") ||
   ($cells === 2 && "event-span-2") ||

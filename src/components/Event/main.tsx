@@ -123,6 +123,8 @@ export const Event = ({ event }: { event: event }) => {
         };
   }, [justThrown, hover]);
 
+  useEffect(() => {}, []);
+
   //[justThrown, hover])
 
   //TODO: avoid magic numbers
@@ -153,6 +155,7 @@ export const Event = ({ event }: { event: event }) => {
             $cells={spreadCells}
             onClick={hOnClick}
             title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
+            $client={event.client.toLowerCase()}
           >
             {!isChildren ? (
               <>

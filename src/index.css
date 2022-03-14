@@ -16,6 +16,15 @@
                             'embedded-opentype', and 'svg' */
 }
 
+@layer utilities {
+  @media print {
+    .printable {
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+  }
+}
+
 @layer base {
   input {
     border: none;

@@ -42,10 +42,13 @@ shadow-[shadow-[5px_5px_5px_rgb(148,163,184)]
 `;
 export const TWboard = tw.div`
 grid gap-1 mt-1 xl:components-calendar sm:ml-2 mx-0 bg-white
+print:w-full
+print:px-10
 `;
 export const TWheader = tw.div`
 sticky top-0 z-50
 outline outline-white outline-4 overscroll-contain
+
 `;
 
 // Login Form

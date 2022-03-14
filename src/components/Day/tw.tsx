@@ -20,6 +20,8 @@ export const TWsizedContainer = tw.div<{
 	font-light
  	shadow-[0px_0px_1px_rgb(226,232,240)]
 
+	printable
+
 	${({ $isLock }) =>
     ($isLock && "bg-orange-400 cursor-not-allowed select-none") ||
     (!$isLock && "bg-white day cursor-pointer") ||
@@ -33,7 +35,7 @@ export const TWsizedContainer = tw.div<{
 
 	${({ $isWeekend }) =>
     ($isWeekend &&
-      "bg-slate-300 z-Dayoff outline outline-[1px] outline-slate-100 select-none") ||
+      "bg-slate-300 z-Dayoff outline outline-[1px] outline-slate-100 select-none print:bg-white") ||
     (!$isWeekend && "outline outline-[1px] outline-slate-300") ||
     ""}	
 
@@ -48,12 +50,15 @@ export const TWheader = tw.div<{
   $restDays: boolean;
 }>`
 border-b-[1px] border-slate-200 day-header flex sm:justify-end justify-center bg-white
+printable
+
 	
 	${({ $isLock }) =>
     ($isLock && "bg-orange-400 z-Dayoff bg-opacity-50 select-none") || ""}	
 
 	${({ $isWeekend }) =>
-    ($isWeekend && "bg-slate-300 hover:bg-slate-50 select-none") ||
+    ($isWeekend &&
+      "bg-slate-300 hover:bg-slate-50 select-none print:bg-white") ||
     (!$isWeekend && "") ||
     ""}	
 
@@ -62,6 +67,7 @@ border-b-[1px] border-slate-200 day-header flex sm:justify-end justify-center bg
 
 export const TWdaySpot = tw.div<{ $isToday: boolean }>`
 flex justify-center items-center rounded-full bg-white w-7 h-7 custombp:w-5 custombp:h-5 customtp:w-5 customtp:h-5 sm:my-1 ml-1 mx-1
-${({ $isToday }) => ($isToday && "bg-blue-400 text-white") || ""}
-	
+${({ $isToday }) =>
+  ($isToday && "bg-blue-400 text-white print:bg-white print:text-black") || ""}
+printable	
 	`;

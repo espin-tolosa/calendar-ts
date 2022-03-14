@@ -1,18 +1,27 @@
 import tw from "tailwind-styled-components";
 
 // This integrates the header and the board of a month
-export const TWflexColLayout = tw.div`
+export const TWflexColLayout = tw.div<{ $toPrint: boolean }>`
 flex flex-col justify-start
 bg-white
 shadow-[5px_5px_5px_rgb(148,163,184)]
+print:shadow-none
 rounded-md 
 z-Dayoff
+print:mt-10
+print:border-[2px]
+print:border-slate-200
+
+
+${({ $toPrint }) => (!$toPrint && "print:hidden") || ""}
 `;
 
 // The header displays a text as: month year, like February 2022
 export const TWheader = tw.div`
 flex justify-center
 sticky sm:top-9 customtp:top-6 custombp:top-6 z-TopLayer
+print:static
+print:align-middle
 font-medium
 text-black
 px-[2ch] border-b-2 border-slate-400 

@@ -4,17 +4,12 @@ import Login from "@/pages/Login/Login";
 import { useUserSession } from "./hooks/useUserSession";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
-import { api } from "@/static/apiRoutes";
 import { event } from "@interfaces/index";
 import { DaysFrom } from "./utils/Date";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import {
-  useEventSelected,
-  useSetEventSelected,
-} from "./components/Controller/main";
+import { useEventSelected } from "./components/Controller/main";
 import { useControllerDispatch } from "./hooks/useController";
 
-import { useControllerDispatchDates } from "./hooks/useControllerDate";
 import { useIsDragging } from "./hooks/useIsDragging";
 import { useEventsStatusDispatcher } from "./hooks/useEventsStatus";
 

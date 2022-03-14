@@ -30,6 +30,7 @@ import { DOMRefs } from "@/globalStorage/DOMRefs";
 import { useOnce } from "@/hooks/useOnce";
 import { useCleanSession } from "@/hooks/useCleanSession";
 import { fetchEvent } from "@/utils/fetchEvent";
+import { usePrint } from "@/hooks/usePrint";
 
 type iMonth = {
   year: number;
@@ -141,11 +142,20 @@ const Month = ({ year, month }: iMonth) => {
 
   const [left, rest] = totalCellsInLastRow(date.start, date.daysList.length);
 
+  const [toPrint, hPrint] = usePrint();
+
   return (
-    <StyledMonth.TWflexColLayout className="relative">
+    <StyledMonth.TWflexColLayout
+      className="relative"
+      $toPrint={toPrint}
+      title="Double click here to print this month"
+    >
       <div className="text-transparent h-0"></div>
       {/*month-header*/}
-      <StyledMonth.TWheader id={`month-${date.year}-${zeroPadd(date.month)}`}>
+      <StyledMonth.TWheader
+        id={`month-${date.year}-${zeroPadd(date.month)}`}
+        onDoubleClick={hPrint}
+      >
         {date.dateFormat}
       </StyledMonth.TWheader>
 
@@ -204,7 +214,6 @@ const Month = ({ year, month }: iMonth) => {
         ></div>
       )}
     </StyledMonth.TWflexColLayout>
-    /* Month container: header | board */
   );
 };
 

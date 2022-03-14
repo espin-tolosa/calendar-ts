@@ -2,6 +2,7 @@ import tw from "tailwind-styled-components";
 
 export const TWcontainer = tw.div`
 	bg-slate-900 sm:font-extrabold sm:text-lg font-extrabold custombp:text-xs customtp:text-xs flex justify-between items-center
+	print:hidden
 `;
 
 export const TWlogo = tw.div`
