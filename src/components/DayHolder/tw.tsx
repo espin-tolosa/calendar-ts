@@ -15,4 +15,6 @@ bg-slate-100
 	outline
 	outline-1
 outline-slate-100
+
+	print:hidden
 `;

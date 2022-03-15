@@ -5,12 +5,10 @@ export const TWflexColLayout = tw.div<{ $toPrint: boolean }>`
 flex flex-col justify-start
 bg-white
 shadow-[5px_5px_5px_rgb(148,163,184)]
-print:shadow-none
 rounded-md 
 z-Dayoff
 print:mt-10
-print:border-[2px]
-print:border-slate-200
+print:shadow-none
 
 
 ${({ $toPrint }) => (!$toPrint && "print:hidden") || ""}
@@ -38,6 +36,7 @@ rounded-t-md
 // this means that N can take values of [4,5]
 export const TWdaysBoard = tw.div`
 	grid grid-cols-7 overflow-hidden relative bg-slate-50 gap-[1px] border-b-[1px] border-slate-300
+	print:bg-white
 `;
 
 // Shifts the day where a month starts

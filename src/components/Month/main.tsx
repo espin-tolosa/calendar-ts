@@ -31,6 +31,7 @@ import { useOnce } from "@/hooks/useOnce";
 import { useCleanSession } from "@/hooks/useCleanSession";
 import { fetchEvent } from "@/utils/fetchEvent";
 import { usePrint } from "@/hooks/usePrint";
+import { useGethCancel } from "@/api/handlers";
 
 type iMonth = {
   year: number;
@@ -56,6 +57,8 @@ const Month = ({ year, month }: iMonth) => {
     setTopNavHeight(style);
     window.scrollTo(0, 0);
   }, []);
+
+  const hCancelClose = useGethCancel();
 
   //TODO:Give a name to this custom hook
   useEffect(() => {
@@ -154,7 +157,12 @@ const Month = ({ year, month }: iMonth) => {
       {/*month-header*/}
       <StyledMonth.TWheader
         id={`month-${date.year}-${zeroPadd(date.month)}`}
-        onDoubleClick={hPrint}
+        onDoubleClick={() => {
+          hCancelClose();
+          setTimeout(() => {
+            hPrint();
+          }, 500);
+        }}
       >
         {date.dateFormat}
       </StyledMonth.TWheader>

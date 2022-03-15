@@ -1,20 +1,11 @@
-import * as StyledDay from "@/components/Day/tw";
-import { memo, useState } from "react";
-import {
-  useControllerDispatch,
-  useControllerState,
-} from "@/hooks/useController";
+import { styles } from "@/components/Day/tw";
+import { memo } from "react";
 import { DateService } from "@/utils/Date";
-import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
 import { Droppable } from "react-beautiful-dnd";
-import { useDayLock, useDayLockDispatcher } from "@/hooks/useDayLock";
-import { useEventSelected, useSetEventSelected } from "../Controller/main";
-import {
-  useControllerStateDates,
-  useControllerDispatchDates,
-} from "@/hooks/useControllerDate";
+import { useDayLockDispatcher } from "@/hooks/useDayLock";
+import { useSetEventSelected } from "../Controller/main";
+import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useIsDragging } from "@/hooks/useIsDragging";
-import { event } from "@/interfaces";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -73,7 +64,7 @@ export function IDay({
   return (
     <Droppable droppableId={fullDate}>
       {(provided, snapshot) => (
-        <StyledDay.TWsizedContainer
+        <styles.contain
           {...provided.droppableProps}
           ref={provided.innerRef}
           id={`day-${fullDate}`}
@@ -99,7 +90,7 @@ export function IDay({
           }}
           onMouseEnter={() => console.info("passing over:", dayPadd)}
         >
-          <StyledDay.TWheader
+          <styles.header
             $isLock={isLocked}
             $restDays={restDays}
             title={(() => {
@@ -111,13 +102,11 @@ export function IDay({
               lockedDaysDispatcher({ type: "update", date: fullDate });
             }}
           >
-            <StyledDay.TWdaySpot $isToday={isToday}>
-              {dayPadd}
-            </StyledDay.TWdaySpot>
-          </StyledDay.TWheader>
+            <styles.daySpot $isToday={isToday}>{dayPadd}</styles.daySpot>
+          </styles.header>
           {children}
           {provided.placeholder}
-        </StyledDay.TWsizedContainer>
+        </styles.contain>
       )}
     </Droppable>
   );
