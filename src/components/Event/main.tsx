@@ -9,12 +9,13 @@ import {
   useControllerDispatch,
   useControllerState,
 } from "@/hooks/useController";
-import { useEventState } from "@/hooks/useEventsState";
-import { useEffect, useMemo, useState } from "react";
+import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
+import { FocusEventHandler, useEffect, useMemo, useRef, useState } from "react";
 import {
   useEventsStatus,
   useEventsStatusDispatcher,
 } from "@/hooks/useEventsStatus";
+import { fetchEvent } from "@/utils/fetchEvent";
 
 export const Event = ({ event }: { event: event }) => {
   const setEventController = useSetEventSelected();
@@ -23,6 +24,11 @@ export const Event = ({ event }: { event: event }) => {
   const dispatchController = useControllerDispatch();
   const events = useEventState();
   const isChildren = event.job.includes("#isChildren");
+  //edit mode
+  const [isSelected, setIsSelected] = useState(false);
+  const isFocus = useRef<HTMLInputElement>(null);
+  const [jobInput, setJobInput] = useState(event.job);
+  const eventDispatcher = useEventDispatch();
 
   const [justThrown, setJustThrown] = useState(true);
   useEffect(() => {
@@ -45,26 +51,72 @@ export const Event = ({ event }: { event: event }) => {
     setHover(idSelected);
   }, [controllerState.id, onHover.id]);
 
+  const hOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Input target", e.target.value);
+    const enter = e.target.value === "Enter";
+    if (enter) {
+      updateEvent({ ...event, job: jobInput });
+      isFocus.current!.blur();
+    } else {
+      setJobInput(e.target.value);
+    }
+  };
+
+  const updateEvent = (newEvent: event) => {
+    // TODO: check if is valid event
+    // Controller 106
+    const result = fetchEvent("PUT", newEvent);
+
+    result.then((res) => {
+      if (res.status === 203) {
+        eventDispatcher({
+          type: "replacebyid",
+          payload: [newEvent],
+        });
+      }
+    });
+  };
+
+  const hOnBlur = () => {
+    //console.log(e);
+    console.log("On blur");
+    updateEvent({ ...event, job: jobInput });
+    setIsSelected(false);
+  };
+
   const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
+    setIsSelected(true);
 
-    const eventRoot = events.find((e) => e.id === event.id);
+    // const eventRoot = events.find((e) => e.id === event.id);
 
-    dispatchControllerDates({
-      type: "setDates",
-      payload: { start: eventRoot?.start!, end: eventRoot?.end! },
-    });
+    // dispatchControllerDates({
+    //   type: "setDates",
+    //   payload: { start: eventRoot?.start!, end: eventRoot?.end! },
+    // });
 
-    dispatchController({
-      type: "setController",
-      payload: {
-        id: eventRoot?.id!,
-        client: eventRoot?.client!,
-        job: eventRoot?.job!,
-      },
-    });
+    // dispatchController({
+    //   type: "setController",
+    //   payload: {
+    //     id: eventRoot?.id!,
+    //     client: eventRoot?.client!,
+    //     job: eventRoot?.job!,
+    //   },
+    // });
 
-    setEventController(event);
+    // setEventController(event);
+  };
+
+  const eventUpdater = {
+    onBlur: hOnBlur,
+    onChange: hOnChange,
+    onKeyDown: (e: any) => {
+      const enter = e.key === "Enter";
+      if (enter) {
+        updateEvent({ ...event, job: jobInput });
+        isFocus.current!.blur();
+      }
+    },
   };
 
   const eventInlineStyle: any = useMemo(() => {
@@ -156,12 +208,21 @@ export const Event = ({ event }: { event: event }) => {
             onClick={hOnClick}
             title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
             $client={event.client.toLowerCase()}
+            {...eventUpdater}
           >
             {!isChildren ? (
               <>
                 <div className="text-md">{event.client}</div>
                 <div className="text-slate-800">{" | "}</div>
-                <div className="">{event.job}</div>
+                {!isSelected ? (
+                  <div className="">{event.job}</div>
+                ) : (
+                  <input
+                    ref={isFocus}
+                    value={jobInput}
+                    className="bg-transparent text-slate-900 outline-none"
+                  ></input>
+                )}
               </>
             ) : (
               <>
