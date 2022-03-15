@@ -1,28 +1,20 @@
 import * as StyledEvent from "./tw";
-import { ClientColorStyles, giveMeColor } from "@/utils/giveMeColor";
 import { event } from "@interfaces/index";
 import { DateService } from "@/utils/Date";
-import { useSetEventSelected } from "../Controller/main";
 import { Draggable } from "react-beautiful-dnd";
-import { useControllerDispatchDates } from "@/hooks/useControllerDate";
-import {
-  useControllerDispatch,
-  useControllerState,
-} from "@/hooks/useController";
-import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
-import { FocusEventHandler, useEffect, useMemo, useRef, useState } from "react";
+import { useControllerState } from "@/hooks/useController";
+import { useEventDispatch } from "@/hooks/useEventsState";
+import { useEffect, useRef, useState } from "react";
 import {
   useEventsStatus,
   useEventsStatusDispatcher,
 } from "@/hooks/useEventsStatus";
 import { fetchEvent } from "@/utils/fetchEvent";
+import { useTransitionStyle } from "./logic";
 
 export const Event = ({ event }: { event: event }) => {
-  const setEventController = useSetEventSelected();
   const controllerState = useControllerState();
-  const dispatchControllerDates = useControllerDispatchDates();
-  const dispatchController = useControllerDispatch();
-  const events = useEventState();
+  //const events = useEventState();
   const isChildren = event.job.includes("#isChildren");
   //edit mode
   const [isSelected, setIsSelected] = useState(false);
@@ -30,19 +22,11 @@ export const Event = ({ event }: { event: event }) => {
   const [jobInput, setJobInput] = useState(event.job);
   const eventDispatcher = useEventDispatch();
 
-  const [justThrown, setJustThrown] = useState(true);
-  useEffect(() => {
-    const relaxTime = 200; /*ms*/
-    const timeoutHandler = setTimeout(() => setJustThrown(false), relaxTime);
-    return () => {
-      clearTimeout(timeoutHandler);
-    };
-  }, []);
-
   //TODO: custom hook to mark as selected an event when is hover any of its items or it is selected in the controller
   const [hover, setHover] = useState(false);
   const onHover = useEventsStatus();
   const dispatchHoveringId = useEventsStatusDispatcher();
+  const eventInlineStyle = useTransitionStyle(isChildren, hover, event);
   useEffect(() => {
     const fromController = controllerState.id;
     const fromEventHover = onHover.id;
@@ -118,66 +102,6 @@ export const Event = ({ event }: { event: event }) => {
       }
     },
   };
-
-  const eventInlineStyle: any = useMemo(() => {
-    //TODO: Memoize this object and only recalculate when hover
-    const clientID = parseInt(event.client.split("_")[1]);
-    const CLIENTS_LENGTH = 9;
-    const EXTRA_COLORS = 1;
-
-    //Initialize with color error
-    let mapClientToColor = (360 * (10 - 1)) / (CLIENTS_LENGTH + EXTRA_COLORS);
-    //then if client parses properly -> map to client color
-    if (!isNaN(clientID) && clientID <= 5) {
-      mapClientToColor = (360 * (clientID - 1)) / 5;
-    } else if (!isNaN(clientID) && clientID > 5) {
-      mapClientToColor = (360 * (clientID - 6)) / 5 + 180 / 5;
-    }
-
-    const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
-    const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.4, 0.7);
-    const [r_b, g_b, b_b] = ClientColorStyles(mapClientToColor, 0.2, 0.4);
-    if (isChildren) {
-      return justThrown
-        ? {
-            background: "gray",
-            border: "1px solid transparent",
-            color: "transparent",
-          }
-        : !hover
-        ? {
-            background: `rgb(${r},${g},${b})`,
-            border: "1px solid transparent",
-            color: "transparent",
-          }
-        : {
-            background: `rgb(${r_h},${g_h},${b_h})`,
-            border: `1px solid rgb(${r_b},${g_b},${b_b})`,
-            color: "transparent",
-          };
-    }
-    return justThrown
-      ? {
-          background: "gray",
-          border: "1px solid transparent",
-          color: "black",
-        }
-      : !hover
-      ? {
-          background: `rgb(${r},${g},${b})`,
-          border: "1px solid transparent",
-          color: "black",
-        }
-      : {
-          background: `rgb(${r_h},${g_h},${b_h})`,
-          border: `1px solid rgb(${r_b},${g_b},${b_b})`,
-          color: "white",
-        };
-  }, [justThrown, hover]);
-
-  useEffect(() => {}, []);
-
-  //[justThrown, hover])
 
   //TODO: avoid magic numbers
   const spreadCells = Math.min(
