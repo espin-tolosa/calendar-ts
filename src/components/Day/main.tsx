@@ -104,7 +104,7 @@ export function IDay({
           >
             <styles.daySpot $isToday={isToday}>{dayPadd}</styles.daySpot>
           </styles.header>
-          {children}
+          {!isWeekend && children}
           {provided.placeholder}
         </styles.contain>
       )}
