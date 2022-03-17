@@ -184,7 +184,6 @@ const Month = ({ year, month }: iMonth) => {
                 key={DateService.ComposeDate(year, month, day)}
                 daynumber={day}
                 fullDate={DateService.ComposeDate(year, month, day)}
-                restDays={false}
                 start={controllerDates.start}
                 end={controllerDates.end}
                 isLocked={

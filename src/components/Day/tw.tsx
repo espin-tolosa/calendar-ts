@@ -19,7 +19,6 @@ export namespace styles {
     $isLock: boolean;
     $isSelected: boolean;
     $isWeekend: boolean;
-    $restDays: boolean;
   }>`
 	min-h-[15vh] transition-colors font-light shadow-[0px_0px_1px_rgb(226,232,240)]
 
@@ -35,7 +34,6 @@ export namespace styles {
     (!$isWeekend && "outline outline-[1px] outline-slate-300") ||
     ""}	
 
-	${({ $restDays }) => ($restDays && "bg-slate-50 z-Dayoff text-slate-50") || ""}
 
 	${() => toPrint}
 
@@ -44,7 +42,6 @@ export namespace styles {
   export const header = tw.div<{
     $isLock: boolean;
     $isWeekend: boolean;
-    $restDays: boolean;
   }>`
 border-b-[1px] border-slate-200 day-header flex sm:justify-end justify-center bg-white
 
@@ -56,7 +53,6 @@ ${({ $isWeekend }) =>
   (!$isWeekend && "") ||
   ""}	
 
-${({ $restDays }) => ($restDays && "bg-slate-50 z-Dayoff text-slate-50") || ""}
 ${() => toPrint}
 
 `;

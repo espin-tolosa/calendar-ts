@@ -11,7 +11,6 @@ type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
   daynumber: number;
   fullDate: string;
-  restDays: boolean;
   start: string;
   end: string;
   isLocked: boolean;
@@ -32,7 +31,6 @@ export function IDay({
   children,
   daynumber,
   fullDate,
-  restDays,
   start,
   end,
   isLocked,
@@ -71,7 +69,6 @@ export function IDay({
           $isLock={isLocked}
           $isWeekend={isWeekend}
           $isSelected={isSelected(start, fullDate, end)}
-          $restDays={restDays}
           onClick={() => {
             if (isDragging.state || isLocked || isWeekend) {
               return;
@@ -92,7 +89,6 @@ export function IDay({
         >
           <styles.header
             $isLock={isLocked}
-            $restDays={restDays}
             title={(() => {
               return (isLocked ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
             })()}

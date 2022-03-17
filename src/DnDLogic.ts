@@ -51,12 +51,10 @@ export const useEventsDnD = () => {
     console.log(draggableId);
 
     const event = allEvents.find((e) => e.id === source.index)!;
-    const end = destination.droppableId.split(":")[0];
     eventStartDragging.current = event;
+    const end = destination.droppableId.split(":")[0];
     const spread = DaysFrom(event.start, end);
-    //const isRewind = DaysFrom(event.end, end) < 0;
     if (spread < 0) return;
-    //if (isRewind) return;
 
     eventDispatcher({
       type: "replacebyid",
