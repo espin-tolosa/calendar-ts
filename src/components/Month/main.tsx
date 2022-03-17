@@ -172,7 +172,12 @@ const Month = ({ year, month }: iMonth) => {
         <StyledMonth.TWdayShift $weekday={"mon"} />
 
         {left //previous days
-          .map((day) => <MemoIDayHolder key={"l" + day}></MemoIDayHolder>)
+          .map((day, index) => (
+            <MemoIDayHolder
+              key={"l" + day}
+              fullDate={DateService.ComposeDate(year, month, 1) + ":" + index}
+            ></MemoIDayHolder>
+          ))
           .concat(
             date.daysList.map((day) => (
               <MemoIDay
@@ -210,7 +215,20 @@ const Month = ({ year, month }: iMonth) => {
           )
           .concat(
             //rest days
-            rest.map((day) => <MemoIDayHolder key={"r" + day}></MemoIDayHolder>)
+            rest.map((day, index) => (
+              <MemoIDayHolder
+                key={"r" + day}
+                fullDate={
+                  DateService.ComposeDate(
+                    year,
+                    month,
+                    date.daysList[date.daysList.length - 1]
+                  ) +
+                  ":" +
+                  index
+                }
+              ></MemoIDayHolder>
+            ))
           )}
       </StyledMonth.TWdaysBoard>
       {isToday(year, month) && (

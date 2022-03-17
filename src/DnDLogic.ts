@@ -19,15 +19,16 @@ export const useEventsDnD = () => {
   const isDragging = useIsDragging();
   const eventDispatcher = useEventDispatch();
   const onBeforeCapture = (result: BeforeCapture) => {
-    console.log("Result", result);
+    const { draggableId, mode } = result;
+    console.log("------------------------------------------------------------");
+    console.log("onBeforeCapture");
+    console.log(draggableId);
+    console.log(mode);
+    //
     const [id, date] = result.draggableId.split(":");
-    console.log("draggable id", result.draggableId);
-
-    console.log("State before filter childrens", allEvents);
     const allEventsNoChild = allEvents.filter((e) => e.job !== "#isChildren");
-    console.log("State after filter children", allEventsNoChild);
-
     const event = allEventsNoChild.find((e) => e.id === parseInt(id))!;
+
     eventStartDragging.current = CustomValues.nullEvent;
 
     // I store the initial event as a backup, so I can restablish it if query fails
@@ -38,54 +39,53 @@ export const useEventsDnD = () => {
   };
 
   const onDragUpdate = (result: DragUpdate) => {
-    const { source, destination, draggableId } = result;
-
-    const event = allEvents.find(
-      (e) => e.id === parseInt(draggableId.split(":")[0])
-    )!;
-    eventStartDragging.current = event;
-    const spread = DaysFrom(event.start, destination?.droppableId!);
-    const isRewind = DaysFrom(event.end, destination?.droppableId!) < 0;
+    const { mode, source, type, combine, destination, draggableId } = result;
     if (!destination) return;
+    console.log("------------------------------------------------------------");
+    console.log("onDragUpdate");
+    console.log(mode);
+    console.log(source);
+    console.log(type);
+    console.log(combine);
+    console.log(destination);
+    console.log(draggableId);
+
+    const event = allEvents.find((e) => e.id === source.index)!;
+    const end = destination.droppableId.split(":")[0];
+    eventStartDragging.current = event;
+    const spread = DaysFrom(event.start, end);
+    //const isRewind = DaysFrom(event.end, end) < 0;
     if (spread < 0) return;
-    if (isRewind) return;
-    const newEvent = {
-      id: event.id,
-      client: event.client,
-      job: event.job,
-      start: event.start,
-      end: destination?.droppableId!,
-    };
+    //if (isRewind) return;
 
     eventDispatcher({
       type: "replacebyid",
-      payload: [newEvent],
+      payload: [{ ...event, end }],
     });
   };
 
   const onDragEnd = (result: DropResult) => {
+    const { mode, reason, source, type, destination, combine } = result;
+    if (!destination) return;
+    console.log("------------------------------------------------------------");
+    console.log("onDragEnd");
+    console.log(mode);
+    console.log(reason);
+    console.log(source);
+    console.log(type);
+    console.log(destination);
+    console.log(combine);
     if (eventStartDragging.current.id === 0) return;
-    const { source, destination } = result;
 
-    if (destination === null) return;
-
+    const end = destination.droppableId.split(":")[0];
     const event = allEvents.find((e) => e.id === source.index)!;
-    const spread = DaysFrom(event.start, destination?.droppableId!);
-    const endTarget = DaysFrom(
-      eventStartDragging.current.end,
-      destination?.droppableId!
-    );
+    const spread = DaysFrom(event.start, end);
+    const endTarget = DaysFrom(eventStartDragging.current.end, end);
 
     if (spread < 0) return;
     if (endTarget === 0) return;
 
-    const newEvent = {
-      id: event.id,
-      client: event.client,
-      job: event.job,
-      start: event.start,
-      end: destination?.droppableId!,
-    };
+    const newEvent = { ...event, end };
     eventDispatcher({
       type: "replacebyid",
       payload: [newEvent],

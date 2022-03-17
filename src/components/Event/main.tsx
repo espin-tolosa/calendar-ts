@@ -63,6 +63,9 @@ export const Event = ({ event }: { event: event }) => {
           </StyledEvent.TWtextContent>
 
           <StyledEvent.TWextend
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
             $cells={spreadCells}
             onMouseDownCapture={(e) => {
               //console.log("extend event:", event.id);
