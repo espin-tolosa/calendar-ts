@@ -1,6 +1,12 @@
+import {
+  useControllerDispatch,
+  useControllerState,
+} from "@/hooks/useController";
 import { event } from "@/interfaces";
 import { ClientColorStyles } from "@/utils/giveMeColor";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { fetchEvent } from "@/utils/fetchEvent";
+import { useEventDispatch } from "@/hooks/useEventsState";
 
 export const useTransitionStyle = (
   isChildren: boolean,
@@ -66,4 +72,108 @@ const composeStyle = (background: string, border: string, color: string) => {
     border,
     color,
   };
+};
+
+export const useHoverEvent = (event: event) => {
+  // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
+  const controllerState = useControllerState();
+  const controllerStateDispatch = useControllerDispatch();
+
+  return {
+    hover: Math.abs(controllerState.id) === Math.abs(event.id),
+
+    onMouseEnter: () => {
+      controllerStateDispatch({
+        type: "setId",
+        payload: { id: Math.abs(event.id) },
+      });
+    },
+
+    onMouseLeave: () => {
+      controllerStateDispatch({
+        type: "setId",
+        payload: { id: Math.abs(0) },
+      });
+    },
+  };
+};
+
+export const useStorage = (event: event) => {
+  //Inline Edit
+  const [isSelected, setIsSelected] = useState(false);
+  const isFocus = useRef<HTMLInputElement>(null);
+  const [jobInput, setJobInput] = useState(event.job);
+  const eventDispatcher = useEventDispatch();
+
+  const readyToSubmit = useRef<boolean>(false);
+
+  const updateEvent = (newEvent: event) => {
+    // TODO: check if is valid event
+    // Controller 106
+    const result = fetchEvent("PUT", newEvent);
+
+    result.then((res) => {
+      if (res.status === 203) {
+        eventDispatcher({
+          type: "replacebyid",
+          payload: [newEvent],
+        });
+      }
+    });
+  };
+
+  const hOnBlur = () => {
+    console.log("On blur");
+    if (readyToSubmit.current) {
+      updateEvent({ ...event, job: jobInput });
+      readyToSubmit.current = false;
+    }
+
+    setIsSelected(false);
+  };
+
+  const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    console.log("is selected");
+    setIsSelected(true);
+  };
+  const hOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const enter = e.target.value === "Enter";
+    if (enter) {
+      updateEvent({ ...event, job: jobInput });
+      isFocus.current!.blur();
+    } else {
+      setJobInput(e.target.value);
+    }
+  };
+
+  const hOnKeyDown = (e: any) => {
+    const enter = e.key === "Enter";
+    if (enter) {
+      updateEvent({ ...event, job: jobInput });
+      isFocus.current!.blur();
+    }
+
+    const cancel = e.key === "Escape";
+    if (cancel) {
+      readyToSubmit.current = false;
+      isFocus.current!.blur();
+    }
+  };
+
+  const eventUpdater = {
+    onBlur: hOnBlur,
+    onChange: hOnChange,
+    onClick: hOnClick,
+    onKeyDown: hOnKeyDown,
+  };
+
+  const toComponent = {
+    isSelected,
+    jobInput,
+    isFocus,
+    ...eventUpdater,
+  };
+
+  return toComponent;
 };

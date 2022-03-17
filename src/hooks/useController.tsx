@@ -4,6 +4,7 @@ const init = { id: 0, client: "", job: "" };
 type Action =
   | { type: "setClient"; payload: { client: string } }
   | { type: "setJob"; payload: { job: string } }
+  | { type: "setId"; payload: { id: number } }
   | {
       type: "setController";
       payload: { id: number; client: string; job: string };
@@ -24,6 +25,9 @@ function reducerController(state: typeof init, action: Action) {
     }
     case "setJob": {
       return { ...state, job: action.payload.job };
+    }
+    case "setId": {
+      return { ...state, id: action.payload.id };
     }
     case "setController": {
       return { ...action.payload };
