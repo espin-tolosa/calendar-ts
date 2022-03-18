@@ -10,6 +10,17 @@ import { useEventsStatusDispatcher } from "./hooks/useEventsStatus";
 
 import { fetchEvent } from "./utils/fetchEvent";
 import { CustomValues } from "@/customTypes";
+import { EventClass } from "./classes/event";
+
+export namespace DnD {
+  export function composeEventDndId(event: event) {
+    return JSON.stringify(event);
+  }
+
+  export function retrieveDraggableId(event: string) {
+    return JSON.parse(event) as event;
+  }
+}
 
 export const useEventsDnD = () => {
   const allEvents = useEventState();
@@ -25,9 +36,7 @@ export const useEventsDnD = () => {
     console.log(draggableId);
     console.log(mode);
     //
-    const [id, date] = result.draggableId.split(":");
-    const allEventsNoChild = allEvents.filter((e) => e.job !== "#isChildren");
-    const event = allEventsNoChild.find((e) => e.id === parseInt(id))!;
+    const event = DnD.retrieveDraggableId(draggableId);
 
     eventStartDragging.current = CustomValues.nullEvent;
 
@@ -40,7 +49,6 @@ export const useEventsDnD = () => {
 
   const onDragUpdate = (result: DragUpdate) => {
     const { mode, source, type, combine, destination, draggableId } = result;
-    if (!destination) return;
     console.log("------------------------------------------------------------");
     console.log("onDragUpdate");
     console.log(mode);
@@ -50,7 +58,9 @@ export const useEventsDnD = () => {
     console.log(destination);
     console.log(draggableId);
 
-    const event = allEvents.find((e) => e.id === source.index)!;
+    if (!destination) return;
+    const event = DnD.retrieveDraggableId(draggableId);
+    console.log(event);
     eventStartDragging.current = event;
     const end = destination.droppableId.split(":")[0];
     const spread = DaysFrom(event.start, end);
@@ -64,7 +74,6 @@ export const useEventsDnD = () => {
 
   const onDragEnd = (result: DropResult) => {
     const { mode, reason, source, type, destination, combine } = result;
-    if (!destination) return;
     console.log("------------------------------------------------------------");
     console.log("onDragEnd");
     console.log(mode);
@@ -73,10 +82,11 @@ export const useEventsDnD = () => {
     console.log(type);
     console.log(destination);
     console.log(combine);
+    if (!destination) return;
     if (eventStartDragging.current.id === 0) return;
 
     const end = destination.droppableId.split(":")[0];
-    const event = allEvents.find((e) => e.id === source.index)!;
+    const event = EventClass.getParentEventFrom(allEvents, source.index);
     const spread = DaysFrom(event.start, end);
     const endTarget = DaysFrom(eventStartDragging.current.end, end);
 
@@ -86,7 +96,7 @@ export const useEventsDnD = () => {
     const newEvent = { ...event, end };
     eventDispatcher({
       type: "replacebyid",
-      payload: [newEvent],
+      payload: [{ ...event, end }],
     });
 
     const fetchResultPUT = fetchEvent("PUT", newEvent);

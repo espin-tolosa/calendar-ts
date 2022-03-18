@@ -3,11 +3,29 @@ import { event } from "@interfaces/index";
 import { DateService } from "@/utils/Date";
 import { useHoverEvent, useStorage, useTransitionStyle } from "./logic";
 import { Draggable } from "react-beautiful-dnd";
+import { DnD } from "@/DnDLogic";
+import { useEventState } from "@/hooks/useEventsState";
+import { EventClass } from "@/classes/event";
+
+const useGetEventFamily = (event: event) => {
+  const events = useEventState();
+  const parentId = EventClass.transformToParentId(event);
+  //return all events that has the same parentId
+  const family = events.filter(
+    (e) => EventClass.transformToParentId(e) === parentId
+  );
+
+  const parent = EventClass.getParentEvent(family);
+  return [parent, family] as [event, Array<event>];
+};
 
 export const Event = ({ event }: { event: event }) => {
   //const events = useEventState();
   const isChildren = event.job.includes("#isChildren");
   //edit mode
+  const [parent, family] = useGetEventFamily(event);
+  //console.log("parent", parent);
+  //console.log("family", family);
 
   // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
   const { hover, ...mouseHover } = useHoverEvent(event);
@@ -23,11 +41,13 @@ export const Event = ({ event }: { event: event }) => {
     1 + DateService.DaysFrom(event.start, event.end),
     8
   );
+  const parentEvent = EventClass.getParentEvent(family);
+  //console.log("Parent Event", parentEvent);
 
   return (
     <Draggable
-      draggableId={`${String(Math.abs(event.id))}:${event.start}`}
-      index={Math.abs(event.id)}
+      draggableId={DnD.composeEventDndId(parent)}
+      index={EventClass.transformToParentId(event)}
     >
       {(provided, snapshot) => (
         <StyledEvent.TWflexContainer {...mouseHover}>
