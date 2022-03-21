@@ -72,9 +72,7 @@ export default function App() {
     <Login />
   ) : (
     <DragDropContext
-      //onDragEnd={(result) => console.log(result)}
-      onDragUpdate={handlers.onDragUpdate}
-      onDragEnd={handlers.onDragEnd}
+      {...handlers}
 
       //    onBeforeCapture={handlers.onBeforeCapture}
       //    onDragUpdate={handlers.onDragUpdate}
