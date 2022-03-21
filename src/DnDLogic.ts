@@ -31,10 +31,6 @@ export const useEventsDnD = () => {
   const eventDispatcher = useEventDispatch();
   const onBeforeCapture = (result: BeforeCapture): void => {
     const { draggableId, mode } = result;
-    console.log("------------------------------------------------------------");
-    console.log("onBeforeCapture");
-    console.log(draggableId);
-    console.log(mode);
     //
     const event = DnD.retrieveDraggableId(draggableId);
 
@@ -54,64 +50,46 @@ export const useEventsDnD = () => {
     const parentEvent = JSON.parse(draggableId);
     const end = destination.droppableId.split(":")[0];
 
-    console.log("------------------------------------------------------------");
-    console.log("onDragUpdate");
-    console.log(parentEvent);
-    console.log(end);
-    //console.log(mode); FLUID
-    //console.log(source);
-    //console.log(type);
-    //console.log(combine);
-    //console.log(destination);
-    //console.log(draggableId);
-
-    // if (!destination) return;
-    // const event = DnD.retrieveDraggableId(draggableId);
-    // console.log(event);
-    // eventStartDragging.current = event;
-    // const end = destination.droppableId;
-    // const spread = DaysFrom(event.start, end);
-    // if (spread < 0) return;
-
-    eventDispatcher({
-      type: "replacebyid",
-      payload: [{ ...parentEvent, end }],
-    });
-    const fetchResultPUT = fetchEvent("PUT", { ...parentEvent, end });
+    //    eventDispatcher({
+    //      type: "update",
+    //      payload: [{ ...parentEvent, end }],
+    //    });
+    fetchEvent("PUT", { ...parentEvent, end });
     //isDragging.setState(false);
     //dispatchHoveringId(0);
 
-    fetchResultPUT
-      .then((res) => {
-        if (res.status !== 203) {
-          throw Error("Error code differs from expected");
-        }
-      })
-      .catch(() => {
-        console.log("restoring", draggableBackup.current);
-        eventDispatcher({
-          type: "replacebyid",
-          payload: [draggableBackup.current],
-        });
-        draggableBackup.current = CustomValues.nullEvent;
-      });
+    // fetchResultPUT
+    //   .then((res) => {
+    //     if (res.status !== 203) {
+    //       throw Error("Error code differs from expected");
+    //     }
+    //   })
+    //   .catch(() => {
+    //     eventDispatcher({
+    //       type: "replacebyid",
+    //       payload: [draggableBackup.current],
+    //     });
+    //     draggableBackup.current = CustomValues.nullEvent;
+    //   });
   };
 
   const onDragEnd = (result: DropResult) => {
+    console.log(
+      "🚀 ~ file: DnDLogic.ts ~ line 77 ~ onDragEnd ~ result",
+      result
+    );
     const { destination, draggableId } = result;
     if (!destination) return;
     const parentEvent = JSON.parse(draggableId);
     const end = destination.droppableId.split(":")[0];
+    console.log(
+      "🚀 ~ file: DnDLogic.ts ~ line 80 ~ onDragEnd ~ parentEvent",
+      parentEvent
+    );
+    console.log("🚀 ~ file: DnDLogic.ts ~ line 82 ~ onDragEnd ~ end", end);
 
-    console.log("------------------------------------------------------------");
-    console.log("onDragEnd");
-    console.log(parentEvent);
     console.log(end); // {index: 0, droppableId: "fullDate of current droppable day"}
-    //console.log(mode); FLUID
-    //console.log(reason); DROP
     ////console.log(source); // {index: event.id, droppableId: "fullDate of current Monday"}
-    //console.log(type); DEFAULT
-    //console.log(combine); null
     //if (eventStartDragging.current.id === 0) return;
 
     //const end = destination.droppableId;
