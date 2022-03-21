@@ -62,9 +62,37 @@ export const useEventsDnD = () => {
   };
 
   const onDragUpdate = (result: DragUpdate) => {
+    /*
+        const { source, destination, draggableId } = result;
+
+        const event = allEvents.find(
+          (e) => e.id === parseInt(draggableId.split(":")[0])
+        )!;
+        eventStartDragging.current = event;
+        const spread = DaysFrom(event.start, destination?.droppableId!);
+        if (!destination) return;
+        if (spread < 0) return;
+        const newEvent = {
+          id: event.id,
+          client: event.client,
+          job: event.job,
+          start: event.start,
+          end: destination?.droppableId!,
+        };
+
+        eventDispatcher({
+          type: "replacebyid",
+          payload: [newEvent],
+        });
+
+		*/
     const { destination, draggableId } = result;
     if (!destination) return;
     const parentEvent = JSON.parse(draggableId);
+    console.log(
+      "🚀 ~ file: DnDLogic.ts ~ line 92 ~ onDragUpdate ~ parentEvent",
+      parentEvent
+    );
     const [destinationDate, id] = destination.droppableId.split(":");
     const isGoingBack = DaysFrom(parentEvent.start, destinationDate) < 0;
     parentEvent.end = destinationDate;
@@ -72,14 +100,10 @@ export const useEventsDnD = () => {
       parentEvent.start = destinationDate;
     }
 
-    try {
-      eventDispatcher({
-        type: "replacebyid",
-        payload: [parentEvent],
-      });
-    } catch (e) {
-      console.log(e);
-    }
+    eventDispatcher({
+      type: "updateDnD",
+      payload: [{ ...parentEvent }],
+    });
 
     fetchEvent("PUT", parentEvent);
 

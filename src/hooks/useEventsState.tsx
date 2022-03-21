@@ -98,6 +98,15 @@ function reducerEvents(state: CustomTypes.State, action: Action) {
       result.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       return result;
     }
+    case "updateDnD": {
+      const toReplace = action.payload[0];
+      const newState = state.filter(
+        (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
+      );
+      const spread = eventSpreader(toReplace);
+      const result = [...newState, toReplace, ...spread];
+      return result;
+    }
     case "update": {
       const event = action.payload[0];
 

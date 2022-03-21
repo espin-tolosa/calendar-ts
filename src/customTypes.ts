@@ -20,7 +20,8 @@ export namespace CustomTypes {
     | "appendarray"
     | "deletebyid"
     | "replacebyid"
-    | "update";
+    | "update"
+    | "updateDnD";
 
   /**
    * Options to send a query by POST method using fetch to Backend API events
