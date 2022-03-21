@@ -29,7 +29,7 @@ export const useEventsDnD = () => {
   const dispatchHoveringId = useEventsStatusDispatcher();
   const isDragging = useIsDragging();
   const eventDispatcher = useEventDispatch();
-  const onBeforeCapture = (result: BeforeCapture) => {
+  const onBeforeCapture = (result: BeforeCapture): void => {
     const { draggableId, mode } = result;
     console.log("------------------------------------------------------------");
     console.log("onBeforeCapture");
@@ -48,60 +48,38 @@ export const useEventsDnD = () => {
   };
 
   const onDragUpdate = (result: DragUpdate) => {
-    const { mode, source, type, combine, destination, draggableId } = result;
+    //const { mode, source, type, combine, destination, draggableId } = result;
+    const { destination, draggableId } = result;
+    if (!destination) return;
+    const parentEvent = JSON.parse(draggableId);
+    const end = destination.droppableId.split(":")[0];
+
     console.log("------------------------------------------------------------");
     console.log("onDragUpdate");
-    console.log(mode);
-    console.log(source);
-    console.log(type);
-    console.log(combine);
-    console.log(destination);
-    console.log(draggableId);
+    console.log(parentEvent);
+    console.log(end);
+    //console.log(mode); FLUID
+    //console.log(source);
+    //console.log(type);
+    //console.log(combine);
+    //console.log(destination);
+    //console.log(draggableId);
 
-    if (!destination) return;
-    const event = DnD.retrieveDraggableId(draggableId);
-    console.log(event);
-    eventStartDragging.current = event;
-    const end = destination.droppableId.split(":")[0];
-    const spread = DaysFrom(event.start, end);
-    if (spread < 0) return;
+    // if (!destination) return;
+    // const event = DnD.retrieveDraggableId(draggableId);
+    // console.log(event);
+    // eventStartDragging.current = event;
+    // const end = destination.droppableId;
+    // const spread = DaysFrom(event.start, end);
+    // if (spread < 0) return;
 
     eventDispatcher({
       type: "replacebyid",
-      payload: [{ ...event, end }],
+      payload: [{ ...parentEvent, end }],
     });
-  };
-
-  const onDragEnd = (result: DropResult) => {
-    const { mode, reason, source, type, destination, combine } = result;
-    console.log("------------------------------------------------------------");
-    console.log("onDragEnd");
-    console.log(mode);
-    console.log(reason);
-    console.log(source);
-    console.log(type);
-    console.log(destination);
-    console.log(combine);
-    if (!destination) return;
-    if (eventStartDragging.current.id === 0) return;
-
-    const end = destination.droppableId.split(":")[0];
-    const event = EventClass.getParentEventFrom(allEvents, source.index);
-    const spread = DaysFrom(event.start, end);
-    const endTarget = DaysFrom(eventStartDragging.current.end, end);
-
-    if (spread < 0) return;
-    if (endTarget === 0) return;
-
-    const newEvent = { ...event, end };
-    eventDispatcher({
-      type: "replacebyid",
-      payload: [{ ...event, end }],
-    });
-
-    const fetchResultPUT = fetchEvent("PUT", newEvent);
-    isDragging.setState(false);
-    dispatchHoveringId(0);
+    const fetchResultPUT = fetchEvent("PUT", { ...parentEvent, end });
+    //isDragging.setState(false);
+    //dispatchHoveringId(0);
 
     fetchResultPUT
       .then((res) => {
@@ -117,6 +95,57 @@ export const useEventsDnD = () => {
         });
         draggableBackup.current = CustomValues.nullEvent;
       });
+  };
+
+  const onDragEnd = (result: DropResult) => {
+    const { destination, draggableId } = result;
+    if (!destination) return;
+    const parentEvent = JSON.parse(draggableId);
+    const end = destination.droppableId.split(":")[0];
+
+    console.log("------------------------------------------------------------");
+    console.log("onDragEnd");
+    console.log(parentEvent);
+    console.log(end); // {index: 0, droppableId: "fullDate of current droppable day"}
+    //console.log(mode); FLUID
+    //console.log(reason); DROP
+    ////console.log(source); // {index: event.id, droppableId: "fullDate of current Monday"}
+    //console.log(type); DEFAULT
+    //console.log(combine); null
+    //if (eventStartDragging.current.id === 0) return;
+
+    //const end = destination.droppableId;
+    //const event = EventClass.getParentEventFrom(allEvents, source.index);
+    //const spread = DaysFrom(event.start, end);
+    //const endTarget = DaysFrom(eventStartDragging.current.end, end);
+
+    //if (spread < 0) return;
+    //if (endTarget === 0) return;
+
+    //    const newEvent = { ...parentEvent, end };
+    //    eventDispatcher({
+    //      type: "replacebyid",
+    //      payload: [{ ...parentEvent, end }],
+    //    });
+
+    //    const fetchResultPUT = fetchEvent("PUT", newEvent);
+    //    isDragging.setState(false);
+    //    dispatchHoveringId(0);
+    //
+    //    fetchResultPUT
+    //      .then((res) => {
+    //        if (res.status !== 203) {
+    //          throw Error("Error code differs from expected");
+    //        }
+    //      })
+    //      .catch(() => {
+    //        console.log("restoring", draggableBackup.current);
+    //        eventDispatcher({
+    //          type: "replacebyid",
+    //          payload: [draggableBackup.current],
+    //        });
+    //        draggableBackup.current = CustomValues.nullEvent;
+    //      });
   };
 
   return {

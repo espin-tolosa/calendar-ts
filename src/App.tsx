@@ -71,7 +71,15 @@ export default function App() {
   return !value() ? (
     <Login />
   ) : (
-    <DragDropContext {...handlers}>
+    <DragDropContext
+      //onDragEnd={(result) => console.log(result)}
+      onDragUpdate={handlers.onDragUpdate}
+      onDragEnd={handlers.onDragEnd}
+
+      //    onBeforeCapture={handlers.onBeforeCapture}
+      //    onDragUpdate={handlers.onDragUpdate}
+      //    onDragEnd={handlers.onDragEnd}
+    >
       <Codelink />
     </DragDropContext>
   );

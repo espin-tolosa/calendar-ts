@@ -60,7 +60,7 @@ export function IDay({
   const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
 
   return (
-    <Droppable droppableId={fullDate}>
+    <Droppable droppableId={`${fullDate}:`}>
       {(provided, snapshot) => (
         <styles.contain
           {...provided.droppableProps}

@@ -175,7 +175,7 @@ const Month = ({ year, month }: iMonth) => {
           .map((day, index) => (
             <MemoIDayHolder
               key={"l" + day}
-              fullDate={DateService.ComposeDate(year, month, 1) + ":" + index}
+              fullDate={`${DateService.ComposeDate(year, month, 1)}:l${index}`}
             ></MemoIDayHolder>
           ))
           .concat(
@@ -214,20 +214,19 @@ const Month = ({ year, month }: iMonth) => {
           )
           .concat(
             //rest days
-            rest.map((day, index) => (
-              <MemoIDayHolder
-                key={"r" + day}
-                fullDate={
-                  DateService.ComposeDate(
+            rest.map((day, index) => {
+              const lastDay = date.daysList[date.daysList.length - 1];
+              return (
+                <MemoIDayHolder
+                  key={"r" + day}
+                  fullDate={`${DateService.ComposeDate(
                     year,
                     month,
-                    date.daysList[date.daysList.length - 1]
-                  ) +
-                  ":" +
-                  index
-                }
-              ></MemoIDayHolder>
-            ))
+                    lastDay
+                  )}:r${index}`}
+                ></MemoIDayHolder>
+              );
+            })
           )}
       </StyledMonth.TWdaysBoard>
       {isToday(year, month) && (

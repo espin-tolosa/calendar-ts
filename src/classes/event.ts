@@ -41,7 +41,7 @@ export class EventClass {
   }
   static getParentEvent(family: Array<event>) {
     const parentId = family.at(0)?.id || 0;
-    console.log("getParentEvent", family);
+    //console.log("getParentEvent", family);
     //return all events that has the same parentId
     return (
       family.find(
