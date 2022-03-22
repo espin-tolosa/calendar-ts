@@ -6,18 +6,7 @@ type IDayProps = {
 };
 
 function IDayHolder({ fullDate }: IDayProps) {
-  return (
-    <Droppable droppableId={fullDate}>
-      {(provided, snapshot) => (
-        <StyledDay.TWsizedContainer
-          {...provided.droppableProps}
-          ref={provided.innerRef}
-        >
-          {fullDate}
-        </StyledDay.TWsizedContainer>
-      )}
-    </Droppable>
-  );
+  return <StyledDay.TWsizedContainer>{fullDate}</StyledDay.TWsizedContainer>;
 }
 
 export const MemoIDayHolder = memo(IDayHolder);

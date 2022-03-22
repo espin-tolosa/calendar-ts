@@ -68,17 +68,5 @@ export default function App() {
     };
   }, [eventSelected]);
 
-  return !value() ? (
-    <Login />
-  ) : (
-    <DragDropContext
-      {...handlers}
-
-      //    onBeforeCapture={handlers.onBeforeCapture}
-      //    onDragUpdate={handlers.onDragUpdate}
-      //    onDragEnd={handlers.onDragEnd}
-    >
-      <Codelink />
-    </DragDropContext>
-  );
+  return !value() ? <Login /> : <Codelink />;
 }

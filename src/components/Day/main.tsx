@@ -1,11 +1,18 @@
 import { styles } from "@/components/Day/tw";
-import { memo } from "react";
+import { memo, useRef, useState } from "react";
 import { DateService } from "@/utils/Date";
 import { Droppable } from "react-beautiful-dnd";
 import { useDayLockDispatcher } from "@/hooks/useDayLock";
 import { useSetEventSelected } from "../Controller/main";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useIsDragging } from "@/hooks/useIsDragging";
+import { useEventDispatch } from "@/hooks/useEventsState";
+import {
+  useTemporaryEvent,
+  useTemporaryEventDispatcher,
+} from "@/globalStorage/temporaryEvents";
+import { fetchEvent } from "@/utils/fetchEvent";
+import { CustomValues } from "@/customTypes";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -36,11 +43,16 @@ export function IDay({
   isLocked,
   isWeekend,
 }: IDayProps) {
+  const eventDispatcher = useEventDispatch();
   const tempDay = String(daynumber);
   const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
   const lockedDaysDispatcher = useDayLockDispatcher();
 
   const setEventController = useSetEventSelected();
+  //dnd
+  const temporaryEvent = useTemporaryEvent();
+  const temporaryEventDispatcher = useTemporaryEventDispatcher();
+  const isSet = useRef(CustomValues.nullEvent);
 
   //const { id } = useControllerState();
 
@@ -60,51 +72,77 @@ export function IDay({
   const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
 
   return (
-    <Droppable droppableId={`${fullDate}:`}>
-      {(provided, snapshot) => (
-        <styles.contain
-          {...provided.droppableProps}
-          ref={provided.innerRef}
-          id={`day-${fullDate}`}
-          $isLock={isLocked}
-          $isWeekend={isWeekend}
-          $isSelected={isSelected(start, fullDate, end)}
-          onClick={() => {
-            if (isDragging.state || isLocked || isWeekend) {
-              return;
-            }
-            dispatchControllerDates({
-              type: "updateDates",
-              payload: { start: fullDate, end: fullDate },
-            });
+    <styles.contain
+      id={`day-${fullDate}`}
+      $isLock={isLocked}
+      $isWeekend={isWeekend}
+      $isSelected={isSelected(start, fullDate, end)}
+      onClick={() => {
+        console.log("Click day");
+        if (isDragging.state || isLocked || isWeekend) {
+          return;
+        }
+        dispatchControllerDates({
+          type: "updateDates",
+          payload: { start: fullDate, end: fullDate },
+        });
 
-            if (start === fullDate && end === fullDate) {
-              setEventController(null);
-            }
-          }}
-          onMouseUp={() => {
-            //console.info("leaving action at day:", dayPadd);
-          }}
-          onMouseEnter={() => console.info("passing over:", dayPadd)}
-        >
-          <styles.header
-            $isLock={isLocked}
-            title={(() => {
-              return (isLocked ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
-            })()}
-            $isWeekend={isWeekend}
-            onClick={(e) => {
-              e.stopPropagation();
-              lockedDaysDispatcher({ type: "update", date: fullDate });
-            }}
-          >
-            <styles.daySpot $isToday={isToday}>{dayPadd}</styles.daySpot>
-          </styles.header>
-          {!isWeekend && children}
-          {provided.placeholder}
-        </styles.contain>
-      )}
-    </Droppable>
+        if (start === fullDate && end === fullDate) {
+          setEventController(null);
+        }
+      }}
+      onTouchStart={() => {
+        console.log("Drag start capture", temporaryEvent);
+        isSet.current = { ...temporaryEvent };
+      }}
+      onDragStart={() => {
+        console.log("Drag start capture", temporaryEvent);
+        isSet.current = { ...temporaryEvent };
+      }}
+      onDragEnter={(e) => {
+        //console.clear();
+        e.preventDefault();
+        e.stopPropagation();
+        setTimeout(() => {
+          console.info(
+            "On drag enter",
+            temporaryEvent,
+            fullDate,
+            isSet.current
+          );
+          if (temporaryEvent.end === fullDate) {
+            return;
+          }
+          const newEvent = temporaryEvent;
+          newEvent.end = fullDate;
+          eventDispatcher({
+            type: "replacebyid",
+            payload: [newEvent],
+          });
+          fetchEvent("PUT", newEvent);
+          isSet.current = CustomValues.nullEvent;
+          //temporaryEventDispatcher(newEvent);
+        }, 100);
+      }}
+      onMouseUp={() => {
+        //console.info("leaving action at day:", dayPadd);
+      }}
+    >
+      <styles.header
+        $isLock={isLocked}
+        title={(() => {
+          return (isLocked ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
+        })()}
+        $isWeekend={isWeekend}
+        onClick={(e) => {
+          e.stopPropagation();
+          lockedDaysDispatcher({ type: "update", date: fullDate });
+        }}
+      >
+        <styles.daySpot $isToday={isToday}>{dayPadd}</styles.daySpot>
+      </styles.header>
+      {!isWeekend && children}
+    </styles.contain>
   );
 }
 const isSelected = (start: string, today: string, end: string) => {
