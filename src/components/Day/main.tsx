@@ -78,7 +78,6 @@ export function IDay({
       $isWeekend={isWeekend}
       $isSelected={isSelected(start, fullDate, end)}
       onClick={() => {
-        console.log("Click day");
         if (isDragging.state || isLocked || isWeekend) {
           return;
         }
@@ -95,6 +94,9 @@ export function IDay({
         console.log("Drag start capture", temporaryEvent);
         isSet.current = { ...temporaryEvent };
       }}
+      onTouchMove={(e) => {
+        console.log("Touch move", e.changedTouches);
+      }}
       onDragStart={() => {
         console.log("Drag start capture", temporaryEvent);
         isSet.current = { ...temporaryEvent };
@@ -103,26 +105,23 @@ export function IDay({
         //console.clear();
         e.preventDefault();
         e.stopPropagation();
-        setTimeout(() => {
-          console.info(
-            "On drag enter",
-            temporaryEvent,
-            fullDate,
-            isSet.current
-          );
-          if (temporaryEvent.end === fullDate) {
-            return;
-          }
-          const newEvent = temporaryEvent;
-          newEvent.end = fullDate;
-          eventDispatcher({
-            type: "replacebyid",
-            payload: [newEvent],
-          });
-          fetchEvent("PUT", newEvent);
-          isSet.current = CustomValues.nullEvent;
-          //temporaryEventDispatcher(newEvent);
-        }, 100);
+        //if (isSet.current.id === 0) {
+        //  console.log("return");
+        //  return;
+        //}
+        //if (fullDate !== temporaryEvent.end) {
+        //  isSet.current = CustomValues.nullEvent;
+        //}
+        if (temporaryEvent.end === fullDate) {
+          return;
+        }
+        const newEvent = { ...temporaryEvent, end: fullDate };
+        eventDispatcher({
+          type: "replacebyid",
+          payload: [newEvent],
+        });
+        fetchEvent("PUT", newEvent);
+        temporaryEventDispatcher(newEvent);
       }}
       onMouseUp={() => {
         //console.info("leaving action at day:", dayPadd);

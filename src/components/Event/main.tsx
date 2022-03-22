@@ -56,7 +56,13 @@ export const Event = ({ event }: { event: event }) => {
   //console.log("Parent Event", parentEvent);
 
   return (
-    <StyledEvent.TWflexContainer {...mouseHover}>
+    <StyledEvent.TWflexContainer
+      {...mouseHover}
+      onDragEnterCapture={(e) => {
+        console.info("On drag enter event", event);
+        e.stopPropagation();
+      }}
+    >
       <StyledEvent.TWtextContent
         $isChildren={isChildren}
         $isHover={hover}
@@ -92,14 +98,14 @@ export const Event = ({ event }: { event: event }) => {
         draggable={"true"}
         onTouchStartCapture={(e) => {
           console.log("Drag Start", event);
-          temporaryEventDispatcher(event);
+          temporaryEventDispatcher(parentEvent);
           //draggableBackup.current = parentEvent;
           //dispatchHoveringId(parentEvent.id);
           //isDragging.setState(true);
         }}
         onDragStartCapture={(e) => {
           console.log("Drag Start", event);
-          temporaryEventDispatcher(event);
+          temporaryEventDispatcher(parentEvent);
           //draggableBackup.current = parentEvent;
           //dispatchHoveringId(parentEvent.id);
           //isDragging.setState(true);
@@ -107,6 +113,9 @@ export const Event = ({ event }: { event: event }) => {
         onTouchEndCapture={(e) => {
           console.log("Drag End", event);
           temporaryEventDispatcher(CustomValues.nullEvent);
+        }}
+        onTouchMove={(e) => {
+          console.log("Touch move", e.changedTouches);
         }}
         onDragEndCapture={(e) => {
           console.log("Drag End", event);

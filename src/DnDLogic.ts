@@ -89,10 +89,6 @@ export const useEventsDnD = () => {
     const { destination, draggableId } = result;
     if (!destination) return;
     const parentEvent = JSON.parse(draggableId);
-    console.log(
-      "🚀 ~ file: DnDLogic.ts ~ line 92 ~ onDragUpdate ~ parentEvent",
-      parentEvent
-    );
     const [destinationDate, id] = destination.droppableId.split(":");
     const isGoingBack = DaysFrom(parentEvent.start, destinationDate) < 0;
     parentEvent.end = destinationDate;
@@ -136,13 +132,8 @@ export const useEventsDnD = () => {
     //     draggableBackup.current = CustomValues.nullEvent;
     //   });
 		*/
-    console.log("End drag update");
   };
   const onDragEnd = (result: DropResult) => {
-    console.log(
-      "🚀 ~ file: DnDLogic.ts ~ line 108 ~ onDragEnd ~ result",
-      result
-    );
     isDragging.setState(false);
     dispatchHoveringId(0);
     draggableBackup.current = CustomValues.nullEvent;
@@ -181,7 +172,6 @@ export const useEventsDnD = () => {
     //        }
     //      })
     //      .catch(() => {
-    //        console.log("restoring", draggableBackup.current);
     //        eventDispatcher({
     //          type: "replacebyid",
     //          payload: [draggableBackup.current],
@@ -201,15 +191,11 @@ export const useEventsDnD = () => {
 
 /*
       onBeforeCapture={(result) => {
-        console.log("Result", result);
         const [id, date] = result.draggableId.split(":");
-        console.log("draggable id", result.draggableId);
 
-        console.log("State before filter childrens", allEvents);
         const allEventsNoChild = allEvents.filter(
           (e) => e.job !== "#isChildren"
         );
-        console.log("State after filter children", allEventsNoChild);
 
         const event = allEventsNoChild.find((e) => e.id === parseInt(id))!;
         eventStartDragging.current = CustomValues.nullEvent;
@@ -266,10 +252,6 @@ export const useEventsDnD = () => {
         //
         //        if (spread < 0) {
         //          event.start = destination.droppableId;
-        //          console.log(
-        //            "🚀 ~ file: App.tsx ~ line 156 ~ App ~ event.start",
-        //            event.start
-        //          );
         //        }
         //
         //        const newEvent = {
@@ -295,7 +277,6 @@ export const useEventsDnD = () => {
         //            }
         //          })
         //          .catch(() => {
-        //            console.log("restoring", draggableBackup.current);
         //            eventDispatcher({
         //              type: "replacebyid",
         //              payload: [draggableBackup.current],
