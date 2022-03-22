@@ -2,8 +2,6 @@ import * as StyledEvent from "./tw";
 import { event } from "@interfaces/index";
 import { DateService } from "@/utils/Date";
 import { useHoverEvent, useStorage, useTransitionStyle } from "./logic";
-import { Draggable } from "react-beautiful-dnd";
-import { DnD } from "@/DnDLogic";
 import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import { EventClass } from "@/classes/event";
 import {
@@ -93,35 +91,95 @@ export const Event = ({ event }: { event: event }) => {
       {...mouseHover}
       onClick={hOnClick}
       draggable={"true"}
-      onTouchStartCapture={(e) => {
-        console.log("Touch Start Capture", event);
-        e.preventDefault();
-        //document.body.style.touchAction = "none";
-        //const board = document.getElementById("Board");
-        //if (board) {
-        //board.style.touchAction = "none";
-        //}
-        //draggableBackup.current = parentEvent;
-        //dispatchHoveringId(parentEvent.id);
-        //isDragging.setState(true);
+      onDragStart={() => {
+        temporaryEventDispatcher(parentEvent);
+      }}
+      onDragEnd={() => {
+        temporaryEventDispatcher(CustomValues.nullEvent);
       }}
       onTouchStart={(e) => {
-        console.log("Touch start");
-        temporaryEventDispatcher(parentEvent);
         e.preventDefault();
+        temporaryEventDispatcher(parentEvent);
       }}
-      //
-      // TODO: this feature is inactive by now, it split an event by clicking on it
-      //				It requires aditional work, as a key like Ctrl to be pressed in order to allow this feature to work
-      //				Also when Ctrl key is pressed a cursor with a scissors will appear
+      onTouchEnd={() => {
+        temporaryEventDispatcher(CustomValues.nullEvent);
+      }}
+      onDragOver={(e) => {
+        e.stopPropagation();
+        const x = e.clientX;
+        const y = e.clientY;
 
+        const el = document.elementsFromPoint(x, y);
+        const dayDiv = el.find((e) => e.id.includes("day"));
+
+        //All of this is the same as Board callback
+        const id = dayDiv?.id;
+        if (!id) {
+          return;
+        }
+
+        const entries = id.split("-");
+
+        if (entries[0] !== "day") {
+          return;
+        }
+
+        const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
+
+        if (temporaryEvent.end === fullDate) {
+          return;
+        }
+
+        const newEvent = { ...temporaryEvent, end: fullDate };
+
+        eventDispatcher({
+          type: "replacebyid",
+          payload: [newEvent],
+        });
+        fetchEvent("PUT", newEvent);
+        temporaryEventDispatcher(newEvent);
+      }}
+      onTouchMove={(e) => {
+        e.preventDefault();
+
+        const x = e.touches[0].clientX;
+        const y = e.touches[0].clientY;
+
+        const el = document.elementsFromPoint(x, y);
+        const dayDiv = el.find((e) => e.id.includes("day"));
+
+        //All of this is the same as Board callback
+        const id = dayDiv?.id;
+        if (!id) {
+          return;
+        }
+
+        const entries = id.split("-");
+
+        if (entries[0] !== "day") {
+          return;
+        }
+
+        const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
+        if (temporaryEvent.end === fullDate) {
+          return;
+        }
+        const newEvent = { ...temporaryEvent, end: fullDate };
+        eventDispatcher({
+          type: "replacebyid",
+          payload: [newEvent],
+        });
+        fetchEvent("PUT", newEvent);
+        temporaryEventDispatcher(newEvent);
+        return true;
+      }}
+      //split event when Ctrl is pressed
       onMouseDownCapture={(e) => {
         setEventController(parentEvent);
         if (keyBuffer?.current !== "Control") {
           return;
         }
         e.stopPropagation();
-        console.log("Click event");
         const x = e.clientX;
         const y = e.clientY;
 
@@ -183,97 +241,6 @@ export const Event = ({ event }: { event: event }) => {
               ],
             });
           });
-      }}
-      onTouchMove={(e) => {
-        e.preventDefault();
-
-        const x = e.touches[0].clientX;
-        const y = e.touches[0].clientY;
-
-        const el = document.elementsFromPoint(x, y);
-        const dayDiv = el.find((e) => e.id.includes("day"));
-
-        //All of this is the same as Board callback
-        const id = dayDiv?.id;
-        if (!id) {
-          return;
-        }
-
-        const entries = id.split("-");
-
-        if (entries[0] !== "day") {
-          return;
-        }
-
-        const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
-        if (temporaryEvent.end === fullDate) {
-          return;
-        }
-        const newEvent = { ...temporaryEvent, end: fullDate };
-        eventDispatcher({
-          type: "replacebyid",
-          payload: [newEvent],
-        });
-        fetchEvent("PUT", newEvent);
-        temporaryEventDispatcher(newEvent);
-        return true;
-      }}
-      onDragStartCapture={(e) => {
-        //e.preventDefault();
-        temporaryEventDispatcher(parentEvent);
-
-        //          var img = new Image();
-        //          img.src =
-        //            "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
-        //          e.dataTransfer.setDragImage(img, 0, 0);
-        //draggableBackup.current = parentEvent;
-        //dispatchHoveringId(parentEvent.id);
-        //isDragging.setState(true);
-      }}
-      onTouchEndCapture={(e) => {
-        console.log("Drag End", event);
-        temporaryEventDispatcher(CustomValues.nullEvent);
-        //document.body.style.touchAction = "auto";
-        //const board = document.getElementById("Board");
-        //if (board) {
-        //  board.style.touchAction = "auto";
-        //}
-      }}
-      onDragEndCapture={(e) => {
-        console.log("Drag End", event);
-        temporaryEventDispatcher(CustomValues.nullEvent);
-      }}
-      onDragOverCapture={(e) => {
-        e.stopPropagation();
-        const x = e.clientX;
-        const y = e.clientY;
-
-        const el = document.elementsFromPoint(x, y);
-        const dayDiv = el.find((e) => e.id.includes("day"));
-
-        //All of this is the same as Board callback
-        const id = dayDiv?.id;
-        if (!id) {
-          return;
-        }
-
-        const entries = id.split("-");
-
-        if (entries[0] !== "day") {
-          return;
-        }
-
-        const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
-        if (temporaryEvent.end === fullDate) {
-          return;
-        }
-        const newEvent = { ...temporaryEvent, end: fullDate };
-        eventDispatcher({
-          type: "replacebyid",
-          payload: [newEvent],
-        });
-        fetchEvent("PUT", newEvent);
-        temporaryEventDispatcher(newEvent);
       }}
     >
       <StyledEvent.TWtextContent

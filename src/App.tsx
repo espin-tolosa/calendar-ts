@@ -2,7 +2,6 @@ import "@/index.css";
 import Codelink from "@/pages/Codelink";
 import Login from "@/pages/Login/Login";
 import { useUserSession } from "./hooks/useUserSession";
-import { DragDropContext } from "react-beautiful-dnd";
 import { useEffect, useLayoutEffect } from "react";
 import { useEventSelected } from "./components/Controller/main";
 import { useControllerDispatch } from "./hooks/useController";
@@ -39,6 +38,7 @@ export default function App() {
       } else if (e.key === "Escape") {
         hCancel();
       } else if (e.key === "Control") {
+        console.log("If control pressed", e.key);
         dispatchKeyBuffer(e.key);
       } else if (!isNaN(parseInt(e.key))) {
         const jobField = document.getElementById("job");

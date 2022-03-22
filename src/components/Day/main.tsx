@@ -96,7 +96,16 @@ export function IDay({
         if (temporaryEvent.end === fullDate) {
           return;
         }
-        const newEvent = { ...temporaryEvent, end: fullDate };
+        const isRewind =
+          DateService.DaysFrom(temporaryEvent.start, fullDate) < 0;
+        const newEvent = { ...temporaryEvent };
+        if (isRewind) {
+          newEvent.start = fullDate;
+          newEvent.end = fullDate;
+        } else {
+          newEvent.end = fullDate;
+        }
+        console.log("Enter", newEvent);
         eventDispatcher({
           type: "replacebyid",
           payload: [newEvent],
