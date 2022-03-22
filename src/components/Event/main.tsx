@@ -13,6 +13,7 @@ import {
 import { CustomValues } from "@/customTypes";
 import { fetchEvent } from "@/utils/fetchEvent";
 import { useBoardScroll } from "@/hooks/useBoardScroll";
+import { useCtxKeyBuffer } from "@/globalStorage/keyBuffer";
 
 const useGetEventFamily = (event: event) => {
   const events = useEventState();
@@ -35,6 +36,8 @@ export const Event = ({ event }: { event: event }) => {
   const temporaryEvent = useTemporaryEvent();
   const temporaryEventDispatcher = useTemporaryEventDispatcher();
   const eventDispatcher = useEventDispatch();
+  //keybuffer to detect when control keyword is pressed
+  const keyBuffer = useCtxKeyBuffer();
 
   //console.log("parent", parent);
   //console.log("family", family);
@@ -83,66 +86,74 @@ export const Event = ({ event }: { event: event }) => {
       //				It requires aditional work, as a key like Ctrl to be pressed in order to allow this feature to work
       //				Also when Ctrl key is pressed a cursor with a scissors will appear
 
-      //onMouseDownCapture={(e) => {
-      //  e.stopPropagation();
-      //  console.log("Click event");
-      //  const x = e.clientX;
-      //  const y = e.clientY;
+      onMouseDownCapture={(e) => {
+        if (keyBuffer?.current !== "Control") {
+          return;
+        }
+        e.stopPropagation();
+        console.log("Click event");
+        const x = e.clientX;
+        const y = e.clientY;
 
-      //  const el = document.elementsFromPoint(x, y);
-      //  const dayDiv = el.find((e) => e.id.includes("day"));
+        const el = document.elementsFromPoint(x, y);
+        const dayDiv = el.find((e) => e.id.includes("day"));
 
-      //  //All of this is the same as Board callback
-      //  const id = dayDiv?.id;
-      //  if (!id) {
-      //    return;
-      //  }
+        //All of this is the same as Board callback
+        const id = dayDiv?.id;
+        if (!id) {
+          return;
+        }
 
-      //  const entries = id.split("-");
+        const entries = id.split("-");
 
-      //  if (entries[0] !== "day") {
-      //    return;
-      //  }
-      //  const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
-      //  if (parentEvent.end === fullDate) {
-      //    return;
-      //  }
+        if (entries[0] !== "day") {
+          return;
+        }
 
-      //  const today = new Date(fullDate);
-      //  const previous = new Date(today.getTime());
-      //  const prev = previous.setDate(today.getDate() + 1);
+        const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
+        if (parentEvent.end === fullDate) {
+          return;
+        }
 
-      //  const yesterdayDate = DateService.FormatDate(new Date(prev));
+        const today = new Date(fullDate);
+        const dayWeek = DateService.GetMonthDayKey(today);
+        const previous = new Date(today.getTime());
+        const nextOrBack = dayWeek !== "Monday" ? +1 : -1;
+        const prev = previous.setDate(today.getDate() + nextOrBack);
 
-      //  const prevEvent = { ...parentEvent, end: fullDate };
-      //  const nextEvent = { ...parentEvent, start: yesterdayDate };
-      //  eventDispatcher({
-      //    type: "replacebyid",
-      //    payload: [prevEvent],
-      //  });
-      //  fetchEvent("PUT", prevEvent);
+        const yesterdayDate = DateService.FormatDate(new Date(prev));
 
-      //  const result = fetchEvent("POST", {
-      //    ...nextEvent,
-      //    id: Math.floor(Math.random() * 1000),
-      //  });
-      //  result
-      //    .then((res: any) => res.json())
-      //    .then((json) => {
-      //      eventDispatcher({
-      //        type: "appendarray",
-      //        payload: [
-      //          {
-      //            id: json[0].id,
-      //            client: json[0].client,
-      //            job: json[0].job,
-      //            start: json[0].start,
-      //            end: json[0].end,
-      //          },
-      //        ],
-      //      });
-      //    });
-      //}}
+        const start = dayWeek !== "Monday" ? yesterdayDate : fullDate;
+        const end = dayWeek !== "Monday" ? fullDate : yesterdayDate;
+        const prevEvent = { ...parentEvent, end };
+        const nextEvent = { ...parentEvent, start };
+        eventDispatcher({
+          type: "replacebyid",
+          payload: [prevEvent],
+        });
+        fetchEvent("PUT", prevEvent);
+
+        const result = fetchEvent("POST", {
+          ...nextEvent,
+          id: Math.floor(Math.random() * 1000),
+        });
+        result
+          .then((res: any) => res.json())
+          .then((json) => {
+            eventDispatcher({
+              type: "appendarray",
+              payload: [
+                {
+                  id: json[0].id,
+                  client: json[0].client,
+                  job: json[0].job,
+                  start: json[0].start,
+                  end: json[0].end,
+                },
+              ],
+            });
+          });
+      }}
       onTouchMove={(e) => {
         e.preventDefault();
 

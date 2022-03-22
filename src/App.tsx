@@ -9,10 +9,13 @@ import { useControllerDispatch } from "./hooks/useController";
 
 import { useGethCancel, useGethDeleteEvent } from "./api/handlers";
 import { useEventsDnD } from "./DnDLogic";
+import { useCtxKeyBufferDispatcher } from "./globalStorage/keyBuffer";
 
 export default function App() {
   const { value } = useUserSession();
   const { handlers } = useEventsDnD();
+
+  const dispatchKeyBuffer = useCtxKeyBufferDispatcher();
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -30,10 +33,13 @@ export default function App() {
 
   useEffect(() => {
     const hOnKeyDown = (e: any) => {
+      console.log("Key pressed", e.key);
       if (eventSelected && e.key === "Delete") {
         hDelete();
       } else if (e.key === "Escape") {
         hCancel();
+      } else if (e.key === "Control") {
+        dispatchKeyBuffer(e.key);
       } else if (!isNaN(parseInt(e.key))) {
         const jobField = document.getElementById("job");
         const selectField = document.querySelector("select");
@@ -60,11 +66,17 @@ export default function App() {
       }
     };
 
+    const hOnKeyUp = () => {
+      dispatchKeyBuffer("");
+    };
+
     document.querySelector("html")?.addEventListener("keydown", hOnKeyDown);
+    document.querySelector("html")?.addEventListener("keyup", hOnKeyUp);
     return () => {
       document
         .querySelector("html")
         ?.removeEventListener("keydown", hOnKeyDown);
+      document.querySelector("html")?.removeEventListener("keyup", hOnKeyUp);
     };
   }, [eventSelected]);
 
