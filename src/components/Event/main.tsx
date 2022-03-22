@@ -98,14 +98,19 @@ export const Event = ({ event }: { event: event }) => {
         draggable={"true"}
         onTouchStartCapture={(e) => {
           console.log("Drag Start", event);
+          e.preventDefault();
           temporaryEventDispatcher(parentEvent);
           //draggableBackup.current = parentEvent;
           //dispatchHoveringId(parentEvent.id);
           //isDragging.setState(true);
         }}
         onDragStartCapture={(e) => {
-          console.log("Drag Start", event);
+          //e.preventDefault();
           temporaryEventDispatcher(parentEvent);
+          //          var img = new Image();
+          //          img.src =
+          //            "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
+          //          e.dataTransfer.setDragImage(img, 0, 0);
           //draggableBackup.current = parentEvent;
           //dispatchHoveringId(parentEvent.id);
           //isDragging.setState(true);
@@ -113,9 +118,6 @@ export const Event = ({ event }: { event: event }) => {
         onTouchEndCapture={(e) => {
           console.log("Drag End", event);
           temporaryEventDispatcher(CustomValues.nullEvent);
-        }}
-        onTouchMove={(e) => {
-          console.log("Touch move", e.changedTouches);
         }}
         onDragEndCapture={(e) => {
           console.log("Drag End", event);

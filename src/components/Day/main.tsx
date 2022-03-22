@@ -53,6 +53,7 @@ export function IDay({
   const temporaryEvent = useTemporaryEvent();
   const temporaryEventDispatcher = useTemporaryEventDispatcher();
   const isSet = useRef(CustomValues.nullEvent);
+  const dayDivRef = useRef<HTMLDivElement>(null);
 
   //const { id } = useControllerState();
 
@@ -77,6 +78,7 @@ export function IDay({
       $isLock={isLocked}
       $isWeekend={isWeekend}
       $isSelected={isSelected(start, fullDate, end)}
+      ref={dayDivRef}
       onClick={() => {
         if (isDragging.state || isLocked || isWeekend) {
           return;
@@ -90,28 +92,7 @@ export function IDay({
           setEventController(null);
         }
       }}
-      onTouchStart={() => {
-        console.log("Drag start capture", temporaryEvent);
-        isSet.current = { ...temporaryEvent };
-      }}
-      onTouchMove={(e) => {
-        console.log("Touch move", e.changedTouches);
-      }}
-      onDragStart={() => {
-        console.log("Drag start capture", temporaryEvent);
-        isSet.current = { ...temporaryEvent };
-      }}
       onDragEnter={(e) => {
-        //console.clear();
-        e.preventDefault();
-        e.stopPropagation();
-        //if (isSet.current.id === 0) {
-        //  console.log("return");
-        //  return;
-        //}
-        //if (fullDate !== temporaryEvent.end) {
-        //  isSet.current = CustomValues.nullEvent;
-        //}
         if (temporaryEvent.end === fullDate) {
           return;
         }
