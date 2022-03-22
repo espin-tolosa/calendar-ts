@@ -33,7 +33,7 @@ export default function App() {
 
   useEffect(() => {
     const hOnKeyDown = (e: any) => {
-      console.log("Key pressed", e.key);
+      console.log("Key pressed", e.key, eventSelected);
       if (eventSelected && e.key === "Delete") {
         hDelete();
       } else if (e.key === "Escape") {

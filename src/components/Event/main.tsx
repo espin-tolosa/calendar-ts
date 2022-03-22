@@ -14,6 +14,9 @@ import { CustomValues } from "@/customTypes";
 import { fetchEvent } from "@/utils/fetchEvent";
 import { useBoardScroll } from "@/hooks/useBoardScroll";
 import { useCtxKeyBuffer } from "@/globalStorage/keyBuffer";
+import { useSetEventSelected } from "../Controller/main";
+import { useControllerDispatch } from "@/hooks/useController";
+import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 
 const useGetEventFamily = (event: event) => {
   const events = useEventState();
@@ -39,6 +42,31 @@ export const Event = ({ event }: { event: event }) => {
   //keybuffer to detect when control keyword is pressed
   const keyBuffer = useCtxKeyBuffer();
 
+  const setEventController = useSetEventSelected();
+  const dispatchController = useControllerDispatch();
+  const dispatchControllerDates = useControllerDispatchDates();
+
+  const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
+    console.log("Clicked on Event", parentEvent);
+    e.stopPropagation();
+
+    // dispatchControllerDates({
+    //   type: "setDates",
+    //   payload: { start: parentEvent.start, end: parentEvent.end },
+    // });
+
+    // dispatchController({
+    //   type: "setController",
+    //   payload: {
+    //     id: parentEvent.id,
+    //     client: parentEvent.client,
+    //     job: parentEvent.job,
+    //   },
+    // });
+
+    setEventController(parentEvent);
+  };
+
   //console.log("parent", parent);
   //console.log("family", family);
 
@@ -63,6 +91,7 @@ export const Event = ({ event }: { event: event }) => {
     <StyledEvent.TWflexContainer
       className="touch-none"
       {...mouseHover}
+      onClick={hOnClick}
       draggable={"true"}
       onTouchStartCapture={(e) => {
         console.log("Touch Start Capture", event);
@@ -87,6 +116,7 @@ export const Event = ({ event }: { event: event }) => {
       //				Also when Ctrl key is pressed a cursor with a scissors will appear
 
       onMouseDownCapture={(e) => {
+        setEventController(parentEvent);
         if (keyBuffer?.current !== "Control") {
           return;
         }

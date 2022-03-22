@@ -43,6 +43,7 @@ export const useGethDeleteEvent = () => {
   const dispatchController = useControllerDispatch();
   const eventDispatcher = useEventDispatch();
   const dispatchControllerDates = useControllerDispatchDates();
+  console.log("delete supr", eventSelected);
   return () => {
     // TODO: check if is valid event
     //if (!isReadyToSubmit) {

@@ -28,9 +28,10 @@ import { fetchEvent } from "@/utils/fetchEvent";
 import { useGethCancel } from "@/api/handlers";
 
 const cEventSelected = createContext<event | null>(null);
-const cSetEventSelected = createContext<
-  Dispatch<React.SetStateAction<event | null>>
->(() => null);
+//const cSetEventSelected = createContext<
+//  Dispatch<React.SetStateAction<event | null>>
+//>(() => null);
+const cSetEventSelected = createContext((event: event | null) => {});
 
 export const useEventSelected = () => {
   return useContext(cEventSelected);
@@ -41,9 +42,14 @@ export const useSetEventSelected = () => {
 
 export const EventInController: composition = ({ children }) => {
   const [eventSelected, setEventSelected] = useState<event | null>(null);
+  const SetEventSelected = (event: event | null) => {
+    console.log("set event", event);
+    setEventSelected(event);
+  };
+
   return (
     <cEventSelected.Provider value={eventSelected}>
-      <cSetEventSelected.Provider value={setEventSelected}>
+      <cSetEventSelected.Provider value={SetEventSelected}>
         {children}
       </cSetEventSelected.Provider>
     </cEventSelected.Provider>
