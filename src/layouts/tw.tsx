@@ -1,8 +1,7 @@
 import tw from "tailwind-styled-components";
 
-export const TWapp = tw.div<{ $disableScroll: boolean }>`
+export const TWapp = tw.div`
 	select-none box-border font-roboto font-extra md:text-xl text-sm  scale-100 bg-slate-50
-	${({ $disableScroll }) => ($disableScroll && "touch-none") || "touch-auto"}
 `;
 
 export const TWmain = tw.div<{ $display: boolean }>`
@@ -41,11 +40,10 @@ sticky sm:top-10 customtp:top-6 custombp:top-6 z-TopLayer
 rounded-md
 shadow-[shadow-[5px_5px_5px_rgb(148,163,184)]
 `;
-export const TWboard = tw.div<{ $disableScroll: boolean }>`
+export const TWboard = tw.div`
 grid gap-1 mt-1 xl:components-calendar sm:ml-2 mx-0 bg-white
 print:w-full
 print:px-10
-	${({ $disableScroll }) => ($disableScroll && "touch-none") || "touch-auto"}
 `;
 export const TWheader = tw.div`
 sticky top-0 z-50
