@@ -78,6 +78,71 @@ export const Event = ({ event }: { event: event }) => {
         temporaryEventDispatcher(parentEvent);
         e.preventDefault();
       }}
+      //
+      // TODO: this feature is inactive by now, it split an event by clicking on it
+      //				It requires aditional work, as a key like Ctrl to be pressed in order to allow this feature to work
+      //				Also when Ctrl key is pressed a cursor with a scissors will appear
+
+      //onMouseDownCapture={(e) => {
+      //  e.stopPropagation();
+      //  console.log("Click event");
+      //  const x = e.clientX;
+      //  const y = e.clientY;
+
+      //  const el = document.elementsFromPoint(x, y);
+      //  const dayDiv = el.find((e) => e.id.includes("day"));
+
+      //  //All of this is the same as Board callback
+      //  const id = dayDiv?.id;
+      //  if (!id) {
+      //    return;
+      //  }
+
+      //  const entries = id.split("-");
+
+      //  if (entries[0] !== "day") {
+      //    return;
+      //  }
+      //  const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
+      //  if (parentEvent.end === fullDate) {
+      //    return;
+      //  }
+
+      //  const today = new Date(fullDate);
+      //  const previous = new Date(today.getTime());
+      //  const prev = previous.setDate(today.getDate() + 1);
+
+      //  const yesterdayDate = DateService.FormatDate(new Date(prev));
+
+      //  const prevEvent = { ...parentEvent, end: fullDate };
+      //  const nextEvent = { ...parentEvent, start: yesterdayDate };
+      //  eventDispatcher({
+      //    type: "replacebyid",
+      //    payload: [prevEvent],
+      //  });
+      //  fetchEvent("PUT", prevEvent);
+
+      //  const result = fetchEvent("POST", {
+      //    ...nextEvent,
+      //    id: Math.floor(Math.random() * 1000),
+      //  });
+      //  result
+      //    .then((res: any) => res.json())
+      //    .then((json) => {
+      //      eventDispatcher({
+      //        type: "appendarray",
+      //        payload: [
+      //          {
+      //            id: json[0].id,
+      //            client: json[0].client,
+      //            job: json[0].job,
+      //            start: json[0].start,
+      //            end: json[0].end,
+      //          },
+      //        ],
+      //      });
+      //    });
+      //}}
       onTouchMove={(e) => {
         e.preventDefault();
 
