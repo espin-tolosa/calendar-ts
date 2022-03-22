@@ -4,7 +4,7 @@ import {
 } from "@/hooks/useController";
 import { event } from "@/interfaces";
 import { ClientColorStyles } from "@/utils/giveMeColor";
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { fetchEvent } from "@/utils/fetchEvent";
 import { useEventDispatch } from "@/hooks/useEventsState";
 
@@ -123,7 +123,6 @@ export const useStorage = (event: event) => {
   };
 
   const hOnBlur = () => {
-    console.log("On blur");
     if (readyToSubmit.current) {
       updateEvent({ ...event, job: jobInput });
       readyToSubmit.current = false;
@@ -134,23 +133,21 @@ export const useStorage = (event: event) => {
 
   const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
-    console.log("is selected");
     setIsSelected(true);
   };
   const hOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const enter = e.target.value === "Enter";
     if (enter) {
-      updateEvent({ ...event, job: jobInput });
       isFocus.current!.blur();
-    } else {
-      setJobInput(e.target.value);
+      return;
     }
+    setJobInput(e.target.value);
+    updateEvent({ ...event, job: e.target.value });
   };
 
-  const hOnKeyDown = (e: any) => {
+  const hOnKeyDown = (e: React.KeyboardEvent) => {
     const enter = e.key === "Enter";
     if (enter) {
-      updateEvent({ ...event, job: jobInput });
       isFocus.current!.blur();
     }
 
