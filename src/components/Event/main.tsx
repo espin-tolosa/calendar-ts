@@ -12,6 +12,7 @@ import {
 } from "@/globalStorage/temporaryEvents";
 import { CustomValues } from "@/customTypes";
 import { fetchEvent } from "@/utils/fetchEvent";
+import { useBoardScroll } from "@/hooks/useBoardScroll";
 
 const useGetEventFamily = (event: event) => {
   const events = useEventState();
@@ -57,10 +58,116 @@ export const Event = ({ event }: { event: event }) => {
 
   return (
     <StyledEvent.TWflexContainer
+      className="touch-none"
       {...mouseHover}
-      onDragEnterCapture={(e) => {
-        console.info("On drag enter event", event);
+      draggable={"true"}
+      onTouchStartCapture={(e) => {
+        console.log("Touch Start Capture", event);
+        e.preventDefault();
+        //document.body.style.touchAction = "none";
+        //const board = document.getElementById("Board");
+        //if (board) {
+        //board.style.touchAction = "none";
+        //}
+        //draggableBackup.current = parentEvent;
+        //dispatchHoveringId(parentEvent.id);
+        //isDragging.setState(true);
+      }}
+      onTouchStart={(e) => {
+        console.log("Touch start");
+        temporaryEventDispatcher(parentEvent);
+        e.preventDefault();
+      }}
+      onTouchMove={(e) => {
+        e.preventDefault();
+
+        const x = e.touches[0].clientX;
+        const y = e.touches[0].clientY;
+
+        const el = document.elementsFromPoint(x, y);
+        const dayDiv = el.find((e) => e.id.includes("day"));
+
+        //All of this is the same as Board callback
+        const id = dayDiv?.id;
+        if (!id) {
+          return;
+        }
+
+        const entries = id.split("-");
+
+        if (entries[0] !== "day") {
+          return;
+        }
+
+        const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
+        if (temporaryEvent.end === fullDate) {
+          return;
+        }
+        const newEvent = { ...temporaryEvent, end: fullDate };
+        eventDispatcher({
+          type: "replacebyid",
+          payload: [newEvent],
+        });
+        fetchEvent("PUT", newEvent);
+        temporaryEventDispatcher(newEvent);
+        return true;
+      }}
+      onDragStartCapture={(e) => {
+        //e.preventDefault();
+        temporaryEventDispatcher(parentEvent);
+
+        //          var img = new Image();
+        //          img.src =
+        //            "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
+        //          e.dataTransfer.setDragImage(img, 0, 0);
+        //draggableBackup.current = parentEvent;
+        //dispatchHoveringId(parentEvent.id);
+        //isDragging.setState(true);
+      }}
+      onTouchEndCapture={(e) => {
+        console.log("Drag End", event);
+        temporaryEventDispatcher(CustomValues.nullEvent);
+        //document.body.style.touchAction = "auto";
+        //const board = document.getElementById("Board");
+        //if (board) {
+        //  board.style.touchAction = "auto";
+        //}
+      }}
+      onDragEndCapture={(e) => {
+        console.log("Drag End", event);
+        temporaryEventDispatcher(CustomValues.nullEvent);
+      }}
+      onDragOverCapture={(e) => {
         e.stopPropagation();
+        const x = e.clientX;
+        const y = e.clientY;
+
+        const el = document.elementsFromPoint(x, y);
+        const dayDiv = el.find((e) => e.id.includes("day"));
+
+        //All of this is the same as Board callback
+        const id = dayDiv?.id;
+        if (!id) {
+          return;
+        }
+
+        const entries = id.split("-");
+
+        if (entries[0] !== "day") {
+          return;
+        }
+
+        const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
+        if (temporaryEvent.end === fullDate) {
+          return;
+        }
+        const newEvent = { ...temporaryEvent, end: fullDate };
+        eventDispatcher({
+          type: "replacebyid",
+          payload: [newEvent],
+        });
+        fetchEvent("PUT", newEvent);
+        temporaryEventDispatcher(newEvent);
       }}
     >
       <StyledEvent.TWtextContent
@@ -95,34 +202,6 @@ export const Event = ({ event }: { event: event }) => {
       </StyledEvent.TWtextContent>
 
       <StyledEvent.TWextend
-        draggable={"true"}
-        onTouchStartCapture={(e) => {
-          console.log("Drag Start", event);
-          e.preventDefault();
-          temporaryEventDispatcher(parentEvent);
-          //draggableBackup.current = parentEvent;
-          //dispatchHoveringId(parentEvent.id);
-          //isDragging.setState(true);
-        }}
-        onDragStartCapture={(e) => {
-          //e.preventDefault();
-          temporaryEventDispatcher(parentEvent);
-          //          var img = new Image();
-          //          img.src =
-          //            "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=";
-          //          e.dataTransfer.setDragImage(img, 0, 0);
-          //draggableBackup.current = parentEvent;
-          //dispatchHoveringId(parentEvent.id);
-          //isDragging.setState(true);
-        }}
-        onTouchEndCapture={(e) => {
-          console.log("Drag End", event);
-          temporaryEventDispatcher(CustomValues.nullEvent);
-        }}
-        onDragEndCapture={(e) => {
-          console.log("Drag End", event);
-          temporaryEventDispatcher(CustomValues.nullEvent);
-        }}
         $cells={spreadCells}
         onMouseDownCapture={(e) => {
           //console.log("extend event:", event.id);
