@@ -69,4 +69,9 @@ export class EventClass {
   static isParent(event: event): boolean {
     return !this.isChildren(event) && !this.isPlaceholder(event);
   }
+
+  static getUnusedId() {
+    const lastId = 100000;
+    return lastId;
+  }
 }

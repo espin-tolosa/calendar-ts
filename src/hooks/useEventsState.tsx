@@ -31,38 +31,42 @@ function reducerEvents(state: CustomTypes.State, action: Action) {
   switch (action.type) {
     // Add new event coming from database, it doesn't allow to add events with duplicated id's
     case "appendarray": {
-      const eventWithDayHour = action.payload[0]; // by now I can only manage first item
-      const event = {
-        id: eventWithDayHour.id,
-        client: eventWithDayHour.client,
-        job: eventWithDayHour.job,
-        start: eventWithDayHour.start.split(" ")[0],
-        end: eventWithDayHour.end.split(" ")[0],
-      };
+      let newState = [...state];
+      const newEvents = action.payload;
+      newEvents.forEach((event) => {
+        //Treat event from db to remove hours from data
+        event.start = event.start.split(" ")[0];
+        event.end = event.end.split(" ")[0];
+        // Check if event already exists in the state by its id
+        const isEventInState =
+          state.findIndex(
+            (inner) => Math.abs(inner.id) === Math.abs(event.id)
+          ) >= 0;
+        if (isEventInState) {
+          return newState;
+        }
 
-      // Check if event already exists in the state by its id
-      const isEventInState = state.findIndex((inner) => inner.id === event.id);
-      if (isEventInState >= 0) {
-        return state;
-      }
+        //checks the case of end begins before the start
+        const daysSpread = DateService.DaysFrom(event.start, event.end);
+        if (daysSpread < 0) {
+          return newState;
+        }
 
-      //checks the case of end begins before the start
-      const daysSpread = DateService.DaysFrom(event.start, event.end);
-      if (daysSpread < 0) {
-        return state;
-      }
+        //check if start and end day exists
 
-      //check if start and end day exists
+        //TODO: extract to a function
+        if (!isReadyToSubmit) {
+          return newState;
+        }
 
-      //TODO: extract to a function
-      if (!isReadyToSubmit) {
-        return state;
-      }
+        const spread = eventSpreader(event);
+        newState.push(event);
+        newState = newState.concat(spread);
+        //newState = [...newState, ...spread];
+      });
 
-      const spread = eventSpreader(event);
-      const newState = [...state, event, ...spread];
-      newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       //
+      newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       return newState;
     }
     //

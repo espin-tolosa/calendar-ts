@@ -1,3 +1,4 @@
+import { EventClass } from "@/classes/event";
 import {
   useEventSelected,
   useSetEventSelected,
@@ -27,14 +28,10 @@ export function useGethCancel() {
   const eventDispatcher = useEventDispatch();
   const dispatchControllerDates = useControllerDispatchDates();
   return () => {
-    const getUnusedId = () => {
-      const lastId = 100000;
-      return lastId;
-    };
     setEventController(null);
     eventDispatcher({
       type: "deletebyid",
-      payload: [{ ...eventSelected!, id: getUnusedId() }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
+      payload: [{ ...eventSelected!, id: EventClass.getUnusedId() }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
     });
 
     dispatchController({

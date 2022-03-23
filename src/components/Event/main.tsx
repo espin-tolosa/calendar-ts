@@ -222,31 +222,34 @@ export const Event = ({ event }: { event: event }) => {
         const start = dayWeek !== "Monday" ? yesterdayDate : fullDate;
         const end = dayWeek !== "Monday" ? fullDate : yesterdayDate;
         const prevEvent = { ...parentEvent, end };
-        const nextEvent = { ...parentEvent, start };
+        const nextEvent = {
+          ...parentEvent,
+          start,
+          id: EventClass.getUnusedId(),
+        };
         eventDispatcher({
           type: "replacebyid",
           payload: [prevEvent],
         });
         fetchEvent("PUT", prevEvent);
 
-        const result = fetchEvent("POST", {
-          ...nextEvent,
-          id: Math.floor(Math.random() * 1000),
+        //Optimistic push nextEvent to state, with
+        eventDispatcher({
+          type: "appendarray",
+          payload: [nextEvent],
         });
+        const result = fetchEvent("POST", nextEvent);
         result
-          .then((res: any) => res.json())
-          .then((json) => {
+          .then((res) => res.json())
+          .then((dbResponse: Array<event>) => {
+            //This is the way I have to replace the Id of an event, since the action "replacebyid" uses the id to change the other fields, I can't use it to replace the id itself
+            eventDispatcher({
+              type: "deletebyid",
+              payload: [nextEvent],
+            });
             eventDispatcher({
               type: "appendarray",
-              payload: [
-                {
-                  id: json[0].id,
-                  client: json[0].client,
-                  job: json[0].job,
-                  start: json[0].start,
-                  end: json[0].end,
-                },
-              ],
+              payload: dbResponse,
             });
           });
       }}
@@ -264,14 +267,18 @@ export const Event = ({ event }: { event: event }) => {
         {!isChildren ? (
           <>
             <div className="text-md">{event.client}</div>
-            <div className="text-slate-800">{" | "}</div>
             {!isSelected ? (
-              <div className="">{event.job}</div>
+              <StyledEvent.TWjobContent $isHover={hover}>
+                {event.job}
+              </StyledEvent.TWjobContent>
             ) : (
               <input
                 ref={isFocus}
                 value={jobInput}
-                className="bg-transparent text-slate-900 outline-none appearance-none"
+                className="bg-transparent text-slate-900 outline-none appearance-none
+								
+whitespace-nowrap overflow-hidden overflow-ellipsis
+								"
               ></input>
             )}
           </>
