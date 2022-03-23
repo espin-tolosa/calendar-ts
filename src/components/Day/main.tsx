@@ -1,9 +1,7 @@
 import { styles } from "@/components/Day/tw";
-import { memo, useRef, useState } from "react";
+import { memo, useRef } from "react";
 import { DateService } from "@/utils/Date";
-import { Droppable } from "react-beautiful-dnd";
 import { useDayLockDispatcher } from "@/hooks/useDayLock";
-import { useSetEventSelected } from "../Controller/main";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useIsDragging } from "@/hooks/useIsDragging";
 import { useEventDispatch } from "@/hooks/useEventsState";
@@ -13,6 +11,7 @@ import {
 } from "@/globalStorage/temporaryEvents";
 import { fetchEvent } from "@/utils/fetchEvent";
 import { CustomValues } from "@/customTypes";
+import { useSetEventSelected } from "@/globalStorage/eventSelected";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{

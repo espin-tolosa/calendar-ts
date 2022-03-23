@@ -1,13 +1,26 @@
 import {
   useEventSelected,
   useSetEventSelected,
-} from "@/components/Controller/main";
+} from "@/globalStorage/eventSelected";
 import { useControllerDispatch } from "@/hooks/useController";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useEventDispatch } from "@/hooks/useEventsState";
 import { fetchEvent } from "@/utils/fetchEvent";
 
-export const useGethCancel = () => {
+// Custom-hook: useGethCancel
+//
+// Gives a Cancel function that can be used to any component that has access to context
+// in the same as Cancel button within Controller
+//
+// - SetEventSelected: null
+// - ControllerDispatch: null
+// - ControllerDispatchDates: null
+// - EventDispatch: clear temporary event
+//
+// A temporary event is tracked by getUnusedId
+//
+
+export function useGethCancel() {
   const eventSelected = useEventSelected();
   const setEventController = useSetEventSelected();
   const dispatchController = useControllerDispatch();
@@ -15,9 +28,6 @@ export const useGethCancel = () => {
   const dispatchControllerDates = useControllerDispatchDates();
   return () => {
     const getUnusedId = () => {
-      //TODO: create a temporary state fot un-fetched events. In the middle, 1 is reserved id for temporal events
-      // I just recover the last id from the array as it is already sorted by id and adds one
-      //const lastId = eventState[eventState.length - 1].id + 1;
       const lastId = 100000;
       return lastId;
     };
@@ -35,25 +45,69 @@ export const useGethCancel = () => {
       type: "clearDates",
     });
   };
-};
+}
 
-export const useGethDeleteEvent = () => {
+// Custom-hook: useGethDeleteEvent
+//
+// Gives a Delete function that can be used to any component that has access to context:
+// in the same as Delete button within Controller
+//
+// - SetEventSelected: null
+// - ControllerDispatch: null
+// - ControllerDispatchDates: null
+// - EventDispatch: clear temporary event
+//
+// A temporary event is tracked by getUnusedId
+//
+
+export function useGethDeleteEvent(): () => void {
   const eventSelected = useEventSelected();
-  const setEventController = useSetEventSelected();
+  const SetEventSelected = useSetEventSelected();
   const dispatchController = useControllerDispatch();
   const eventDispatcher = useEventDispatch();
   const dispatchControllerDates = useControllerDispatchDates();
-  console.log("delete supr", eventSelected);
-  return () => {
-    // TODO: check if is valid event
-    //if (!isReadyToSubmit) {
-    //  return;
-    //}
-    const result = fetchEvent("DELETE", eventSelected!);
-    result.then((res) => {
-      if (res.status === 204) {
+  return async () => {
+    const deleteResourceInAPI = async () => {
+      const result = await fetchEvent("DELETE", eventSelected!);
+      if (result.status === 204) {
+        console.log("Clear controller");
+        dispatchController({
+          type: "setController",
+          payload: { id: 0, client: "", job: "" },
+        });
+        dispatchControllerDates({
+          type: "clearDates",
+        });
+        SetEventSelected(null);
+      } else {
+        console.log("reset event", eventSelected);
         eventDispatcher({
-          type: "deletebyid",
+          type: "appendarray",
+          payload: [eventSelected!],
+        });
+      }
+
+      return result.status;
+    };
+
+    const MAX_ATTEMPTS = 10;
+    const success = (code: number) => code === 204;
+
+    eventDispatcher({
+      type: "deletebyid",
+      payload: [eventSelected!],
+    });
+    for (let i = 0; i < MAX_ATTEMPTS; i++) {
+      try {
+        const status = await deleteResourceInAPI();
+        if (success(status)) {
+          break;
+        }
+      } catch (e) {}
+      if (i === MAX_ATTEMPTS - 1) {
+        alert("Something went wrong, unable to delete event");
+        eventDispatcher({
+          type: "appendarray",
           payload: [eventSelected!],
         });
         dispatchController({
@@ -63,9 +117,8 @@ export const useGethDeleteEvent = () => {
         dispatchControllerDates({
           type: "clearDates",
         });
+        SetEventSelected(null);
       }
-    });
-
-    setEventController(null);
+    }
   };
-};
+}

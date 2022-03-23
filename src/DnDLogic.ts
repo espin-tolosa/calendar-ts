@@ -1,3 +1,9 @@
+// This custom hook utility it is no longer used.
+// It wrapps the callbacks around Bnd
+// but actually I'm implemented my own dnd system, called Odnd (organic drag and drop)
+
+// TODO: delete all
+
 import {
   BeforeCapture,
   DragStart,

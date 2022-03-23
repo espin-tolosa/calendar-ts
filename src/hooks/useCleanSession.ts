@@ -1,4 +1,4 @@
-import { useSetEventSelected } from "@/components/Controller/main";
+import { useSetEventSelected } from "@/globalStorage/eventSelected";
 import { useEffect, useState } from "react";
 import { useControllerDispatch } from "./useController";
 import { useControllerDispatchDates } from "./useControllerDate";
@@ -8,6 +8,7 @@ export const useCleanSession = () => {
   const [isToClean, setIsToClean] = useState(false);
 
   const setSession = useUserSession();
+
   const setEventController = useSetEventSelected();
   const dispatchController = useControllerDispatch();
   const dispatchControllerDates = useControllerDispatchDates();

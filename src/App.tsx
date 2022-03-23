@@ -3,12 +3,12 @@ import Codelink from "@/pages/Codelink";
 import Login from "@/pages/Login/Login";
 import { useUserSession } from "./hooks/useUserSession";
 import { useEffect, useLayoutEffect } from "react";
-import { useEventSelected } from "./components/Controller/main";
 import { useControllerDispatch } from "./hooks/useController";
 
 import { useGethCancel, useGethDeleteEvent } from "./api/handlers";
 import { useEventsDnD } from "./DnDLogic";
 import { useCtxKeyBufferDispatcher } from "./globalStorage/keyBuffer";
+import { useEventSelected } from "./globalStorage/eventSelected";
 
 export default function App() {
   const { value } = useUserSession();

@@ -10,11 +10,10 @@ import {
 } from "@/globalStorage/temporaryEvents";
 import { CustomValues } from "@/customTypes";
 import { fetchEvent } from "@/utils/fetchEvent";
-import { useBoardScroll } from "@/hooks/useBoardScroll";
 import { useCtxKeyBuffer } from "@/globalStorage/keyBuffer";
-import { useSetEventSelected } from "../Controller/main";
 import { useControllerDispatch } from "@/hooks/useController";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
+import { useSetEventSelected } from "@/globalStorage/eventSelected";
 
 const useGetEventFamily = (event: event) => {
   const events = useEventState();
@@ -48,19 +47,19 @@ export const Event = ({ event }: { event: event }) => {
     console.log("Clicked on Event", parentEvent);
     e.stopPropagation();
 
-    // dispatchControllerDates({
-    //   type: "setDates",
-    //   payload: { start: parentEvent.start, end: parentEvent.end },
-    // });
+    dispatchControllerDates({
+      type: "setDates",
+      payload: { start: parentEvent.start, end: parentEvent.end },
+    });
 
-    // dispatchController({
-    //   type: "setController",
-    //   payload: {
-    //     id: parentEvent.id,
-    //     client: parentEvent.client,
-    //     job: parentEvent.job,
-    //   },
-    // });
+    dispatchController({
+      type: "setController",
+      payload: {
+        id: parentEvent.id,
+        client: parentEvent.client,
+        job: parentEvent.job,
+      },
+    });
 
     setEventController(parentEvent);
   };

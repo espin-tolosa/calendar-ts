@@ -1,14 +1,9 @@
-import { useUserSession } from "@/hooks/useUserSession";
 import { DateService } from "@/utils/Date";
-import { scrollToDay } from "@/utils/scrollToDay";
 import { useToken } from "@/hooks/useToken";
 import * as StyledTopnav from "./tw";
-import { useSetEventSelected } from "../Controller/main";
-import { useControllerDispatchDates } from "@/hooks/useControllerDate";
-import { useControllerDispatch } from "@/hooks/useController";
 import { useCtxCurrentMonthRef } from "@/globalStorage/currentMonthReference";
 import { useCtxTopNavRef } from "@/globalStorage/topNavSize";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect } from "react";
 import { DOMRefs } from "@/globalStorage/DOMRefs";
 import { useCleanSession } from "@/hooks/useCleanSession";
 

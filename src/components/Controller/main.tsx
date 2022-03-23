@@ -1,14 +1,6 @@
-import React, {
-  createContext,
-  Dispatch,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef } from "react";
 import * as tw_Controller from "./tw";
 import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
-import { composition, event } from "@/interfaces";
 import tw from "tailwind-styled-components";
 import {
   useControllerDispatch,
@@ -16,45 +8,17 @@ import {
 } from "@/hooks/useController";
 import { DateService } from "@/utils/Date";
 import { isReadyToSubmit } from "@/utils/ValidateEvent";
-import { useUserSession } from "@/hooks/useUserSession";
-import { api } from "@/static/apiRoutes";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
 import { useListenWindowSize } from "@/hooks/useResponsiveLayout";
 import { useControllerStateDates } from "@/hooks/useControllerDate";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
-import { zeroPadd } from "@/utils/zeroPadd";
 import { scrollToDay } from "@/utils/scrollToDay";
 import { fetchEvent } from "@/utils/fetchEvent";
-import { useGethCancel } from "@/api/handlers";
-
-const cEventSelected = createContext<event | null>(null);
-//const cSetEventSelected = createContext<
-//  Dispatch<React.SetStateAction<event | null>>
-//>(() => null);
-const cSetEventSelected = createContext((event: event | null) => {});
-
-export const useEventSelected = () => {
-  return useContext(cEventSelected);
-};
-export const useSetEventSelected = () => {
-  return useContext(cSetEventSelected);
-};
-
-export const EventInController: composition = ({ children }) => {
-  const [eventSelected, setEventSelected] = useState<event | null>(null);
-  const SetEventSelected = (event: event | null) => {
-    console.log("set event", event);
-    setEventSelected(event);
-  };
-
-  return (
-    <cEventSelected.Provider value={eventSelected}>
-      <cSetEventSelected.Provider value={SetEventSelected}>
-        {children}
-      </cSetEventSelected.Provider>
-    </cEventSelected.Provider>
-  );
-};
+import { useGethCancel, useGethDeleteEvent } from "@/api/handlers";
+import {
+  useEventSelected,
+  useSetEventSelected,
+} from "@/globalStorage/eventSelected";
 
 const CreateEvent = () => {
   const eventSelected = useEventSelected();
@@ -63,6 +27,7 @@ const CreateEvent = () => {
   const setEventController = useSetEventSelected();
   const eventState = useEventState();
   const hCancelClose = useGethCancel();
+  const hDeleteClose = useGethDeleteEvent();
 
   /*  parallel change consume date context */
   const dispatchController = useControllerDispatch();
@@ -199,32 +164,7 @@ const CreateEvent = () => {
         type="submit"
         value={"Delete"}
         title={`Delete event from ${eventSelected?.client || ""}`}
-        onClick={() => {
-          // TODO: check if is valid event
-          if (!isReadyToSubmit) {
-            return;
-          }
-
-          //Controller 220
-          const result = fetchEvent("DELETE", eventSelected!);
-          result.then((res) => {
-            if (res.status === 204) {
-              eventDispatcher({
-                type: "deletebyid",
-                payload: [eventSelected!],
-              });
-              dispatchController({
-                type: "setController",
-                payload: { id: 0, client: "", job: "" },
-              });
-              dispatchControllerDates({
-                type: "clearDates",
-              });
-            }
-          });
-
-          setEventController(null);
-        }}
+        onClick={hDeleteClose}
       />
       {/* Log button */}
       <tw_Controller.button
