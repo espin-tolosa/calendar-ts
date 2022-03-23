@@ -101,11 +101,9 @@ export function IDay({
         const newEvent = { ...temporaryEvent };
         if (isRewind) {
           newEvent.start = fullDate;
-          newEvent.end = fullDate;
         } else {
           newEvent.end = fullDate;
         }
-        console.log("Enter", newEvent);
         eventDispatcher({
           type: "replacebyid",
           payload: [newEvent],

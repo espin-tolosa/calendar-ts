@@ -164,7 +164,16 @@ export const Event = ({ event }: { event: event }) => {
         if (temporaryEvent.end === fullDate) {
           return;
         }
-        const newEvent = { ...temporaryEvent, end: fullDate };
+
+        const isRewind =
+          DateService.DaysFrom(temporaryEvent.start, fullDate) < 0;
+        const newEvent = { ...temporaryEvent };
+        if (isRewind) {
+          newEvent.start = fullDate;
+        } else {
+          newEvent.end = fullDate;
+        }
+
         eventDispatcher({
           type: "replacebyid",
           payload: [newEvent],
