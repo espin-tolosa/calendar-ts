@@ -110,6 +110,7 @@ export const useStorage = (event: event) => {
   const updateEvent = (newEvent: event) => {
     // TODO: check if is valid event
     // Controller 106
+    //TODO: turn to async function in order to catch net Errors
     const result = fetchEvent("PUT", newEvent);
 
     result.then((res) => {
@@ -118,6 +119,10 @@ export const useStorage = (event: event) => {
           type: "replacebyid",
           payload: [newEvent],
         });
+      } else {
+        const error = res.status === 401 ? "Unauthorized" : "Server error";
+        alert("Something went wrong: " + error);
+        window.location.reload();
       }
     });
   };

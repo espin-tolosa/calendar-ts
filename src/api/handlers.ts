@@ -66,11 +66,13 @@ export function useGethDeleteEvent(): () => void {
   const dispatchController = useControllerDispatch();
   const eventDispatcher = useEventDispatch();
   const dispatchControllerDates = useControllerDispatchDates();
+
+  // First time I'm able to catch error Failed to Fetch
+  // it needs async function to get caught
   return async () => {
     const deleteResourceInAPI = async () => {
       const result = await fetchEvent("DELETE", eventSelected!);
       if (result.status === 204) {
-        console.log("Clear controller");
         dispatchController({
           type: "setController",
           payload: { id: 0, client: "", job: "" },
@@ -79,12 +81,6 @@ export function useGethDeleteEvent(): () => void {
           type: "clearDates",
         });
         SetEventSelected(null);
-      } else {
-        console.log("reset event", eventSelected);
-        eventDispatcher({
-          type: "appendarray",
-          payload: [eventSelected!],
-        });
       }
 
       return result.status;
@@ -97,6 +93,9 @@ export function useGethDeleteEvent(): () => void {
       type: "deletebyid",
       payload: [eventSelected!],
     });
+
+    //This try to fetch 10 times before refresh the web page
+
     for (let i = 0; i < MAX_ATTEMPTS; i++) {
       try {
         const status = await deleteResourceInAPI();
@@ -105,19 +104,27 @@ export function useGethDeleteEvent(): () => void {
         }
       } catch (e) {}
       if (i === MAX_ATTEMPTS - 1) {
+        // It migth happen
         alert("Something went wrong, unable to delete event");
-        eventDispatcher({
-          type: "appendarray",
-          payload: [eventSelected!],
-        });
-        dispatchController({
-          type: "setController",
-          payload: { id: 0, client: "", job: "" },
-        });
-        dispatchControllerDates({
-          type: "clearDates",
-        });
-        SetEventSelected(null);
+
+        //First strategy, force to refresh the page
+
+        window.location.reload();
+
+        //Second strategy, clear the state and contine
+
+        //        eventDispatcher({
+        //          type: "appendarray",
+        //          payload: [eventSelected!],
+        //        });
+        //        dispatchController({
+        //          type: "setController",
+        //          payload: { id: 0, client: "", job: "" },
+        //        });
+        //        dispatchControllerDates({
+        //          type: "clearDates",
+        //        });
+        //        SetEventSelected(null);
       }
     }
   };

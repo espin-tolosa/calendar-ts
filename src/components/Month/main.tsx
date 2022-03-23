@@ -1,12 +1,4 @@
-import {
-  memo,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { memo, useEffect, useLayoutEffect, useState } from "react";
 import { useMonthDate } from "@/hooks/useMonthDate";
 import { MemoIDay } from "@components/Day/main";
 import { MemoIDayHolder } from "@components/DayHolder/main";
@@ -16,7 +8,6 @@ import { DateService } from "@/utils/Date";
 import { event } from "@/interfaces";
 import { useEventDispatch } from "@/hooks/useEventsState";
 
-import { api } from "@/static/apiRoutes";
 import { zeroPadd } from "@/utils/zeroPadd";
 import { useControllerStateDates } from "@/hooks/useControllerDate";
 import { useDayLock } from "@/hooks/useDayLock";
@@ -24,12 +15,8 @@ import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences"
 import { useIsFetchingEvents } from "@/hooks/useIsFetchingEvents";
 import { useCtxCurrentMonthRef } from "@/globalStorage/currentMonthReference";
 import { isToday, _renderDate } from "@/utils/Date_v2";
-import { TopNavRef, useCtxTopNavRef } from "@/globalStorage/topNavSize";
-import { start } from "repl";
+import { useCtxTopNavRef } from "@/globalStorage/topNavSize";
 import { DOMRefs } from "@/globalStorage/DOMRefs";
-import { useOnce } from "@/hooks/useOnce";
-import { useCleanSession } from "@/hooks/useCleanSession";
-import { fetchEvent } from "@/utils/fetchEvent";
 import { usePrint } from "@/hooks/usePrint";
 import { useGethCancel } from "@/api/handlers";
 
@@ -39,12 +26,9 @@ type iMonth = {
 };
 const Month = ({ year, month }: iMonth) => {
   const date = useMonthDate(year, month);
-  const eventsDispatcher = useEventDispatch();
   const monthRef = useCtxCurrentMonthRef();
   const topNavRef = useCtxTopNavRef();
   const dispatchDOMRef = DOMRefs.useDispatch();
-  const { isFetching } = useIsFetchingEvents();
-  const setSessionIsToClean = useCleanSession();
 
   const [topNavHeight, setTopNavHeight] = useState({ top: "" });
   useLayoutEffect(() => {
@@ -92,43 +76,6 @@ const Month = ({ year, month }: iMonth) => {
   //
   const { setIsFetching } = useIsFetchingEvents();
 
-  useEffect(() => {
-    setIsFetching(true);
-    const result = fetchEvent("GET_FROM", {
-      id: 0,
-      client: "",
-      job: "",
-      start: `${year}-${month}-01`,
-      end: "",
-    });
-    result
-      .then((res) => res.json())
-      .then((json: Array<event>) =>
-        json.forEach((event: event) => {
-          eventsDispatcher({
-            type: "appendarray",
-            payload: [
-              {
-                id: event.id,
-                client: event.client,
-                job: event.job,
-                start: event.start,
-                end: event.end,
-              },
-            ],
-          });
-          setIsFetching(false);
-        })
-      )
-      .catch((e) => {
-        console.error("Possible invalid token", e);
-
-        let text = "Your credentials has expired, logout?";
-        if (window.confirm(text) == true) {
-          setSessionIsToClean(true);
-        }
-      });
-  }, []);
   const totalCellsInLastRow = (start: string, length: number) => {
     const DayStart = DateService.GetDayNumberOfDay(start);
     let startRows = 4; //it's the minimun ever when feb starts on monday 28days/7cols = 4rows
@@ -158,6 +105,7 @@ const Month = ({ year, month }: iMonth) => {
       <StyledMonth.TWheader
         id={`month-${date.year}-${zeroPadd(date.month)}`}
         onDoubleClick={() => {
+          //Print to PDF
           hCancelClose();
           setTimeout(() => {
             hPrint();

@@ -1,5 +1,9 @@
-import { createContext, useContext, useState } from "react";
+// Context:
+//
+// It's used to help the Controller knows what event is selected by the user
+//
 
+import { createContext, useContext, useState } from "react";
 import { composition, event } from "@/interfaces";
 
 const cEventSelected = createContext<event | null>(null);
