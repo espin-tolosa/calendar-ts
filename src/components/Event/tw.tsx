@@ -1,7 +1,7 @@
 import tw from "tailwind-styled-components";
 
 export const TWjobContent = tw.div<{ $isHover: boolean }>`
-flex whitespace-normal justify-center break-words overflow-hidden overflow-ellipsis border-l-2 pl-1 border-dashed
+flex whitespace-normal justify-center break-words overflow-hidden overflow-ellipsis border-l-2 pl-1 border-dotted
 ${({ $isHover }) => ($isHover && "border-slate-400") || "border-transparent"}
 `;
 
@@ -20,7 +20,6 @@ export const TWtextContent = tw.div<{
 flex flex-row gap-1 items-center absolute
 whitespace-nowrap overflow-hidden overflow-ellipsis
 pl-2 active:text-black ml-[0.1rem] transition-colors
-rounded-r-full
 printable
 ${({ $client }) => $client}
 ${({ $cells }) =>
@@ -34,8 +33,8 @@ ${({ $cells }) =>
   ($cells === 8 && "event-span-8") ||
   "extend-event-1"}
 		
-
-${({ $isChildren }) => (!$isChildren && "rounded-l-full") || ""}
+rounded-r-[10px]
+${({ $isChildren }) => (!$isChildren && "rounded-l-[10px]") || ""}
 ${({ $isHover, $isChildren }) =>
   ($isHover && !$isChildren && "text-black") ||
   ($isChildren && "text-transparent") ||

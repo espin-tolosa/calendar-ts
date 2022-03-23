@@ -86,7 +86,6 @@ export const Event = ({ event }: { event: event }) => {
 
   return (
     <StyledEvent.TWflexContainer
-      className="touch-none"
       {...mouseHover}
       onClick={hOnClick}
       draggable={"true"}

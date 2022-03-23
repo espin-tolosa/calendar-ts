@@ -38,39 +38,65 @@ export const useTransitionStyle = (
 
     const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
     const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.4, 0.7);
-    const [r_b, g_b, b_b] = ClientColorStyles(mapClientToColor, 0.2, 0.4);
+    const [r_b, g_b, b_b] = ClientColorStyles(mapClientToColor, 0.3, 0.5);
     if (isChildren) {
       return justThrown
-        ? composeStyle("lightgray", "1px solid transparent", "black")
+        ? composeStyle(
+            "lightgray",
+            "2px solid transparent",
+            "black",
+            "2px solid transparent"
+          )
         : !hover
         ? composeStyle(
             `rgb(${r}, ${g}, ${b})`,
-            "1px solid transparent",
-            "transparent"
+            "2px solid transparent",
+            "transparent",
+            "2px solid transparent"
           )
         : composeStyle(
             `rgb(${r_h},${g_h},${b_h})`,
-            `1px solid rgb(${r_b},${g_b},${b_b})`,
-            "transparent"
+            `2px solid rgb(${r_b},${g_b},${b_b})`,
+            "transparent",
+            "2px solid transparent"
           );
     }
     return justThrown
-      ? composeStyle("lightgray", "1px solid transparent", "black")
+      ? composeStyle(
+          "lightgray",
+          "2px solid transparent",
+          "black",
+          "2px solid transparent"
+        )
       : !hover
-      ? composeStyle(`rgb(${r}, ${g}, ${b})`, "1px solid transparent", "black")
+      ? composeStyle(
+          `rgb(${r}, ${g}, ${b})`,
+          "2px solid transparent",
+          "black",
+          "2px solid transparent"
+        )
       : composeStyle(
           `rgb(${r_h}, ${g_h}, ${b_h})`,
-          `1px solid rgb(${r_b}, ${g_b},${b_b})`,
-          "white"
+          `2px solid rgb(${r_b}, ${g_b},${b_b})`,
+          "white",
+          `2px solid rgb(${r_b}, ${g_b},${b_b})`
         );
   }, [justThrown, hover]);
 };
 
-const composeStyle = (background: string, border: string, color: string) => {
+const composeStyle = (
+  background: string,
+  borderTop: string,
+  color: string,
+  borderLeft: string
+) => {
   return {
     background,
-    border,
+    borderTop,
+    borderBottom: borderTop,
+    borderRight: borderTop,
     color,
+    borderLeft,
   };
 };
 
