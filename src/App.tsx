@@ -6,23 +6,13 @@ import { useEffect, useLayoutEffect } from "react";
 import { useControllerDispatch } from "./hooks/useController";
 
 import { useGethCancel, useGethDeleteEvent } from "./api/handlers";
-import { useEventsDnD } from "./DnDLogic";
 import { useCtxKeyBufferDispatcher } from "./globalStorage/keyBuffer";
 import { useEventSelected } from "./globalStorage/eventSelected";
 
 export default function App() {
   const { value } = useUserSession();
-  const { handlers } = useEventsDnD();
 
   const dispatchKeyBuffer = useCtxKeyBufferDispatcher();
-
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  {
-    /*this code is forcing enter in the calendar automatically*/
-  }
 
   const eventSelected = useEventSelected();
   const dispatchController = useControllerDispatch();
