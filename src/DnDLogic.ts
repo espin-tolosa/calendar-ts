@@ -13,15 +13,14 @@ import {
 
 import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import { event } from "@interfaces/index";
-import { DaysFrom } from "./utils/Date";
+import { DaysFrom } from "@/utils/Date";
 import { useRef } from "react";
 
-import { useIsDragging } from "./hooks/useIsDragging";
-import { useEventsStatusDispatcher } from "./hooks/useEventsStatus";
+import { useIsDragging } from "@/hooks/useIsDragging";
+import { useEventsStatusDispatcher } from "@/hooks/useEventsStatus";
 
-import { fetchEvent } from "./utils/fetchEvent";
+import { fetchEvent } from "@/utils/fetchEvent";
 import { CustomValues } from "@/customTypes";
-import { EventClass } from "./classes/event";
 
 export namespace DnD {
   export function composeEventDndId(event: event) {

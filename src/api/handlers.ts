@@ -67,8 +67,11 @@ export function useGethDeleteEvent(): () => void {
   // First time I'm able to catch error Failed to Fetch
   // it needs async function to get caught
   return async () => {
+    if (!eventSelected) {
+      return;
+    }
     const deleteResourceInAPI = async () => {
-      const result = await fetchEvent("DELETE", eventSelected!);
+      const result = await fetchEvent("DELETE", eventSelected);
       if (result.status === 204) {
         dispatchController({
           type: "setController",

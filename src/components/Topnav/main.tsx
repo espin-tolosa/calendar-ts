@@ -27,11 +27,12 @@ export const Topnav = () => {
 
   //If useToken returns a nullToken user the component clears session in the same way of the logout button
   useEffect(() => {
-    //TODO effect not tested yet
     if (!token.exp || !token.data.usr) {
+      window.alert("Expired Credentials");
+      //TODO: clean session should clean eventSelected in controller an other temporary values
       setSessionIsToClean(true);
     }
-  }, []);
+  }, [token]);
 
   return (
     <StyledTopnav.TWcontainer id={TOPNAV_ID} ref={topNavRef}>

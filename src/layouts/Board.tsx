@@ -11,10 +11,14 @@ import { useIsFetchingEvents } from "@/hooks/useIsFetchingEvents";
 import { useEventDispatch } from "@/hooks/useEventsState";
 import { useCleanSession } from "@/hooks/useCleanSession";
 import { CustomValues } from "@/customTypes";
+import { zeroPadd } from "@/utils/zeroPadd";
 
 export const LayoutBoard = () => {
   const nextDates = useBoardScroll({ initialLength: 1 });
   const prevDates = ListPrevDates(nextDates[0], 2);
+
+  const fromYear = prevDates[0].year;
+  const fromMonth = zeroPadd(prevDates[0].month);
 
   const { setIsFetching } = useIsFetchingEvents();
   const eventsDispatcher = useEventDispatch();
@@ -22,41 +26,29 @@ export const LayoutBoard = () => {
 
   useEffect(() => {
     setIsFetching(true);
-    const start = `${prevDates[0].year}-${prevDates[0].month}-01`;
+    //The response from database is not the same if I send a query with only year-month
+    //my local version of MySQL responds in the same way, but the version of freehostia gives an empty array with success code 201
+    const start = `${fromYear}-${fromMonth}-01`;
 
     (async () => {
-      console.log("board");
       const fromEvent = { ...CustomValues.nullEvent, start };
-      const result = await fetchEvent("GET_FROM", fromEvent);
-      const dbState: Array<event> = await result.json();
-      eventsDispatcher({
-        type: "appendarray",
-        payload: [...dbState],
-      });
-      setIsFetching(false);
+      try {
+        const result = await fetchEvent("GET_FROM", fromEvent);
+        const dbState: Array<event> = await result.json();
+        eventsDispatcher({
+          type: "appendarray",
+          payload: dbState,
+        });
+      } catch (e) {
+        console.error("Possible invalid token", e);
 
-      //      result
-      //        .then((json: Array<event>) =>
-      //          json.forEach((event: event) => {
-      //            eventsDispatcher({
-      //              type: "appendarray",
-      //              payload: [
-      //                {
-      //                  ...event,
-      //                },
-      //              ],
-      //            });
-      //            setIsFetching(false);
-      //          })
-      //        )
-      //        .catch((e) => {
-      //          console.error("Possible invalid token", e);
-      //
-      //          let text = "Your credentials has expired, logout?";
-      //          if (window.confirm(text) == true) {
-      //            setSessionIsToClean(true);
-      //          }
-      //        });
+        let text = "Your credentials has expired, logout?";
+        if (window.confirm(text) == true) {
+          setSessionIsToClean(true);
+        }
+      } finally {
+        setIsFetching(false);
+      }
     })();
     /*
   return async () => {

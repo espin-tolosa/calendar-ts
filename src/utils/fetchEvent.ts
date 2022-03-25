@@ -2,6 +2,9 @@ import { CustomTypes, CustomValues } from "@/customTypes";
 import { event } from "@/interfaces";
 import { api } from "@/static/apiRoutes";
 
+/**
+ * Fetch events to API
+ */
 export async function fetchEvent(
   action: CustomTypes.OptionsEventsAPI,
   event: event = CustomValues.nullEvent
@@ -9,10 +12,16 @@ export async function fetchEvent(
   const data = new FormData();
   const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
   data.append("json", dataJSON);
-  return fetch(api.routes.events, {
+  const response = await fetch(api.routes.events, {
     method: "POST",
     body: data,
   });
+
+  if (response.status === 401) {
+    throw Error("No JWT");
+  }
+
+  return response;
 }
 
 // DELETE

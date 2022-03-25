@@ -152,6 +152,10 @@ const CreateEvent = () => {
                   },
                 ],
               });
+            })
+            .catch((e) => {
+              console.log("Catched error on Save");
+              console.log(e);
             });
 
           hCancelClose();

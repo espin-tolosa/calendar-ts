@@ -31,7 +31,7 @@ export default function App() {
   const hDelete = useGethDeleteEvent();
 
   useEffect(() => {
-    const hOnKeyDown = (e: any) => {
+    const hOnKeyDown = (e: KeyboardEvent) => {
       console.log("Key pressed", e.key, eventSelected);
       if (eventSelected && e.key === "Delete") {
         hDelete();

@@ -45,19 +45,6 @@ export const UserSession: composition = ({ children }) => {
     });
   };
 
-  const fakeLogin = (payload: SubmitHandler<FieldValues>) => {
-    if (
-      (payload.arguments.user === "samuel" &&
-        payload.arguments.password === "freesolo") ||
-      (payload.arguments.user === "thomas" &&
-        payload.arguments.password === "admin") ||
-      (payload.arguments.user === "james" &&
-        payload.arguments.password === "admin")
-    ) {
-      dispatch(true);
-    }
-  };
-
   const fetchLogin = (payload: any) => {
     const data = new FormData();
     data.append("json", JSON.stringify(payload));
@@ -65,14 +52,23 @@ export const UserSession: composition = ({ children }) => {
     fetch(api.routes.login, {
       method: "POST",
       body: data,
-    }).then((res) => {
-      res.status === 201 ? dispatch(true) : dispatch(false);
-    });
+    })
+      .then((res) => {
+        if (res.status !== 201) {
+          throw Error(`Error code: ${res.status}`);
+        }
+      })
+      .catch(() => {
+        deleteSession();
+      })
+      .finally(() => {
+        dispatch(isPHPSession() && isToken());
+      });
   };
 
   const clearLoginSession = () => {
-    const payload = { user: "", password: "" };
-    fetchLogin(payload);
+    const nullUser = { user: "", password: "" };
+    fetchLogin(nullUser);
   };
 
   return (
@@ -83,13 +79,6 @@ export const UserSession: composition = ({ children }) => {
     </cUserSession.Provider>
   );
 };
-
-// * Aux functions, needs revisit and add to backend SameSite=Lax
-function isCookie(name: string) {
-  return document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"))
-    ? true
-    : false;
-}
 
 function isToken() {
   return getCookie("token") === "" ? false : true;
@@ -110,12 +99,20 @@ function getCookie(name: string) {
   }
 }
 
-export function deleteSession() {
-  const cookiesExpired = document.cookie.split("; ").map((c) => {
-    return `${c.trimStart()} ;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+/**
+ * Side effect function to remove cookies emmited by the server, targets:
+ * - PHPSESSIONID
+ * - Hashed Token
+ */
+function deleteSession() {
+  const recoveredCookies: Array<string> = window.document.cookie.split(";");
+  const cookiesWithExpirationDateAttached = recoveredCookies.map((cookie) => {
+    return `${cookie
+      .trimStart()
+      .trimEnd()} ;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
   });
 
-  cookiesExpired.forEach((c) => {
-    document.cookie = c;
+  cookiesWithExpirationDateAttached.forEach((expiredCookie) => {
+    window.document.cookie = expiredCookie;
   });
 }

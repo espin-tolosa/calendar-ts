@@ -22,6 +22,9 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
   }
 
   const sortedEvents = bubblingAlgo(dayEvents);
+  console.log("Sorted events", sortedEvents);
+
+  //TODO: style height has be passed from eventRef
 
   return (
     <div className="flex flex-col gap-1 my-5">
@@ -29,7 +32,11 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
         const keyValue = Math.abs(event.id);
         if (isPlaceholder(event)) {
           return (
-            <EventHolder key={`p-${keyValue}`} event={event}></EventHolder>
+            <EventHolder
+              key={`p-${keyValue}`}
+              event={event}
+              style={{ height: event.mutable?.height }}
+            ></EventHolder>
           );
         }
         //Mutable instruction for global state of events

@@ -14,6 +14,7 @@ import { useCtxKeyBuffer } from "@/globalStorage/keyBuffer";
 import { useControllerDispatch } from "@/hooks/useController";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 
 const useGetEventFamily = (event: event) => {
   const events = useEventState();
@@ -83,6 +84,16 @@ export const Event = ({ event }: { event: event }) => {
   );
   const parentEvent = EventClass.getParentEvent(family);
   //console.log("Parent Event", parentEvent);
+
+  //determine hight of event
+  const eventRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    event.mutable = { height: `${eventRef.current?.clientHeight}px` };
+    console.log("event mutable", event.mutable);
+    //console.log("Div h:", event, eventRef);
+    //console.log("Famili:", family);
+  }, [eventRef.current?.clientHeight]);
 
   return (
     <StyledEvent.TWflexContainer
@@ -255,6 +266,7 @@ export const Event = ({ event }: { event: event }) => {
     >
       <StyledEvent.TWtextContent
         $isChildren={isChildren}
+        ref={eventRef}
         $isHover={hover}
         style={eventInlineStyle}
         key={event.id}
@@ -300,21 +312,36 @@ whitespace-nowrap overflow-hidden overflow-ellipsis
           //console.log("leaving extend event");
         }}
         title={`Drag here to extend ${event.client}\'s job`}
+        style={{ height: event.mutable?.height }}
       >
         {"+"}
       </StyledEvent.TWextend>
 
-      <StyledEvent.TWplaceholder key={"p" + event.id}>
+      <StyledEvent.TWplaceholder
+        key={"p" + event.id}
+        style={{ height: event.mutable?.height }}
+      >
         {"placeholder"}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
   );
 };
 
-export const EventHolder = ({ event }: { event: event }) => {
+export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
+  const [parent, family] = useGetEventFamily(event);
+
+  //TODO
+  //tengo que crear un consumidor de contexto para que esto se actualize
+  //con el valor correcto de mutable.hegiht
+  //cuando se lea arriba useEffectLayout
+
+  console.log("Event holder", family[0].mutable?.height);
   return (
-    <StyledEvent.TWflexContainer>
-      <StyledEvent.TWplaceholder key={"p" + event.id}>
+    <StyledEvent.TWflexContainer style={{ height: family[1].mutable?.height }}>
+      <StyledEvent.TWplaceholder
+        key={"p" + event.id}
+        style={{ height: family[1].mutable?.height }}
+      >
         {-event.id}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>

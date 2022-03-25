@@ -16,6 +16,7 @@ export interface event {
   job: string;
   start: string;
   end: string;
+  mutable?: { height: string };
 }
 
 export type setstate<S> = React.Dispatch<React.SetStateAction<S>>;
