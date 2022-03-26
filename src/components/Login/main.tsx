@@ -54,30 +54,4 @@ export default function Login() {
       </TWloginForm>
     </TWloginWrapper>
   );
-
-  /*
-  return (
-    <TWlogin.loginWrapper >
-      <StyledLogin.Form onSubmit={handleSubmit(onSubmitLogin)}>
-        <StyledLogin.Input
-          type="text"
-          placeholder="User"
-          {...register("user", { required: true })}
-        />
-        <StyledLogin.Input
-          type="password"
-          placeholder="Password"
-          autoComplete="on"
-          {...register("password", { required: true })}
-        />
-
-        <StyledLogin.Button type="submit" value="Login">
-          Login{" "}
-        </StyledLogin.Button>
-        {errors.user && <p>User is required.</p>}
-        {errors.password && <p>Password is required.</p>}
-      </StyledLogin.Form>
-    </StyledLogin.Wrapper>
-  );
-*/
 }

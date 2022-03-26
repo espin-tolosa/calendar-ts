@@ -15,6 +15,10 @@ const monthNames = [
   "December",
 ];
 
+function secondsSinceEpoch() {
+  return Math.floor(Date.now() / 1000);
+}
+
 function zeroPad(num: number, places = 2) {
   return String(num).padStart(places, "0");
 }
@@ -230,4 +234,5 @@ export const DateService = {
   ExportDateToControllerValue,
   GetDayNumberOfDay,
   GetPrevDate,
+  secondsSinceEpoch,
 };

@@ -11,28 +11,18 @@ export const TOPNAV_ID = "Topnav";
 
 export const Topnav = () => {
   const token = useToken();
-  const user = token.data.usr || "not logged";
+  const user = token.user();
   const topNavRef = useCtxTopNavRef();
   const dispatchDOMRef = DOMRefs.useDispatch();
 
   //Custom hook to clean session, gives a handler to set to true when session is to clean
   const setSessionIsToClean = useCleanSession();
-  /*  parallel change consume date context */
 
   const monthRef = useCtxCurrentMonthRef();
 
   useEffect(() => {
     dispatchDOMRef({ type: "update", payload: topNavRef });
   }, []);
-
-  //If useToken returns a nullToken user the component clears session in the same way of the logout button
-  useEffect(() => {
-    if (!token.exp || !token.data.usr) {
-      window.alert("Expired Credentials");
-      //TODO: clean session should clean eventSelected in controller an other temporary values
-      setSessionIsToClean(true);
-    }
-  }, [token]);
 
   return (
     <StyledTopnav.TWcontainer id={TOPNAV_ID} ref={topNavRef}>
@@ -54,7 +44,7 @@ export const Topnav = () => {
           setSessionIsToClean(true);
         }}
       >
-        Logout
+        {token.isValid() ? "Logout" : "Sign in"}
       </StyledTopnav.TWlogout>
     </StyledTopnav.TWcontainer>
   );

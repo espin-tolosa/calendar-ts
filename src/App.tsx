@@ -4,7 +4,7 @@ import Login from "@/components/Login/main";
 import { useUserSession } from "./hooks/useUserSession";
 
 export default function App() {
-  const { value } = useUserSession();
+  const { isUserLogged } = useUserSession();
 
-  return !value() ? <Login /> : <LayoutMain />;
+  return !isUserLogged ? <Login /> : <LayoutMain />;
 }

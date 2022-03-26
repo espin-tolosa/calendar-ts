@@ -1,5 +1,4 @@
 import * as StyledDay from "@/components/DayHolder/tw";
-import { Droppable } from "react-beautiful-dnd";
 import { memo } from "react";
 type IDayProps = {
   fullDate: string;

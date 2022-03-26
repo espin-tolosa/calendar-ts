@@ -1,20 +1,20 @@
 import { useState, useContext, createContext } from "react";
-import { composition } from "@/interfaces";
-import { FieldValues, SubmitHandler } from "react-hook-form";
+import { composition, loginForm } from "@/interfaces";
 import { api } from "@/static/apiRoutes";
+import { Token } from "@/classes/token";
 
 // * 1. Create context: Logged
 
-const value = () => false;
-const dispatch: (update: boolean) => void = () => {};
+const isUserLogged: boolean = false;
+const isUserLoggedDispatcher: (update: boolean) => void = () => {};
 //const fakeLogin: (payload: SubmitHandler<FieldValues>) => void = () => {};
 //const fetchLogin: (payload: SubmitHandler<FieldValues>) => void = () => {};
 const clearLoginSession: () => void = () => {};
 const fetchLogin: (payload: any) => void = () => {};
 
 const cUserSession = createContext({
-  value,
-  dispatch,
+  isUserLogged,
+  isUserLoggedDispatcher,
   fetchLogin,
   clearLoginSession,
 });
@@ -32,14 +32,13 @@ export function useUserSession() {
 
 // * dep: src/main.tsx
 export const UserSession: composition = ({ children }) => {
-  const [state, setState] = useState(isPHPSession() && isToken());
+  const [isUserLogged, setIsLogged] = useState(Token.getToken().isValid());
 
   // * Dispatcher closure wrapping setState:
   // * case dispatch true:	updates login status
   // * case dispatch false:	updates login status and clear all cookies coming from login api
-  const value = () => state;
-  const dispatch = (value: boolean) => {
-    setState(() => {
+  const isUserLoggedDispatcher = (value: boolean) => {
+    setIsLogged(() => {
       !value && deleteSession();
       return value;
     });
@@ -62,42 +61,28 @@ export const UserSession: composition = ({ children }) => {
         deleteSession();
       })
       .finally(() => {
-        dispatch(isPHPSession() && isToken());
+        isUserLoggedDispatcher(Token.getToken().isValid());
       });
   };
 
   const clearLoginSession = () => {
-    const nullUser = { user: "", password: "" };
-    fetchLogin(nullUser);
+    const nullForm: loginForm = { user: "", password: "" };
+    fetchLogin(nullForm);
   };
 
   return (
     <cUserSession.Provider
-      value={{ value, dispatch, fetchLogin, clearLoginSession }}
+      value={{
+        isUserLogged,
+        isUserLoggedDispatcher,
+        fetchLogin,
+        clearLoginSession,
+      }}
     >
       {children}
     </cUserSession.Provider>
   );
 };
-
-function isToken() {
-  return getCookie("token") === "" ? false : true;
-}
-function isPHPSession() {
-  return getCookie("phpsession") === "" ? false : true;
-}
-
-function getCookie(name: string) {
-  const [phpsession, token] = document.cookie.split(" ");
-
-  if (name === "phpsession") {
-    return phpsession ? phpsession : "";
-  } else if (name === "token") {
-    return token ? token : "";
-  } else {
-    return "";
-  }
-}
 
 /**
  * Side effect function to remove cookies emmited by the server, targets:

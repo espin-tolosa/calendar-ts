@@ -19,6 +19,18 @@ export interface event {
   mutable?: { height: string };
 }
 
+export interface loginForm {
+  user: string;
+  password: string;
+}
+
+export interface token {
+  name: string;
+  exp: number;
+  data: { iss: string; usr: string; aut: string; rus: string };
+  // whatever else is in the JWT.
+}
+
 export type setstate<S> = React.Dispatch<React.SetStateAction<S>>;
 
 export type children = { children: ReactChild | ReactChildren };

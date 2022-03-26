@@ -6,14 +6,12 @@ import { useKeyboardShortcuts } from "@/hooks/useKeyListeners";
 export const LayoutMain = () => {
   useKeyboardShortcuts();
   return (
-    <>
-      <tw_Layouts.TWapp id={"app"}>
-        {/*header-layout*/}
-        <LayoutHeader />
+    <tw_Layouts.TWapp id={"app"}>
+      {/*header-layout*/}
+      <LayoutHeader />
 
-        {/*main-layout: layout-grid*/}
-        <LayoutMaster />
-      </tw_Layouts.TWapp>
-    </>
+      {/*main-layout: layout-grid*/}
+      <LayoutMaster />
+    </tw_Layouts.TWapp>
   );
 };
