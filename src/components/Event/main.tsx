@@ -145,7 +145,7 @@ export const Event = ({ event }: { event: event }) => {
           type: "replacebyid",
           payload: [newEvent],
         });
-        fetchEvent("PUT", newEvent);
+        fetchEvent("POST", newEvent);
         temporaryEventDispatcher(newEvent);
       }}
       onTouchMove={(e) => {

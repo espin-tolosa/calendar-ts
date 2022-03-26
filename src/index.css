@@ -201,30 +201,6 @@
   }
 }
 
-@layer utilities {
-  .utility-smooth {
-    overflow: hidden;
-    transition-property: max-height;
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.3s;
-  }
-
-  .text-landscape {
-    font-size: 0.55rem;
-    line-height: 0.8rem;
-  }
-
-  .text-portrait {
-    font-size: 0.55rem;
-    line-height: 0.8rem;
-  }
-  .button-shadow {
-    box-shadow: rgba(0, 0, 0, 0.3) 0 0 5px;
-  }
-  .button-shadow:hover {
-    box-shadow: rgba(0, 0, 0, 0.7) 0 0 5px;
-  }
-}
 /*input*/
 @layer utilities {
   .text-effect {

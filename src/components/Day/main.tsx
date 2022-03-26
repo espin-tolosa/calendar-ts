@@ -48,6 +48,7 @@ export function IDay({
   const lockedDaysDispatcher = useDayLockDispatcher();
 
   const setEventController = useSetEventSelected();
+  const eventDispatch = useEventDispatch();
   //dnd
   const temporaryEvent = useTemporaryEvent();
   const temporaryEventDispatcher = useTemporaryEventDispatcher();
@@ -82,9 +83,25 @@ export function IDay({
         if (isDragging.state || isLocked || isWeekend) {
           return;
         }
-        dispatchControllerDates({
-          type: "updateDates",
-          payload: { start: fullDate, end: fullDate },
+        eventDispatcher({
+          type: "appendarray",
+          payload: [
+            {
+              id: 10000,
+              client: "default",
+              job: "default",
+              start: fullDate,
+              end: fullDate,
+            },
+          ],
+        });
+
+        fetchEvent("POST", {
+          id: 10000,
+          client: "default",
+          job: "default",
+          start: fullDate,
+          end: fullDate,
         });
 
         if (start === fullDate && end === fullDate) {

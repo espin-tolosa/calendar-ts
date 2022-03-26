@@ -4,18 +4,9 @@ export const TWapp = tw.div`
 	select-none box-border font-roboto font-extra md:text-xl text-sm  scale-100 bg-slate-50
 `;
 
-export const TWmain = tw.div<{ $display: boolean }>`
-${({ $display }) =>
-  ($display && "components-controller-on") ||
-  (!$display && "components-controller-off") ||
-  ""}	
-sm:grid sm:landscape:grid flex flex-col custombp:text-landscape
+export const TWmain = tw.div`
+flex flex-col
 `;
-
-// overflow: hidden;
-// transition-property: max-height;
-// transition-timing-function: ease-in-out;
-// transition-duration: 0.3s;
 
 export const TWcontroller = tw.div<{ $display: boolean }>`
 ${({ $display }) =>

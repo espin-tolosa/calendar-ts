@@ -215,6 +215,19 @@ export function ListPrevDates(
   return result;
 }
 
+function GetDateFrom(fullDate: string, offset: number) {
+  //  const today = new Date(fullDate);
+  //  const previous = new Date(today.getTime() + offset);
+  //  console.log(previous);
+  //  debugger;
+  //  return FormatDate(previous);
+
+  const dt = new Date(fullDate);
+  const copy = new Date(dt.valueOf());
+  const newDate = new Date(copy.setDate(copy.getDate() + offset));
+  return FormatDate(newDate);
+}
+
 export const DateService = {
   GetDate,
   GetTodayDateFormat,
@@ -235,4 +248,5 @@ export const DateService = {
   GetDayNumberOfDay,
   GetPrevDate,
   secondsSinceEpoch,
+  GetDateFrom,
 };
