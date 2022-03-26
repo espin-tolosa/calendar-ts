@@ -14,6 +14,9 @@ type Action =
 const cControllerState = createContext(init);
 const cControllerDispatch = createContext<React.Dispatch<Action>>(() => {});
 
+cControllerState.displayName = "Controller State";
+cControllerDispatch.displayName = "Controller State Dispatcher";
+
 /* to consume in controller and other  components that wants to dispatch to controller */
 export const useControllerState = () => useContext(cControllerState);
 export const useControllerDispatch = () => useContext(cControllerDispatch);
