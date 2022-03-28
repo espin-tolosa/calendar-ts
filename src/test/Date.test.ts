@@ -1,4 +1,60 @@
-import { DateService } from "../utils/Date";
+import { Action, reducerEvents } from "@/hooks/useEventsState";
+import { DateService } from "@/utils/Date";
+import { event } from "@/interfaces/index";
+
+const genEventCall = (
+  type: "appendarray" | "replacebyid" | "deletebyid" | "update",
+  id: number,
+  client: string,
+  job: string,
+  start: string,
+  end: string
+) => {
+  //return empty state if no event data is provided
+
+  const payload = [
+    {
+      id,
+      client,
+      job,
+      start,
+      end,
+    },
+  ];
+  return { type, payload } as Action;
+};
+
+const emptyState: Array<event> = [];
+const state1Event: Array<event> = reducerEvents(
+  emptyState,
+  genEventCall(
+    "appendarray",
+    1,
+    "Client_1",
+    "Job_1",
+    "2022-03-01",
+    "2022-03-10"
+  )
+);
+const state2Event = reducerEvents(
+  state1Event,
+  genEventCall(
+    "appendarray",
+    2,
+    "Client_1",
+    "Job_1",
+    "2022-03-01",
+    "2022-03-10"
+  )
+);
+
+const expectToBe = (input: event, output: event) => {
+  expect(input.id).toBe(output.id);
+  expect(input.client).toBe(output.client);
+  expect(input.job).toBe(output.job);
+  expect(input.start).toBe(output.start);
+  expect(input.end).toBe(output.end);
+};
 
 test("Within 31 days from 01 of march will be 01 of april", () => {
   const today = "2022-03-01";
@@ -12,3 +68,180 @@ test("Today is 2022-03-01 and yesterday was 2022-02-28", () => {
 
   expect(result).toBe(DateService.GetDateFrom(today, -1));
 });
+
+test("append one day duration is represented by one entry in the local state", () => {
+  const state: Array<event> = [];
+  const action = genEventCall(
+    "appendarray",
+    1,
+    "client1",
+    "testjob",
+    "2022-03-01",
+    "2022-03-01"
+  );
+  const newState = reducerEvents(state, action);
+  expect(newState.length).toBe(1);
+  expectToBe(newState[0], action.payload[0]);
+});
+
+test("append two day duration is represented by two entry in the local state", () => {
+  const state: Array<event> = [];
+  const action = genEventCall(
+    "appendarray",
+    1,
+    "client1",
+    "testjob",
+    "2022-03-01",
+    "2022-03-02"
+  );
+  const newState = reducerEvents(state, action);
+  expect(newState.length).toBe(2);
+  expectToBe(newState[0], action.payload[0]);
+  expectToBe(newState[1], {
+    ...action.payload[0],
+    id: -1,
+    start: "2022-03-02",
+  });
+});
+
+test("append one week duration is represented by 1+6 per week in local state", () => {
+  const state: Array<event> = [];
+  const action = genEventCall(
+    "appendarray",
+    1,
+    "client1",
+    "testjob",
+    "2022-03-01",
+    "2022-03-08"
+  );
+  const newState = reducerEvents(state, action);
+  expect(newState.length).toBe(8);
+  expectToBe(newState[6], {
+    ...action.payload[0],
+    job: "#isChildren",
+    start: "2022-03-07",
+    end: "2022-03-08",
+  });
+});
+
+test("no append if end is before start", () => {
+  const state: Array<event> = [];
+  const action = genEventCall(
+    "appendarray",
+    1,
+    "client1",
+    "testjob",
+    "2022-03-02",
+    "2022-03-01"
+  );
+  const newState = reducerEvents(state, action);
+  expect(newState.length).toBe(0);
+});
+
+test("replace by id a single day event", () => {
+  const state: Array<event> = [
+    {
+      id: 1,
+      client: "client2",
+      job: "testjob2",
+      start: "2022-03-04",
+      end: "2022-03-04",
+    },
+  ];
+  const action = genEventCall(
+    "replacebyid",
+    1,
+    "client2",
+    "testjob2",
+    "2022-03-04",
+    "2022-03-04"
+  );
+  const newState = reducerEvents(state, action);
+  expect(newState.length).toBe(1);
+  expectToBe(newState[0], action.payload[0]);
+});
+test("replace by id a multiple day event", () => {
+  const action = genEventCall(
+    "replacebyid",
+    1,
+    "client2",
+    "testjob2",
+    "2022-03-01",
+    "2022-03-01"
+  );
+
+  const newState = reducerEvents(state1Event, action);
+  expect(newState.length).toBe(state1Event.length - 9); //reduced the event in 9 days
+  expectToBe(newState[0], action.payload[0]);
+});
+
+test("replace by id not found the id, the state wont change", () => {
+  const action = genEventCall(
+    "replacebyid", //<-testing this
+    2,
+    "client2",
+    "testjob2",
+    "2022-03-01",
+    "2022-03-03"
+  );
+  const newState = reducerEvents(emptyState, action);
+  expect(newState.length).toBe(0);
+});
+
+test("update event state from empty state", () => {
+  const action = genEventCall(
+    "update",
+    2,
+    "client2",
+    "testjob2",
+    "2022-03-01",
+    "2022-03-03"
+  );
+  const newState = reducerEvents(emptyState, action);
+  expect(newState.length).toBe(3);
+});
+
+test("dont update state for placeholder ids", () => {
+  const action = genEventCall(
+    "update",
+    -1,
+    "client2",
+    "testjob2",
+    "2022-03-01",
+    "2022-03-12"
+  );
+
+  const newState = reducerEvents(state1Event, action);
+  expect(newState.length).toBe(state1Event.length);
+});
+
+test("update state for nonexistent ids", () => {
+  const action = genEventCall(
+    "update",
+    3,
+    "client3",
+    "testjob3",
+    "2022-03-01",
+    "2022-03-10"
+  );
+
+  const newState = reducerEvents(state2Event, action);
+  console.log(newState);
+  expect(newState.length).toBe(state2Event.length + 10);
+});
+
+//test("tessting returned references", () => {
+//  const action = genEventCall(
+//    "appendarray",
+//    3,
+//    "client3",
+//    "testjob3",
+//    "2022-03-01",
+//    "2022-03-10"
+//  );
+//
+//  const newState = reducerEvents(state2Event, action);
+//
+//
+//  expect(newState).toBe(state2Event);
+//});

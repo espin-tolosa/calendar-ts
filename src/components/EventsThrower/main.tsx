@@ -14,6 +14,7 @@ interface EventProps {
 export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
   const dayEvents = useEventState(day);
   const allEvents = useEventState();
+  console.log("All events", dayEvents);
   const lockedDays = useDayLock();
   const isLocked = lockedDays.find((lock) => lock === day) === day;
   //No events in a day fast exit
@@ -21,6 +22,7 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
     return <></>;
   }
 
+  console.log("Before bubilg algo", dayEvents);
   const sortedEvents = bubblingAlgo(dayEvents);
   console.log("Sorted events", sortedEvents);
 

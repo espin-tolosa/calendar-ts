@@ -142,7 +142,7 @@ export const useStorage = (event: event) => {
     result.then((res) => {
       if (res.status === 203) {
         eventDispatcher({
-          type: "replacebyid",
+          type: "update",
           payload: [newEvent],
         });
       } else {

@@ -31,25 +31,36 @@ export const LayoutBoard = () => {
     const start = `${fromYear}-${fromMonth}-01`;
 
     (async () => {
-      const fromEvent = { ...CustomValues.nullEvent, start };
-      try {
-        const result = await fetchEvent("GET_FROM", fromEvent);
-        const dbState: Array<event> = await result.json();
-        eventsDispatcher({
-          type: "appendarray",
-          payload: dbState,
-        });
-      } catch (e) {
-        console.error("Possible invalid token", e);
+      const eventDate = { ...CustomValues.nullEvent, start };
+      const dbState = await fetchEvent("GET_FROM", eventDate);
 
-        let text = "Your credentials has expired, logout?";
-        if (window.confirm(text) == true) {
-          setSessionIsToClean(true);
-        }
-      } finally {
-        setIsFetching(false);
-      }
+      console.log(dbState);
+      eventsDispatcher({
+        type: "appendarray",
+        payload: dbState,
+      });
     })();
+
+    //    (async () => {
+    //      const fromEvent = { ...CustomValues.nullEvent, start };
+    //      try {
+    //        const result = await fetchEvent("GET_FROM", fromEvent);
+    //        const dbState: Array<event> = await result.json();
+    //        eventsDispatcher({
+    //          type: "appendarray",
+    //          payload: dbState,
+    //        });
+    //      } catch (e) {
+    //        console.error("Possible invalid token", e);
+    //
+    //        let text = "Your credentials has expired, logout?";
+    //        if (window.confirm(text) == true) {
+    //          setSessionIsToClean(true);
+    //        }
+    //      } finally {
+    //        setIsFetching(false);
+    //      }
+    //    })();
     /*
   return async () => {
     const deleteResourceInAPI = async () => {
@@ -72,7 +83,7 @@ export const LayoutBoard = () => {
     const success = (code: number) => code === 204;
 
     eventDispatcher({
-      type: "deletebyid",
+      type: "delete",
       payload: [eventSelected!],
     });
 

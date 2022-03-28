@@ -18,10 +18,9 @@ export namespace CustomTypes {
    */
   export type DispatchLocalStateEvents =
     | "appendarray"
-    | "deletebyid"
+    | "delete"
     | "replacebyid"
-    | "update"
-    | "updateDnD";
+    | "update";
 
   /**
    * Options to send a query by POST method using fetch to Backend API events

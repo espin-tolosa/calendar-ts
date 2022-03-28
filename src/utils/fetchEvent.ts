@@ -1,5 +1,5 @@
 import { CustomTypes, CustomValues } from "@/customTypes";
-import { event } from "@/interfaces";
+import { event, objectKeys } from "@interfaces/index";
 import { api } from "@/static/apiRoutes";
 
 /**
@@ -10,7 +10,7 @@ export async function fetchEvent(
   event: event = CustomValues.nullEvent
 ) {
   const data = new FormData();
-  const dataJSON = JSON.stringify({ action, ...event }); //! event should be passed as plain object to the api
+  const dataJSON = JSON.stringify({ action, ...event });
   data.append("json", dataJSON);
   const response = await fetch(api.routes.events, {
     method: "POST",
@@ -21,8 +21,21 @@ export async function fetchEvent(
     throw Error("No JWT");
   }
 
-  return response;
+  if (response.status === 404) {
+    throw Error("No credentials");
+  }
+
+  return await response.json();
 }
+
+const http_response_code: objectKeys<number> = {
+  GET_ALL: 201,
+  GET_FROM: 201,
+  POST: 202,
+  PUT: 203,
+  DELETE: 204,
+  DELETE_ALL: 204,
+};
 
 // DELETE
 // POST

@@ -12,6 +12,7 @@ import {
 import { fetchEvent } from "@/utils/fetchEvent";
 import { CustomValues } from "@/customTypes";
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
+import { event } from "@/interfaces";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -48,7 +49,6 @@ export function IDay({
   const lockedDaysDispatcher = useDayLockDispatcher();
 
   const setEventController = useSetEventSelected();
-  const eventDispatch = useEventDispatch();
   //dnd
   const temporaryEvent = useTemporaryEvent();
   const temporaryEventDispatcher = useTemporaryEventDispatcher();
@@ -79,30 +79,37 @@ export function IDay({
       $isWeekend={isWeekend}
       $isSelected={isSelected(start, fullDate, end)}
       ref={dayDivRef}
-      onClick={() => {
+      onClick={async () => {
         if (isDragging.state || isLocked || isWeekend) {
           return;
         }
-        eventDispatcher({
-          type: "appendarray",
-          payload: [
-            {
-              id: 10000,
-              client: "default",
-              job: "default",
-              start: fullDate,
-              end: fullDate,
-            },
-          ],
-        });
 
-        fetchEvent("POST", {
-          id: 10000,
+        //
+        const newEvent = {
+          id: 100000,
           client: "default",
           job: "default",
           start: fullDate,
           end: fullDate,
+        };
+        eventDispatcher({
+          type: "update",
+          payload: [newEvent],
         });
+        const result = await fetchEvent("POST", newEvent);
+        const dbResponse: Array<event> = await result.json();
+
+        //This is the way I have to replace the Id of an event, since the action "replacebyid" uses the id to change the other fields, I can't use it to replace the id itself
+        eventDispatcher({
+          type: "delete",
+          payload: [newEvent],
+        });
+        eventDispatcher({
+          type: "appendarray",
+          payload: dbResponse,
+        });
+
+        //
 
         if (start === fullDate && end === fullDate) {
           setEventController(null);
@@ -121,7 +128,7 @@ export function IDay({
           newEvent.end = fullDate;
         }
         eventDispatcher({
-          type: "replacebyid",
+          type: "update",
           payload: [newEvent],
         });
         fetchEvent("PUT", newEvent);

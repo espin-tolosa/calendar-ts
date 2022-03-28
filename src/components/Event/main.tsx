@@ -142,7 +142,7 @@ export const Event = ({ event }: { event: event }) => {
         const newEvent = { ...temporaryEvent, end: fullDate };
 
         eventDispatcher({
-          type: "replacebyid",
+          type: "update",
           payload: [newEvent],
         });
         fetchEvent("POST", newEvent);
@@ -184,7 +184,7 @@ export const Event = ({ event }: { event: event }) => {
         }
 
         eventDispatcher({
-          type: "replacebyid",
+          type: "update",
           payload: [newEvent],
         });
         fetchEvent("PUT", newEvent);
@@ -237,24 +237,22 @@ export const Event = ({ event }: { event: event }) => {
           start,
           id: EventClass.getUnusedId(),
         };
-        eventDispatcher({
-          type: "replacebyid",
-          payload: [prevEvent],
-        });
-        fetchEvent("PUT", prevEvent);
-
         //Optimistic push nextEvent to state, with
         eventDispatcher({
-          type: "appendarray",
-          payload: [nextEvent],
+          type: "update",
+          payload: [prevEvent, nextEvent],
         });
+
+        //TODO: use promise all, to ensure prevEvent don't fail
+        fetchEvent("PUT", prevEvent);
+
         const result = fetchEvent("POST", nextEvent);
         result
           .then((res) => res.json())
           .then((dbResponse: Array<event>) => {
             //This is the way I have to replace the Id of an event, since the action "replacebyid" uses the id to change the other fields, I can't use it to replace the id itself
             eventDispatcher({
-              type: "deletebyid",
+              type: "delete",
               payload: [nextEvent],
             });
             eventDispatcher({

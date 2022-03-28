@@ -4,6 +4,10 @@ import { useControllerDispatch } from "./useController";
 import { useControllerDispatchDates } from "./useControllerDate";
 import { useUserSession } from "./useUserSession";
 
+// This is the reference hook to clean te entire memory,
+// any component should consume this to clear temporary states
+// Eventually this will grow up, to host clear options,
+// so the useState hook will be interchanged by useReducer
 export const useCleanSession = () => {
   const [isToClean, setIsToClean] = useState(false);
 

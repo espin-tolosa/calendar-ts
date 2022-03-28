@@ -1,13 +1,13 @@
 import { composition } from "@/interfaces";
 import React, { createContext, useContext, useEffect, useReducer } from "react";
-import { event } from "@interfaces/index";
+import { event } from "@/interfaces/index";
 import { month0 } from "@/static/initEvents";
 import { eventSpreader } from "@/algorithms/eventSpreader";
 import { DateService } from "@/utils/Date";
 import { isReadyToSubmit } from "@/utils/ValidateEvent";
 import { CustomTypes } from "@/customTypes";
 
-type Action = {
+export type Action = {
   type: CustomTypes.DispatchLocalStateEvents;
   payload: CustomTypes.State;
 };
@@ -27,9 +27,11 @@ const diff_byId = (
   );
 };
 
-function reducerEvents(state: CustomTypes.State, action: Action) {
+export function reducerEvents(state: CustomTypes.State, action: Action) {
+  console.log("Dispatcher", action);
   switch (action.type) {
     // Add new event coming from database, it doesn't allow to add events with duplicated id's
+    //Notice: use it only forfetch events from  the database, it clears the state
     case "appendarray": {
       let newState = [...state];
       const newEvents = action.payload;
@@ -52,111 +54,93 @@ function reducerEvents(state: CustomTypes.State, action: Action) {
           return newState;
         }
 
-        //check if start and end day exists
-
-        //TODO: extract to a function
+        //check if start and end day exists, and client is not empty or is default
         if (!isReadyToSubmit) {
           return newState;
         }
 
+        //Recompute the new representation of that event
         const spread = eventSpreader(event);
         newState.push(event);
         newState = newState.concat(spread);
-        //newState = [...newState, ...spread];
       });
 
-      //
       newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       return newState;
     }
     //
-    case "deletebyid": {
+    case "update": {
+      //I start with the complete state, to then filter by id and add changes
       let newState = [...state];
+
       action.payload.forEach((toReplace) => {
+        //Avoid enter negative id, reserved for placeholders
+        //TODO: add more safety conditions like start < end
+        if (toReplace.id < 1) {
+          //skip by not doing nothing for that event
+          return;
+        }
+        const spread = eventSpreader(toReplace);
+        //in each iteration in filtering some part of the original state and injecting something new
         newState = newState.filter(
           (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
         );
+        newState.push(toReplace);
+        newState = newState.concat(spread);
       });
+
       newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       return newState;
     }
     //
+    case "delete": {
+      let newState = [...state];
+      //Clean state is the state without all the events targeting the id to replace
+      action.payload.forEach((toDelete) => {
+        newState = newState.filter(
+          (event) => Math.abs(event.id) !== Math.abs(toDelete.id)
+        );
+      });
+      return newState;
+    }
+    //
+
+    //Strict replace by id: update the complete event state only if such event is found
     case "replacebyid": {
       const toReplace = action.payload[0];
-      const target = state.findIndex((event) => event.id === toReplace.id);
-      if (target < 0) return state;
-      const spread = eventSpreader(toReplace);
-      const newState = state.filter(
+      const cleanState = state.filter(
         (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
       );
 
-      const result = [...newState, toReplace, ...spread];
+      //State before and after cleaning is the same, event is not in state so won't add
+      const affectedEvents = state.length - cleanState.length;
+      if (affectedEvents === 0) {
+        return [...state];
+      }
 
+      //Recompute the new representation of that event
+      const spread = eventSpreader(toReplace);
+
+      //Append to previous cleaned state
+      const result = [...cleanState, toReplace, ...spread];
+
+      //Sort again
       result.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       return result;
     }
-    case "updateDnD": {
-      const toReplace = action.payload[0];
-      const newState = state.filter(
-        (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
-      );
-      const spread = eventSpreader(toReplace);
-      const result = [...newState, toReplace, ...spread];
-      return result;
-    }
-    case "update": {
-      const event = action.payload[0];
-
-      const isEvent = state.findIndex((e) => e.id === event.id) >= 0;
-
-      if (isEvent) {
-        const event = action.payload[0];
-        const spread = eventSpreader(event);
-        let newState = [...state];
-        action.payload.forEach((toReplace) => {
-          newState = newState.filter(
-            (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
-          );
-        });
-
-        const result = [...newState, event, ...spread];
-
-        result.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
-        return result;
-      } else {
-        const isEventInState = state.findIndex(
-          (inner) => inner.id === event.id
-        );
-        if (isEventInState >= 0) {
-          return state;
-        }
-
-        //checks the case of end begins before the start
-        const daysSpread = DateService.DaysFrom(event.start, event.end);
-        if (daysSpread < 0) {
-          return state;
-        }
-
-        //check if start and end day exists
-
-        //TODO: extract to a function
-        if (!isReadyToSubmit) {
-          return state;
-        }
-
-        const spread = eventSpreader(event);
-        const newState = [...state, event, ...spread];
-        newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
-        //
-        return newState;
-      }
-    }
   }
 }
+
 // Context
 const defaultState = month0;
 const cEventState = createContext<Array<event>>(defaultState);
+const cEventBuffer = createContext<Array<event>>(defaultState);
+const cBufferDispatch = createContext<React.Dispatch<Action>>(() => {});
 const cEventDispatch = createContext<React.Dispatch<Action>>(() => {});
+
+cEventState.displayName = "Event State: a interpretation of database events";
+cEventBuffer.displayName = "Event Buffer: a temporal state";
+cEventDispatch.displayName = "Event State Dispatch";
 
 export function useEventState(day?: string) {
   const events = useContext(cEventState);
@@ -171,17 +155,74 @@ export function useEventDispatch() {
 export const EventsDispatcher: composition = ({ children }) => {
   const [state, dispatch] = useReducer(reducerEvents, defaultState);
 
-  /*
-        onClick={() => {
-          eventDispatcher({
-        }}
-*/
-
   return (
     <cEventState.Provider value={state}>
-      <cEventDispatch.Provider value={dispatch}>
-        {children}
-      </cEventDispatch.Provider>
+      <cEventBuffer.Provider value={state}>
+        <cEventDispatch.Provider value={dispatch}>
+          <cBufferDispatch.Provider value={dispatch}>
+            {children}
+          </cBufferDispatch.Provider>
+        </cEventDispatch.Provider>
+      </cEventBuffer.Provider>
     </cEventState.Provider>
   );
 };
+
+const useFetchEvents = () => {};
+//export function fetchEvent_v2(
+//  action: CustomTypes.OptionsEventsAPI,
+//  event: event = CustomValues.nullEvent
+//): Promise<Array<event>> {
+//  const method = "POST"; //https method, nothing to do with action
+//  const body = new FormData();
+//  const dataJSON = JSON.stringify({ action, ...event });
+//  body.append("json", dataJSON);
+//
+//  const handleFetchErrors = async (response: Response) => {
+//    if (response.status === 401) {
+//      throw Error("No JWT");
+//    }
+//
+//    if (response.status === 404) {
+//      throw Error("No credentials"); //!
+//    }
+//
+//    const dbResponse: Array<event> = await response.json();
+//    return new Promise((resolve, reject) => {
+//      resolve(dbResponse);
+//    });
+//  };
+//
+//  fetch(api.routes.events, { method, body })
+//    .then((response) => {
+//      //  if (response.status === 401) {
+//      //    throw Error("No JWT");
+//      //  }
+//
+//      //  if (response.status === 404) {
+//      //    throw Error("No credentials"); //!
+//      //  }
+//      return response.json();
+//    })
+//    .then((response) => {
+//      return response as Array<event>;
+//    })
+//  	.catch(error =>{
+//
+//  		    return new Promise((resolve, reject) => {
+//  		      setTimeout(() => {
+//  		        resolve([
+//  		          {
+//  		            id: 10,
+//  		            client: "Client_1",
+//  		            job: "local",
+//  		            start: "2022-03-01",
+//  		            end: "2022-03-02",
+//  		          },
+//
+//  		        ]);
+//  		      }, 1000)})}
+//
+//  	)
+//
+//}

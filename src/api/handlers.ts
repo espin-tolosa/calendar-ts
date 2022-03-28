@@ -30,7 +30,7 @@ export function useGethCancel() {
   return () => {
     setEventController(null);
     eventDispatcher({
-      type: "deletebyid",
+      type: "delete",
       payload: [{ ...eventSelected!, id: EventClass.getUnusedId() }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
     });
 
@@ -90,7 +90,7 @@ export function useGethDeleteEvent(): () => void {
     const success = (code: number) => code === 204;
 
     eventDispatcher({
-      type: "deletebyid",
+      type: "delete",
       payload: [eventSelected!],
     });
 
