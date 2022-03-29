@@ -28,20 +28,19 @@ const diff_byId = (
 };
 
 export function reducerEvents(state: CustomTypes.State, action: Action) {
-  console.log("Dispatcher", action);
   switch (action.type) {
     // Add new event coming from database, it doesn't allow to add events with duplicated id's
     //Notice: use it only forfetch events from  the database, it clears the state
     case "appendarray": {
-      let newState = [...state];
-      const newEvents = action.payload;
-      newEvents.forEach((event) => {
+      //I will avoid spread operator [...state] until verify it won't throw RangeError for large arrays
+      let newState = state.slice();
+      action.payload.forEach((event) => {
         //Treat event from db to remove hours from data
         event.start = event.start.split(" ")[0];
         event.end = event.end.split(" ")[0];
         // Check if event already exists in the state by its id
         const isEventInState =
-          state.findIndex(
+          newState.findIndex(
             (inner) => Math.abs(inner.id) === Math.abs(event.id)
           ) >= 0;
         if (isEventInState) {
@@ -62,16 +61,17 @@ export function reducerEvents(state: CustomTypes.State, action: Action) {
         //Recompute the new representation of that event
         const spread = eventSpreader(event);
         newState.push(event);
-        newState = newState.concat(spread);
+        newState.push(...spread);
+        //newState = newState.concat(spread);
       });
 
       newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
       return newState;
     }
     //
+    //I start with the complete state, to then filter by id and add changes
     case "update": {
-      //I start with the complete state, to then filter by id and add changes
-      let newState = [...state];
+      let newState = state.slice();
 
       action.payload.forEach((toReplace) => {
         //Avoid enter negative id, reserved for placeholders
@@ -94,7 +94,7 @@ export function reducerEvents(state: CustomTypes.State, action: Action) {
     }
     //
     case "delete": {
-      let newState = [...state];
+      let newState = state.slice();
       //Clean state is the state without all the events targeting the id to replace
       action.payload.forEach((toDelete) => {
         newState = newState.filter(

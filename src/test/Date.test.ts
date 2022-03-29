@@ -95,6 +95,8 @@ test("append two day duration is represented by two entry in the local state", (
     "2022-03-02"
   );
   const newState = reducerEvents(state, action);
+  console.log("Append two day");
+  console.log(newState);
   expect(newState.length).toBe(2);
   expectToBe(newState[0], action.payload[0]);
   expectToBe(newState[1], {
@@ -226,8 +228,48 @@ test("update state for nonexistent ids", () => {
   );
 
   const newState = reducerEvents(state2Event, action);
-  console.log(newState);
   expect(newState.length).toBe(state2Event.length + 10);
+  expect(newState).toEqual(state2Event.concat(reducerEvents([], action)));
+});
+
+test("object are different references", () => {
+  const action = genEventCall(
+    "appendarray",
+    2,
+    "client1",
+    "testjob1",
+    "2022-03-01",
+    "2022-03-10"
+  );
+  const newState = reducerEvents(state1Event, action);
+  const isSame = Object.is(newState, state1Event);
+  expect(isSame).toBe(false);
+});
+test("object are different references", () => {
+  const action = genEventCall(
+    "update",
+    1,
+    "client1",
+    "testjob1",
+    "2022-03-01",
+    "2022-03-10"
+  );
+  const newState = reducerEvents(state1Event, action);
+  const isSame = Object.is(newState, state1Event);
+  expect(isSame).toBe(false);
+});
+test("object are different content", () => {
+  const newState = reducerDemo(state1Event);
+
+  //state is passed by ref
+  function reducerDemo(state: Array<event>) {
+    const newState = [...state];
+    newState[0].id = 100;
+    return newState;
+  }
+
+  expect(newState[0]).toBe(state1Event[0]);
+  expect(newState).toEqual(state1Event);
 });
 
 //test("tessting returned references", () => {
