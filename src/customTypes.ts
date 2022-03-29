@@ -17,10 +17,10 @@ export namespace CustomTypes {
    * Options to dispatch actions that manipulate the local representation of the events state
    */
   export type DispatchLocalStateEvents =
-    | "appendarray"
+    | "syncDB"
     | "delete"
-    | "replacebyid"
-    | "update";
+    | "update"
+    | "override";
 
   /**
    * Options to send a query by POST method using fetch to Backend API events

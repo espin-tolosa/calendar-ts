@@ -1,9 +1,10 @@
 import { Action, reducerEvents } from "@/hooks/useEventsState";
 import { DateService } from "@/utils/Date";
 import { event } from "@/interfaces/index";
+import { CustomTypes } from "@/customTypes";
 
 const genEventCall = (
-  type: "appendarray" | "replacebyid" | "deletebyid" | "update",
+  type: CustomTypes.DispatchLocalStateEvents,
   id: number,
   client: string,
   job: string,
@@ -27,25 +28,11 @@ const genEventCall = (
 const emptyState: Array<event> = [];
 const state1Event: Array<event> = reducerEvents(
   emptyState,
-  genEventCall(
-    "appendarray",
-    1,
-    "Client_1",
-    "Job_1",
-    "2022-03-01",
-    "2022-03-10"
-  )
+  genEventCall("syncDB", 1, "Client_1", "Job_1", "2022-03-01", "2022-03-10")
 );
 const state2Event = reducerEvents(
   state1Event,
-  genEventCall(
-    "appendarray",
-    2,
-    "Client_1",
-    "Job_1",
-    "2022-03-01",
-    "2022-03-10"
-  )
+  genEventCall("syncDB", 2, "Client_1", "Job_1", "2022-03-01", "2022-03-10")
 );
 
 const expectToBe = (input: event, output: event) => {
@@ -72,7 +59,7 @@ test("Today is 2022-03-01 and yesterday was 2022-02-28", () => {
 test("append one day duration is represented by one entry in the local state", () => {
   const state: Array<event> = [];
   const action = genEventCall(
-    "appendarray",
+    "syncDB",
     1,
     "client1",
     "testjob",
@@ -87,7 +74,7 @@ test("append one day duration is represented by one entry in the local state", (
 test("append two day duration is represented by two entry in the local state", () => {
   const state: Array<event> = [];
   const action = genEventCall(
-    "appendarray",
+    "syncDB",
     1,
     "client1",
     "testjob",
@@ -109,7 +96,7 @@ test("append two day duration is represented by two entry in the local state", (
 test("append one week duration is represented by 1+6 per week in local state", () => {
   const state: Array<event> = [];
   const action = genEventCall(
-    "appendarray",
+    "syncDB",
     1,
     "client1",
     "testjob",
@@ -127,9 +114,10 @@ test("append one week duration is represented by 1+6 per week in local state", (
 });
 
 test("no append if end is before start", () => {
+  console.log("No append test case");
   const state: Array<event> = [];
   const action = genEventCall(
-    "appendarray",
+    "syncDB",
     1,
     "client1",
     "testjob",
@@ -137,6 +125,7 @@ test("no append if end is before start", () => {
     "2022-03-01"
   );
   const newState = reducerEvents(state, action);
+  console.log(newState);
   expect(newState.length).toBe(0);
 });
 
@@ -151,7 +140,7 @@ test("replace by id a single day event", () => {
     },
   ];
   const action = genEventCall(
-    "replacebyid",
+    "override",
     1,
     "client2",
     "testjob2",
@@ -164,7 +153,7 @@ test("replace by id a single day event", () => {
 });
 test("replace by id a multiple day event", () => {
   const action = genEventCall(
-    "replacebyid",
+    "override",
     1,
     "client2",
     "testjob2",
@@ -179,7 +168,7 @@ test("replace by id a multiple day event", () => {
 
 test("replace by id not found the id, the state wont change", () => {
   const action = genEventCall(
-    "replacebyid", //<-testing this
+    "override", //<-testing this
     2,
     "client2",
     "testjob2",
@@ -234,7 +223,7 @@ test("update state for nonexistent ids", () => {
 
 test("object are different references", () => {
   const action = genEventCall(
-    "appendarray",
+    "syncDB",
     2,
     "client1",
     "testjob1",

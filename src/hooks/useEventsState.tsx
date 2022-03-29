@@ -3,8 +3,7 @@ import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { event } from "@/interfaces/index";
 import { month0 } from "@/static/initEvents";
 import { eventSpreader } from "@/algorithms/eventSpreader";
-import { DateService } from "@/utils/Date";
-import { isReadyToSubmit } from "@/utils/ValidateEvent";
+import { isWellDefined } from "@/utils/ValidateEvent";
 import { CustomTypes } from "@/customTypes";
 
 export type Action = {
@@ -27,35 +26,26 @@ const diff_byId = (
   );
 };
 
-export function reducerEvents(state: CustomTypes.State, action: Action) {
+export function reducerEvents(
+  state: CustomTypes.State,
+  action: Action
+): Array<event> {
   switch (action.type) {
     // Add new event coming from database, it doesn't allow to add events with duplicated id's
     //Notice: use it only forfetch events from  the database, it clears the state
-    case "appendarray": {
+
+    case "syncDB": {
       //I will avoid spread operator [...state] until verify it won't throw RangeError for large arrays
-      let newState = state.slice();
+      let newState: Array<event> = [];
       action.payload.forEach((event) => {
         //Treat event from db to remove hours from data
         event.start = event.start.split(" ")[0];
         event.end = event.end.split(" ")[0];
-        // Check if event already exists in the state by its id
-        const isEventInState =
-          newState.findIndex(
-            (inner) => Math.abs(inner.id) === Math.abs(event.id)
-          ) >= 0;
-        if (isEventInState) {
-          return newState;
-        }
 
         //checks the case of end begins before the start
-        const daysSpread = DateService.DaysFrom(event.start, event.end);
-        if (daysSpread < 0) {
-          return newState;
-        }
-
         //check if start and end day exists, and client is not empty or is default
-        if (!isReadyToSubmit) {
-          return newState;
+        if (!isWellDefined(event)) {
+          return;
         }
 
         //Recompute the new representation of that event
@@ -106,7 +96,7 @@ export function reducerEvents(state: CustomTypes.State, action: Action) {
     //
 
     //Strict replace by id: update the complete event state only if such event is found
-    case "replacebyid": {
+    case "override": {
       const toReplace = action.payload[0];
       const cleanState = state.filter(
         (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
