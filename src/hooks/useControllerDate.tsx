@@ -35,11 +35,6 @@ function reducerController(state: dates, action: Action) {
     case "clearDates": {
       return { start: "", end: "" };
     }
-
-    default: {
-      console.warn("reducer option not implemented in reducerController");
-      return state;
-    }
   }
 }
 

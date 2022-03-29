@@ -1,11 +1,9 @@
 import { Event, EventHolder } from "@components/Event/main";
 import { useEventState } from "@/hooks/useEventsState";
-import { useDayLock } from "@/hooks/useDayLock";
-import {
-  bubblingAlgo,
-  isPlaceholder,
-} from "@components/EventsThrower/bubblingAlgoUtils";
+import { bubblingAlgo } from "@components/EventsThrower/bubblingAlgoUtils";
 import { sendEndReferencesToPlaceholders } from "@components/EventsThrower/sendReferencesToPlaceholders";
+import { isPlaceholder, isValidPlaceholder } from "@/utils/ValidateEvent";
+import { useEffect, useLayoutEffect } from "react";
 
 interface EventProps {
   day: string;
@@ -14,17 +12,35 @@ interface EventProps {
 export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
   const dayEvents = useEventState(day);
   const allEvents = useEventState();
-  const lockedDays = useDayLock();
-  const isLocked = lockedDays.find((lock) => lock === day) === day;
+  console.log("Entering inside EventThro", dayEvents);
+  //TODO: rebuild isLocked day const isLocked = lockedDays.find((lock) => lock === day) === day;
+  const isLocked = false;
   //No events in a day fast exit
-  if (dayEvents.length === 0 || isLocked) {
-    return <></>;
-  }
 
   const sortedEvents = bubblingAlgo(dayEvents);
 
+  useEffect(() => {
+    if (dayEvents.length === 0 || isLocked) {
+      return;
+    }
+    console.log(`%c Effect: ${day} `, "background: #222; color: #bada55");
+    //console.log(dayEvents, allEvents);
+  });
+
+  useLayoutEffect(() => {
+    if (dayEvents.length === 0 || isLocked) {
+      return;
+    }
+    console.log(`%c Layout: ${day} `, "background: #222; color: #55dac8");
+  });
+
   //TODO: style height has be passed from eventRef
 
+  if (dayEvents.length === 0 || isLocked) {
+    return <></>;
+  }
+  console.log(`%c Renderer: ${day} `, "background: #222; color: #d86a49");
+  console.log("Rendering inside EventThro", dayEvents);
   return (
     <div className="flex flex-col gap-1 my-5">
       {sortedEvents.map((event, position) => {

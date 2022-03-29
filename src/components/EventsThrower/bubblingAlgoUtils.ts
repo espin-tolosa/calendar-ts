@@ -1,4 +1,5 @@
 import { event } from "@/interfaces";
+import { isValidPlaceholder } from "@/utils/ValidateEvent";
 const isPreviousElement = (index: number) => {
   return index > 0;
 };
@@ -11,13 +12,9 @@ const prevIndex = (current: number) => {
   return current - 1;
 };
 
-export const isPlaceholder = (event: event) => {
-  return event.id < 0;
-};
-
 const prevIsPlaceholder = (arr: Array<event>, current: number) => {
   const prevEvent = arr[prevIndex(current)];
-  return isPlaceholder(prevEvent);
+  return isValidPlaceholder(prevEvent);
 };
 
 const isPrevEventPlaceholder = (arr: Array<event>, current: number) => {
@@ -25,7 +22,7 @@ const isPrevEventPlaceholder = (arr: Array<event>, current: number) => {
 };
 
 const endPosition = (current: event) => {
-  if (isPlaceholder(current)) {
+  if (isValidPlaceholder(current)) {
     return parseInt(current.end);
   } else {
     return Infinity;

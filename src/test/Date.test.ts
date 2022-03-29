@@ -82,8 +82,6 @@ test("append two day duration is represented by two entry in the local state", (
     "2022-03-02"
   );
   const newState = reducerEvents(state, action);
-  console.log("Append two day");
-  console.log(newState);
   expect(newState.length).toBe(2);
   expectToBe(newState[0], action.payload[0]);
   expectToBe(newState[1], {
@@ -114,7 +112,6 @@ test("append one week duration is represented by 1+6 per week in local state", (
 });
 
 test("no append if end is before start", () => {
-  console.log("No append test case");
   const state: Array<event> = [];
   const action = genEventCall(
     "syncDB",
@@ -125,7 +122,6 @@ test("no append if end is before start", () => {
     "2022-03-01"
   );
   const newState = reducerEvents(state, action);
-  console.log(newState);
   expect(newState.length).toBe(0);
 });
 

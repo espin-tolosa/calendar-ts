@@ -218,7 +218,6 @@ export function ListPrevDates(
 function GetDateFrom(fullDate: string, offset: number) {
   //  const today = new Date(fullDate);
   //  const previous = new Date(today.getTime() + offset);
-  //  console.log(previous);
   //  debugger;
   //  return FormatDate(previous);
 

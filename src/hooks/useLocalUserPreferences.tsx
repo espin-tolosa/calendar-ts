@@ -28,9 +28,6 @@ const getLocalUserState = () => {
 };
 
 function reducer(state: UserPreferencesState, action: { type: string }) {
-  //  console.log("Entering at the reducer");
-  //  console.log("state", state);
-  //  console.log("action type", action.type);
   if (action.type === "toggleController") {
     const result: UserPreferencesState = {
       ...state,

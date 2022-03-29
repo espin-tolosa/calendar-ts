@@ -31,13 +31,13 @@ export const LayoutBoard = () => {
     const start = `${fromYear}-${fromMonth}-01`;
 
     (async () => {
-      const eventDate = { ...CustomValues.nullEvent, start };
-      const dbState = await fetchEvent("GET_FROM", eventDate);
+      const eventDate = { ...CustomValues.nullEvent, start, end: start };
+      const response = await fetchEvent("GET_FROM", eventDate);
+      const state = await response.json();
 
-      console.log(dbState);
       eventsDispatcher({
-        type: "appendarray",
-        payload: dbState,
+        type: "syncDB",
+        payload: state,
       });
     })();
 

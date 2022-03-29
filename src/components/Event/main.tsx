@@ -15,6 +15,7 @@ import { useControllerDispatch } from "@/hooks/useController";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { isValidChildren } from "@/utils/ValidateEvent";
 
 const useGetEventFamily = (event: event) => {
   const events = useEventState();
@@ -29,6 +30,7 @@ const useGetEventFamily = (event: event) => {
 };
 
 export const Event = ({ event }: { event: event }) => {
+  console.log("Enter event component", event);
   //const events = useEventState();
   const isChildren = event.job.includes("#isChildren");
   //edit mode
@@ -45,7 +47,6 @@ export const Event = ({ event }: { event: event }) => {
   const dispatchControllerDates = useControllerDispatchDates();
 
   const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
-    console.log("Clicked on Event", parentEvent);
     e.stopPropagation();
 
     dispatchControllerDates({
@@ -65,9 +66,6 @@ export const Event = ({ event }: { event: event }) => {
     setEventController(parentEvent);
   };
 
-  //console.log("parent", parent);
-  //console.log("family", family);
-
   // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
   const { hover, ...mouseHover } = useHoverEvent(event);
 
@@ -83,18 +81,16 @@ export const Event = ({ event }: { event: event }) => {
     8
   );
   const parentEvent = EventClass.getParentEvent(family);
-  //console.log("Parent Event", parentEvent);
 
   //determine hight of event
   const eventRef = useRef<HTMLDivElement | null>(null);
 
   useLayoutEffect(() => {
     event.mutable = { height: `${eventRef.current?.clientHeight}px` };
-    console.log("event mutable", event.mutable);
-    //console.log("Div h:", event, eventRef);
-    //console.log("Famili:", family);
+    console.log("Layout event component", event);
   }, [eventRef.current?.clientHeight]);
 
+  console.log("Rendering event component", event);
   return (
     <StyledEvent.TWflexContainer
       {...mouseHover}
@@ -256,7 +252,7 @@ export const Event = ({ event }: { event: event }) => {
               payload: [nextEvent],
             });
             eventDispatcher({
-              type: "appendarray",
+              type: "syncDB",
               payload: dbResponse,
             });
           });
@@ -300,15 +296,9 @@ whitespace-nowrap overflow-hidden overflow-ellipsis
 
       <StyledEvent.TWextend
         $cells={spreadCells}
-        onMouseDownCapture={(e) => {
-          //console.log("extend event:", event.id);
-        }}
-        onMouseEnter={() => {
-          //console.log("enter extend event");
-        }}
-        onMouseOut={() => {
-          //console.log("leaving extend event");
-        }}
+        onMouseDownCapture={(e) => {}}
+        onMouseEnter={() => {}}
+        onMouseOut={() => {}}
         title={`Drag here to extend ${event.client}\'s job`}
         style={{ height: event.mutable?.height }}
       >
@@ -333,7 +323,6 @@ export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
   //con el valor correcto de mutable.hegiht
   //cuando se lea arriba useEffectLayout
 
-  console.log("Event holder", family[0].mutable?.height);
   return (
     <StyledEvent.TWflexContainer style={{ height: family[1].mutable?.height }}>
       <StyledEvent.TWplaceholder

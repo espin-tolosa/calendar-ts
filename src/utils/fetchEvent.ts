@@ -25,7 +25,7 @@ export async function fetchEvent(
     throw Error("No credentials");
   }
 
-  return await response.json();
+  return response;
 }
 
 const http_response_code: objectKeys<number> = {

@@ -8,7 +8,6 @@ import { UserPreferences } from "@/hooks/useLocalUserPreferences";
 
 import { ControllerProvider } from "@/hooks/useController";
 import { ControllerProviderDates } from "@/hooks/useControllerDate";
-import { DayLock } from "@/hooks/useDayLock";
 import { IsDraggingEvent } from "@/hooks/useIsDragging";
 import { EventsStatus } from "@/hooks/useEventsStatus";
 import { IsFetchingEvents } from "@/hooks/useIsFetchingEvents";
@@ -31,17 +30,15 @@ ReactDOM.render(
                   <ControllerProvider>
                     <ControllerProviderDates>
                       <UserPreferences>
-                        <DayLock>
-                          <EventsDispatcher>
-                            <EventInController>
-                              <EventsStatus>
-                                <UserSession>
-                                  <App />
-                                </UserSession>
-                              </EventsStatus>
-                            </EventInController>
-                          </EventsDispatcher>
-                        </DayLock>
+                        <EventsDispatcher>
+                          <EventInController>
+                            <EventsStatus>
+                              <UserSession>
+                                <App />
+                              </UserSession>
+                            </EventsStatus>
+                          </EventInController>
+                        </EventsDispatcher>
                       </UserPreferences>
                     </ControllerProviderDates>
                   </ControllerProvider>

@@ -20,7 +20,6 @@ export const useEventsStatusDispatcher = () => {
 export const EventsStatus: composition = ({ children }) => {
   const [state, setState] = useState(defaultState);
   const dispatchState = (newValue: number) => {
-    console.log("update dispatch event with id", newValue);
     setState({ id: newValue });
   };
 

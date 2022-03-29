@@ -1,7 +1,6 @@
 import { styles } from "@/components/Day/tw";
 import { memo, useRef } from "react";
 import { DateService } from "@/utils/Date";
-import { useDayLockDispatcher } from "@/hooks/useDayLock";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useIsDragging } from "@/hooks/useIsDragging";
 import { useEventDispatch } from "@/hooks/useEventsState";
@@ -46,7 +45,6 @@ export function IDay({
   const eventDispatcher = useEventDispatch();
   const tempDay = String(daynumber);
   const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
-  const lockedDaysDispatcher = useDayLockDispatcher();
 
   const setEventController = useSetEventSelected();
   //dnd
@@ -97,7 +95,9 @@ export function IDay({
           payload: [newEvent],
         });
         const result = await fetchEvent("POST", newEvent);
-        const dbResponse: Array<event> = await result.json();
+
+        const dbState2: Array<event> = [];
+        //const dbResponse: Array<event> = await result.text();
 
         //This is the way I have to replace the Id of an event, since the action "replacebyid" uses the id to change the other fields, I can't use it to replace the id itself
         eventDispatcher({
@@ -105,8 +105,8 @@ export function IDay({
           payload: [newEvent],
         });
         eventDispatcher({
-          type: "appendarray",
-          payload: dbResponse,
+          type: "syncDB",
+          payload: dbState2,
         });
 
         //
@@ -134,9 +134,7 @@ export function IDay({
         fetchEvent("PUT", newEvent);
         temporaryEventDispatcher(newEvent);
       }}
-      onMouseUp={() => {
-        //console.info("leaving action at day:", dayPadd);
-      }}
+      onMouseUp={() => {}}
     >
       <styles.header
         $isLock={isLocked}
@@ -144,10 +142,6 @@ export function IDay({
           return (isLocked ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
         })()}
         $isWeekend={isWeekend}
-        onClick={(e) => {
-          e.stopPropagation();
-          lockedDaysDispatcher({ type: "update", date: fullDate });
-        }}
       >
         <styles.daySpot $isToday={isToday}>{dayPadd}</styles.daySpot>
       </styles.header>

@@ -10,7 +10,6 @@ import { useEventDispatch } from "@/hooks/useEventsState";
 
 import { zeroPadd } from "@/utils/zeroPadd";
 import { useControllerStateDates } from "@/hooks/useControllerDate";
-import { useDayLock } from "@/hooks/useDayLock";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
 import { useIsFetchingEvents } from "@/hooks/useIsFetchingEvents";
 import { useCtxCurrentMonthRef } from "@/globalStorage/currentMonthReference";
@@ -68,7 +67,6 @@ const Month = ({ year, month }: iMonth) => {
   const controllerDates = useControllerStateDates();
 
   //2. locked days
-  const lockedDays = useDayLock();
 
   //3. user preferences
   const { showWeekends } = useLocalUserPreferencesContext().localState;
@@ -134,11 +132,7 @@ const Month = ({ year, month }: iMonth) => {
                 fullDate={DateService.ComposeDate(year, month, day)}
                 start={controllerDates.start}
                 end={controllerDates.end}
-                isLocked={
-                  lockedDays.find(
-                    (lock) => lock === DateService.ComposeDate(year, month, day)
-                  ) === DateService.ComposeDate(year, month, day)
-                }
+                isLocked={false} //TODO: A way to determine locked days
                 isWeekend={
                   (!showWeekends &&
                     DateService.GetMonthDayKey(
