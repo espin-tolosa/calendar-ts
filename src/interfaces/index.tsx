@@ -16,7 +16,12 @@ export interface event {
   job: string;
   start: string;
   end: string;
-  mutable?: { height: string };
+  mutable?: {
+    bubble?: number;
+    height: string;
+    eventRef: HTMLDivElement;
+    index: number;
+  };
 }
 
 export interface loginForm {

@@ -96,8 +96,16 @@ export function GetYear(dt: Idt) {
 }
 
 export function FormatDate(dt: Idt) {
-  /*return a Y-M-D used as a date value | output example: "2021/00/01" */
   return `${GetYear(dt)}-${zeroPad(GetMonth(dt))}-${zeroPad(GetDay(dt))}`;
+}
+
+//Returns the index of day of the week as following
+//Monday:0, ...,Saturday:5, Sunday: 6
+export function GetDayWeekIndex(date: string) {
+  const isSunday = (index: number) => (index === 0 ? true : false);
+  const dt = new Date(date);
+  const index = dt.getDay();
+  return isSunday(index) ? 6 : index - 1;
 }
 
 export function GetMonthDayKey(dt: Idt) {
@@ -224,7 +232,22 @@ function GetDateFrom(fullDate: string, offset: number) {
   const dt = new Date(fullDate);
   const copy = new Date(dt.valueOf());
   const newDate = new Date(copy.setDate(copy.getDate() + offset));
-  return FormatDate(newDate);
+  const result = FormatDate(newDate);
+  return result;
+}
+
+function GetWeekRangeOf(today: string) {
+  const dayIndexLeft = DateService.GetDayWeekIndex(today);
+  const dayIndexRight = 6 - dayIndexLeft;
+  const dayNumber = parseInt(today.split("-")[2]);
+  const toLastMonday = Math.min(dayNumber, dayIndexLeft);
+  const daysLeftTillEndOfMonth =
+    DateService.GetLastDayMonth(new Date(today)) - dayNumber;
+  const toNextSunday = Math.min(daysLeftTillEndOfMonth, dayIndexRight);
+  const from = DateService.GetDateFrom(today, -toLastMonday);
+  const to = DateService.GetDateFrom(today, toNextSunday);
+  const rangeDates = { from, to };
+  return rangeDates;
 }
 
 export const DateService = {
@@ -248,4 +271,6 @@ export const DateService = {
   GetPrevDate,
   secondsSinceEpoch,
   GetDateFrom,
+  GetDayWeekIndex,
+  GetWeekRangeOf,
 };

@@ -1,17 +1,31 @@
 import { composition } from "@/interfaces";
-import React, { createContext, useContext, useEffect, useReducer } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 import { event } from "@/interfaces/index";
 import { month0 } from "@/static/initEvents";
 import { eventSpreader } from "@/algorithms/eventSpreader";
 import { isWellDefined } from "@/utils/ValidateEvent";
 import { CustomTypes } from "@/customTypes";
+import { DateService } from "@/utils/Date";
 
 export type Action = {
   type: CustomTypes.DispatchLocalStateEvents;
   payload: CustomTypes.State;
 };
 
-const sortCriteriaFIFO = (a: number, b: number) => Math.abs(a) - Math.abs(b);
+const sortCriteriaFIFO = (prev: event, next: event) =>
+  Math.abs(prev.id) - Math.abs(next.id);
+const sortCriteriaLonger = (prev: event, next: event) => {
+  const prevRange = DateService.DaysFrom(prev.start, prev.end);
+  const nextRange = DateService.DaysFrom(next.start, next.end);
+  return nextRange - prevRange;
+};
+const sortCriteria = sortCriteriaLonger;
 const diff_byId = (
   newState: CustomTypes.State,
   state: CustomTypes.State
@@ -55,7 +69,7 @@ export function reducerEvents(
         //newState = newState.concat(spread);
       });
 
-      newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
+      newState.sort((prev, next) => sortCriteria(prev, next));
       return newState;
     }
     //
@@ -79,7 +93,7 @@ export function reducerEvents(
         newState = newState.concat(spread);
       });
 
-      newState.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
+      newState.sort((prev, next) => sortCriteria(prev, next));
       return newState;
     }
     //
@@ -115,7 +129,7 @@ export function reducerEvents(
       const result = [...cleanState, toReplace, ...spread];
 
       //Sort again
-      result.sort((prev, next) => sortCriteriaFIFO(prev.id, next.id));
+      result.sort((prev, next) => sortCriteria(prev, next));
       return result;
     }
   }
@@ -132,9 +146,22 @@ cEventState.displayName = "Event State: a interpretation of database events";
 cEventBuffer.displayName = "Event Buffer: a temporal state";
 cEventDispatch.displayName = "Event State Dispatch";
 
-export function useEventState(day?: string) {
+export function useEventState(day?: string | { from: string; to: string }) {
   const events = useContext(cEventState);
-  return day ? events.filter((event) => event.start === day) : events;
+  if (typeof day === "object") {
+    //TODO: Figure out the way to do this only once for the deps: [events, day.from]
+    return events.filter((event) => {
+      const leftRangeWidth = DateService.DaysFrom(day.from, event.start) >= 0;
+      const rightRangeWidth = DateService.DaysFrom(event.start, day.to) >= 0;
+      const isInRange = leftRangeWidth && rightRangeWidth;
+      return isInRange;
+    });
+  }
+
+  if (typeof day === "string") {
+    return events.filter((event) => event.start.includes(day));
+  }
+  return events;
 }
 export function useEventDispatch() {
   return useContext(cEventDispatch);

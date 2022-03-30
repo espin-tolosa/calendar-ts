@@ -14,7 +14,7 @@ import { useCtxKeyBuffer } from "@/globalStorage/keyBuffer";
 import { useControllerDispatch } from "@/hooks/useController";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { isValidChildren } from "@/utils/ValidateEvent";
 
 const useGetEventFamily = (event: event) => {
@@ -29,12 +29,16 @@ const useGetEventFamily = (event: event) => {
   return [parent, family] as [event, Array<event>];
 };
 
-export const Event = ({ event }: { event: event }) => {
-  console.log("Enter event component", event);
+export const Event = ({ event, index }: { event: event; index: number }) => {
+  const today = event.start;
+  const weekRange = DateService.GetWeekRangeOf(today);
+  const eventsOfWeek = useEventState(weekRange);
   //const events = useEventState();
   const isChildren = event.job.includes("#isChildren");
   //edit mode
   const [parent, family] = useGetEventFamily(event);
+  const [state, setState] = useState<any>();
+
   //drag and drop
   const temporaryEvent = useTemporaryEvent();
   const temporaryEventDispatcher = useTemporaryEventDispatcher();
@@ -83,14 +87,25 @@ export const Event = ({ event }: { event: event }) => {
   const parentEvent = EventClass.getParentEvent(family);
 
   //determine hight of event
-  const eventRef = useRef<HTMLDivElement | null>(null);
+  const eventRef = useRef<HTMLDivElement>();
+
+  const h = eventRef?.current?.clientHeight;
 
   useLayoutEffect(() => {
-    event.mutable = { height: `${eventRef.current?.clientHeight}px` };
-    console.log("Layout event component", event);
-  }, [eventRef.current?.clientHeight]);
+    if (typeof eventRef.current !== "undefined") {
+      event.mutable = {
+        height: `${eventRef.current!.clientHeight}px`,
+        eventRef: eventRef.current,
+        index: index,
+      };
+      setState({
+        height: `${eventRef.current?.clientHeight}px`,
+      });
+    }
+  }, [h]);
+  //useLayoutEffect(() => {
+  //}, []);
 
-  console.log("Rendering event component", event);
   return (
     <StyledEvent.TWflexContainer
       {...mouseHover}
@@ -270,8 +285,7 @@ export const Event = ({ event }: { event: event }) => {
         {...eventUpdater}
       >
         {!isChildren ? (
-          <>
-            <div className="text-md">{event.client}</div>
+          <div className="flex flex-col w-full">
             {!isSelected ? (
               <StyledEvent.TWjobContent $isHover={hover}>
                 {event.job}
@@ -281,12 +295,15 @@ export const Event = ({ event }: { event: event }) => {
                 ref={isFocus}
                 value={jobInput}
                 className="bg-transparent text-slate-900 outline-none appearance-none
-								
-whitespace-nowrap overflow-hidden overflow-ellipsis
+							
+							whitespace-nowrap overflow-hidden overflow-ellipsis
 								"
               ></input>
             )}
-          </>
+            <div className="bg-black text-center text-white text-xs rounded-b-[10px] border-1 ">
+              {event.client}
+            </div>
+          </div>
         ) : (
           <>
             <div className="text-transparent">{event.client}</div>
@@ -317,19 +334,71 @@ whitespace-nowrap overflow-hidden overflow-ellipsis
 
 export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
   const [parent, family] = useGetEventFamily(event);
+  const pref = useRef<HTMLDivElement>();
+  const [state, setState] = useState<any>();
 
+  const h = parent.mutable?.eventRef?.clientHeight;
+
+  //  const myState = useEventState();
+  const today = event.start;
+  //const today = "2022-03-30";
+  const weekRange = DateService.GetWeekRangeOf(today);
+  weekRange.from = event.start;
+  const eventsOfWeek = useEventState(weekRange);
+
+  useLayoutEffect(() => {
+    if (typeof pref.current !== "undefined") {
+      //const p = pref.current!.offsetTop;
+      //const t = parent.mutable?.eventRef?.offsetTop;
+      //const h = parent.mutable?.eventRef?.clientHeight;
+      //const height = h!; //+ t! - p!;
+      //pref.current!.style.backgroundColor = "yellow";
+      const allIndex1 = eventsOfWeek.filter(
+        (all) => all.mutable?.index === parseInt(event.end)
+      );
+
+      //
+
+      const allH = allIndex1.map(
+        (a1) =>
+          a1.mutable!.eventRef.clientHeight + a1.mutable!.eventRef.offsetTop
+      );
+
+      const maxH = Math.max(...allH);
+
+      const p = pref.current!.offsetTop;
+      const t = parent.mutable?.eventRef?.offsetTop;
+      const h = parent.mutable?.eventRef?.clientHeight;
+
+      //In case of not found sibblings use the parent h //!bug solved
+      const height = isFinite(maxH) ? maxH - p : h;
+      pref.current!.style.border = "1px dashed red";
+
+      console.info({ event, p, t, h, maxH, height, allH });
+      //const height = h! + t! - p!;
+
+      //
+      event.mutable = {
+        //height: `${height}px`,
+        height: `${height}px` /*max of height for index   */,
+        eventRef: pref.current,
+        index: parseInt(event.end),
+      };
+
+      setState({
+        height: event.mutable.height,
+      });
+    }
+  }, [h]);
   //TODO
   //tengo que crear un consumidor de contexto para que esto se actualize
   //con el valor correcto de mutable.hegiht
   //cuando se lea arriba useEffectLayout
 
   return (
-    <StyledEvent.TWflexContainer style={{ height: family[1].mutable?.height }}>
-      <StyledEvent.TWplaceholder
-        key={"p" + event.id}
-        style={{ height: family[1].mutable?.height }}
-      >
-        {-event.id}
+    <StyledEvent.TWflexContainer ref={pref} style={state}>
+      <StyledEvent.TWplaceholder key={"p" + event.id}>
+        {parent.job}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
   );

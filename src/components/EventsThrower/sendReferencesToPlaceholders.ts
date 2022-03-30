@@ -10,5 +10,9 @@ export const sendEndReferencesToPlaceholders = (
   endRef: number
 ) => {
   const placeholders = filterPlaceholdersByEvent(allEvents, event);
-  placeholders.forEach((placeholder) => (placeholder.end = String(endRef)));
+  placeholders.forEach((placeholder) => {
+    placeholder.end = String(endRef);
+    //!("mutable" in placeholder) && (placeholder.mutable = {});
+    //placeholder.mutable!.bubble = endRef;
+  });
 };

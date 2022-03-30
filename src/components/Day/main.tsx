@@ -3,7 +3,7 @@ import { memo, useRef } from "react";
 import { DateService } from "@/utils/Date";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useIsDragging } from "@/hooks/useIsDragging";
-import { useEventDispatch } from "@/hooks/useEventsState";
+import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import {
   useTemporaryEvent,
   useTemporaryEventDispatcher,
@@ -54,6 +54,12 @@ export function IDay({
   const dayDivRef = useRef<HTMLDivElement>(null);
 
   //const { id } = useControllerState();
+  const events = useEventState(fullDate);
+
+  if (fullDate === "2022-03-24") {
+    console.log("events for day", fullDate);
+    console.log(events);
+  }
 
   const dispatchControllerDates = useControllerDispatchDates();
   const isDragging = useIsDragging();

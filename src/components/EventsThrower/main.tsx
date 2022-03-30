@@ -4,6 +4,7 @@ import { bubblingAlgo } from "@components/EventsThrower/bubblingAlgoUtils";
 import { sendEndReferencesToPlaceholders } from "@components/EventsThrower/sendReferencesToPlaceholders";
 import { isPlaceholder, isValidPlaceholder } from "@/utils/ValidateEvent";
 import { useEffect, useLayoutEffect } from "react";
+import { DateService } from "@/utils/Date";
 
 interface EventProps {
   day: string;
@@ -12,12 +13,14 @@ interface EventProps {
 export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
   const dayEvents = useEventState(day);
   const allEvents = useEventState();
-  console.log("Entering inside EventThro", dayEvents);
+  const weekRange = DateService.GetWeekRangeOf(day);
+  const eventsOfWeek = useEventState(weekRange);
   //TODO: rebuild isLocked day const isLocked = lockedDays.find((lock) => lock === day) === day;
   const isLocked = false;
   //No events in a day fast exit
 
   const sortedEvents = bubblingAlgo(dayEvents);
+  //const sortedEvents = dayEvents;
 
   useEffect(() => {
     if (dayEvents.length === 0 || isLocked) {
@@ -41,6 +44,9 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
   }
   console.log(`%c Renderer: ${day} `, "background: #222; color: #d86a49");
   console.log("Rendering inside EventThro", dayEvents);
+
+  console.log(eventsOfWeek);
+  console.log("----------------------------------------------------");
   return (
     <div className="flex flex-col gap-1 my-5">
       {sortedEvents.map((event, position) => {
@@ -56,7 +62,9 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
         }
         //Mutable instruction for global state of events
         sendEndReferencesToPlaceholders(allEvents, event, position);
-        return <Event key={`e-${keyValue}`} event={event}></Event>;
+        return (
+          <Event key={`e-${keyValue}`} event={event} index={position}></Event>
+        );
       })}
     </div>
   );
