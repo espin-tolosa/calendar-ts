@@ -277,7 +277,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         $isChildren={isChildren}
         ref={eventRef}
         $isHover={hover}
-        style={eventInlineStyle}
+        style={eventInlineStyle.dinamic}
         key={event.id}
         $cells={spreadCells}
         title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
@@ -286,23 +286,25 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
       >
         {!isChildren ? (
           <div className="flex flex-col w-full">
+            <div
+              className="bg-black text-center text-white text-sm customtp:text-xxs custombp:text-xxs w-full"
+              style={eventInlineStyle.static}
+            >
+              {event.client}
+            </div>
             {!isSelected ? (
               <StyledEvent.TWjobContent $isHover={hover}>
-                {event.job}
+                <div className="p-3 customtp:text-xxs customtp:p-1 custombp:text-xxs custombp:p-1  ">
+                  {event.job}
+                </div>
               </StyledEvent.TWjobContent>
             ) : (
               <input
                 ref={isFocus}
                 value={jobInput}
-                className="bg-transparent text-slate-900 outline-none appearance-none
-							
-							whitespace-nowrap overflow-hidden overflow-ellipsis
-								"
+                className="bg-transparent text-slate-900 outline-none appearance-none	whitespace-nowrap overflow-hidden overflow-ellipsis"
               ></input>
             )}
-            <div className="bg-black text-center text-white text-xs rounded-b-[10px] border-1 ">
-              {event.client}
-            </div>
           </div>
         ) : (
           <>
@@ -344,6 +346,9 @@ export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
   //const today = "2022-03-30";
   const weekRange = DateService.GetWeekRangeOf(today);
   weekRange.from = event.start;
+  if (event.id === -60) {
+    console.info("Issue", event, weekRange);
+  }
   const eventsOfWeek = useEventState(weekRange);
 
   useLayoutEffect(() => {
@@ -372,9 +377,22 @@ export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
 
       //In case of not found sibblings use the parent h //!bug solved
       const height = isFinite(maxH) ? maxH - p : h;
+
+      if (event.id === -60) {
+        //console.info("Issue event", event.end);
+        //console.info("looking inside", { allIndex1, allH, maxH, height });
+        const allEventsCol0 = eventsOfWeek.filter(
+          (all) => all.mutable?.index === 0
+        );
+        //console.info("event -60 on al effects", { event, parent });
+        const che = event.mutable?.eventRef.getBoundingClientRect();
+        const chp = parent.mutable?.eventRef.clientHeight;
+        //console.info("clientHeight -60 on al effects", { che, chp });
+        //console.info("Events of index 0", allEventsCol0);
+        //console.info({ event, p, t, h, maxH, height, allH });
+      }
       pref.current!.style.border = "1px dashed red";
 
-      console.info({ event, p, t, h, maxH, height, allH });
       //const height = h! + t! - p!;
 
       //
@@ -382,22 +400,40 @@ export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
         //height: `${height}px`,
         height: `${height}px` /*max of height for index   */,
         eventRef: pref.current,
-        index: parseInt(event.end),
+        index: parent.mutable?.index!, //!Corrected bug: was using event.end wich is zero
       };
 
-      setState({
-        height: event.mutable.height,
-      });
+      if (event.id === -60) {
+        const chp = parent.mutable?.eventRef.clientHeight;
+        console.info("Client height", chp);
+        console.info("Commputed h", height);
+        console.info("Mutable props", event.mutable);
+        console.warn({
+          height: event.mutable.height,
+        });
+        setState(() => {
+          return {
+            height: event.mutable!.height,
+          };
+        });
+      } else {
+        setState({
+          height: event.mutable.height,
+        });
+      }
     }
   }, [h]);
   //TODO
   //tengo que crear un consumidor de contexto para que esto se actualize
   //con el valor correcto de mutable.hegiht
   //cuando se lea arriba useEffectLayout
+  if (event.id === -60) {
+    console.warn("Return", state);
+  }
 
   return (
-    <StyledEvent.TWflexContainer ref={pref} style={state}>
-      <StyledEvent.TWplaceholder key={"p" + event.id}>
+    <StyledEvent.TWflexContainer ref={pref}>
+      <StyledEvent.TWplaceholder key={"p" + event.id} style={state}>
         {parent.job}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>

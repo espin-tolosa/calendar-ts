@@ -7,6 +7,7 @@ import { ClientColorStyles } from "@/utils/giveMeColor";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { fetchEvent } from "@/utils/fetchEvent";
 import { useEventDispatch } from "@/hooks/useEventsState";
+import { resourceLimits } from "worker_threads";
 
 export const useTransitionStyle = (
   isChildren: boolean,
@@ -38,9 +39,12 @@ export const useTransitionStyle = (
 
     const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
     const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.4, 0.7);
-    const [r_b, g_b, b_b] = ClientColorStyles(mapClientToColor, 0.3, 0.5);
+    const [r_b, g_b, b_b] = ClientColorStyles(mapClientToColor, 0.8, 0.2);
+    const [r_c, g_c, b_c] = ClientColorStyles(mapClientToColor, 0.7, 0.3);
+
+    let result = {};
     if (isChildren) {
-      return justThrown
+      result = justThrown
         ? composeStyle(
             "lightgray",
             "2px solid transparent",
@@ -60,27 +64,33 @@ export const useTransitionStyle = (
             "transparent",
             "2px solid transparent"
           );
+    } else {
+      result = justThrown
+        ? composeStyle(
+            "lightgray",
+            "2px solid transparent",
+            "black",
+            "2px solid transparent"
+          )
+        : !hover
+        ? composeStyle(
+            `rgb(${r}, ${g}, ${b})`,
+            "2px solid transparent",
+            "black",
+            "2px solid transparent"
+          )
+        : composeStyle(
+            `rgb(${r_h}, ${g_h}, ${b_h})`,
+            `2px solid rgb(${r_b}, ${g_b},${b_b})`,
+            "white",
+            `2px solid rgb(${r_b}, ${g_b},${b_b})`
+          );
     }
-    return justThrown
-      ? composeStyle(
-          "lightgray",
-          "2px solid transparent",
-          "black",
-          "2px solid transparent"
-        )
-      : !hover
-      ? composeStyle(
-          `rgb(${r}, ${g}, ${b})`,
-          "2px solid transparent",
-          "black",
-          "2px solid transparent"
-        )
-      : composeStyle(
-          `rgb(${r_h}, ${g_h}, ${b_h})`,
-          `2px solid rgb(${r_b}, ${g_b},${b_b})`,
-          "white",
-          `2px solid rgb(${r_b}, ${g_b},${b_b})`
-        );
+
+    return {
+      dinamic: result,
+      static: { background: `rgb(${r_b}, ${g_c}, ${b_c})` },
+    };
   }, [justThrown, hover]);
 };
 

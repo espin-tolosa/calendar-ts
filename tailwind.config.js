@@ -55,6 +55,9 @@ module.exports = {
         // Used in TopNav and Controller
         TopLayer: "3",
       },
+      fontSize: {
+        xxs: "0.6rem",
+      },
     },
   },
   plugins: [],

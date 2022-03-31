@@ -1,8 +1,7 @@
 import tw from "tailwind-styled-components";
 
 export const TWjobContent = tw.div<{ $isHover: boolean }>`
-flex whitespace-normal justify-center break-words overflow-hidden overflow-ellipsis border-l-2 pl-1 border-dotted
-${({ $isHover }) => ($isHover && "border-slate-400") || "border-transparent"}
+flex whitespace-normal break-words overflow-hidden overflow-ellipsis
 `;
 
 export const TWflexContainer = tw.div`
