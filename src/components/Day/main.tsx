@@ -47,12 +47,12 @@ export function IDay({
   const tempDay = String(daynumber);
   const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
   const componentName = "Day";
-  console.info("Renderer " + componentName + " : " + fullDate);
+  //console.info("Renderer " + componentName + " : " + fullDate);
   useEffect(() => {
-    console.info("Use Effect " + componentName + " : " + fullDate);
+    //console.info("Use Effect " + componentName + " : " + fullDate);
   }, []);
   useLayoutEffect(() => {
-    console.info("Use Layout of " + componentName + " : " + fullDate);
+    //console.info("Use Layout of " + componentName + " : " + fullDate);
   }, []);
 
   const setEventController = useSetEventSelected();

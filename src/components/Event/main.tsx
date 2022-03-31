@@ -32,7 +32,7 @@ const useGetEventFamily = (event: event) => {
 export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();
   const allEvents = useEventState();
-  console.info("Renderer ", event);
+  //console.info("Renderer ", event);
   useEffect(() => {
     //console.info("Use Effect ", eventRef.current);
     //console.info(allEvents);
@@ -302,10 +302,10 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         {!isChildren ? (
           <div className="flex flex-col w-full">
             <div
-              className="bg-black text-center text-white text-sm customtp:text-xxs custombp:text-xxs w-full"
+              className="bg-black text-left text-white text-sm customtp:text-xxs custombp:text-xxs w-full"
               style={eventInlineStyle.static}
             >
-              {event.client}
+              {event.id + " : " + event.mutable?.index + " : " + event.client}
             </div>
             {!isSelected ? (
               <StyledEvent.TWjobContent $isHover={hover}>
@@ -353,36 +353,52 @@ export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
   const [parent, family] = useGetEventFamily(event);
   const eventRef = useRef<HTMLDivElement>();
   const [state, setState] = useState<any>();
-  console.info("Renderer ", event);
+  //console.info("Renderer ", event);
   const today = event.start;
   const weekRange = DateService.GetWeekRangeOf(today);
   weekRange.from = event.start;
   const eventsOfWeek = useEventState(weekRange);
   useEffect(() => {
-    console.info("Use Effect ", eventRef.current);
+    //debugger;
+    //console.info("Use Effect ", eventRef.current);
 
     const allIndex1 = eventsOfWeek.filter(
-      (all) => all.mutable?.index === parseInt(event.end)
+      (all) => all.mutable?.index === parent.mutable?.index
     );
     const allH = allIndex1.map(
       (a1) => a1.mutable!.eventRef.clientHeight + a1.mutable!.eventRef.offsetTop
     );
-    const maxH = Math.max(...allH);
-
-    const p = eventRef.current!.offsetTop;
     const t = parent.mutable?.eventRef?.offsetTop;
     const h = parent.mutable?.eventRef?.clientHeight;
+    const maxH = Math.max(...allH, t! + h!);
+
+    const p = eventRef.current!.offsetTop;
+
+    //const height = h!; //+ t! - p!;
+    let height = maxH - p; // maxH - p!;
+    //let height = 0;
+    if (event.id === -60) {
+      console.log(height);
+      //height = 260;
+    }
+    if (event.id === -20) {
+      //      height = 60;
+    }
 
     //In case of not found sibblings use the parent h //!bug solved
-    const height = isFinite(maxH) ? maxH - p : h;
+    //const height = h;
     event.mutable!.height = `${height}px`; //max of height for index   ,
+    const prevState = parseInt(event.mutable!.height.split("px")[0]);
+    const nextState = height;
     setState({
       height: event.mutable!.height,
     });
+    if (prevState !== nextState) {
+    }
     //debugger;
   }, []);
   useLayoutEffect(() => {
-    console.info("Use Layout of ", eventRef.current);
+    //console.info("Use Layout of ", eventRef.current);
     eventRef.current!.style.border = "1px dashed red";
     event.mutable = {
       height: `${eventRef.current!.clientHeight}px`,

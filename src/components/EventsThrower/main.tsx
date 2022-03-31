@@ -16,12 +16,12 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
   const weekRange = DateService.GetWeekRangeOf(day);
   const eventsOfWeek = useEventState(weekRange);
   const componentName = "Eventthrown";
-  console.info("Renderer " + componentName + " : " + day);
+  //console.info("Renderer " + componentName + " : " + day);
   useEffect(() => {
-    console.info("Use Effect " + componentName + " : " + day);
+    //console.info("Use Effect " + componentName + " : " + day);
   }, []);
   useLayoutEffect(() => {
-    console.info("Use Layout of " + componentName + " : " + day);
+    //console.info("Use Layout of " + componentName + " : " + day);
   }, []);
   //TODO: rebuild isLocked day const isLocked = lockedDays.find((lock) => lock === day) === day;
   const isLocked = false;
