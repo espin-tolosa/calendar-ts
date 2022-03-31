@@ -51,7 +51,8 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const isChildren = event.job.includes("#isChildren");
   //edit mode
   const [parent, family] = useGetEventFamily(event);
-  const [state, setState] = useState<any>();
+  const syleType = {};
+  const [state, setState] = useState<{ height: string }>({ height: "" });
 
   //drag and drop
   const temporaryEvent = useTemporaryEvent();
@@ -302,10 +303,10 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         {!isChildren ? (
           <div className="flex flex-col w-full">
             <div
-              className="bg-black text-left text-white text-sm customtp:text-xxs custombp:text-xxs w-full"
+              className="bg-black text-center text-white text-sm customtp:text-xxs custombp:text-xxs w-full"
               style={eventInlineStyle.static}
             >
-              {event.id + " : " + event.mutable?.index + " : " + event.client}
+              {event.client}
             </div>
             {!isSelected ? (
               <StyledEvent.TWjobContent $isHover={hover}>
@@ -365,46 +366,53 @@ export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
     const allIndex1 = eventsOfWeek.filter(
       (all) => all.mutable?.index === parent.mutable?.index
     );
-    const allH = allIndex1.map(
-      (a1) => a1.mutable!.eventRef.clientHeight + a1.mutable!.eventRef.offsetTop
-    );
+    const allH = allIndex1.map((a1) => a1.mutable!.eventRef.clientHeight);
     const t = parent.mutable?.eventRef?.offsetTop;
     const h = parent.mutable?.eventRef?.clientHeight;
-    const maxH = Math.max(...allH, t! + h!);
+    const maxH = Math.max(...allH, h!);
 
     const p = eventRef.current!.offsetTop;
 
     //const height = h!; //+ t! - p!;
-    let height = maxH - p; // maxH - p!;
+    let height = maxH;
     //let height = 0;
-    if (event.id === -60) {
-      console.log(height);
-      //height = 260;
-    }
-    if (event.id === -20) {
-      //      height = 60;
-    }
+    //console.log(height);
+    //height = 260;
+
+    //height = 260;
 
     //In case of not found sibblings use the parent h //!bug solved
     //const height = h;
-    event.mutable!.height = `${height}px`; //max of height for index   ,
-    const prevState = parseInt(event.mutable!.height.split("px")[0]);
-    const nextState = height;
-    setState({
-      height: event.mutable!.height,
+    setState((prev: any) => {
+      if (event.id === -60) {
+        console.log("state", {
+          prev,
+          height,
+          maxH,
+          allH,
+          h,
+        });
+      }
+      return {
+        height: `${height}px`,
+      };
     });
-    if (prevState !== nextState) {
-    }
     //debugger;
   }, []);
   useLayoutEffect(() => {
     //console.info("Use Layout of ", eventRef.current);
-    eventRef.current!.style.border = "1px dashed red";
+    if (event.id === -60) {
+      console.log("Layout", `${eventRef.current!.clientHeight}px`);
+      //console.log(height);
+      //height = 260;
+    }
+    //eventRef.current!.style.border = "1px dashed red";
     event.mutable = {
       height: `${eventRef.current!.clientHeight}px`,
       eventRef: eventRef.current!,
       index: parent.mutable?.index!, //!Corrected bug: was using event.end wich is zero
     };
+    setState({ height: event.mutable?.height });
   }, []);
   /*
 	
@@ -496,10 +504,11 @@ export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
   return (
     <StyledEvent.TWflexContainer
       ref={eventRef}
-      style={{ height: event.mutable?.height }}
+      className="placehoder"
+      style={state}
     >
       <StyledEvent.TWplaceholder key={"p" + event.id}>
-        {parent.job}
+        {""}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
   );
