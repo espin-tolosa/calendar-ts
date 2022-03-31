@@ -30,6 +30,20 @@ const useGetEventFamily = (event: event) => {
 };
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
+  const eventRef = useRef<HTMLDivElement>();
+  const allEvents = useEventState();
+  console.info("Renderer ", event);
+  useEffect(() => {
+    //console.info("Use Effect ", eventRef.current);
+    //console.info(allEvents);
+  }, []);
+  useLayoutEffect(() => {
+    event.mutable = {
+      height: `${eventRef.current!.clientHeight}px`,
+      eventRef: eventRef.current!,
+      index: index,
+    };
+  }, []);
   const today = event.start;
   const weekRange = DateService.GetWeekRangeOf(today);
   const eventsOfWeek = useEventState(weekRange);
@@ -87,10 +101,9 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const parentEvent = EventClass.getParentEvent(family);
 
   //determine hight of event
-  const eventRef = useRef<HTMLDivElement>();
 
+  /*
   const h = eventRef?.current?.clientHeight;
-
   useLayoutEffect(() => {
     if (typeof eventRef.current !== "undefined") {
       event.mutable = {
@@ -103,6 +116,8 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
       });
     }
   }, [h]);
+*/
+
   //useLayoutEffect(() => {
   //}, []);
 
@@ -336,22 +351,59 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 
 export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
   const [parent, family] = useGetEventFamily(event);
-  const pref = useRef<HTMLDivElement>();
+  const eventRef = useRef<HTMLDivElement>();
   const [state, setState] = useState<any>();
+  console.info("Renderer ", event);
+  const today = event.start;
+  const weekRange = DateService.GetWeekRangeOf(today);
+  weekRange.from = event.start;
+  const eventsOfWeek = useEventState(weekRange);
+  useEffect(() => {
+    console.info("Use Effect ", eventRef.current);
 
+    const allIndex1 = eventsOfWeek.filter(
+      (all) => all.mutable?.index === parseInt(event.end)
+    );
+    const allH = allIndex1.map(
+      (a1) => a1.mutable!.eventRef.clientHeight + a1.mutable!.eventRef.offsetTop
+    );
+    const maxH = Math.max(...allH);
+
+    const p = eventRef.current!.offsetTop;
+    const t = parent.mutable?.eventRef?.offsetTop;
+    const h = parent.mutable?.eventRef?.clientHeight;
+
+    //In case of not found sibblings use the parent h //!bug solved
+    const height = isFinite(maxH) ? maxH - p : h;
+    event.mutable!.height = `${height}px`; //max of height for index   ,
+    setState({
+      height: event.mutable!.height,
+    });
+    //debugger;
+  }, []);
+  useLayoutEffect(() => {
+    console.info("Use Layout of ", eventRef.current);
+    eventRef.current!.style.border = "1px dashed red";
+    event.mutable = {
+      height: `${eventRef.current!.clientHeight}px`,
+      eventRef: eventRef.current!,
+      index: parent.mutable?.index!, //!Corrected bug: was using event.end wich is zero
+    };
+  }, []);
+  /*
+	
+	*/
+
+  /*	
   const h = parent.mutable?.eventRef?.clientHeight;
-
   //  const myState = useEventState();
   const today = event.start;
   //const today = "2022-03-30";
   const weekRange = DateService.GetWeekRangeOf(today);
   weekRange.from = event.start;
-  if (event.id === -60) {
-    console.info("Issue", event, weekRange);
-  }
   const eventsOfWeek = useEventState(weekRange);
-
-  useLayoutEffect(() => {
+  //console.warn("Use effect of Eventholder");
+  useEffect(() => {
     if (typeof pref.current !== "undefined") {
       //const p = pref.current!.offsetTop;
       //const t = parent.mutable?.eventRef?.offsetTop;
@@ -398,19 +450,19 @@ export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
       //
       event.mutable = {
         //height: `${height}px`,
-        height: `${height}px` /*max of height for index   */,
+        height: `${height}px` //max of height for index   ,
         eventRef: pref.current,
         index: parent.mutable?.index!, //!Corrected bug: was using event.end wich is zero
       };
 
       if (event.id === -60) {
         const chp = parent.mutable?.eventRef.clientHeight;
-        console.info("Client height", chp);
-        console.info("Commputed h", height);
-        console.info("Mutable props", event.mutable);
-        console.warn({
-          height: event.mutable.height,
-        });
+        //console.info("Client height", chp);
+        //console.info("Commputed h", height);
+        //console.info("Mutable props", event.mutable);
+        //console.warn({
+        //  height: event.mutable.height,
+        //});
         setState(() => {
           return {
             height: event.mutable!.height,
@@ -423,17 +475,14 @@ export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
       }
     }
   }, [h]);
-  //TODO
-  //tengo que crear un consumidor de contexto para que esto se actualize
-  //con el valor correcto de mutable.hegiht
-  //cuando se lea arriba useEffectLayout
-  if (event.id === -60) {
-    console.warn("Return", state);
-  }
+*/
 
   return (
-    <StyledEvent.TWflexContainer ref={pref}>
-      <StyledEvent.TWplaceholder key={"p" + event.id} style={state}>
+    <StyledEvent.TWflexContainer
+      ref={eventRef}
+      style={{ height: event.mutable?.height }}
+    >
+      <StyledEvent.TWplaceholder key={"p" + event.id}>
         {parent.job}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>

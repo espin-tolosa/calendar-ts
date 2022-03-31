@@ -143,15 +143,7 @@ const Month = ({ year, month }: iMonth) => {
                       new Date(DateService.ComposeDate(year, month, day))
                     ) === "Saturday")
                 }
-              >
-                {true ? (
-                  <EventsThrower
-                    day={DateService.ComposeDate(year, month, day)}
-                  />
-                ) : (
-                  <></>
-                )}
-              </MemoIDay>
+              ></MemoIDay>
             ))
           )
           .concat(

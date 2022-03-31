@@ -1,5 +1,6 @@
 import { styles } from "@/components/Day/tw";
-import { memo, useRef } from "react";
+import { EventsThrower } from "@/components/EventsThrower/main";
+import { memo, useEffect, useLayoutEffect, useRef } from "react";
 import { DateService } from "@/utils/Date";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useIsDragging } from "@/hooks/useIsDragging";
@@ -45,6 +46,14 @@ export function IDay({
   const eventDispatcher = useEventDispatch();
   const tempDay = String(daynumber);
   const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
+  const componentName = "Day";
+  console.info("Renderer " + componentName + " : " + fullDate);
+  useEffect(() => {
+    console.info("Use Effect " + componentName + " : " + fullDate);
+  }, []);
+  useLayoutEffect(() => {
+    console.info("Use Layout of " + componentName + " : " + fullDate);
+  }, []);
 
   const setEventController = useSetEventSelected();
   //dnd
@@ -57,8 +66,8 @@ export function IDay({
   const events = useEventState(fullDate);
 
   if (fullDate === "2022-03-24") {
-    console.log("events for day", fullDate);
-    console.log(events);
+    //console.log("events for day", fullDate);
+    //console.log(events);
   }
 
   const dispatchControllerDates = useControllerDispatchDates();
@@ -151,7 +160,8 @@ export function IDay({
       >
         <styles.daySpot $isToday={isToday}>{dayPadd}</styles.daySpot>
       </styles.header>
-      {!isWeekend && children}
+
+      {true ? <EventsThrower day={fullDate} /> : <></>}
     </styles.contain>
   );
 }
