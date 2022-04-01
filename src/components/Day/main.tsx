@@ -13,6 +13,7 @@ import { fetchEvent_Day } from "@/utils/fetchEvent";
 import { CustomValues } from "@/customTypes";
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
 import { event } from "@/interfaces";
+import { usePostQuery } from "@/api/queries";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -20,8 +21,6 @@ type IDayProps = WithChildren<{
   fullDate: string;
   start: string;
   end: string;
-  isLocked: boolean;
-  isWeekend: boolean;
 }>;
 
 // Used Context in Day Component:
@@ -34,15 +33,13 @@ type IDayProps = WithChildren<{
 // cControllerState - start,end
 // cControllerState - id,client,job
 
-export function IDay({
-  children,
-  daynumber,
-  fullDate,
-  start,
-  end,
-  isLocked,
-  isWeekend,
-}: IDayProps) {
+export function IDay({ children, daynumber, fullDate, start, end }: IDayProps) {
+  //TODO: Locked days not impl
+  const isLocked = false;
+  //Query Hook
+  const click = usePostQuery(fullDate);
+  //
+  const isWeekend = DateService.IsWeekend(fullDate);
   const eventDispatcher = useEventDispatch();
   const tempDay = String(daynumber);
   const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
@@ -92,146 +89,7 @@ export function IDay({
       $isWeekend={isWeekend}
       $isSelected={isSelected(start, fullDate, end)}
       ref={dayDivRef}
-      onClick={async () => {
-        if (isDragging.state || isLocked || isWeekend) {
-          return;
-        }
-
-        //
-        const newEvent = {
-          id: 100000,
-          client: "default",
-          job: "default",
-          start: fullDate,
-          end: fullDate,
-        };
-        eventDispatcher({
-          type: "update",
-          payload: [newEvent],
-        });
-
-        const FetchClosure = () => {
-          const Max_Attempts = 10;
-
-          const callFetch = async () => {
-            try {
-              const data = await fetchEvent_Day("POST", newEvent);
-              return { status: true, data };
-            } catch (e: any) {
-              return { status: false, data: [] };
-            }
-          };
-
-          const callManager = async (currentAttempt = 1) => {
-            let result = await callFetch();
-            setTimeout(async () => {
-              if (!result.status && currentAttempt < Max_Attempts) {
-                return callManager(++currentAttempt);
-              }
-              //Handle the result in case of succed or wasted time, first remove temporal event
-              eventDispatcher({
-                type: "delete",
-                payload: [newEvent],
-              });
-              //then, commit database response if status is ok
-              result.status &&
-                eventDispatcher({
-                  type: "update",
-                  payload: result.data,
-                });
-
-              return;
-            }, 200);
-          };
-
-          return callManager;
-        };
-
-        const caller = FetchClosure();
-        caller();
-
-        /*
-  return async () => {
-    const deleteResourceInAPI = async () => {
-      const result = await fetchEvent("DELETE", eventSelected!);
-      if (result.status === 204) {
-        dispatchController({
-          type: "setController",
-          payload: { id: 0, client: "", job: "" },
-        });
-        dispatchControllerDates({
-          type: "clearDates",
-        });
-        SetEventSelected(null);
-      }
-
-      return result.status;
-    };
-
-    const MAX_ATTEMPTS = 10;
-    const success = (code: number) => code === 204;
-
-    eventDispatcher({
-      type: "delete",
-      payload: [eventSelected!],
-    });
-
-    //This try to fetch 10 times before refresh the web page
-
-    for (let i = 0; i < MAX_ATTEMPTS; i++) {
-      try {
-        const status = await deleteResourceInAPI();
-        if (success(status)) {
-          break;
-        }
-      } catch (e) {}
-      if (i === MAX_ATTEMPTS - 1) {
-        // It migth happen
-        alert("Something went wrong, unable to delete event");
-
-        //First strategy, force to refresh the page
-
-        window.location.reload();
-
-        //Second strategy, clear the state and contine
-
-        //        eventDispatcher({
-        //          type: "appendarray",
-        //          payload: [eventSelected!],
-        //        });
-        //        dispatchController({
-        //          type: "setController",
-        //          payload: { id: 0, client: "", job: "" },
-        //        });
-        //        dispatchControllerDates({
-        //          type: "clearDates",
-        //        });
-        //        SetEventSelected(null);
-      }
-    }
-  };
-
-*/
-
-        //    const dbState2: Array<event> = [];
-        //    //const dbResponse: Array<event> = await result.text();
-
-        //    //This is the way I have to replace the Id of an event, since the action "replacebyid" uses the id to change the other fields, I can't use it to replace the id itself
-        //    eventDispatcher({
-        //      type: "delete",
-        //      payload: [newEvent],
-        //    });
-        //    eventDispatcher({
-        //      type: "syncDB",
-        //      payload: dbState2,
-        //    });
-
-        //
-
-        //     if (start === fullDate && end === fullDate) {
-        //       setEventController(null);
-        //     }
-      }}
+      onClick={click}
       onDragEnter={(e) => {
         if (temporaryEvent.end === fullDate) {
           return;
@@ -283,9 +141,9 @@ export const MemoIDay = memo(IDay, (prev, next) => {
 
   const datesSelectionEqual = prevSelection === nextSelection;
 
-  const isLockedEqual = prev.isLocked === next.isLocked;
+  //const isLockedEqual = prev.isLocked === next.isLocked;
 
-  const showWeekendEqual = prev.isWeekend === next.isWeekend;
+  //const showWeekendEqual = prev.isWeekend === next.isWeekend;
 
-  return datesSelectionEqual && isLockedEqual && showWeekendEqual;
+  return datesSelectionEqual /* && isLockedEqual*/ /*&& showWeekendEqual*/;
 });

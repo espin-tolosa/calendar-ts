@@ -250,6 +250,15 @@ function GetWeekRangeOf(today: string) {
   return rangeDates;
 }
 
+function IsWeekend(today: string) {
+  return (
+    DateService.GetMonthDayKey(new Date(DateService.GetDateFrom(today, 0))) ===
+      "Sunday" ||
+    DateService.GetMonthDayKey(new Date(DateService.GetDateFrom(today, 0))) ===
+      "Saturday"
+  );
+}
+
 export const DateService = {
   GetDate,
   GetTodayDateFormat,
@@ -273,4 +282,5 @@ export const DateService = {
   GetDateFrom,
   GetDayWeekIndex,
   GetWeekRangeOf,
+  IsWeekend,
 };

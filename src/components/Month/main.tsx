@@ -133,16 +133,6 @@ const Month = ({ year, month }: iMonth) => {
                 start={controllerDates.start}
                 end={controllerDates.end}
                 isLocked={false} //TODO: A way to determine locked days
-                isWeekend={
-                  (!showWeekends &&
-                    DateService.GetMonthDayKey(
-                      new Date(DateService.ComposeDate(year, month, day))
-                    ) === "Sunday") ||
-                  (!showWeekends &&
-                    DateService.GetMonthDayKey(
-                      new Date(DateService.ComposeDate(year, month, day))
-                    ) === "Saturday")
-                }
               ></MemoIDay>
             ))
           )

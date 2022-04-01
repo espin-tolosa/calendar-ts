@@ -33,13 +33,7 @@ export const useTransitionStyle = (
   //Check if event is temporary and in that case return a steady style
   //this will be skiped when then event become sync with database
   if (event.id === Number.MAX_SAFE_INTEGER) {
-    const body = composeStyle(
-      `rgb(${r}, ${g}, ${b})`,
-      "2px solid transparent",
-      "black",
-      "2px solid transparent"
-    );
-    const temp = composeStyle(
+    const temporaryBody = composeStyle(
       "lightgray",
       "2px solid transparent",
       "black",
@@ -52,7 +46,7 @@ export const useTransitionStyle = (
       "2px solid transparent"
     );
     return {
-      dinamic: temp,
+      dinamic: temporaryBody,
       static: header,
     };
   }
