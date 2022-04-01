@@ -14,6 +14,49 @@ export const useTransitionStyle = (
   hover: boolean,
   event: event
 ) => {
+  const clientID = parseInt(event.client.split("_")[1]);
+  const CLIENTS_LENGTH = 9;
+  const EXTRA_COLORS = 1;
+
+  //Initialize with color error
+  let mapClientToColor = (360 * (10 - 1)) / (CLIENTS_LENGTH + EXTRA_COLORS);
+  //then if client parses properly -> map to client color
+  if (!isNaN(clientID) && clientID <= 5) {
+    mapClientToColor = (360 * (clientID - 1)) / 5;
+  } else if (!isNaN(clientID) && clientID > 5) {
+    mapClientToColor = (360 * (clientID - 6)) / 5 + 180 / 5;
+  }
+  const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
+  const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.4, 0.7);
+  const [r_b, g_b, b_b] = ClientColorStyles(mapClientToColor, 0.8, 0.2);
+  const [r_c, g_c, b_c] = ClientColorStyles(mapClientToColor, 0.7, 0.3);
+  //Check if event is temporary and in that case return a steady style
+  //this will be skiped when then event become sync with database
+  if (event.id === Number.MAX_SAFE_INTEGER) {
+    const body = composeStyle(
+      `rgb(${r}, ${g}, ${b})`,
+      "2px solid transparent",
+      "black",
+      "2px solid transparent"
+    );
+    const temp = composeStyle(
+      "lightgray",
+      "2px solid transparent",
+      "black",
+      "2px solid transparent"
+    );
+    const header = composeStyle(
+      `rgb(${r_c}, ${g_c}, ${b_c})`,
+      "2px solid transparent",
+      "black",
+      "2px solid transparent"
+    );
+    return {
+      dinamic: temp,
+      static: header,
+    };
+  }
+
   const [justThrown, setJustThrown] = useState(true);
   useEffect(() => {
     const relaxTime = 200; /*ms*/
@@ -24,24 +67,6 @@ export const useTransitionStyle = (
   }, []);
 
   return useMemo(() => {
-    const clientID = parseInt(event.client.split("_")[1]);
-    const CLIENTS_LENGTH = 9;
-    const EXTRA_COLORS = 1;
-
-    //Initialize with color error
-    let mapClientToColor = (360 * (10 - 1)) / (CLIENTS_LENGTH + EXTRA_COLORS);
-    //then if client parses properly -> map to client color
-    if (!isNaN(clientID) && clientID <= 5) {
-      mapClientToColor = (360 * (clientID - 1)) / 5;
-    } else if (!isNaN(clientID) && clientID > 5) {
-      mapClientToColor = (360 * (clientID - 6)) / 5 + 180 / 5;
-    }
-
-    const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
-    const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.4, 0.7);
-    const [r_b, g_b, b_b] = ClientColorStyles(mapClientToColor, 0.8, 0.2);
-    const [r_c, g_c, b_c] = ClientColorStyles(mapClientToColor, 0.7, 0.3);
-
     let result = {};
     if (isChildren) {
       result = justThrown
