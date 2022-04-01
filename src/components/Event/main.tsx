@@ -11,11 +11,8 @@ import {
 import { CustomValues } from "@/customTypes";
 import { fetchEvent } from "@/utils/fetchEvent";
 import { useCtxKeyBuffer } from "@/globalStorage/keyBuffer";
-import { useControllerDispatch } from "@/hooks/useController";
-import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { isValidChildren } from "@/utils/ValidateEvent";
 
 const useGetEventFamily = (event: event) => {
   const events = useEventState();
@@ -31,28 +28,17 @@ const useGetEventFamily = (event: event) => {
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();
-  const allEvents = useEventState();
-  //console.info("Renderer ", event);
-  useEffect(() => {
-    //console.info("Use Effect ", eventRef.current);
-    //console.info(allEvents);
-  }, []);
   useLayoutEffect(() => {
     event.mutable = {
       height: `${eventRef.current!.clientHeight}px`,
       eventRef: eventRef.current!,
       index: index,
     };
-  }, []);
-  const today = event.start;
-  const weekRange = DateService.GetWeekRangeOf(today);
-  const eventsOfWeek = useEventState(weekRange);
-  //const events = useEventState();
+  }, [eventRef.current?.clientHeight]);
+
   const isChildren = event.job.includes("#isChildren");
   //edit mode
   const [parent, family] = useGetEventFamily(event);
-  const syleType = {};
-  const [state, setState] = useState<{ height: string }>({ height: "" });
 
   //drag and drop
   const temporaryEvent = useTemporaryEvent();
@@ -62,26 +48,9 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const keyBuffer = useCtxKeyBuffer();
 
   const setEventController = useSetEventSelected();
-  const dispatchController = useControllerDispatch();
-  const dispatchControllerDates = useControllerDispatchDates();
 
   const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
-
-    dispatchControllerDates({
-      type: "setDates",
-      payload: { start: parentEvent.start, end: parentEvent.end },
-    });
-
-    dispatchController({
-      type: "setController",
-      payload: {
-        id: parentEvent.id,
-        client: parentEvent.client,
-        job: parentEvent.job,
-      },
-    });
-
     setEventController(parentEvent);
   };
 
@@ -100,27 +69,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
     8
   );
   const parentEvent = EventClass.getParentEvent(family);
-
-  //determine hight of event
-
-  /*
-  const h = eventRef?.current?.clientHeight;
-  useLayoutEffect(() => {
-    if (typeof eventRef.current !== "undefined") {
-      event.mutable = {
-        height: `${eventRef.current!.clientHeight}px`,
-        eventRef: eventRef.current,
-        index: index,
-      };
-      setState({
-        height: `${eventRef.current?.clientHeight}px`,
-      });
-    }
-  }, [h]);
-*/
-
-  //useLayoutEffect(() => {
-  //}, []);
 
   return (
     <StyledEvent.TWflexContainer
@@ -172,8 +120,8 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           type: "update",
           payload: [newEvent],
         });
-        fetchEvent("POST", newEvent);
-        temporaryEventDispatcher(newEvent);
+        // fetchEvent("POST", newEvent);
+        // temporaryEventDispatcher(newEvent);
       }}
       onTouchMove={(e) => {
         e.preventDefault();
@@ -350,166 +298,34 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   );
 };
 
-export const EventHolder = ({ event, style }: { event: event; style: {} }) => {
+export const EventHolder = ({ event }: { event: event }) => {
   const [parent, family] = useGetEventFamily(event);
   const eventRef = useRef<HTMLDivElement>();
-  const [state, setState] = useState<any>();
-  //console.info("Renderer ", event);
-  const today = event.start;
-  const weekRange = DateService.GetWeekRangeOf(today);
-  weekRange.from = event.start;
-  const eventsOfWeek = useEventState(weekRange);
-  useEffect(() => {
-    //debugger;
-    //console.info("Use Effect ", eventRef.current);
-
-    const allIndex1 = eventsOfWeek.filter(
-      (all) => all.mutable?.index === parent.mutable?.index
-    );
-    const allH = allIndex1.map((a1) => a1.mutable!.eventRef.clientHeight);
-    const t = parent.mutable?.eventRef?.offsetTop;
-    const h = parent.mutable?.eventRef?.clientHeight;
-    const maxH = Math.max(...allH, h!);
-
-    const p = eventRef.current!.offsetTop;
-
-    //const height = h!; //+ t! - p!;
-    let height = maxH;
-    //let height = 0;
-    //console.log(height);
-    //height = 260;
-
-    //height = 260;
-
-    //In case of not found sibblings use the parent h //!bug solved
-    //const height = h;
-    setState((prev: any) => {
-      if (event.id === -60) {
-        console.log("state", {
-          prev,
-          height,
-          maxH,
-          allH,
-          h,
-        });
-      }
-      return {
-        height: `${height}px`,
-      };
-    });
-    //debugger;
-  }, []);
+  const [state, setState] = useState<{ height: string }>({ height: "0px" });
+  const week = DateService.GetWeekRangeOf(event.start);
+  week.from = event.start;
+  const eventsOfWeek = useEventState(week);
+  //
   useLayoutEffect(() => {
-    //console.info("Use Layout of ", eventRef.current);
-    if (event.id === -60) {
-      console.log("Layout", `${eventRef.current!.clientHeight}px`);
-      //console.log(height);
-      //height = 260;
-    }
-    //eventRef.current!.style.border = "1px dashed red";
     event.mutable = {
       height: `${eventRef.current!.clientHeight}px`,
       eventRef: eventRef.current!,
       index: parent.mutable?.index!, //!Corrected bug: was using event.end wich is zero
     };
-    setState({ height: event.mutable?.height });
+    setState({ height: `${maxH}px` });
   }, []);
-  /*
-	
-	*/
+  //
+  const allIndex1 = eventsOfWeek.filter(
+    (all) => all.mutable?.index === parent.mutable?.index
+  );
+  const allH = allIndex1.map((a1) => a1.mutable?.eventRef.clientHeight || 0);
+  const h = parent.mutable?.eventRef?.clientHeight || 0;
+  const maxH = Math.max(...allH, h);
 
-  /*	
-  const h = parent.mutable?.eventRef?.clientHeight;
-  //  const myState = useEventState();
-  const today = event.start;
-  //const today = "2022-03-30";
-  const weekRange = DateService.GetWeekRangeOf(today);
-  weekRange.from = event.start;
-  const eventsOfWeek = useEventState(weekRange);
-  //console.warn("Use effect of Eventholder");
-  useEffect(() => {
-    if (typeof pref.current !== "undefined") {
-      //const p = pref.current!.offsetTop;
-      //const t = parent.mutable?.eventRef?.offsetTop;
-      //const h = parent.mutable?.eventRef?.clientHeight;
-      //const height = h!; //+ t! - p!;
-      //pref.current!.style.backgroundColor = "yellow";
-      const allIndex1 = eventsOfWeek.filter(
-        (all) => all.mutable?.index === parseInt(event.end)
-      );
-
-      //
-
-      const allH = allIndex1.map(
-        (a1) =>
-          a1.mutable!.eventRef.clientHeight + a1.mutable!.eventRef.offsetTop
-      );
-
-      const maxH = Math.max(...allH);
-
-      const p = pref.current!.offsetTop;
-      const t = parent.mutable?.eventRef?.offsetTop;
-      const h = parent.mutable?.eventRef?.clientHeight;
-
-      //In case of not found sibblings use the parent h //!bug solved
-      const height = isFinite(maxH) ? maxH - p : h;
-
-      if (event.id === -60) {
-        //console.info("Issue event", event.end);
-        //console.info("looking inside", { allIndex1, allH, maxH, height });
-        const allEventsCol0 = eventsOfWeek.filter(
-          (all) => all.mutable?.index === 0
-        );
-        //console.info("event -60 on al effects", { event, parent });
-        const che = event.mutable?.eventRef.getBoundingClientRect();
-        const chp = parent.mutable?.eventRef.clientHeight;
-        //console.info("clientHeight -60 on al effects", { che, chp });
-        //console.info("Events of index 0", allEventsCol0);
-        //console.info({ event, p, t, h, maxH, height, allH });
-      }
-      pref.current!.style.border = "1px dashed red";
-
-      //const height = h! + t! - p!;
-
-      //
-      event.mutable = {
-        //height: `${height}px`,
-        height: `${height}px` //max of height for index   ,
-        eventRef: pref.current,
-        index: parent.mutable?.index!, //!Corrected bug: was using event.end wich is zero
-      };
-
-      if (event.id === -60) {
-        const chp = parent.mutable?.eventRef.clientHeight;
-        //console.info("Client height", chp);
-        //console.info("Commputed h", height);
-        //console.info("Mutable props", event.mutable);
-        //console.warn({
-        //  height: event.mutable.height,
-        //});
-        setState(() => {
-          return {
-            height: event.mutable!.height,
-          };
-        });
-      } else {
-        setState({
-          height: event.mutable.height,
-        });
-      }
-    }
-  }, [h]);
-*/
-
+  const style = { height: `${maxH}px` };
   return (
-    <StyledEvent.TWflexContainer
-      ref={eventRef}
-      className="placehoder"
-      style={state}
-    >
-      <StyledEvent.TWplaceholder key={"p" + event.id}>
-        {""}
-      </StyledEvent.TWplaceholder>
+    <StyledEvent.TWflexContainer ref={eventRef} style={style}>
+      <StyledEvent.TWplaceholder>{""}</StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
   );
 };

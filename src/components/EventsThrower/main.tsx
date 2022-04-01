@@ -62,11 +62,7 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
         const keyValue = Math.abs(event.id);
         if (isPlaceholder(event)) {
           return (
-            <EventHolder
-              key={`p-${keyValue}`}
-              event={event}
-              style={{ height: event.mutable?.height }}
-            ></EventHolder>
+            <EventHolder key={`p-${keyValue}`} event={event}></EventHolder>
           );
         }
         //Mutable instruction for global state of events

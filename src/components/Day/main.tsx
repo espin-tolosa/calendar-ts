@@ -9,7 +9,7 @@ import {
   useTemporaryEvent,
   useTemporaryEventDispatcher,
 } from "@/globalStorage/temporaryEvents";
-import { fetchEvent } from "@/utils/fetchEvent";
+import { fetchEvent_Day } from "@/utils/fetchEvent";
 import { CustomValues } from "@/customTypes";
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
 import { event } from "@/interfaces";
@@ -109,26 +109,128 @@ export function IDay({
           type: "update",
           payload: [newEvent],
         });
-        const result = await fetchEvent("POST", newEvent);
 
-        const dbState2: Array<event> = [];
-        //const dbResponse: Array<event> = await result.text();
+        const FetchClosure = () => {
+          const Max_Attempts = 10;
 
-        //This is the way I have to replace the Id of an event, since the action "replacebyid" uses the id to change the other fields, I can't use it to replace the id itself
-        eventDispatcher({
-          type: "delete",
-          payload: [newEvent],
+          const callFetch = async () => {
+            try {
+              const data = await fetchEvent_Day("POST", newEvent);
+              return { status: true, data };
+            } catch (e: any) {
+              return { status: false, data: [] };
+            }
+          };
+
+          const callManager = async (currentAttempt = 1) => {
+            let result = await callFetch();
+            setTimeout(async () => {
+              if (!result.status && currentAttempt < Max_Attempts) {
+                return callManager(++currentAttempt);
+              }
+              //Handle the result in case of succed or wasted time, first remove temporal event
+              eventDispatcher({
+                type: "delete",
+                payload: [newEvent],
+              });
+              //then, commit database response if status is ok
+              result.status &&
+                eventDispatcher({
+                  type: "update",
+                  payload: result.data,
+                });
+
+              return;
+            }, 200);
+          };
+
+          return callManager;
+        };
+
+        const caller = FetchClosure();
+        caller();
+
+        /*
+  return async () => {
+    const deleteResourceInAPI = async () => {
+      const result = await fetchEvent("DELETE", eventSelected!);
+      if (result.status === 204) {
+        dispatchController({
+          type: "setController",
+          payload: { id: 0, client: "", job: "" },
         });
-        eventDispatcher({
-          type: "syncDB",
-          payload: dbState2,
+        dispatchControllerDates({
+          type: "clearDates",
         });
+        SetEventSelected(null);
+      }
+
+      return result.status;
+    };
+
+    const MAX_ATTEMPTS = 10;
+    const success = (code: number) => code === 204;
+
+    eventDispatcher({
+      type: "delete",
+      payload: [eventSelected!],
+    });
+
+    //This try to fetch 10 times before refresh the web page
+
+    for (let i = 0; i < MAX_ATTEMPTS; i++) {
+      try {
+        const status = await deleteResourceInAPI();
+        if (success(status)) {
+          break;
+        }
+      } catch (e) {}
+      if (i === MAX_ATTEMPTS - 1) {
+        // It migth happen
+        alert("Something went wrong, unable to delete event");
+
+        //First strategy, force to refresh the page
+
+        window.location.reload();
+
+        //Second strategy, clear the state and contine
+
+        //        eventDispatcher({
+        //          type: "appendarray",
+        //          payload: [eventSelected!],
+        //        });
+        //        dispatchController({
+        //          type: "setController",
+        //          payload: { id: 0, client: "", job: "" },
+        //        });
+        //        dispatchControllerDates({
+        //          type: "clearDates",
+        //        });
+        //        SetEventSelected(null);
+      }
+    }
+  };
+
+*/
+
+        //    const dbState2: Array<event> = [];
+        //    //const dbResponse: Array<event> = await result.text();
+
+        //    //This is the way I have to replace the Id of an event, since the action "replacebyid" uses the id to change the other fields, I can't use it to replace the id itself
+        //    eventDispatcher({
+        //      type: "delete",
+        //      payload: [newEvent],
+        //    });
+        //    eventDispatcher({
+        //      type: "syncDB",
+        //      payload: dbState2,
+        //    });
 
         //
 
-        if (start === fullDate && end === fullDate) {
-          setEventController(null);
-        }
+        //     if (start === fullDate && end === fullDate) {
+        //       setEventController(null);
+        //     }
       }}
       onDragEnter={(e) => {
         if (temporaryEvent.end === fullDate) {
@@ -146,7 +248,7 @@ export function IDay({
           type: "update",
           payload: [newEvent],
         });
-        fetchEvent("PUT", newEvent);
+        fetchEvent_Day("PUT", newEvent);
         temporaryEventDispatcher(newEvent);
       }}
       onMouseUp={() => {}}
