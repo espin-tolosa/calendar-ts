@@ -13,7 +13,7 @@ import { fetchEvent } from "@/utils/fetchEvent";
 import { useCtxKeyBuffer } from "@/globalStorage/keyBuffer";
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { usePostQuery } from "@/api/queries";
+//import { usePostQuery } from "@/api/queries";
 
 const useGetEventFamily = (event: event) => {
   const events = useEventState();
@@ -73,6 +73,8 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   );
   const parentEvent = EventClass.getParentEvent(family);
 
+  const dayRef = useRef<Element>();
+
   return (
     <StyledEvent.TWflexContainer
       {...mouseHover}
@@ -81,7 +83,38 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
       onDragStart={() => {
         temporaryEventDispatcher(parentEvent);
       }}
-      onDragEnd={() => {
+      onDragEnd={(e) => {
+        e.stopPropagation();
+        console.log("on Drag End", dayRef.current);
+        const id = dayRef.current?.id;
+        if (!id) {
+          return;
+        }
+
+        const entries = id.split("-");
+
+        if (entries[0] !== "day") {
+          return;
+        }
+
+        const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
+
+        if (temporaryEvent.end === fullDate) {
+          return;
+        }
+
+        console.info("Setting up new event");
+
+        const newEvent = { ...temporaryEvent, end: fullDate };
+        //        const newEvent = { ...temporaryEvent };
+        eventDispatcher({
+          type: "delete",
+          payload: [newEvent],
+        });
+        eventDispatcher({
+          type: "update",
+          payload: [newEvent],
+        });
         temporaryEventDispatcher(CustomValues.nullEvent);
       }}
       onTouchStart={(e) => {
@@ -100,10 +133,13 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         const dayDiv = el.find((e) => e.id.includes("day"));
 
         //All of this is the same as Board callback
+        console.log("on Drag Over", { x, y, dayDiv });
         const id = dayDiv?.id;
         if (!id) {
           return;
         }
+
+        dayRef.current = dayDiv;
 
         const entries = id.split("-");
 
@@ -286,7 +322,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         onMouseEnter={() => {}}
         onMouseOut={() => {}}
         title={`Drag here to extend ${event.client}\'s job`}
-        style={{ height: event.mutable?.height }}
       >
         {"+"}
       </StyledEvent.TWextend>
@@ -310,24 +345,64 @@ export const EventHolder = ({ event }: { event: event }) => {
   const eventsOfWeek = useEventState(week);
   //
   useLayoutEffect(() => {
+    console.info(
+      "%c mount state of event",
+      "background: #222; color: #da557d",
+      event
+    );
     event.mutable = {
       height: `${eventRef.current!.clientHeight}px`,
       eventRef: eventRef.current!,
       index: parent.mutable?.index!, //!Corrected bug: was using event.end wich is zero
     };
-    setState({ height: `${maxH}px` });
+    //const allIndex1 = eventsOfWeek.filter(
+    //  (all) => all.mutable?.index === parent.mutable?.index
+    //);
+    //const allH = allIndex1.map((a1) => a1.mutable?.eventRef.clientHeight || 0);
+    //const h = parent.mutable?.eventRef?.clientHeight || 0;
+    //const maxH = Math.max(...allH, h);
+    //setState({ height: `${maxH}px` });
+  }, []);
+
+  //const update = useRef(false);
+
+  useEffect(() => {
+    //    if (update.current === false) {
+    //      update.current = true;
+    //      return;
+    //    }
+    //    if (!eventRef.current) {
+    //      return;
+    //    }
+    // console.info(
+    //   "%c update state of event first return",
+    //   "background: #222; color: #bada55",
+    //   eventRef.current
+    // );
+    const allIndex1 = eventsOfWeek.filter(
+      (all) => all.mutable?.index === parent.mutable?.index
+    );
+    const allH = allIndex1.map((a1) => a1.mutable?.eventRef.clientHeight || 0);
+    const h = parent.mutable?.eventRef?.clientHeight || 0;
+    const maxH = Math.max(...allH, h);
+    const newState = { height: `${maxH}px` };
+
+    console.info(`state: ${state.height} | new: ${newState.height}`);
+
+    if (newState.height === state.height) {
+      return;
+    }
+    console.info(
+      "%c update state of event first return",
+      "background: #222; color: #bada55",
+      event,
+      newState
+    );
+    setState(newState);
   }, []);
   //
-  const allIndex1 = eventsOfWeek.filter(
-    (all) => all.mutable?.index === parent.mutable?.index
-  );
-  const allH = allIndex1.map((a1) => a1.mutable?.eventRef.clientHeight || 0);
-  const h = parent.mutable?.eventRef?.clientHeight || 0;
-  const maxH = Math.max(...allH, h);
-
-  const style = { height: `${maxH}px` };
   return (
-    <StyledEvent.TWflexContainer ref={eventRef} style={style}>
+    <StyledEvent.TWflexContainer ref={eventRef} style={state}>
       <StyledEvent.TWplaceholder>{""}</StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
   );

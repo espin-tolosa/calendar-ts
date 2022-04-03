@@ -43,32 +43,11 @@ export function IDay({ children, daynumber, fullDate, start, end }: IDayProps) {
   const eventDispatcher = useEventDispatch();
   const tempDay = String(daynumber);
   const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
-  const componentName = "Day";
-  //console.info("Renderer " + componentName + " : " + fullDate);
-  useEffect(() => {
-    //console.info("Use Effect " + componentName + " : " + fullDate);
-  }, []);
-  useLayoutEffect(() => {
-    //console.info("Use Layout of " + componentName + " : " + fullDate);
-  }, []);
 
-  const setEventController = useSetEventSelected();
   //dnd
   const temporaryEvent = useTemporaryEvent();
   const temporaryEventDispatcher = useTemporaryEventDispatcher();
-  const isSet = useRef(CustomValues.nullEvent);
   const dayDivRef = useRef<HTMLDivElement>(null);
-
-  //const { id } = useControllerState();
-  const events = useEventState(fullDate);
-
-  if (fullDate === "2022-03-24") {
-    //console.log("events for day", fullDate);
-    //console.log(events);
-  }
-
-  const dispatchControllerDates = useControllerDispatchDates();
-  const isDragging = useIsDragging();
 
   const isSelected = (start: string, today: string, end: string) => {
     const left = DateService.DaysFrom(start, today);
@@ -80,6 +59,7 @@ export function IDay({ children, daynumber, fullDate, start, end }: IDayProps) {
     return false;
   };
 
+  //Determine if this day is current local date of client
   const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
 
   return (
@@ -145,5 +125,6 @@ export const MemoIDay = memo(IDay, (prev, next) => {
 
   //const showWeekendEqual = prev.isWeekend === next.isWeekend;
 
-  return datesSelectionEqual /* && isLockedEqual*/ /*&& showWeekendEqual*/;
+  return true;
+  //return datesSelectionEqual /* && isLockedEqual*/ /*&& showWeekendEqual*/;
 });
