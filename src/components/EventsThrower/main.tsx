@@ -20,13 +20,6 @@ export const EventsThrower: React.FC<EventProps> = ({
   const weekRange = DateService.GetWeekRangeOf(day);
   const eventsOfWeek = useEventState(weekRange);
   const componentName = "Eventthrown";
-  //console.info("Renderer " + componentName + " : " + day);
-  useEffect(() => {
-    //console.info("Use Effect " + componentName + " : " + day);
-  }, []);
-  useLayoutEffect(() => {
-    //console.info("Use Layout of " + componentName + " : " + day);
-  }, []);
   //TODO: rebuild isLocked day const isLocked = lockedDays.find((lock) => lock === day) === day;
   const isLocked = false;
   //No events in a day fast exit
@@ -34,19 +27,10 @@ export const EventsThrower: React.FC<EventProps> = ({
   const sortedEvents = bubblingAlgo(dayEvents);
   //const sortedEvents = dayEvents;
 
-  useEffect(() => {
-    if (dayEvents.length === 0 || isLocked) {
-      return;
-    }
-    //console.log(`%c Effect: ${day} `, "background: #222; color: #bada55");
-    //console.log(dayEvents, allEvents);
-  });
-
   useLayoutEffect(() => {
     if (dayEvents.length === 0 || isLocked) {
       return;
     }
-    //console.log(`%c Layout: ${day} `, "background: #222; color: #55dac8");
   });
 
   //TODO: style height has be passed from eventRef
@@ -54,13 +38,6 @@ export const EventsThrower: React.FC<EventProps> = ({
   if (dayEvents.length === 0 || isLocked) {
     return <></>;
   }
-  //console.log(`%c Renderer: ${day} `, "background: #222; color: #d86a49");
-  //console.log("Rendering inside EventThro", dayEvents);
-
-  //console.log(eventsOfWeek);
-  //console.log("----------------------------------------------------");
-
-  console.log("EVENTTHRONW: " + day, sortedEvents);
 
   return (
     <div className="flex flex-col gap-1 my-5">

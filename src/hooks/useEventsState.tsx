@@ -80,7 +80,6 @@ export function diffStates(state: Array<event>, newState: Array<event>) {
     }
   });
 
-  //console.log("Days to push", DaysToPush);
   return DaysToPush;
 }
 
@@ -164,7 +163,6 @@ export function reducerEvents(
       newState.sort((prev, next) => sortCriteria(prev, next));
       diffStates(state, newState);
       const daysToPush = diffStates(state, newState);
-      console.log("Events dispatchcer of days", daysToPush);
       action.callback(daysToPush);
       return newState;
     }
