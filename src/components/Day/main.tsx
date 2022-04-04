@@ -90,6 +90,7 @@ export function IDay({
         const isRewind =
           DateService.DaysFrom(temporaryEvent.start, fullDate) < 0;
         const newEvent = { ...temporaryEvent };
+        console.log("Temporary event", newEvent);
         if (isRewind) {
           newEvent.start = fullDate;
         } else {

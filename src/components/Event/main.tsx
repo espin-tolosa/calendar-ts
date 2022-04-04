@@ -86,36 +86,36 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         temporaryEventDispatcher(parentEvent);
       }}
       onDragEnd={(e) => {
-        e.stopPropagation();
-        const id = dayRef.current?.id;
-        if (!id) {
-          return;
-        }
+        //e.stopPropagation();
+        // const id = dayRef.current?.id;
+        // if (!id) {
+        //   return;
+        // }
 
-        const entries = id.split("-");
+        // const entries = id.split("-");
 
-        if (entries[0] !== "day") {
-          return;
-        }
+        // if (entries[0] !== "day") {
+        //   return;
+        // }
 
-        const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
+        // const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
 
-        if (temporaryEvent.end === fullDate) {
-          return;
-        }
+        // if (temporaryEvent.end === fullDate) {
+        //   return;
+        // }
 
-        const newEvent = { ...temporaryEvent, end: fullDate };
-        //        const newEvent = { ...temporaryEvent };
-        eventDispatcher({
-          type: "delete",
-          payload: [newEvent],
-          callback: pushDaysDispatcher,
-        });
-        eventDispatcher({
-          type: "update",
-          payload: [newEvent],
-          callback: pushDaysDispatcher,
-        });
+        // const newEvent = { ...temporaryEvent, end: fullDate };
+        // //        const newEvent = { ...temporaryEvent };
+        // // eventDispatcher({
+        // //   type: "delete",
+        // //   payload: [newEvent],
+        // //   callback: pushDaysDispatcher,
+        // // });
+        // eventDispatcher({
+        //   type: "update",
+        //   payload: [newEvent],
+        //   callback: pushDaysDispatcher,
+        // });
         temporaryEventDispatcher(CustomValues.nullEvent);
       }}
       onTouchStart={(e) => {
@@ -149,7 +149,9 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 
         const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
 
-        if (temporaryEvent.end === fullDate) {
+        //console.log(dayRef.current.id.split("day-")[1], fullDate);
+        //const updatedDraggingEvent =
+        if (parentEvent.end === fullDate) {
           return;
         }
 
@@ -160,8 +162,8 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           payload: [newEvent],
           callback: pushDaysDispatcher,
         });
-        // fetchEvent("POST", newEvent);
-        // temporaryEventDispatcher(newEvent);
+        fetchEvent("PUT", newEvent);
+        temporaryEventDispatcher(newEvent);
       }}
       onTouchMove={(e) => {
         e.preventDefault();
@@ -397,7 +399,7 @@ export const EventHolder = ({ event }: { event: event }) => {
   return (
     <StyledEvent.TWflexContainer ref={eventRef}>
       <StyledEvent.TWplaceholder style={resultStyle}>
-        {""}
+        {event.id}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
   );
