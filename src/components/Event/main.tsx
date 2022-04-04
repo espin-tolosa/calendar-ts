@@ -436,7 +436,7 @@ export const EventHolder = ({ event }: { event: event }) => {
   return (
     <StyledEvent.TWflexContainer ref={eventRef}>
       <StyledEvent.TWplaceholder style={state}>
-        {event.id}
+        {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
   );

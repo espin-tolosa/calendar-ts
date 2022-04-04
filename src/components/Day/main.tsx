@@ -147,6 +147,7 @@ export const MemoIDay = memo(IDay, (prev, next) => {
   //const isDayToPush = next.fullDate === "2022-04-05";
 
   return !isDayToPush;
-  //return true;
+  //return false;
+  //return false;
   //return datesSelectionEqual /* && isLockedEqual*/ /*&& showWeekendEqual*/;
 });

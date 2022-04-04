@@ -66,7 +66,10 @@ export const bubblingAlgo = (dayEvents: Array<event>) => {
   //rootEvents: filtered day events without placeholders
 
   //Bubbling Algo
-  const mixture = placeholders; //start with all placeholder previously sorted
+  //const mixture = placeholders;
+  const mixture = placeholders.sort(
+    (prev, next) => parseInt(prev.end) - parseInt(next.end)
+  ); //start with all placeholder previously sorted
   rootEvents.map((currentEvent) => {
     mixture.push(currentEvent); //add an event at the end of the mixture
     bubblingEvent(mixture); //ascend throught the mixture as possible
