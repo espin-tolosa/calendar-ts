@@ -143,6 +143,7 @@ export const MemoIDay = memo(IDay, (prev, next) => {
 
   //const showWeekendEqual = prev.isWeekend === next.isWeekend;
   const isDayToPush = next.pushedDays.has(next.fullDate);
+  //const isDayToPush = next.fullDate === "2022-04-05";
 
   return isDayToPush;
   //return true;

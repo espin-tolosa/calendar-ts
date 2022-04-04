@@ -342,6 +342,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 };
 
 export const EventHolder = ({ event }: { event: event }) => {
+  const mounted = useRef<boolean>(false);
   const [parent, family] = useGetEventFamily(event);
   const eventRef = useRef<HTMLDivElement>();
   const [state, setState] = useState<{ height: string }>({ height: "0px" });
@@ -359,6 +360,22 @@ export const EventHolder = ({ event }: { event: event }) => {
 
   //const update = useRef(false);
 
+  let stateUpdate = state;
+  if (mounted.current) {
+    const allIndex1 = eventsOfWeek.filter(
+      (all) => all.mutable?.index === parent.mutable?.index
+    );
+    const allH = allIndex1.map((a1) => a1.mutable?.eventRef.clientHeight || 0);
+    const h = parent.mutable?.eventRef?.clientHeight || 0;
+    const maxH = Math.max(...allH, h);
+    const newState = { height: `${maxH}px` };
+    //   if (newState.height === state.height) {
+    //     return;
+    //   }
+    //   mounted.current = true;
+    stateUpdate = newState;
+  }
+
   useEffect(() => {
     const allIndex1 = eventsOfWeek.filter(
       (all) => all.mutable?.index === parent.mutable?.index
@@ -371,12 +388,17 @@ export const EventHolder = ({ event }: { event: event }) => {
     if (newState.height === state.height) {
       return;
     }
+    mounted.current = true;
     setState(newState);
   }, []);
+
+  const resultStyle = mounted.current ? stateUpdate : state;
   //
   return (
-    <StyledEvent.TWflexContainer ref={eventRef} style={state}>
-      <StyledEvent.TWplaceholder>{""}</StyledEvent.TWplaceholder>
+    <StyledEvent.TWflexContainer ref={eventRef}>
+      <StyledEvent.TWplaceholder style={resultStyle}>
+        {""}
+      </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
   );
 };

@@ -136,7 +136,9 @@ export function reducerEvents(
 
       newState.sort((prev, next) => sortCriteria(prev, next));
       const daysToPush = diffStates(state, newState);
-      action.callback(daysToPush);
+      setTimeout(() => {
+        action.callback(daysToPush);
+      }, 100);
       return newState;
     }
     //
@@ -163,7 +165,9 @@ export function reducerEvents(
       newState.sort((prev, next) => sortCriteria(prev, next));
       diffStates(state, newState);
       const daysToPush = diffStates(state, newState);
-      action.callback(daysToPush);
+      setTimeout(() => {
+        action.callback(daysToPush);
+      }, 100);
       return newState;
     }
     //
@@ -177,7 +181,9 @@ export function reducerEvents(
       });
       diffStates(state, newState);
       const daysToPush = diffStates(state, newState);
-      action.callback(daysToPush);
+      setTimeout(() => {
+        action.callback(daysToPush);
+      }, 100);
       return newState;
     }
     //
