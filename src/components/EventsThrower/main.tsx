@@ -3,14 +3,18 @@ import { useEventState } from "@/hooks/useEventsState";
 import { bubblingAlgo } from "@components/EventsThrower/bubblingAlgoUtils";
 import { sendEndReferencesToPlaceholders } from "@components/EventsThrower/sendReferencesToPlaceholders";
 import { isPlaceholder, isValidPlaceholder } from "@/utils/ValidateEvent";
-import { useEffect, useLayoutEffect } from "react";
+import { memo, useEffect, useLayoutEffect } from "react";
 import { DateService } from "@/utils/Date";
 
 interface EventProps {
   day: string;
+  pushedDays: Set<string>;
 }
 
-export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
+export const EventsThrower: React.FC<EventProps> = ({
+  day,
+  pushedDays,
+}): JSX.Element => {
   const dayEvents = useEventState(day);
   const allEvents = useEventState();
   const weekRange = DateService.GetWeekRangeOf(day);
@@ -56,6 +60,8 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
   //console.log(eventsOfWeek);
   //console.log("----------------------------------------------------");
 
+  console.log("EVENTTHRONW", sortedEvents);
+
   return (
     <div className="flex flex-col gap-1 my-5">
       {sortedEvents.map((event, position) => {
@@ -74,3 +80,17 @@ export const EventsThrower: React.FC<EventProps> = ({ day }): JSX.Element => {
     </div>
   );
 };
+
+export const MemoEventsThrower = memo(EventsThrower, (prev, next) => {
+  //const datesSelectionEqual = prevSelection === nextSelection;
+
+  //const isLockedEqual = prev.isLocked === next.isLocked;
+
+  //const showWeekendEqual = prev.isWeekend === next.isWeekend;
+  const isDayToPush = next.pushedDays.has(next.day);
+  console.log("Days to push in eventthronwe", next.pushedDays);
+  isDayToPush && console.info("is day: " + prev.day);
+
+  return isDayToPush;
+  //return datesSelectionEqual /* && isLockedEqual*/ /*&& showWeekendEqual*/;
+});

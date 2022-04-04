@@ -1,5 +1,8 @@
 import { styles } from "@/components/Day/tw";
-import { EventsThrower } from "@/components/EventsThrower/main";
+import {
+  EventsThrower,
+  MemoEventsThrower,
+} from "@/components/EventsThrower/main";
 import { memo, useEffect, useLayoutEffect, useRef } from "react";
 import { DateService } from "@/utils/Date";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
@@ -14,6 +17,7 @@ import { CustomValues } from "@/customTypes";
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
 import { event } from "@/interfaces";
 import { usePostQuery } from "@/api/queries";
+import { usePushedDays, usePushedDaysDispatcher } from "@/hooks/usePushDays";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
@@ -21,6 +25,7 @@ type IDayProps = WithChildren<{
   fullDate: string;
   start: string;
   end: string;
+  pushedDays: Set<string>;
 }>;
 
 // Used Context in Day Component:
@@ -33,7 +38,15 @@ type IDayProps = WithChildren<{
 // cControllerState - start,end
 // cControllerState - id,client,job
 
-export function IDay({ children, daynumber, fullDate, start, end }: IDayProps) {
+export function IDay({
+  daynumber,
+  fullDate,
+  start,
+  end,
+  pushedDays,
+}: IDayProps) {
+  const pushDaysDispatcher = usePushedDaysDispatcher();
+
   //TODO: Locked days not impl
   const isLocked = false;
   //Query Hook
@@ -85,6 +98,7 @@ export function IDay({ children, daynumber, fullDate, start, end }: IDayProps) {
         eventDispatcher({
           type: "update",
           payload: [newEvent],
+          callback: pushDaysDispatcher,
         });
         fetchEvent_Day("PUT", newEvent);
         temporaryEventDispatcher(newEvent);
@@ -101,7 +115,11 @@ export function IDay({ children, daynumber, fullDate, start, end }: IDayProps) {
         <styles.daySpot $isToday={isToday}>{dayPadd}</styles.daySpot>
       </styles.header>
 
-      {true ? <EventsThrower day={fullDate} /> : <></>}
+      {true ? (
+        <MemoEventsThrower day={fullDate} pushedDays={pushedDays} />
+      ) : (
+        <></>
+      )}
     </styles.contain>
   );
 }
@@ -119,12 +137,13 @@ export const MemoIDay = memo(IDay, (prev, next) => {
   const prevSelection = isSelected(prev.start, prev.fullDate, prev.end);
   const nextSelection = isSelected(next.start, next.fullDate, next.end);
 
-  const datesSelectionEqual = prevSelection === nextSelection;
+  //const datesSelectionEqual = prevSelection === nextSelection;
 
   //const isLockedEqual = prev.isLocked === next.isLocked;
 
   //const showWeekendEqual = prev.isWeekend === next.isWeekend;
+  const isDayToPush = next.pushedDays.has(next.fullDate);
 
-  return true;
+  return isDayToPush;
   //return datesSelectionEqual /* && isLockedEqual*/ /*&& showWeekendEqual*/;
 });

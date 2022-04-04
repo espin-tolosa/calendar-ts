@@ -1,11 +1,13 @@
 import { Action } from "@/hooks/useEventsState";
 import { fetchEvent_Day } from "@/utils/fetchEvent";
-import React from "react";
+import React, { Dispatch } from "react";
 import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import { DateService } from "@/utils/Date";
 import { useIsDragging } from "@/hooks/useIsDragging";
+import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 
 export const usePostQuery = (fullDate: string) => {
+  const pushDaysDispatcher = usePushedDaysDispatcher();
   const eventDispatcher = useEventDispatch();
   const isDragging = useIsDragging();
   const isWeekend = DateService.IsWeekend(fullDate);
@@ -15,13 +17,14 @@ export const usePostQuery = (fullDate: string) => {
     if (isDragging.state || isLocked || isWeekend) {
       return;
     }
-    queryEvent(fullDate, eventDispatcher);
+    queryEvent(fullDate, eventDispatcher, pushDaysDispatcher);
   };
 };
 
 const queryEvent = async (
   date: string,
-  eventDispatcher: React.Dispatch<Action>
+  eventDispatcher: React.Dispatch<Action>,
+  pushDaysDispatcher: Dispatch<Set<string>>
 ) => {
   const MaxId = Number.MAX_SAFE_INTEGER;
   const newEvent = {
@@ -34,6 +37,7 @@ const queryEvent = async (
   eventDispatcher({
     type: "update",
     payload: [newEvent],
+    callback: pushDaysDispatcher,
   });
 
   const FetchClosure = () => {
@@ -59,12 +63,14 @@ const queryEvent = async (
         eventDispatcher({
           type: "delete",
           payload: [newEvent],
+          callback: pushDaysDispatcher,
         });
         //then, commit database response if status is ok
         result.status &&
           eventDispatcher({
             type: "update",
             payload: result.data,
+            callback: pushDaysDispatcher,
           });
 
         return;

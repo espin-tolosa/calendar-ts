@@ -1,6 +1,9 @@
 import { composition } from "@/interfaces";
 import React, {
   createContext,
+  Dispatch,
+  DispatchWithoutAction,
+  ReducerWithoutAction,
   useContext,
   useEffect,
   useMemo,
@@ -16,7 +19,70 @@ import { DateService } from "@/utils/Date";
 export type Action = {
   type: CustomTypes.DispatchLocalStateEvents;
   payload: CustomTypes.State;
+  callback: Dispatch<Set<string>>;
 };
+
+function rangeOfDates(start: string, end: string) {
+  const numberOfDays = DateService.DaysFrom(start, end);
+  const DaysToPush: Set<string> = new Set([start]);
+
+  for (let i = 1; i < numberOfDays; i++) {
+    DaysToPush.add(DateService.GetDateFrom(start, i));
+  }
+
+  DaysToPush.add(end);
+
+  return DaysToPush;
+}
+
+// Return a range of dates affecting the difference between prev and next state of events
+export function diffStates(state: Array<event>, newState: Array<event>) {
+  const prevState = [...state];
+  const nextState = [...newState];
+
+  //sort by start day from earlier first
+  prevState.sort((prev, next) => -DateService.DaysFrom(prev.start, next.start));
+  nextState.sort((prev, next) => -DateService.DaysFrom(prev.start, next.start));
+
+  //  return nextState;
+  const DaysToPush: Set<string> = new Set();
+
+  //For each new Event compare if it exists or it is modified respect to prev state and store the range of dates in a Set
+  nextState.forEach((nextEvent) => {
+    let start = nextEvent.start;
+    let end = nextEvent.end;
+
+    const prev = prevState.find((event) => event.id === nextEvent.id);
+
+    //case where an event with new id is found
+    if (!prev) {
+      rangeOfDates(start, end).forEach((date) => DaysToPush.add(date));
+      //case where event exists but differs on one of the key: start, end, client or job
+    } else {
+      if (
+        prev.start !== nextEvent.start ||
+        prev.end !== nextEvent.end ||
+        prev.client !== nextEvent.client ||
+        prev.job !== nextEvent.job
+      ) {
+        //take the earlier start date
+        const startDates = [prev.start, nextEvent.start];
+        startDates.sort((prev, next) => -DateService.DaysFrom(prev, next));
+        start = startDates[0];
+        //take the later end date
+        const endDates = [prev.end, nextEvent.end];
+        endDates.sort((prev, next) => -DateService.DaysFrom(prev, next));
+        end = endDates[0];
+
+        //always return the max value
+        rangeOfDates(start, end).forEach((date) => DaysToPush.add(date));
+      }
+    }
+  });
+
+  //console.log("Days to push", DaysToPush);
+  return DaysToPush;
+}
 
 const sortCriteriaFIFO = (prev: event, next: event) =>
   Math.abs(prev.id) - Math.abs(next.id);
@@ -25,7 +91,7 @@ const sortCriteriaLonger = (prev: event, next: event) => {
   const nextRange = DateService.DaysFrom(next.start, next.end);
   return nextRange - prevRange;
 };
-const sortCriteria = sortCriteriaLonger;
+export const sortCriteria = sortCriteriaLonger;
 const diff_byId = (
   newState: CustomTypes.State,
   state: CustomTypes.State
@@ -70,6 +136,8 @@ export function reducerEvents(
       });
 
       newState.sort((prev, next) => sortCriteria(prev, next));
+      const daysToPush = diffStates(state, newState);
+      action.callback(daysToPush);
       return newState;
     }
     //
@@ -94,6 +162,10 @@ export function reducerEvents(
       });
 
       newState.sort((prev, next) => sortCriteria(prev, next));
+      diffStates(state, newState);
+      const daysToPush = diffStates(state, newState);
+      console.log("Events dispatchcer of days", daysToPush);
+      action.callback(daysToPush);
       return newState;
     }
     //
@@ -105,6 +177,9 @@ export function reducerEvents(
           (event) => Math.abs(event.id) !== Math.abs(toDelete.id)
         );
       });
+      diffStates(state, newState);
+      const daysToPush = diffStates(state, newState);
+      action.callback(daysToPush);
       return newState;
     }
     //

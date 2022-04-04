@@ -18,12 +18,14 @@ import { useCtxTopNavRef } from "@/globalStorage/topNavSize";
 import { DOMRefs } from "@/globalStorage/DOMRefs";
 import { usePrint } from "@/hooks/usePrint";
 import { useGethCancel } from "@/api/handlers";
+import { usePushedDays, usePushedDaysDispatcher } from "@/hooks/usePushDays";
 
 type iMonth = {
   year: number;
   month: number;
 };
 const Month = ({ year, month }: iMonth) => {
+  const pushedDays = usePushedDays();
   const date = useMonthDate(year, month);
   const monthRef = useCtxCurrentMonthRef();
   const topNavRef = useCtxTopNavRef();
@@ -132,7 +134,7 @@ const Month = ({ year, month }: iMonth) => {
                 fullDate={DateService.ComposeDate(year, month, day)}
                 start={controllerDates.start}
                 end={controllerDates.end}
-                isLocked={false} //TODO: A way to determine locked days
+                pushedDays={pushedDays}
               ></MemoIDay>
             ))
           )

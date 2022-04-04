@@ -13,6 +13,7 @@ import { fetchEvent } from "@/utils/fetchEvent";
 import { useCtxKeyBuffer } from "@/globalStorage/keyBuffer";
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 //import { usePostQuery } from "@/api/queries";
 
 const useGetEventFamily = (event: event) => {
@@ -28,6 +29,7 @@ const useGetEventFamily = (event: event) => {
 };
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
+  const pushDaysDispatcher = usePushedDaysDispatcher();
   const eventRef = useRef<HTMLDivElement>();
 
   //Layout Hook
@@ -110,10 +112,12 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         eventDispatcher({
           type: "delete",
           payload: [newEvent],
+          callback: pushDaysDispatcher,
         });
         eventDispatcher({
           type: "update",
           payload: [newEvent],
+          callback: pushDaysDispatcher,
         });
         temporaryEventDispatcher(CustomValues.nullEvent);
       }}
@@ -158,6 +162,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         eventDispatcher({
           type: "update",
           payload: [newEvent],
+          callback: pushDaysDispatcher,
         });
         // fetchEvent("POST", newEvent);
         // temporaryEventDispatcher(newEvent);
@@ -200,6 +205,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         eventDispatcher({
           type: "update",
           payload: [newEvent],
+          callback: pushDaysDispatcher,
         });
         fetchEvent("PUT", newEvent);
         temporaryEventDispatcher(newEvent);
@@ -255,6 +261,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         eventDispatcher({
           type: "update",
           payload: [prevEvent, nextEvent],
+          callback: pushDaysDispatcher,
         });
 
         //TODO: use promise all, to ensure prevEvent don't fail
@@ -268,10 +275,12 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
             eventDispatcher({
               type: "delete",
               payload: [nextEvent],
+              callback: pushDaysDispatcher,
             });
             eventDispatcher({
               type: "syncDB",
               payload: dbResponse,
+              callback: pushDaysDispatcher,
             });
           });
       }}

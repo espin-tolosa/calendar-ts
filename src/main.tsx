@@ -17,37 +17,40 @@ import { DOMRefs } from "@/globalStorage/DOMRefs";
 import { TemporaryEvent } from "@/globalStorage/temporaryEvents";
 import { KeyBuffer } from "@/globalStorage/keyBuffer";
 import { EventInController } from "@/globalStorage/eventSelected";
+import { PushedDays } from "@/hooks/usePushDays";
 
 ReactDOM.render(
   <React.StrictMode>
     <DOMRefs.Context>
-      <KeyBuffer>
-        <TemporaryEvent>
-          <TopNavRef>
-            <CurrentMonthRef>
-              <IsFetchingEvents>
-                <IsDraggingEvent>
-                  <ControllerProvider>
-                    <ControllerProviderDates>
-                      <UserPreferences>
-                        <EventsDispatcher>
-                          <EventInController>
-                            <EventsStatus>
-                              <UserSession>
-                                <App />
-                              </UserSession>
-                            </EventsStatus>
-                          </EventInController>
-                        </EventsDispatcher>
-                      </UserPreferences>
-                    </ControllerProviderDates>
-                  </ControllerProvider>
-                </IsDraggingEvent>
-              </IsFetchingEvents>
-            </CurrentMonthRef>
-          </TopNavRef>
-        </TemporaryEvent>
-      </KeyBuffer>
+      <PushedDays>
+        <KeyBuffer>
+          <TemporaryEvent>
+            <TopNavRef>
+              <CurrentMonthRef>
+                <IsFetchingEvents>
+                  <IsDraggingEvent>
+                    <ControllerProvider>
+                      <ControllerProviderDates>
+                        <UserPreferences>
+                          <EventsDispatcher>
+                            <EventInController>
+                              <EventsStatus>
+                                <UserSession>
+                                  <App />
+                                </UserSession>
+                              </EventsStatus>
+                            </EventInController>
+                          </EventsDispatcher>
+                        </UserPreferences>
+                      </ControllerProviderDates>
+                    </ControllerProvider>
+                  </IsDraggingEvent>
+                </IsFetchingEvents>
+              </CurrentMonthRef>
+            </TopNavRef>
+          </TemporaryEvent>
+        </KeyBuffer>
+      </PushedDays>
     </DOMRefs.Context>
   </React.StrictMode>,
   document.getElementById("root")

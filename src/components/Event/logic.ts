@@ -8,6 +8,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { fetchEvent } from "@/utils/fetchEvent";
 import { useEventDispatch } from "@/hooks/useEventsState";
 import { resourceLimits } from "worker_threads";
+import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 
 export const useTransitionStyle = (
   isChildren: boolean,
@@ -154,6 +155,7 @@ export const useHoverEvent = (event: event) => {
 };
 
 export const useStorage = (event: event) => {
+  const pushDaysDispatcher = usePushedDaysDispatcher();
   //Inline Edit
   const [isSelected, setIsSelected] = useState(false);
   const isFocus = useRef<HTMLInputElement>(null);
@@ -173,6 +175,7 @@ export const useStorage = (event: event) => {
         eventDispatcher({
           type: "update",
           payload: [newEvent],
+          callback: pushDaysDispatcher,
         });
       } else {
         const error = res.status === 401 ? "Unauthorized" : "Server error";

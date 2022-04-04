@@ -12,8 +12,11 @@ import { useEventDispatch } from "@/hooks/useEventsState";
 import { useCleanSession } from "@/hooks/useCleanSession";
 import { CustomValues } from "@/customTypes";
 import { zeroPadd } from "@/utils/zeroPadd";
+import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 
 export const LayoutBoard = () => {
+  const pushDatesDispatcher = usePushedDaysDispatcher();
+
   const nextDates = useBoardScroll({ initialLength: 1 });
   const prevDates = ListPrevDates(nextDates[0], 2);
 
@@ -29,7 +32,32 @@ export const LayoutBoard = () => {
     //The response from database is not the same if I send a query with only year-month
     //my local version of MySQL responds in the same way, but the version of freehostia gives an empty array with success code 201
     const start = `${fromYear}-${fromMonth}-01`;
+    /*
+export async function fetchEvent(
+  action: CustomTypes.OptionsEventsAPI,
+  event: event = CustomValues.nullEvent
+) {
+  const data = new FormData();
+  const { mutable, ...filteredEvent } = event;
+  const dataJSON = JSON.stringify({ action, ...filteredEvent });
+  data.append("json", dataJSON);
+  const response = await fetch(api.routes.events, {
+    method: "POST",
+    body: data,
+  });
 
+  if (response.status === 401) {
+    throw Error("No JWT");
+  }
+
+  if (response.status === 404) {
+    throw Error("No credentials");
+  }
+
+  return response;
+}
+
+*/
     (async () => {
       const eventDate = { ...CustomValues.nullEvent, start, end: start };
       const response = await fetchEvent("GET_FROM", eventDate);
@@ -38,6 +66,7 @@ export const LayoutBoard = () => {
       eventsDispatcher({
         type: "syncDB",
         payload: state,
+        callback: pushDatesDispatcher,
       });
     })();
 

@@ -1,4 +1,4 @@
-import { Action, reducerEvents } from "@/hooks/useEventsState";
+import { Action, diffStates, reducerEvents } from "@/hooks/useEventsState";
 import { DateService } from "@/utils/Date";
 import { event } from "@/interfaces/index";
 import { CustomTypes } from "@/customTypes";
@@ -255,6 +255,44 @@ test("object are different content", () => {
 
   expect(newState[0]).toBe(state1Event[0]);
   expect(newState).toEqual(state1Event);
+});
+
+test("Testing", () => {
+  const state: Array<event> = [
+    {
+      id: 1,
+      client: "Client_1",
+      job: "Job",
+      start: "2022-03-01",
+      end: "2022-03-02",
+    },
+  ];
+  const newState: Array<event> = [
+    {
+      id: 1,
+      client: "Client_1",
+      job: "new Job",
+      start: "2022-03-02",
+      end: "2022-03-02",
+    },
+    {
+      id: 2,
+      client: "Client_1",
+      job: "Job",
+      start: "2022-03-04",
+      end: "2022-03-05",
+    },
+    {
+      id: 3,
+      client: "Client_1",
+      job: "Job",
+      start: "2022-03-10",
+      end: "2022-03-15",
+    },
+  ];
+
+  const result = diffStates(state, newState);
+  console.log(result);
 });
 
 //test("tessting returned references", () => {

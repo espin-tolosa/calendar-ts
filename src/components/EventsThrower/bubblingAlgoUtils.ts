@@ -1,3 +1,4 @@
+import { sortCriteria } from "@/hooks/useEventsState";
 import { event } from "@/interfaces";
 import { isValidPlaceholder } from "@/utils/ValidateEvent";
 const isPreviousElement = (index: number) => {
@@ -56,9 +57,7 @@ const bubblingEvent = (merged: Array<event>) => {
 };
 
 export const bubblingAlgo = (dayEvents: Array<event>) => {
-  const placeholders = dayEvents
-    .filter((e) => e.id < 0)
-    .sort((prev, next) => parseInt(prev.end) - parseInt(next.end));
+  const placeholders = dayEvents.filter((e) => e.id < 0).sort(sortCriteria);
   const rootEvents = dayEvents.filter((e) => e.id > 0); //separate the real events of that day
 
   //allEvents: the global state of events componsed by event objects
