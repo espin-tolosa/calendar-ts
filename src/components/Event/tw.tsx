@@ -56,5 +56,5 @@ export const TWextend = tw.div<{ $cells: number }>`
 `;
 
 export const TWplaceholder = tw.div`
- border-2 outline-2 outline-dashed outline-red-400 border-red-400 border-dashed z-10 bg-[rgb(0,100,0,0.1)]
+	text-transparent
 `;

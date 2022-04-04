@@ -3,21 +3,16 @@ import {
   EventsThrower,
   MemoEventsThrower,
 } from "@/components/EventsThrower/main";
-import { memo, useEffect, useLayoutEffect, useRef } from "react";
+import { memo, useRef } from "react";
 import { DateService } from "@/utils/Date";
-import { useControllerDispatchDates } from "@/hooks/useControllerDate";
-import { useIsDragging } from "@/hooks/useIsDragging";
-import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
+import { useEventDispatch } from "@/hooks/useEventsState";
 import {
   useTemporaryEvent,
   useTemporaryEventDispatcher,
 } from "@/globalStorage/temporaryEvents";
 import { fetchEvent_Day } from "@/utils/fetchEvent";
-import { CustomValues } from "@/customTypes";
-import { useSetEventSelected } from "@/globalStorage/eventSelected";
-import { event } from "@/interfaces";
 import { usePostQuery } from "@/api/queries";
-import { usePushedDays, usePushedDaysDispatcher } from "@/hooks/usePushDays";
+import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
 type IDayProps = WithChildren<{
