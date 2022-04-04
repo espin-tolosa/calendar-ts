@@ -138,7 +138,7 @@ export function reducerEvents(
       const daysToPush = diffStates(state, newState);
       setTimeout(() => {
         action.callback(daysToPush);
-      }, 100);
+      }, 0);
       return newState;
     }
     //
@@ -167,7 +167,7 @@ export function reducerEvents(
       const daysToPush = diffStates(state, newState);
       setTimeout(() => {
         action.callback(daysToPush);
-      }, 100);
+      }, 0);
       return newState;
     }
     //
@@ -183,7 +183,7 @@ export function reducerEvents(
       const daysToPush = diffStates(state, newState);
       setTimeout(() => {
         action.callback(daysToPush);
-      }, 100);
+      }, 0);
       return newState;
     }
     //

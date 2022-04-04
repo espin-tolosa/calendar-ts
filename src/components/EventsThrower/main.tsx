@@ -38,11 +38,6 @@ export const EventsThrower: React.FC<EventProps> = ({
   if (dayEvents.length === 0 || isLocked) {
     return <></>;
   }
-  if (day === "2022-04-05") {
-    console.log("Sorted Events", sortedEvents);
-    const target = sortedEvents.find((e) => e.id === 177);
-    console.log("TARGET", target);
-  }
 
   return (
     <div className="flex flex-col gap-1 my-5">
@@ -54,15 +49,6 @@ export const EventsThrower: React.FC<EventProps> = ({
           );
         }
         //Mutable instruction for global state of events
-        //I tried to pass the index of the root event but it doesn't do nothing because at the time the ref is sent, that index doesn't exists
-        //sendEndReferencesToPlaceholders(
-        //  allEvents,
-        //  event,
-        //  event.mutable?.index || position
-        //);
-        if (event.id === 177) {
-          console.log("Send ref", event, position);
-        }
         sendEndReferencesToPlaceholders(allEvents, event, position);
         return (
           <Event key={`e-${keyValue}`} event={event} index={position}></Event>

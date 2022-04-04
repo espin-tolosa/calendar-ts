@@ -44,10 +44,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   //week.from = event.start;
   const eventsOfWeek = useEventState(week);
 
-  if (event.start === "2022-04-06") {
-    console.log(event);
-  }
-
   useEffect(() => {
     const sameRow = eventsOfWeek
       .filter((e) => e.mutable!.index === event.mutable!.index)
