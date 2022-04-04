@@ -65,9 +65,7 @@ export const MemoEventsThrower = memo(EventsThrower, (prev, next) => {
 
   //const showWeekendEqual = prev.isWeekend === next.isWeekend;
   const isDayToPush = next.pushedDays.has(next.day);
-  isDayToPush && console.log("Eventthrower on day", prev.day);
 
-  //return isDayToPush;
-  return true;
+  return !isDayToPush;
   //return datesSelectionEqual /* && isLockedEqual*/ /*&& showWeekendEqual*/;
 });

@@ -33,13 +33,60 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();
 
   //Layout Hook
+  //useLayoutEffect(() => {
+  //  event.mutable = {
+  //    height: `${eventRef.current!.clientHeight}px`,
+  //    eventRef: eventRef.current!,
+  //    index: index,
+  //  };
+  //}, [eventRef.current?.clientHeight]);
+  //--------------------------------------
+
   useLayoutEffect(() => {
     event.mutable = {
       height: `${eventRef.current!.clientHeight}px`,
       eventRef: eventRef.current!,
-      index: index,
+      index: index, //!Corrected bug: was using event.end wich is zero
     };
-  }, [eventRef.current?.clientHeight]);
+  }, []);
+  // useEffect(() => {
+  //   const pB = parent.mutable?.eventRef.getBoundingClientRect().top || 0;
+  //   const eB = event.mutable?.eventRef.getBoundingClientRect().top || 0;
+  //   const height = pB - eB + event.mutable!.eventRef.clientHeight;
+  //   const newState = { height: `${height}px` };
+  //   if (newState.height === state.height) {
+  //     return;
+  //   }
+  //   setState(newState);
+  // }, [event]);
+  const tempState = useRef<string>("0px");
+  const [state, setState] = useState<{ height: string }>({ height: "0px" });
+  const week = DateService.GetWeekRangeOf(event.start);
+  //week.from = event.start;
+  const eventsOfWeek = useEventState(week);
+
+  if (event.start === "2022-04-06") {
+    console.log(event);
+  }
+
+  useEffect(() => {
+    const sameRow = eventsOfWeek
+      .filter((e) => e.mutable?.index === event.mutable?.index)
+      .filter((e) => e.id > 0);
+    const allH = sameRow.map((r) => r.mutable!.eventRef.clientHeight);
+    const maxH = Math.max(...allH);
+    //const allH = allIndex1.map((a1) => a1.mutable!.eventRef.offsetHeight);
+    const newState = { height: `${maxH}px` };
+
+    //if (newState.height === tempState.current) {
+    //  return;
+    //}
+    tempState.current = newState.height;
+    event.mutable!.height = newState.height;
+    setState(newState);
+  }, [event]);
+
+  //--------------------------------------------
 
   const isChildren = event.job.includes("#isChildren");
   //edit mode
@@ -333,10 +380,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         {"+"}
       </StyledEvent.TWextend>
 
-      <StyledEvent.TWplaceholder
-        key={"p" + event.id}
-        style={{ height: event.mutable?.height }}
-      >
+      <StyledEvent.TWplaceholder key={"p" + event.id} style={state}>
         {"placeholder"}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
@@ -359,46 +403,39 @@ export const EventHolder = ({ event }: { event: event }) => {
       index: parent.mutable?.index!, //!Corrected bug: was using event.end wich is zero
     };
   }, []);
-
-  //const update = useRef(false);
-
-  let stateUpdate = state;
-  if (mounted.current) {
-    const allIndex1 = eventsOfWeek.filter(
-      (all) => all.mutable?.index === parent.mutable?.index
-    );
-    const allH = allIndex1.map((a1) => a1.mutable?.eventRef.clientHeight || 0);
-    const h = parent.mutable?.eventRef?.clientHeight || 0;
-    const maxH = Math.max(...allH, h);
-    const newState = { height: `${maxH}px` };
-    //   if (newState.height === state.height) {
-    //     return;
-    //   }
-    //   mounted.current = true;
-    stateUpdate = newState;
-  }
+  // useEffect(() => {
+  //   const pB = parent.mutable?.eventRef.getBoundingClientRect().top || 0;
+  //   const eB = event.mutable?.eventRef.getBoundingClientRect().top || 0;
+  //   const height = pB - eB + event.mutable!.eventRef.clientHeight;
+  //   const newState = { height: `${height}px` };
+  //   if (newState.height === state.height) {
+  //     return;
+  //   }
+  //   setState(newState);
+  // }, [event]);
+  const tempState = useRef<string>("0px");
 
   useEffect(() => {
     const allIndex1 = eventsOfWeek.filter(
       (all) => all.mutable?.index === parent.mutable?.index
     );
     const allH = allIndex1.map((a1) => a1.mutable?.eventRef.clientHeight || 0);
-    const h = parent.mutable?.eventRef?.clientHeight || 0;
+    const h = parseInt(parent.mutable!.height.split("px")[0]);
     const maxH = Math.max(...allH, h);
+    //const allH = allIndex1.map((a1) => a1.mutable!.eventRef.offsetHeight);
     const newState = { height: `${maxH}px` };
 
-    if (newState.height === state.height) {
-      return;
-    }
-    mounted.current = true;
+    //if (newState.height === tempState.current) {
+    //  return;
+    //}
+    tempState.current = newState.height;
     setState(newState);
-  }, []);
+  }, [event]);
 
-  const resultStyle = mounted.current ? stateUpdate : state;
   //
   return (
     <StyledEvent.TWflexContainer ref={eventRef}>
-      <StyledEvent.TWplaceholder style={resultStyle}>
+      <StyledEvent.TWplaceholder style={state}>
         {event.id}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
