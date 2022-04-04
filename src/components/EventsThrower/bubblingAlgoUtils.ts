@@ -58,7 +58,7 @@ const bubblingEvent = (merged: Array<event>) => {
 
 export const bubblingAlgo = (dayEvents: Array<event>) => {
   const placeholders = dayEvents.filter((e) => e.id < 0).sort(sortCriteria);
-  const rootEvents = dayEvents.filter((e) => e.id > 0); //separate the real events of that day
+  const rootEvents = dayEvents.filter((e) => e.id > 0).sort(sortCriteria); //separate the real events of that day
 
   //allEvents: the global state of events componsed by event objects
   //dayEvents: the events of the day filtered from the global state

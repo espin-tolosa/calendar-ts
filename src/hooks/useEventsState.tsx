@@ -37,8 +37,8 @@ function rangeOfDates(start: string, end: string) {
 
 // Return a range of dates affecting the difference between prev and next state of events
 export function diffStates(state: Array<event>, newState: Array<event>) {
-  const prevState = [...state];
-  const nextState = [...newState];
+  const prevState = state.filter((event) => event.id > 0);
+  const nextState = newState.filter((event) => event.id > 0);
 
   //sort by start day from earlier first
   prevState.sort((prev, next) => -DateService.DaysFrom(prev.start, next.start));

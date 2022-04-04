@@ -60,7 +60,7 @@ export const EventsThrower: React.FC<EventProps> = ({
   //console.log(eventsOfWeek);
   //console.log("----------------------------------------------------");
 
-  console.log("EVENTTHRONW", sortedEvents);
+  console.log("EVENTTHRONW: " + day, sortedEvents);
 
   return (
     <div className="flex flex-col gap-1 my-5">
@@ -88,9 +88,8 @@ export const MemoEventsThrower = memo(EventsThrower, (prev, next) => {
 
   //const showWeekendEqual = prev.isWeekend === next.isWeekend;
   const isDayToPush = next.pushedDays.has(next.day);
-  console.log("Days to push in eventthronwe", next.pushedDays);
-  isDayToPush && console.info("is day: " + prev.day);
 
   return isDayToPush;
+  //return true;
   //return datesSelectionEqual /* && isLockedEqual*/ /*&& showWeekendEqual*/;
 });

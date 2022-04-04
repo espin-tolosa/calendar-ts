@@ -1,20 +1,6 @@
 import { composition } from "@/interfaces";
-import React, {
-  createContext,
-  Dispatch,
-  DispatchWithoutAction,
-  useContext,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-} from "react";
-import { event } from "@/interfaces/index";
-import { month0 } from "@/static/initEvents";
-import { eventSpreader } from "@/algorithms/eventSpreader";
-import { isWellDefined } from "@/utils/ValidateEvent";
+import { createContext, Dispatch, useContext, useState } from "react";
 import { CustomTypes } from "@/customTypes";
-import { DateService } from "@/utils/Date";
 
 export type Action = {
   type: CustomTypes.DispatchLocalStateEvents;
