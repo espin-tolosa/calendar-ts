@@ -17,7 +17,6 @@ this requires JS, hasta ahora solamente el CSS ha sido incorporado.
 export namespace styles {
   export const contain = tw.div<{
     $isLock: boolean;
-    $isSelected: boolean;
     $isWeekend: boolean;
   }>`
 	min-h-[15vh] transition-colors font-light shadow-[0px_0px_1px_rgb(226,232,240)]
@@ -27,8 +26,7 @@ export namespace styles {
     (!$isLock && "bg-white day cursor-pointer") ||
     ""}
 
-	${({ $isWeekend, $isSelected }) =>
-    ($isSelected && !$isWeekend && "border-2 bg-green-100") ||
+	${({ $isWeekend }) =>
     ($isWeekend &&
       "bg-slate-300 z-Dayoff outline outline-[1px] outline-slate-100 select-none") ||
     (!$isWeekend && "outline outline-[1px] outline-slate-300") ||

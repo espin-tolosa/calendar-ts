@@ -16,7 +16,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 //import { usePostQuery } from "@/api/queries";
 
-const useGetEventFamily = (event: event) => {
+export const useGetEventFamily = (event: event) => {
   const events = useEventState();
   const parentId = EventClass.transformToParentId(event);
   //return all events that has the same parentId
@@ -45,7 +45,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   }, [event]);
 
   useEffect(() => {
-    console.log("Use effect of", event);
     const sameRow = eventsOfWeek
       .filter((e) => e.mutable!.index === event.mutable!.index)
       .filter((e) => e.id > 0);
@@ -62,6 +61,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const isChildren = event.job.includes("#isChildren");
   //edit mode
   const [parent, family] = useGetEventFamily(event);
+  const parentEvent = EventClass.getParentEvent(family);
 
   //drag and drop
   const temporaryEvent = useTemporaryEvent();
@@ -91,7 +91,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
     1 + DateService.DaysFrom(event.start, event.end),
     8
   );
-  const parentEvent = EventClass.getParentEvent(family);
 
   const dayRef = useRef<Element>();
 
@@ -147,32 +146,23 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         e.stopPropagation();
         const x = e.clientX;
         const y = e.clientY;
-
         const el = document.elementsFromPoint(x, y);
         const dayDiv = el.find((e) => e.id.includes("day"));
-
         //All of this is the same as Board callback
         const id = dayDiv?.id;
         if (!id) {
           return;
         }
-
         dayRef.current = dayDiv;
-
         const entries = id.split("-");
-
         if (entries[0] !== "day") {
           return;
         }
-
         const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
-
         if (parentEvent.end === fullDate) {
           return;
         }
-
         const newEvent = { ...temporaryEvent, end: fullDate };
-
         eventDispatcher({
           type: "update",
           payload: [newEvent],

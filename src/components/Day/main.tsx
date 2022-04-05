@@ -1,8 +1,5 @@
 import { styles } from "@/components/Day/tw";
-import {
-  EventsThrower,
-  MemoEventsThrower,
-} from "@/components/EventsThrower/main";
+import { MemoEventsThrower } from "@/components/EventsThrower/main";
 import { memo, useRef } from "react";
 import { DateService } from "@/utils/Date";
 import { useEventDispatch } from "@/hooks/useEventsState";
@@ -15,11 +12,9 @@ import { usePostQuery } from "@/api/queries";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 
 type WithChildren<T = {}> = T & { children?: React.ReactNode };
-type IDayProps = WithChildren<{
+type Day = WithChildren<{
   daynumber: number;
   fullDate: string;
-  start: string;
-  end: string;
   pushedDays: Set<string>;
 }>;
 
@@ -33,81 +28,55 @@ type IDayProps = WithChildren<{
 // cControllerState - start,end
 // cControllerState - id,client,job
 
-export function IDay({
-  daynumber,
-  fullDate,
-  start,
-  end,
-  pushedDays,
-}: IDayProps) {
+function Day({ daynumber, fullDate, pushedDays }: Day) {
   const pushDaysDispatcher = usePushedDaysDispatcher();
-
+  const addEvent = usePostQuery(fullDate);
   //TODO: Locked days not impl
-  const isLocked = false;
-  //Query Hook
-  const click = usePostQuery(fullDate);
-  //
-  const isWeekend = DateService.IsWeekend(fullDate);
+  const $isLock = false;
+
+  const $isWeekend = DateService.IsWeekend(fullDate);
   const eventDispatcher = useEventDispatch();
-  const tempDay = String(daynumber);
-  const dayPadd = daynumber < 10 ? `0${tempDay}` : tempDay;
 
   //dnd
   const temporaryEvent = useTemporaryEvent();
   const temporaryEventDispatcher = useTemporaryEventDispatcher();
   const dayDivRef = useRef<HTMLDivElement>(null);
 
-  const isSelected = (start: string, today: string, end: string) => {
-    const left = DateService.DaysFrom(start, today);
-    const right = DateService.DaysFrom(end, today);
-
-    if (left >= 0 && right <= 0) {
-      return true;
-    }
-    return false;
-  };
-
   //Determine if this day is current local date of client
   const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
+
+  const styledProps = { $isWeekend, $isLock };
+
+  const hOnDragEnter = () => {
+    if (temporaryEvent.end === fullDate) {
+      return;
+    }
+    const isRewind = DateService.DaysFrom(temporaryEvent.start, fullDate) < 0;
+    const newEvent = { ...temporaryEvent };
+    if (isRewind) {
+      newEvent.start = fullDate;
+    } else {
+      newEvent.end = fullDate;
+    }
+    eventDispatcher({
+      type: "update",
+      payload: [newEvent],
+      callback: pushDaysDispatcher,
+    });
+    fetchEvent_Day("PUT", newEvent);
+    temporaryEventDispatcher(newEvent);
+  };
 
   return (
     <styles.contain
       id={`day-${fullDate}`}
-      $isLock={isLocked}
-      $isWeekend={isWeekend}
-      $isSelected={isSelected(start, fullDate, end)}
+      {...styledProps}
       ref={dayDivRef}
-      onClick={click}
-      onDragEnter={(e) => {
-        if (temporaryEvent.end === fullDate) {
-          return;
-        }
-        const isRewind =
-          DateService.DaysFrom(temporaryEvent.start, fullDate) < 0;
-        const newEvent = { ...temporaryEvent };
-        if (isRewind) {
-          newEvent.start = fullDate;
-        } else {
-          newEvent.end = fullDate;
-        }
-        eventDispatcher({
-          type: "update",
-          payload: [newEvent],
-          callback: pushDaysDispatcher,
-        });
-        fetchEvent_Day("PUT", newEvent);
-        temporaryEventDispatcher(newEvent);
-      }}
-      onMouseUp={() => {}}
+      onClick={addEvent}
+      onDragEnter={hOnDragEnter}
     >
-      <styles.header
-        $isLock={isLocked}
-        title={(() => {
-          return (isLocked ? "Unlock " : "Lock ") + `day: ${dayPadd}`;
-        })()}
-        $isWeekend={isWeekend}
-      >
-        <styles.daySpot $isToday={isToday}>{dayPadd}</styles.daySpot>
+      <styles.header {...styledProps}>
+        <styles.daySpot $isToday={isToday}>{`${daynumber}`}</styles.daySpot>
       </styles.header>
 
       {true ? (
@@ -118,22 +87,9 @@ export function IDay({
     </styles.contain>
   );
 }
-const isSelected = (start: string, today: string, end: string) => {
-  const left = DateService.DaysFrom(start, today);
-  const right = DateService.DaysFrom(end, today);
 
-  if (left >= 0 && right <= 0) {
-    return true;
-  }
-  return false;
-};
-
-export const MemoIDay = memo(IDay, (prev, next) => {
-  const prevSelection = isSelected(prev.start, prev.fullDate, prev.end);
-  const nextSelection = isSelected(next.start, next.fullDate, next.end);
-
+export const MemoDay = memo(Day, (prev, next) => {
   const isDayToPush = next.pushedDays.has(next.fullDate);
-  isDayToPush && console.log("Memo Day", next.fullDate);
 
   return !isDayToPush;
 });

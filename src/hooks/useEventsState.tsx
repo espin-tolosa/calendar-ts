@@ -165,7 +165,6 @@ export function reducerEvents(
       newState.sort((prev, next) => sortCriteria(prev, next));
       diffStates(state, newState);
       const daysToPush = diffStates(state, newState);
-      console.log("Days to update: ", daysToPush);
       setTimeout(() => {
         action.callback(daysToPush);
       }, 0);

@@ -1,14 +1,12 @@
 import { memo } from "react";
 import { useMonthDate } from "@/hooks/useMonthDate";
-import { MemoIDay } from "@components/Day/main";
+import { MemoDay } from "@components/Day/main";
 import { MemoIDayHolder } from "@components/DayHolder/main";
 import * as StyledMonth from "./tw";
 import { DateService } from "@/utils/Date";
 
 import { zeroPadd } from "@/utils/zeroPadd";
-import { useControllerStateDates } from "@/hooks/useControllerDate";
 import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
-import { useIsFetchingEvents } from "@/hooks/useIsFetchingEvents";
 import { usePrint } from "@/hooks/usePrint";
 import { usePushedDays } from "@/hooks/usePushDays";
 import { CustomTypes } from "@/customTypes";
@@ -18,10 +16,6 @@ import { totalCellsInLastRow } from "./totalCellsInLastRow";
 const Month = ({ year, month }: CustomTypes.Month) => {
   const pushedDays = usePushedDays(); //!days affected by event dispatcher
   const date = useMonthDate(year, month); //memoized date stats needed to render a month grid
-
-  //Context processing to pass to Day component
-  //1. start,end dates
-  const controllerDates = useControllerStateDates();
 
   //2. locked days
 
@@ -61,14 +55,12 @@ const Month = ({ year, month }: CustomTypes.Month) => {
           ))
           .concat(
             date.daysList.map((day) => (
-              <MemoIDay
+              <MemoDay
                 key={DateService.ComposeDate(year, month, day)}
                 daynumber={day}
                 fullDate={DateService.ComposeDate(year, month, day)}
-                start={controllerDates.start}
-                end={controllerDates.end}
                 pushedDays={pushedDays}
-              ></MemoIDay>
+              ></MemoDay>
             ))
           )
           .concat(

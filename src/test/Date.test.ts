@@ -290,9 +290,6 @@ test("Testing", () => {
       end: "2022-03-15",
     },
   ];
-
-  const result = diffStates(state, newState);
-  console.log(result);
 });
 
 //test("tessting returned references", () => {
