@@ -178,9 +178,14 @@ export const useStorage = (event: event) => {
           callback: pushDaysDispatcher,
         });
       } else {
-        const error = res.status === 401 ? "Unauthorized" : "Server error";
-        alert("Something went wrong: " + error);
-        window.location.reload();
+        eventDispatcher({
+          type: "update",
+          payload: [newEvent],
+          callback: pushDaysDispatcher,
+        });
+        //const error = res.status === 401 ? "Unauthorized" : "Server error";
+        //alert("Something went wrong: " + error);
+        //window.location.reload();
       }
     });
   };
@@ -200,6 +205,7 @@ export const useStorage = (event: event) => {
   };
   const hOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const enter = e.target.value === "Enter";
+
     if (enter) {
       isFocus.current!.blur();
       return;
@@ -211,6 +217,11 @@ export const useStorage = (event: event) => {
   const hOnKeyDown = (e: React.KeyboardEvent) => {
     const enter = e.key === "Enter";
     if (enter) {
+      eventDispatcher({
+        type: "update",
+        payload: [{ ...event, job: `${event.job} - ` }],
+        callback: pushDaysDispatcher,
+      });
       isFocus.current!.blur();
     }
 

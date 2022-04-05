@@ -67,6 +67,5 @@ export const MemoEventsThrower = memo(EventsThrower, (prev, next) => {
   const isDayToPush = next.pushedDays.has(next.day);
 
   return !isDayToPush;
-  //return false;
   //return datesSelectionEqual /* && isLockedEqual*/ /*&& showWeekendEqual*/;
 });

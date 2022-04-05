@@ -68,11 +68,11 @@ export function diffStates(state: Array<event>, newState: Array<event>) {
         //take the earlier start date
         const startDates = [prev.start, nextEvent.start];
         startDates.sort((prev, next) => -DateService.DaysFrom(prev, next));
-        start = startDates[0];
+        start = DateService.GetWeekRangeOf(startDates[0]).from;
         //take the later end date
         const endDates = [prev.end, nextEvent.end];
         endDates.sort((prev, next) => -DateService.DaysFrom(prev, next));
-        end = endDates[0];
+        end = DateService.GetWeekRangeOf(endDates[0]).to;
 
         //always return the max value
         rangeOfDates(start, end).forEach((date) => DaysToPush.add(date));
@@ -165,6 +165,7 @@ export function reducerEvents(
       newState.sort((prev, next) => sortCriteria(prev, next));
       diffStates(state, newState);
       const daysToPush = diffStates(state, newState);
+      console.log("Days to update: ", daysToPush);
       setTimeout(() => {
         action.callback(daysToPush);
       }, 0);

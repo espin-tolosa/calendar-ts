@@ -3,10 +3,11 @@ import { GetDateNextMonth } from "@/utils/Date";
 import { useInitMonths } from "@/hooks/useInitMonths";
 import { useListenWindowSize } from "@/hooks/useResponsiveLayout";
 
-export function useBoardScroll({ initialLength }: { initialLength: number }) {
+//Infinite scrolling
+export function useInfiniteScroll(initLength: number) {
   const isLargeWindow = useListenWindowSize();
   const [monthKeys, setMonthKeys] = useInitMonths(
-    2 * Math.round(initialLength / 2)
+    2 * Math.round(initLength / 2)
   );
   const [isBottom, setIsBottom] = useState(false);
   useEffect(() => {
@@ -37,9 +38,7 @@ export function useBoardScroll({ initialLength }: { initialLength: number }) {
 
       setMonthKeys([...monthKeys, month_entry1, month_entry2]);
 
-      setIsBottom((prev) => {
-        return !prev;
-      });
+      setIsBottom((prev) => !prev);
     }
   }, [isBottom]);
 

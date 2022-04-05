@@ -33,6 +33,11 @@ export namespace CustomTypes {
     | "PUT"
     | "DELETE"
     | "DELETE_ALL";
+
+  export type Month = {
+    year: number;
+    month: number;
+  };
 }
 
 export namespace CustomValues {

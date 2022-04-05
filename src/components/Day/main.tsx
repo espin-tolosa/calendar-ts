@@ -132,16 +132,8 @@ export const MemoIDay = memo(IDay, (prev, next) => {
   const prevSelection = isSelected(prev.start, prev.fullDate, prev.end);
   const nextSelection = isSelected(next.start, next.fullDate, next.end);
 
-  //const datesSelectionEqual = prevSelection === nextSelection;
-
-  //const isLockedEqual = prev.isLocked === next.isLocked;
-
-  //const showWeekendEqual = prev.isWeekend === next.isWeekend;
   const isDayToPush = next.pushedDays.has(next.fullDate);
-  //const isDayToPush = next.fullDate === "2022-04-05";
+  isDayToPush && console.log("Memo Day", next.fullDate);
 
   return !isDayToPush;
-  //return false;
-  //return false;
-  //return datesSelectionEqual /* && isLockedEqual*/ /*&& showWeekendEqual*/;
 });

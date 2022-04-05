@@ -30,7 +30,7 @@ const queryEvent = async (
   const newEvent = {
     id: MaxId,
     client: "default",
-    job: "default",
+    job: "-",
     start: date,
     end: date,
   };

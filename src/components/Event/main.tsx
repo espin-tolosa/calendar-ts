@@ -32,19 +32,20 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const pushDaysDispatcher = usePushedDaysDispatcher();
   const eventRef = useRef<HTMLDivElement>();
 
+  const [state, setState] = useState<{ height: string }>({ height: "0px" });
+  const week = DateService.GetWeekRangeOf(event.start);
+  //week.from = event.start;
+  const eventsOfWeek = useEventState(week);
   useLayoutEffect(() => {
     event.mutable = {
       height: `${eventRef.current!.clientHeight}px`,
       eventRef: eventRef.current!,
       index: index, //!Corrected bug: was using event.end wich is zero
     };
-  }, []);
-  const [state, setState] = useState<{ height: string }>({ height: "0px" });
-  const week = DateService.GetWeekRangeOf(event.start);
-  //week.from = event.start;
-  const eventsOfWeek = useEventState(week);
+  }, [event]);
 
   useEffect(() => {
+    console.log("Use effect of", event);
     const sameRow = eventsOfWeek
       .filter((e) => e.mutable!.index === event.mutable!.index)
       .filter((e) => e.id > 0);
@@ -324,11 +325,18 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
                 </div>
               </StyledEvent.TWjobContent>
             ) : (
-              <input
-                ref={isFocus}
-                value={jobInput}
-                className="bg-transparent text-slate-900 outline-none appearance-none	whitespace-nowrap overflow-hidden overflow-ellipsis"
-              ></input>
+              <>
+                <input
+                  ref={isFocus}
+                  value={jobInput}
+                  className="absolute h-10 text-slate-900 outline-none appearance-none whitespace-normal break-words overflow-ellipsis "
+                ></input>
+                <StyledEvent.TWjobContent $isHover={hover}>
+                  <div className="p-3 customtp:text-xxs customtp:p-1 custombp:text-xxs custombp:p-1  ">
+                    {event.job}
+                  </div>
+                </StyledEvent.TWjobContent>
+              </>
             )}
           </div>
         ) : (
@@ -359,9 +367,6 @@ export const EventHolder = ({ event }: { event: event }) => {
   const [parent, family] = useGetEventFamily(event);
   const eventRef = useRef<HTMLDivElement>();
   const [state, setState] = useState<{ height: string }>({ height: "0px" });
-  const week = DateService.GetWeekRangeOf(event.start);
-  week.from = event.start;
-  const eventsOfWeek = useEventState(week);
   //
   useLayoutEffect(() => {
     event.mutable = {
@@ -369,24 +374,20 @@ export const EventHolder = ({ event }: { event: event }) => {
       eventRef: eventRef.current!,
       index: parent.mutable?.index!, //!Corrected bug: was using event.end wich is zero
     };
+    const h0 = parent.mutable?.height || "0px";
+    const h1 = parseInt(h0.split("px")[0]);
+    const newState = { height: `${h1}px` };
+    setState(newState);
   }, []);
 
-  useEffect(() => {
-    const allIndex1 = eventsOfWeek.filter(
-      (all) => all.mutable?.index === parent.mutable?.index
-    );
-    const allH = allIndex1.map((a1) => a1.mutable?.eventRef.clientHeight || 0);
-    const h = parseInt(parent.mutable!.height.split("px")[0]);
-    const maxH = Math.max(...allH, h);
-    const newState = { height: `${maxH}px` };
-
-    setState(newState);
-  }, [event]);
+  const h0 = parent.mutable?.height || state.height;
+  const h1 = parseInt(h0.split("px")[0]);
+  const newState = { height: `${h1}px` };
 
   //
   return (
     <StyledEvent.TWflexContainer ref={eventRef}>
-      <StyledEvent.TWplaceholder style={state}>
+      <StyledEvent.TWplaceholder style={newState}>
         {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>

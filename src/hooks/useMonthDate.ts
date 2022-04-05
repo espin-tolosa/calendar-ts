@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo } from "react";
 
 import {
   GetMonthDayKey,
@@ -18,8 +18,7 @@ export const WeekDays = {
 };
 
 export function useMonthDate(year: number, month: number) {
-  const newDate = recomputeDates(year, month);
-  return useState(newDate)[0];
+  return useMemo(() => recomputeDates(year, month), [year, month]);
 }
 
 export function recomputeDates(year: number, month: number) {
