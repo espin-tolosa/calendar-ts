@@ -16,7 +16,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 //import { usePostQuery } from "@/api/queries";
 
-export const useGetEventFamily = (event: event) => {
+const useGetEventFamily = (event: event) => {
   const events = useEventState();
   const parentId = EventClass.transformToParentId(event);
   //return all events that has the same parentId

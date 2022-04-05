@@ -54,6 +54,7 @@ const queryEvent = async (
 
     //!continue reviewing drag and drop fetching
     const callManager = async (currentAttempt = 1) => {
+      const REFETCHING_TIME = 200; //ms
       let result = await callFetch();
       setTimeout(async () => {
         if (!result.status && currentAttempt < Max_Attempts) {
@@ -74,7 +75,7 @@ const queryEvent = async (
           });
 
         return;
-      }, 200);
+      }, REFETCHING_TIME);
     };
 
     return callManager;
