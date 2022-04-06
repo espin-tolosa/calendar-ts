@@ -72,11 +72,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 
   const setEventController = useSetEventSelected();
 
-  const hOnClick = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation();
-    setEventController(parentEvent);
-  };
-
   // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
   const { hover, ...mouseHover } = useHoverEvent(event);
 
@@ -98,36 +93,22 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
     <>
       <StyledEvent.TWflexContainer
         {...mouseHover}
+        onMouseDownCapture={(e) => {
+          e.stopPropagation();
+          setEventController(parentEvent);
+        }}
         draggable={"true"}
-        onDragStart={() => {
+        onDragStart={(e) => {
+          e.stopPropagation();
           console.log("On drag start from Center", parentEvent);
           const copyOfParent: event = { ...parentEvent };
           copyOfParent.mutable!.bubble = 0;
           temporaryEventDispatcher(parentEvent);
         }}
-        onDragEnd={(e) => {
-          //  e.stopPropagation();
-          //  const id = dayRef.current?.id;
-          //  if (!id) {
-          //    return;
-          //  }
-
-          //  const entries = id.split("-");
-
-          //  const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
-
-          //  const newEvent = { ...temporaryEvent, end: fullDate };
-          //  fetchEvent("PUT", newEvent);
-          //  eventDispatcher({
-          //    type: "update",
-          //    payload: [newEvent],
-          //    callback: pushDaysDispatcher,
-          //  });
-          temporaryEventDispatcher(CustomValues.nullEvent);
-        }}
-        onClick={hOnClick}
         onTouchStart={(e) => {
           e.preventDefault();
+          const copyOfParent: event = { ...parentEvent };
+          copyOfParent.mutable!.bubble = 0;
           temporaryEventDispatcher(parentEvent);
         }}
         onTouchEnd={() => {
@@ -206,120 +187,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           temporaryEventDispatcher(newEvent);
           return true;
         }}
-        //split event when Ctrl is pressed
-        onMouseDownCapture={(e) => {
-          setEventController(parentEvent);
-          if (keyBuffer?.current !== "Control") {
-            return;
-          }
-          e.stopPropagation();
-          const x = e.clientX;
-          const y = e.clientY;
-
-          const el = document.elementsFromPoint(x, y);
-          const dayDiv = el.find((e) => e.id.includes("day"));
-
-          //All of this is the same as Board callback
-          const id = dayDiv?.id;
-          if (!id) {
-            return;
-          }
-
-          const entries = id.split("-");
-
-          if (entries[0] !== "day") {
-            return;
-          }
-
-          const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
-          if (parentEvent.end === fullDate) {
-            return;
-          }
-
-          const today = new Date(fullDate);
-          const dayWeek = DateService.GetMonthDayKey(today);
-          const previous = new Date(today.getTime());
-          const nextOrBack = dayWeek !== "Monday" ? +1 : -1;
-          const prev = previous.setDate(today.getDate() + nextOrBack);
-
-          const yesterdayDate = DateService.FormatDate(new Date(prev));
-
-          const start = dayWeek !== "Monday" ? yesterdayDate : fullDate;
-          const end = dayWeek !== "Monday" ? fullDate : yesterdayDate;
-          const prevEvent = { ...parentEvent, end };
-          const nextEvent = {
-            ...parentEvent,
-            start,
-            id: EventClass.getUnusedId(),
-          };
-          //Optimistic push nextEvent to state, with
-          eventDispatcher({
-            type: "update",
-            payload: [prevEvent, nextEvent],
-            callback: pushDaysDispatcher,
-          });
-
-          //TODO: use promise all, to ensure prevEvent don't fail
-          fetchEvent("PUT", prevEvent);
-
-          const result = fetchEvent("POST", nextEvent);
-          result
-            .then((res) => res.json())
-            .then((dbResponse: Array<event>) => {
-              //This is the way I have to replace the Id of an event, since the action "replacebyid" uses the id to change the other fields, I can't use it to replace the id itself
-              eventDispatcher({
-                type: "delete",
-                payload: [nextEvent],
-                callback: pushDaysDispatcher,
-              });
-              eventDispatcher({
-                type: "syncDB",
-                payload: dbResponse,
-                callback: pushDaysDispatcher,
-              });
-            });
-        }}
       >
-        {!isSelected && (
-          <StyledEvent.TWextend_Left
-            $cells={spreadCells}
-            onMouseDownCapture={(e) => {}}
-            onMouseEnter={() => {}}
-            onMouseOut={() => {}}
-            style={state}
-            title={`Drag here to extend ${event.client}\'s job`}
-            draggable={"true"}
-            onDragStart={(e) => {
-              e.stopPropagation();
-              console.log("On drag start from Left", parentEvent);
-              const copyOfParent: event = { ...parentEvent };
-              copyOfParent.mutable!.bubble = -1;
-              temporaryEventDispatcher(parentEvent);
-            }}
-            onDragEnd={(e) => {
-              //  e.stopPropagation();
-              //  const id = dayRef.current?.id;
-              //  if (!id) {
-              //    return;
-              //  }
-
-              //  const entries = id.split("-");
-
-              //  const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
-
-              //  const newEvent = { ...temporaryEvent, end: fullDate };
-              //  fetchEvent("PUT", newEvent);
-              //  eventDispatcher({
-              //    type: "update",
-              //    payload: [newEvent],
-              //    callback: pushDaysDispatcher,
-              //  });
-              temporaryEventDispatcher(CustomValues.nullEvent);
-            }}
-          >
-            {"+"}
-          </StyledEvent.TWextend_Left>
-        )}
         <StyledEvent.TWtextContent
           $isChildren={isChildren}
           ref={eventRef}
@@ -334,18 +202,73 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           {!isChildren ? (
             <div className="flex flex-col w-full">
               <div
-                className="bg-black text-center text-white text-sm customtp:text-xxs custombp:text-xxs w-full"
+                className="bg-black p-1 text-white text-sm customtp:text-xxs custombp:text-xxs w-full"
                 style={eventInlineStyle.static}
               >
-                {event.client + " : " + event.mutable?.index}
+                {event.client}
               </div>
-              {!isSelected ? (
+              {true ? (
                 <StyledEvent.TWjobContent $isHover={hover}>
-                  <div className="p-3 customtp:text-xxs customtp:p-1 custombp:text-xxs custombp:p-1  ">
+                  <span
+                    className="textarea  border-[1px] border-slate-100 rounded-[5px] w-full p-1 "
+                    role="textbox"
+                    contentEditable={true}
+                    onClick={(e) => {
+                      console.log("CLICK");
+                      e.currentTarget.focus();
+                      //console.log("Click", e.currentTarget);
+                      eventDispatcher({
+                        type: "update",
+                        payload: [{ ...event, job: "" }],
+                        callback: pushDaysDispatcher,
+                      });
+                    }}
+                    onKeyDown={(e) => {
+                      console.log("KEYDOWN");
+                      //console.log(e.code);
+                      if (e.code === "Enter") {
+                        const job = e.currentTarget.textContent || "";
+                        console.log("Dispatching", job);
+                        fetchEvent("PUT", { ...event, job });
+                        eventDispatcher({
+                          type: "update",
+                          payload: [{ ...event, job }],
+                          callback: pushDaysDispatcher,
+                        });
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.currentTarget.blur();
+                      }
+                    }}
+                    onInput={(e) => {
+                      console.log("INPUT");
+                      //console.log(e.currentTarget.textContent);
+                      e.preventDefault();
+                    }}
+                    onChange={(e) => {
+                      console.log("CHANGE");
+                      e.preventDefault();
+                    }}
+                  >
                     {event.job}
-                  </div>
+                  </span>
                 </StyledEvent.TWjobContent>
               ) : (
+                //	{
+                //		<StyledEvent.TWjobContent $isHover={hover}>
+                //			<textarea
+                //				className="p-3 customtp:text-xxs customtp:p-1 custombp:text-xxs custombp:p-1  w-full overflow-hidden "
+                //				onInput={(e) => {
+                //					e.currentTarget.style.height = "";
+                //					e.currentTarget.style.height =
+                //						e.currentTarget.scrollHeight + "px";
+                //				}}
+                //			>
+                //				{event.job}
+                //			</textarea>
+                //		</StyledEvent.TWjobContent>
+
+                //	}
                 <>
                   <input
                     ref={isFocus}
@@ -367,37 +290,34 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           )}
         </StyledEvent.TWtextContent>
         {!isSelected && (
+          <StyledEvent.TWextend_Left
+            $cells={spreadCells}
+            style={state}
+            title={`Drag here to extend ${event.client}\'s job`}
+            draggable={"true"}
+            onDragStart={(e) => {
+              //e.stopPropagation();
+              console.log("On drag start from Left", parentEvent);
+              const copyOfParent: event = { ...parentEvent };
+              copyOfParent.mutable!.bubble = -1;
+              temporaryEventDispatcher(parentEvent);
+            }}
+          >
+            {"+"}
+          </StyledEvent.TWextend_Left>
+        )}
+        {!isSelected && (
           <StyledEvent.TWextend
             $cells={spreadCells}
             style={state}
             title={`Drag here to extend ${event.client}\'s job`}
             draggable={"true"}
             onDragStart={(e) => {
-              e.stopPropagation();
+              //e.stopPropagation();
               console.log("On drag start from Right", parentEvent);
               const copyOfParent: event = { ...parentEvent };
               copyOfParent.mutable!.bubble = 1;
               temporaryEventDispatcher(parentEvent);
-            }}
-            onDragEnd={(e) => {
-              //  e.stopPropagation();
-              //  const id = dayRef.current?.id;
-              //  if (!id) {
-              //    return;
-              //  }
-
-              //  const entries = id.split("-");
-
-              //  const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
-
-              //  const newEvent = { ...temporaryEvent, end: fullDate };
-              //  fetchEvent("PUT", newEvent);
-              //  eventDispatcher({
-              //    type: "update",
-              //    payload: [newEvent],
-              //    callback: pushDaysDispatcher,
-              //  });
-              temporaryEventDispatcher(CustomValues.nullEvent);
             }}
           >
             {"+"}

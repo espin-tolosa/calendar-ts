@@ -41,7 +41,7 @@ ${({ $isHover, $isChildren }) =>
 `;
 
 export const TWextend = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event min-w-[4.14%] z-ExtendEvent border-2 border-red-500
+	mt-[1px] absolute text-transparent extend-event min-w-[4.14%] z-ExtendEvent /*border-2 border-red-500*/
 
 	${({ $cells }) =>
     ($cells === 1 && "extend-event-1") ||
@@ -55,7 +55,7 @@ export const TWextend = tw.div<{ $cells: number }>`
     "extend-event-1"}
 `;
 export const TWextend_Left = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event min-w-[4.14%] z-ExtendEvent border-2 border-green-500
+	mt-[1px] absolute text-transparent extend-event min-w-[4.14%] z-ExtendEvent /*border-2 border-green-500*/
 
 	${({ $cells }) =>
     ($cells === 1 && "extend-event-l-1") ||
@@ -70,5 +70,5 @@ export const TWextend_Left = tw.div<{ $cells: number }>`
 `;
 
 export const TWplaceholder = tw.div`
-	text-transparent border-2 border-red-900 border-dashed bg-red-200
+	text-transparent /*border-2 border-red-900 border-dashed bg-red-200*/
 `;

@@ -98,7 +98,7 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
       id={`day-${fullDate}`}
       {...styledProps}
       ref={dayDivRef}
-      onClick={addEvent}
+      onMouseDown={addEvent}
       onDragEnter={hOnDragEnter}
     >
       <styles.header {...styledProps}>

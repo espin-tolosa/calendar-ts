@@ -90,7 +90,7 @@ const sortCriteriaLonger = (prev: event, next: event) => {
   const nextRange = DateService.DaysFrom(next.start, next.end);
   return nextRange - prevRange;
 };
-export const sortCriteria = sortCriteriaLonger;
+export const sortCriteria = sortCriteriaFIFO;
 const diff_byId = (
   newState: CustomTypes.State,
   state: CustomTypes.State

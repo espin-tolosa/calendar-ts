@@ -29,8 +29,8 @@ const queryEvent = async (
   const MaxId = Number.MAX_SAFE_INTEGER;
   const newEvent = {
     id: MaxId,
-    client: "default",
-    job: "-",
+    client: `Client_${Math.ceil(10 * Math.random()) + 1}`,
+    job: "description",
     start: date,
     end: date,
   };
