@@ -15,6 +15,7 @@ import { eventSpreader } from "@/algorithms/eventSpreader";
 import { isWellDefined } from "@/utils/ValidateEvent";
 import { CustomTypes } from "@/customTypes";
 import { DateService } from "@/utils/Date";
+import { EventClass } from "@/classes/event";
 
 export type Action = {
   type: CustomTypes.DispatchLocalStateEvents;
@@ -244,6 +245,19 @@ export function useEventState(day?: string | { from: string; to: string }) {
 }
 export function useEventDispatch() {
   return useContext(cEventDispatch);
+}
+
+//A children custom hook of useEventState
+export function useGetEventFamily(event: event) {
+  const events = useEventState();
+  const parentId = EventClass.transformToParentId(event);
+  //return all events that has the same parentId
+  const family = events.filter(
+    (e) => EventClass.transformToParentId(e) === parentId
+  );
+
+  const parent = EventClass.getParentEvent(family);
+  return [parent, family] as [event, Array<event>];
 }
 
 // Context Dispatcher of Event Reducer

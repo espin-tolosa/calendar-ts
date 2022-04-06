@@ -37,13 +37,11 @@ export const useTransitionStyle = (
     const temporaryBody = composeStyle(
       "lightgray",
       "2px solid transparent",
-      "black",
       "2px solid transparent"
     );
     const header = composeStyle(
       `rgb(${r_c}, ${g_c}, ${b_c})`,
       "2px solid transparent",
-      "black",
       "2px solid transparent"
     );
     return {
@@ -68,20 +66,17 @@ export const useTransitionStyle = (
         ? composeStyle(
             "lightgray",
             "2px solid transparent",
-            "black",
             "2px solid transparent"
           )
         : !hover
         ? composeStyle(
             `rgb(${r}, ${g}, ${b})`,
             "2px solid transparent",
-            "transparent",
             "2px solid transparent"
           )
         : composeStyle(
             `rgb(${r_h},${g_h},${b_h})`,
             `2px solid rgb(${r_b},${g_b},${b_b})`,
-            "transparent",
             "2px solid transparent"
           );
     } else {
@@ -89,20 +84,17 @@ export const useTransitionStyle = (
         ? composeStyle(
             "lightgray",
             "2px solid transparent",
-            "black",
             "2px solid transparent"
           )
         : !hover
         ? composeStyle(
-            `rgb(${r}, ${g}, ${b})`,
+            `rgb(${r_h}, ${g_h}, ${b_h})`,
             "2px solid transparent",
-            "black",
             "2px solid transparent"
           )
         : composeStyle(
             `rgb(${r_h}, ${g_h}, ${b_h})`,
             `2px solid rgb(${r_b}, ${g_b},${b_b})`,
-            "white",
             `2px solid rgb(${r_b}, ${g_b},${b_b})`
           );
     }
@@ -117,7 +109,6 @@ export const useTransitionStyle = (
 const composeStyle = (
   background: string,
   borderTop: string,
-  color: string,
   borderLeft: string
 ) => {
   return {
@@ -125,7 +116,6 @@ const composeStyle = (
     borderTop,
     borderBottom: borderTop,
     borderRight: borderTop,
-    color,
     borderLeft,
   };
 };

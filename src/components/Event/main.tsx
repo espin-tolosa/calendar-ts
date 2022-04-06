@@ -1,46 +1,24 @@
 import * as StyledEvent from "./tw";
-import { event } from "@interfaces/index";
+import { composition, event } from "@interfaces/index";
 import { DateService } from "@/utils/Date";
 import { useHoverEvent, useStorage, useTransitionStyle } from "./logic";
-import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
+import {
+  useEventDispatch,
+  useEventState,
+  useGetEventFamily,
+} from "@/hooks/useEventsState";
 import { EventClass } from "@/classes/event";
 import {
   useTemporaryEvent,
   useTemporaryEventDispatcher,
 } from "@/globalStorage/temporaryEvents";
-import { CustomValues } from "@/customTypes";
-import { fetchEvent } from "@/utils/fetchEvent";
 import { useCtxKeyBuffer } from "@/globalStorage/keyBuffer";
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
+import { EventCard, EventTail } from "./eventCard";
 //import { usePostQuery } from "@/api/queries";
 
-const CLIENTS = [
-  "Client_1",
-  "Client_2",
-  "Client_3",
-  "Client_4",
-  "Client_5",
-  "Client_6",
-  "Client_7",
-  "Client_8",
-  "Client_9",
-];
-const useGetEventFamily = (event: event) => {
-  const events = useEventState();
-  const parentId = EventClass.transformToParentId(event);
-  //return all events that has the same parentId
-  const family = events.filter(
-    (e) => EventClass.transformToParentId(e) === parentId
-  );
-
-  const parent = EventClass.getParentEvent(family);
-  return [parent, family] as [event, Array<event>];
-};
-
 export const Event = ({ event, index }: { event: event; index: number }) => {
-  const pushDaysDispatcher = usePushedDaysDispatcher();
   const eventRef = useRef<HTMLDivElement>();
 
   const [state, setState] = useState<{ height: string }>({ height: "0px" });
@@ -71,8 +49,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 
   const isChildren = event.job.includes("#isChildren");
   //edit mode
-  const [parent, family] = useGetEventFamily(event);
-  const parentEvent = EventClass.getParentEvent(family);
+  const [parentEvent, family] = useGetEventFamily(event);
 
   //drag and drop
   const temporaryEvent = useTemporaryEvent();
@@ -129,70 +106,18 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           {...eventUpdater}
         >
           {!isChildren ? (
-            <div className="flex flex-col w-full">
-              {
-                <StyledEvent.TWStyledSelect
-                  value={event.client}
-                  style={eventInlineStyle.static}
-                  id={"select"}
-                >
-                  <option value="default" hidden>
-                    Select Client
-                  </option>
-                  {CLIENTS.map((clientIterator, index) => {
-                    return (
-                      <option key={index} value={clientIterator}>
-                        {clientIterator}
-                      </option>
-                    );
-                  })}
-                </StyledEvent.TWStyledSelect>
-              }
-              {
-                <StyledEvent.TWjobContent $isHover={hover}>
-                  <span
-                    className="textarea rounded-[5px] w-full p-1 "
-                    role="textbox"
-                    contentEditable={true}
-                    onClick={(e) => {
-                      console.log("CLICK");
-                      e.currentTarget.focus();
-                      //console.log("Click", e.currentTarget);
-                      eventDispatcher({
-                        type: "update",
-                        payload: [{ ...event, job: "" }],
-                        callback: pushDaysDispatcher,
-                      });
-                    }}
-                    onKeyDown={(e) => {
-                      console.log("KEYDOWN");
-                      //console.log(e.code);
-                      if (e.code === "Enter") {
-                        const job = e.currentTarget.textContent || "";
-                        console.log("Dispatching", job);
-                        fetchEvent("PUT", { ...event, job });
-                        eventDispatcher({
-                          type: "update",
-                          payload: [{ ...event, job }],
-                          callback: pushDaysDispatcher,
-                        });
-                        e.preventDefault();
-                        e.stopPropagation();
-                        e.currentTarget.blur();
-                      }
-                    }}
-                  >
-                    {event.job}
-                  </span>
-                </StyledEvent.TWjobContent>
-              }
-            </div>
+            <EventCard
+              event={event}
+              isHover={hover}
+              style={eventInlineStyle.static}
+            />
           ) : (
-            <>
-              <div className="text-transparent">{event.client}</div>
-            </>
+            <EventTail event={event} />
           )}
         </StyledEvent.TWtextContent>
+        {
+          //DnD Logic
+        }
         {!isSelected && (
           <StyledEvent.TWextend_Left
             $cells={spreadCells}
