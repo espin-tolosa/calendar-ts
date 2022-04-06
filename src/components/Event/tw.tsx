@@ -41,7 +41,7 @@ ${({ $isHover, $isChildren }) =>
 `;
 
 export const TWextend = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event min-w-[7.14%] z-ExtendEvent
+	mt-[1px] absolute text-transparent extend-event min-w-[4.14%] z-ExtendEvent border-2 border-red-500
 
 	${({ $cells }) =>
     ($cells === 1 && "extend-event-1") ||
@@ -53,6 +53,20 @@ export const TWextend = tw.div<{ $cells: number }>`
     ($cells === 7 && "extend-event-7") ||
     ($cells === 8 && "extend-event-8") ||
     "extend-event-1"}
+`;
+export const TWextend_Left = tw.div<{ $cells: number }>`
+	mt-[1px] absolute text-transparent extend-event min-w-[4.14%] z-ExtendEvent border-2 border-green-500
+
+	${({ $cells }) =>
+    ($cells === 1 && "extend-event-l-1") ||
+    ($cells === 2 && "extend-event-l-2") ||
+    ($cells === 3 && "extend-event-l-3") ||
+    ($cells === 4 && "extend-event-l-4") ||
+    ($cells === 5 && "extend-event-l-5") ||
+    ($cells === 6 && "extend-event-l-6") ||
+    ($cells === 7 && "extend-event-l-7") ||
+    ($cells === 8 && "extend-event-l-8") ||
+    "extend-event-l-1"}
 `;
 
 export const TWplaceholder = tw.div`

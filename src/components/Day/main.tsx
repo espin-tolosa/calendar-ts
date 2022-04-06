@@ -47,24 +47,50 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
 
   const styledProps = { $isWeekend, $isLock };
 
-  const hOnDragEnter = () => {
+  const hOnDragEnter = (e: any) => {
     if (temporaryEvent.end === fullDate) {
       return;
     }
-    const isRewind = DateService.DaysFrom(temporaryEvent.start, fullDate) < 0;
-    const newEvent = { ...temporaryEvent };
-    if (isRewind) {
-      newEvent.start = fullDate;
-    } else {
-      newEvent.end = fullDate;
+    //e.stopPropagation();
+    const x = e.clientX;
+    const y = e.clientY;
+    const el = document.elementsFromPoint(x, y);
+    const dayDiv = el.find((e) => e.id.includes("day"));
+    //All of this is the same as Board callback
+    const id = dayDiv?.id;
+    if (!id) {
+      return;
     }
+    const date = id.split("day-")[1];
+    const isRewind = DateService.DaysFrom(temporaryEvent.start, date) < 0;
+    const newEvent = { ...temporaryEvent };
+    //TODO: pulling from red is working like this, but pulling from green it is more or less the opposite
+    if (temporaryEvent.mutable?.bubble === 1) {
+      newEvent.end = date;
+      //     if (isRewind) {
+      //       newEvent.start = date;
+      //     } else {
+      //       newEvent.end = date;
+      //     }
+    } else if (temporaryEvent.mutable?.bubble === -1) {
+      newEvent.start = date;
+      //    if (!isRewind) {
+      //      newEvent.start = date;
+      //    } else {
+      //      newEvent.end = date;
+      //    }
+    } else {
+      newEvent.start = date;
+      newEvent.end = date;
+    }
+    //-------------------------------------------------------------------------------------------
     eventDispatcher({
       type: "update",
       payload: [newEvent],
       callback: pushDaysDispatcher,
     });
     fetchEvent_Day("PUT", newEvent);
-    temporaryEventDispatcher(newEvent);
+    //temporaryEventDispatcher(newEvent);
   };
 
   return (
