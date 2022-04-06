@@ -72,3 +72,7 @@ export const TWextend_Left = tw.div<{ $cells: number }>`
 export const TWplaceholder = tw.div`
 	text-transparent /*border-2 border-red-900 border-dashed bg-red-200*/
 `;
+
+export const TWStyledSelect = tw.select`
+  border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer outline-none
+`;

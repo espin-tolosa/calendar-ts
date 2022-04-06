@@ -204,6 +204,17 @@ export const useStorage = (event: event) => {
     setIsSelected(true);
   };
   const hOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    const newEvent = { ...event, client: e.target.value };
+    fetchEvent("PUT", newEvent);
+    eventDispatcher({
+      type: "update",
+      payload: [newEvent],
+      callback: pushDaysDispatcher,
+    });
+    e.target.blur();
+    /*
     const enter = e.target.value === "Enter";
 
     if (enter) {
@@ -212,6 +223,7 @@ export const useStorage = (event: event) => {
     }
     setJobInput(e.target.value);
     updateEvent({ ...event, job: e.target.value });
+		*/
   };
 
   const hOnKeyDown = (e: React.KeyboardEvent) => {
@@ -248,3 +260,59 @@ export const useStorage = (event: event) => {
 
   return toComponent;
 };
+
+//! TOOKED FROM EVENT
+//<StyledEvent.TWflexContainer
+//  onTouchStart={(e) => {
+//    e.preventDefault();
+//    const copyOfParent: event = { ...parentEvent };
+//    copyOfParent.mutable!.bubble = 0;
+//    temporaryEventDispatcher(parentEvent);
+//  }}
+//  onTouchEnd={() => {
+//    temporaryEventDispatcher(CustomValues.nullEvent);
+//  }}
+//  onTouchMove={(e) => {
+//    e.preventDefault();
+
+//    const x = e.touches[0].clientX;
+//    const y = e.touches[0].clientY;
+
+//    const el = document.elementsFromPoint(x, y);
+//    const dayDiv = el.find((e) => e.id.includes("day"));
+
+//    //All of this is the same as Board callback
+//    const id = dayDiv?.id;
+//    if (!id) {
+//      return;
+//    }
+
+//    const entries = id.split("-");
+
+//    if (entries[0] !== "day") {
+//      return;
+//    }
+
+//    const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
+//    if (temporaryEvent.end === fullDate) {
+//      return;
+//    }
+
+//    const isRewind =
+//      DateService.DaysFrom(temporaryEvent.start, fullDate) < 0;
+//    const newEvent = { ...temporaryEvent };
+//    if (isRewind) {
+//      newEvent.start = fullDate;
+//    } else {
+//      newEvent.end = fullDate;
+//    }
+
+//    eventDispatcher({
+//      type: "update",
+//      payload: [newEvent],
+//      callback: pushDaysDispatcher,
+//    });
+//    fetchEvent("PUT", newEvent);
+//    temporaryEventDispatcher(newEvent);
+//    return true;
+//  }}

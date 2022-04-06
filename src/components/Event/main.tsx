@@ -16,6 +16,17 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 //import { usePostQuery } from "@/api/queries";
 
+const CLIENTS = [
+  "Client_1",
+  "Client_2",
+  "Client_3",
+  "Client_4",
+  "Client_5",
+  "Client_6",
+  "Client_7",
+  "Client_8",
+  "Client_9",
+];
 const useGetEventFamily = (event: event) => {
   const events = useEventState();
   const parentId = EventClass.transformToParentId(event);
@@ -92,100 +103,18 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   return (
     <>
       <StyledEvent.TWflexContainer
+        draggable={"true"}
         {...mouseHover}
         onMouseDownCapture={(e) => {
           e.stopPropagation();
           setEventController(parentEvent);
         }}
-        draggable={"true"}
         onDragStart={(e) => {
           e.stopPropagation();
           console.log("On drag start from Center", parentEvent);
           const copyOfParent: event = { ...parentEvent };
           copyOfParent.mutable!.bubble = 0;
           temporaryEventDispatcher(parentEvent);
-        }}
-        onTouchStart={(e) => {
-          e.preventDefault();
-          const copyOfParent: event = { ...parentEvent };
-          copyOfParent.mutable!.bubble = 0;
-          temporaryEventDispatcher(parentEvent);
-        }}
-        onTouchEnd={() => {
-          temporaryEventDispatcher(CustomValues.nullEvent);
-        }}
-        onDragOver={(e) => {
-          // e.stopPropagation();
-          // const x = e.clientX;
-          // const y = e.clientY;
-          // const el = document.elementsFromPoint(x, y);
-          // const dayDiv = el.find((e) => e.id.includes("day"));
-          // //All of this is the same as Board callback
-          // const id = dayDiv?.id;
-          // if (!id) {
-          //   return;
-          // }
-          // dayRef.current = dayDiv;
-          // const entries = id.split("-");
-          // if (entries[0] !== "day") {
-          //   return;
-          // }
-          // const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
-          // if (parentEvent.end === fullDate) {
-          //   return;
-          // }
-          // const newEvent = { ...temporaryEvent, end: fullDate };
-          // eventDispatcher({
-          //   type: "update",
-          //   payload: [newEvent],
-          //   callback: pushDaysDispatcher,
-          // });
-          //fetchEvent("PUT", newEvent);
-          // temporaryEventDispatcher(newEvent);
-        }}
-        onTouchMove={(e) => {
-          e.preventDefault();
-
-          const x = e.touches[0].clientX;
-          const y = e.touches[0].clientY;
-
-          const el = document.elementsFromPoint(x, y);
-          const dayDiv = el.find((e) => e.id.includes("day"));
-
-          //All of this is the same as Board callback
-          const id = dayDiv?.id;
-          if (!id) {
-            return;
-          }
-
-          const entries = id.split("-");
-
-          if (entries[0] !== "day") {
-            return;
-          }
-
-          const fullDate = `${entries[1]}-${entries[2]}-${entries[3]}`;
-          if (temporaryEvent.end === fullDate) {
-            return;
-          }
-
-          const isRewind =
-            DateService.DaysFrom(temporaryEvent.start, fullDate) < 0;
-          const newEvent = { ...temporaryEvent };
-          if (isRewind) {
-            newEvent.start = fullDate;
-          } else {
-            newEvent.end = fullDate;
-          }
-
-          eventDispatcher({
-            type: "update",
-            payload: [newEvent],
-            callback: pushDaysDispatcher,
-          });
-          fetchEvent("PUT", newEvent);
-          temporaryEventDispatcher(newEvent);
-          return true;
         }}
       >
         <StyledEvent.TWtextContent
@@ -201,16 +130,28 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         >
           {!isChildren ? (
             <div className="flex flex-col w-full">
-              <div
-                className="bg-black p-1 text-white text-sm customtp:text-xxs custombp:text-xxs w-full"
-                style={eventInlineStyle.static}
-              >
-                {event.client}
-              </div>
-              {true ? (
+              {
+                <StyledEvent.TWStyledSelect
+                  value={event.client}
+                  style={eventInlineStyle.static}
+                  id={"select"}
+                >
+                  <option value="default" hidden>
+                    Select Client
+                  </option>
+                  {CLIENTS.map((clientIterator, index) => {
+                    return (
+                      <option key={index} value={clientIterator}>
+                        {clientIterator}
+                      </option>
+                    );
+                  })}
+                </StyledEvent.TWStyledSelect>
+              }
+              {
                 <StyledEvent.TWjobContent $isHover={hover}>
                   <span
-                    className="textarea  border-[1px] border-slate-100 rounded-[5px] w-full p-1 "
+                    className="textarea rounded-[5px] w-full p-1 "
                     role="textbox"
                     contentEditable={true}
                     onClick={(e) => {
@@ -240,48 +181,11 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
                         e.currentTarget.blur();
                       }
                     }}
-                    onInput={(e) => {
-                      console.log("INPUT");
-                      //console.log(e.currentTarget.textContent);
-                      e.preventDefault();
-                    }}
-                    onChange={(e) => {
-                      console.log("CHANGE");
-                      e.preventDefault();
-                    }}
                   >
                     {event.job}
                   </span>
                 </StyledEvent.TWjobContent>
-              ) : (
-                //	{
-                //		<StyledEvent.TWjobContent $isHover={hover}>
-                //			<textarea
-                //				className="p-3 customtp:text-xxs customtp:p-1 custombp:text-xxs custombp:p-1  w-full overflow-hidden "
-                //				onInput={(e) => {
-                //					e.currentTarget.style.height = "";
-                //					e.currentTarget.style.height =
-                //						e.currentTarget.scrollHeight + "px";
-                //				}}
-                //			>
-                //				{event.job}
-                //			</textarea>
-                //		</StyledEvent.TWjobContent>
-
-                //	}
-                <>
-                  <input
-                    ref={isFocus}
-                    value={jobInput}
-                    className="absolute h-10 text-slate-900 outline-none appearance-none whitespace-normal break-words overflow-ellipsis "
-                  ></input>
-                  <StyledEvent.TWjobContent $isHover={hover}>
-                    <div className="p-3 customtp:text-xxs customtp:p-1 custombp:text-xxs custombp:p-1  ">
-                      {event.job}
-                    </div>
-                  </StyledEvent.TWjobContent>
-                </>
-              )}
+              }
             </div>
           ) : (
             <>
@@ -296,7 +200,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
             title={`Drag here to extend ${event.client}\'s job`}
             draggable={"true"}
             onDragStart={(e) => {
-              //e.stopPropagation();
+              e.stopPropagation();
               console.log("On drag start from Left", parentEvent);
               const copyOfParent: event = { ...parentEvent };
               copyOfParent.mutable!.bubble = -1;
@@ -313,7 +217,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
             title={`Drag here to extend ${event.client}\'s job`}
             draggable={"true"}
             onDragStart={(e) => {
-              //e.stopPropagation();
+              e.stopPropagation();
               console.log("On drag start from Right", parentEvent);
               const copyOfParent: event = { ...parentEvent };
               copyOfParent.mutable!.bubble = 1;
