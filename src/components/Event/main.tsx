@@ -1,21 +1,14 @@
 import * as StyledEvent from "./tw";
-import { composition, event } from "@interfaces/index";
+import { event } from "@interfaces/index";
 import { DateService } from "@/utils/Date";
 import { useHoverEvent, useStorage, useTransitionStyle } from "./logic";
-import {
-  useEventDispatch,
-  useEventState,
-  useGetEventFamily,
-} from "@/hooks/useEventsState";
-import { EventClass } from "@/classes/event";
-import {
-  useTemporaryEvent,
-  useTemporaryEventDispatcher,
-} from "@/globalStorage/temporaryEvents";
-import { useCtxKeyBuffer } from "@/globalStorage/keyBuffer";
-import { useSetEventSelected } from "@/globalStorage/eventSelected";
+import { useEventState, useGetEventFamily } from "@/hooks/useEventsState";
+import { useTemporaryEventDispatcher } from "@/globalStorage/temporaryEvents";
+//import { useCtxKeyBuffer } from "@/globalStorage/keyBuffer";
+//import { useSetEventSelected } from "@/globalStorage/eventSelected";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { EventCard, EventTail } from "./eventCard";
+import { useGethDeleteEvent } from "@/api/handlers";
 //import { usePostQuery } from "@/api/queries";
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
@@ -52,13 +45,14 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const [parentEvent, family] = useGetEventFamily(event);
 
   //drag and drop
-  const temporaryEvent = useTemporaryEvent();
+  //const temporaryEvent = useTemporaryEvent();
   const temporaryEventDispatcher = useTemporaryEventDispatcher();
-  const eventDispatcher = useEventDispatch();
+  //const eventDispatcher = useEventDispatch();
   //keybuffer to detect when control keyword is pressed
-  const keyBuffer = useCtxKeyBuffer();
+  //const keyBuffer = useCtxKeyBuffer();
 
-  const setEventController = useSetEventSelected();
+  //const setEventController = useSetEventSelected();
+  const hDelete = useGethDeleteEvent(event);
 
   // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
   const { hover, ...mouseHover } = useHoverEvent(event);
@@ -80,12 +74,14 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   return (
     <>
       <StyledEvent.TWflexContainer
+        onMouseDown={(e) => e.stopPropagation()}
+        onKeyDown={(e) => {
+          if (e.ctrlKey && e.code === "Delete") {
+            hDelete();
+          }
+        }}
         draggable={"true"}
         {...mouseHover}
-        onMouseDownCapture={(e) => {
-          e.stopPropagation();
-          setEventController(parentEvent);
-        }}
         onDragStart={(e) => {
           e.stopPropagation();
           console.log("On drag start from Center", parentEvent);
@@ -153,7 +149,17 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           </StyledEvent.TWextend>
         )}
 
-        <StyledEvent.TWplaceholder key={"p" + event.id} style={state}>
+        <StyledEvent.TWplaceholder
+          key={"p" + event.id}
+          style={state}
+          onMouseDown={(e) => {
+            //const x = e.clientX;
+            //const y = e.clientY;
+            //const el = document.elementsFromPoint(x, y);
+            //const dayDiv = el.find((e) => e.id.includes("day"));
+            //console.log("Clicked on placeholder", dayDiv);
+          }}
+        >
           {"placeholder"}
         </StyledEvent.TWplaceholder>
       </StyledEvent.TWflexContainer>

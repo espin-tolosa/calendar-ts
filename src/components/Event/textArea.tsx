@@ -17,7 +17,10 @@ export const EventTextArea = ({ event, isHover }: TextArea) => {
   const [state, setState] = useState(event.job);
 
   return (
-    <StyledEvent.TWjobContent $isHover={isHover}>
+    <StyledEvent.TWjobContent
+      $isHover={isHover}
+      onMouseDown={(e) => e.stopPropagation()}
+    >
       <span
         className="textarea rounded-[5px] w-full p-1"
         role="textbox"

@@ -105,11 +105,7 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
         <styles.daySpot $isToday={isToday}>{`${daynumber}`}</styles.daySpot>
       </styles.header>
 
-      {true ? (
-        <MemoEventsThrower day={fullDate} pushedDays={pushedDays} />
-      ) : (
-        <></>
-      )}
+      <MemoEventsThrower day={fullDate} pushedDays={pushedDays} />
     </styles.contain>
   );
 }

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useControllerDispatch } from "@/hooks/useController";
 
-import { useGethCancel, useGethDeleteEvent } from "@/api/handlers";
+import { useGethCancel } from "@/api/handlers";
 import { useCtxKeyBufferDispatcher } from "@/globalStorage/keyBuffer";
 import { useEventSelected } from "@/globalStorage/eventSelected";
 
@@ -12,12 +12,9 @@ export const useKeyboardShortcuts = () => {
   const dispatchController = useControllerDispatch();
 
   const hCancel = useGethCancel();
-  const hDelete = useGethDeleteEvent();
   useEffect(() => {
     const hOnKeyDown = (e: KeyboardEvent) => {
-      if (eventSelected && e.key === "Delete") {
-        hDelete();
-      } else if (e.key === "Escape") {
+      if (e.key === "Escape") {
         hCancel();
       } else if (e.key === "Control") {
         dispatchKeyBuffer(e.key);

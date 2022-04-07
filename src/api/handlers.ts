@@ -7,6 +7,7 @@ import { useControllerDispatch } from "@/hooks/useController";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useEventDispatch } from "@/hooks/useEventsState";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
+import { event } from "@/interfaces";
 import { fetchEvent } from "@/utils/fetchEvent";
 
 // Custom-hook: useGethCancel
@@ -60,12 +61,8 @@ export function useGethCancel() {
 // A temporary event is tracked by getUnusedId
 //
 
-export function useGethDeleteEvent(): () => void {
-  const eventSelected = useEventSelected();
-  const SetEventSelected = useSetEventSelected();
-  const dispatchController = useControllerDispatch();
+export function useGethDeleteEvent(eventSelected: event): () => void {
   const eventDispatcher = useEventDispatch();
-  const dispatchControllerDates = useControllerDispatchDates();
   const pushDaysDispatcher = usePushedDaysDispatcher();
 
   // First time I'm able to catch error Failed to Fetch
@@ -76,16 +73,6 @@ export function useGethDeleteEvent(): () => void {
     }
     const deleteResourceInAPI = async () => {
       const result = await fetchEvent("DELETE", eventSelected);
-      if (result.status === 204) {
-        dispatchController({
-          type: "setController",
-          payload: { id: 0, client: "", job: "" },
-        });
-        dispatchControllerDates({
-          type: "clearDates",
-        });
-        SetEventSelected(null);
-      }
 
       return result.status;
     };

@@ -16,5 +16,5 @@ export const EventCard = ({ event, isHover, style }: EventCard) => {
 };
 
 export const EventTail = ({ event }: { event: event }) => {
-  return <div className="text-transparent">{event.client}</div>;
+  return <div className="text-transparent ">{event.client}</div>;
 };
