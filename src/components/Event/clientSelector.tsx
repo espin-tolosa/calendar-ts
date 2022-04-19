@@ -11,6 +11,7 @@ const CLIENTS = [
   "Client_7",
   "Client_8",
   "Client_9",
+  "Unavailable",
 ];
 
 export type ClientSelector = {

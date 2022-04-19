@@ -1,6 +1,6 @@
 import tw from "tailwind-styled-components";
 
-export const TWjobContent = tw.div<{ $isHover: boolean }>`
+export const TWjobContent = tw.div`
 flex whitespace-normal break-words overflow-hidden overflow-ellipsis
 `;
 

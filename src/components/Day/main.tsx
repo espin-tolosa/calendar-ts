@@ -2,7 +2,7 @@ import { styles } from "@/components/Day/tw";
 import { MemoEventsThrower } from "@/components/EventsThrower/main";
 import { memo, useRef } from "react";
 import { DateService } from "@/utils/Date";
-import { useEventDispatch } from "@/hooks/useEventsState";
+import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import {
   useTemporaryEvent,
   useTemporaryEventDispatcher,
@@ -92,6 +92,12 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
     fetchEvent_Day("PUT", newEvent);
     //temporaryEventDispatcher(newEvent);
   };
+
+  const dayEvents = useEventState(fullDate);
+
+  //  const dayOff = dayEvents.find((event) => event.client === "Unavailable");
+  //  const isLocked =
+  //    typeof dayOff !== "undefined" && dayOff.client.includes("Unavailable");
 
   return (
     <styles.contain

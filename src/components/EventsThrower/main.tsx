@@ -1,4 +1,4 @@
-import { Event, EventHolder } from "@components/Event/main";
+import { Event, EventHolder, EventOff } from "@components/Event/main";
 import { useEventState } from "@/hooks/useEventsState";
 import { bubblingAlgo } from "@components/EventsThrower/bubblingAlgoUtils";
 import { sendEndReferencesToPlaceholders } from "@components/EventsThrower/sendReferencesToPlaceholders";
@@ -20,24 +20,18 @@ export const EventsThrower: React.FC<EventProps> = ({
   const weekRange = DateService.GetWeekRangeOf(day);
   const eventsOfWeek = useEventState(weekRange);
   const componentName = "Eventthrown";
-  //TODO: rebuild isLocked day const isLocked = lockedDays.find((lock) => lock === day) === day;
-  const isLocked = false;
-  //No events in a day fast exit
-
-  const sortedEvents = bubblingAlgo(dayEvents);
-  //const sortedEvents = dayEvents;
-
-  useLayoutEffect(() => {
-    if (dayEvents.length === 0 || isLocked) {
-      return;
-    }
-  });
 
   //TODO: style height has be passed from eventRef
 
-  if (dayEvents.length === 0 || isLocked) {
-    return <></>;
-  }
+  //Day off
+
+  const dayOff = dayEvents.find((event) => event.client === "Unavailable");
+  //dayOff!.mutable!.index = 0;
+  const isLocked =
+    typeof dayOff !== "undefined" && dayOff.client.includes("Unavailable");
+
+  const dayEventsFiltered = isLocked ? [dayOff] : dayEvents;
+  const sortedEvents = bubblingAlgo(dayEventsFiltered);
 
   return (
     <div className="flex flex-col gap-1 my-5">
