@@ -4,11 +4,13 @@ import { zeroPadd } from "@/utils/zeroPadd";
 import { useEffect } from "react";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 import { useEventDispatch } from "../hooks/useEventsState";
+import { useCleanSession } from "@/hooks/useCleanSession";
 
 export const useGetAllEventsFrom = ({ year, month }: CustomTypes.Month) => {
   const fromYear = year;
   const fromMonth = zeroPadd(month);
   const pushDatesDispatcher = usePushedDaysDispatcher();
+  const setSessionIsToClean = useCleanSession();
 
   const eventsDispatcher = useEventDispatch();
 
@@ -19,13 +21,20 @@ export const useGetAllEventsFrom = ({ year, month }: CustomTypes.Month) => {
     (async () => {
       const eventDate = { ...CustomValues.nullEvent, start, end: start };
       const response = await fetchEvent("GET_FROM", eventDate);
-      const state = await response.json();
+      try {
+        const state = await response.json();
+        eventsDispatcher({
+          type: "syncDB",
+          payload: state,
+          callback: pushDatesDispatcher,
+        });
+      } catch {
+        setTimeout(() => {
+          window.alert("Session is expired");
 
-      eventsDispatcher({
-        type: "syncDB",
-        payload: state,
-        callback: pushDatesDispatcher,
-      });
+          setSessionIsToClean(true);
+        }, 1000);
+      }
     })();
   }, []);
 };
