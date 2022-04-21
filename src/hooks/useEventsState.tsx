@@ -17,6 +17,8 @@ import { CustomTypes } from "@/customTypes";
 import { DateService } from "@/utils/Date";
 import { EventClass } from "@/classes/event";
 
+const DEFERRAL_TIME = 0;
+
 export type Action = {
   type: CustomTypes.DispatchLocalStateEvents;
   payload: CustomTypes.State;
@@ -138,8 +140,9 @@ export function reducerEvents(
       newState.sort((prev, next) => sortCriteria(prev, next));
       const daysToPush = diffStates(state, newState);
       setTimeout(() => {
+        console.log("Pushing Days", daysToPush);
         action.callback(daysToPush);
-      }, 0);
+      }, DEFERRAL_TIME);
       return newState;
     }
     //
@@ -164,15 +167,16 @@ export function reducerEvents(
       });
 
       newState.sort((prev, next) => sortCriteria(prev, next));
-      diffStates(state, newState);
       const daysToPush = diffStates(state, newState);
       setTimeout(() => {
+        console.log("Pushing Days", daysToPush);
         action.callback(daysToPush);
-      }, 0);
+      }, DEFERRAL_TIME);
       return newState;
     }
     //
     case "delete": {
+      console.log("DELETE event", action);
       let newState = state.slice();
       //Clean state is the state without all the events targeting the id to replace
       action.payload.forEach((toDelete) => {
@@ -182,9 +186,10 @@ export function reducerEvents(
       });
       diffStates(state, newState);
       const daysToPush = diffStates(state, newState);
+      console.log("Pushing Days", daysToPush);
       setTimeout(() => {
         action.callback(daysToPush);
-      }, 0);
+      }, DEFERRAL_TIME);
       return newState;
     }
     //
