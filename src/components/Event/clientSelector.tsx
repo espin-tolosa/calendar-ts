@@ -1,6 +1,5 @@
 import * as StyledEvent from "./tw";
 import { event } from "@interfaces/index";
-//import { usePostQuery } from "@/api/queries";
 const CLIENTS = [
   "Client_1",
   "Client_2",

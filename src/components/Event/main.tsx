@@ -9,7 +9,6 @@ import { useTemporaryEventDispatcher } from "@/globalStorage/temporaryEvents";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { EventCard, EventTail } from "./eventCard";
 import { useGethDeleteEvent } from "@/api/handlers";
-//import { usePostQuery } from "@/api/queries";
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();

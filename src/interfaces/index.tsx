@@ -1,6 +1,8 @@
 import { ReactChildren, ReactChild } from "react";
 
-export type Date = string;
+export namespace event {
+  export type date = string;
+}
 
 export interface objectKeys<V> {
   [key: string]: V;

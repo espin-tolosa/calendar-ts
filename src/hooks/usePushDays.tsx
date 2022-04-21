@@ -1,4 +1,4 @@
-import { composition } from "@/interfaces";
+import { composition, event } from "@/interfaces";
 import { createContext, Dispatch, useContext, useState } from "react";
 import { CustomTypes } from "@/customTypes";
 
@@ -7,8 +7,8 @@ export type Action = {
   payload: CustomTypes.State;
 };
 
-const defaultPushDates: Set<string> = new Set();
-const defaultPushDatesDispatcher: Dispatch<Set<string>> = () => {};
+const defaultPushDates: Set<event.date> = new Set();
+const defaultPushDatesDispatcher: Dispatch<Set<event.date>> = () => {};
 
 const cPushDates = createContext(defaultPushDates);
 const cPushDatesDispatcher = createContext(defaultPushDatesDispatcher);
@@ -25,7 +25,7 @@ export const usePushedDaysDispatcher = () => {
 
 export const PushedDays: composition = ({ children }) => {
   //const [state, dispatch] = useReducer(reducerEvents, defaultState);
-  const [days, dispatchDays] = useState<Set<string>>(new Set());
+  const [days, dispatchDays] = useState<Set<event.date>>(new Set());
 
   return (
     <cPushDates.Provider value={days}>

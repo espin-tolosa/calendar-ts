@@ -5,8 +5,9 @@ import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import { DateService } from "@/utils/Date";
 import { useIsDragging } from "@/hooks/useIsDragging";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
+import { event } from "@/interfaces";
 
-export const usePostQuery = (fullDate: string) => {
+export const usePostQuery = (fullDate: event.date) => {
   const pushDaysDispatcher = usePushedDaysDispatcher();
   const eventDispatcher = useEventDispatch();
   const isDragging = useIsDragging();
@@ -22,9 +23,9 @@ export const usePostQuery = (fullDate: string) => {
 };
 
 const queryEvent = async (
-  date: string,
+  date: event.date,
   eventDispatcher: React.Dispatch<Action>,
-  pushDaysDispatcher: Dispatch<Set<string>>
+  pushDaysDispatcher: Dispatch<Set<event.date>>
 ) => {
   const MaxId = Number.MAX_SAFE_INTEGER;
   const newEvent = {
@@ -47,7 +48,7 @@ const queryEvent = async (
       try {
         const data = await fetchEvent_Day("POST", newEvent);
         return { status: true, data };
-      } catch (e: any) {
+      } catch {
         return { status: false, data: [] };
       }
     };

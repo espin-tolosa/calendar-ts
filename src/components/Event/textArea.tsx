@@ -3,7 +3,6 @@ import { event } from "@interfaces/index";
 
 import { fetchEvent } from "@/utils/fetchEvent";
 import { useState } from "react";
-//import { usePostQuery } from "@/api/queries";
 
 export type TextArea = {
   event: event;
@@ -24,7 +23,13 @@ export const EventTextArea = ({ event }: TextArea) => {
             fetchEvent("PUT", { ...event, job });
             setState(job);
             e.currentTarget.blur();
+          } else if (e.code === "Escape") {
+            e.currentTarget.blur();
           }
+        }}
+        onBlur={() => {
+          console.log("Element finished");
+          location.reload();
         }}
       >
         {state}
