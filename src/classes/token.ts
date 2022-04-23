@@ -1,27 +1,26 @@
-import jwt_decode, { InvalidTokenError } from "jwt-decode";
+import jwt_decode from "jwt-decode";
 import { DateService } from "@/utils/Date";
 import { token } from "@/interfaces";
 type EncodedToken = {
   data: string | undefined;
 };
 
+const nullToken: token = {
+  name: "",
+  exp: 0,
+  data: { iss: "", usr: "", aut: "", rus: "" },
+};
+
 export class Token {
-  constructor(token: token) {
+  constructor(token: token = nullToken) {
     this.token = token;
   }
   private token: token;
 
-  public static nullToken = new Token({
-    name: "",
-    exp: 0,
-    data: { iss: "", usr: "", aut: "", rus: "" },
-  });
-
   // Is valid token just do some checks in any found token
   public isValid() {
-    const secondsSinceEpoch = DateService.secondsSinceEpoch();
-
-    return this.token.exp > secondsSinceEpoch && this.token.data.usr !== "";
+    const expired = this.token.exp > DateService.secondsSinceEpoch();
+    return expired && !!this.token.data.usr.length;
   }
 
   public expires() {
@@ -102,8 +101,8 @@ export class Token {
       }
 
       return sortedTokens[0];
-    } catch (token: any) {
-      return Token.nullToken;
+    } catch {
+      return new Token(); //returns an empty token
     }
   };
 }

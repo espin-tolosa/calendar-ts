@@ -10,7 +10,7 @@ export const useToken = () => {
       setToken(currentToken);
     }
     if (!currentToken.isValid()) {
-      setToken(Token.nullToken); //this is not needed as the component will unmount
+      setToken(new Token()); //this is not needed as the component will unmount
     }
   };
 

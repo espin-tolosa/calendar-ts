@@ -140,7 +140,6 @@ export function reducerEvents(
       newState.sort((prev, next) => sortCriteria(prev, next));
       const daysToPush = diffStates(state, newState);
       setTimeout(() => {
-        console.log("Pushing Days", daysToPush);
         action.callback(daysToPush);
       }, DEFERRAL_TIME);
       return newState;
@@ -169,14 +168,12 @@ export function reducerEvents(
       newState.sort((prev, next) => sortCriteria(prev, next));
       const daysToPush = diffStates(state, newState);
       setTimeout(() => {
-        console.log("Pushing Days", daysToPush);
         action.callback(daysToPush);
       }, DEFERRAL_TIME);
       return newState;
     }
     //
     case "delete": {
-      console.log("DELETE event", action);
       let newState = state.slice();
       //Clean state is the state without all the events targeting the id to replace
       action.payload.forEach((toDelete) => {
@@ -186,7 +183,6 @@ export function reducerEvents(
       });
       diffStates(state, newState);
       const daysToPush = diffStates(state, newState);
-      console.log("Pushing Days", daysToPush);
       setTimeout(() => {
         action.callback(daysToPush);
       }, DEFERRAL_TIME);
