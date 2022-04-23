@@ -1,4 +1,4 @@
-const domain = "http://localhost"; //http://localhost
+const domain = ""; //http://localhost
 
 export const api = {
   routes: {

@@ -11,7 +11,7 @@ print:mt-10
 print:shadow-none
 
 
-${({ $toPrint }) => (!$toPrint && "print:hidden") || ""}
+${({ $toPrint }: { $toPrint: boolean }) => (!$toPrint && "print:hidden") || ""}
 `;
 
 // The header displays a text as: month year, like February 2022
@@ -42,7 +42,7 @@ export const TWdaysBoard = tw.div`
 // Shifts the day where a month starts
 export const TWdayShift = tw.div<{ $weekday: string }>`
 
-${({ $weekday }) =>
+${({ $weekday }: { $weekday: string }) =>
   ($weekday === "mon" && "month-start-mon") ||
   ($weekday === "tue" && "month-start-tue") ||
   ($weekday === "wed" && "month-start-wed") ||

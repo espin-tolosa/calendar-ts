@@ -40,5 +40,5 @@ export interface token {
 
 export type setstate<S> = React.Dispatch<React.SetStateAction<S>>;
 
-export type children = { children: ReactChild | ReactChildren };
+export type children = { children: React.ReactNode };
 export type composition = React.FC<children>;

@@ -22,6 +22,7 @@ export namespace DOMRefs {
     return useContext(Dispatcher);
   }
   //Context Provider
+
   export const Context: composition = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, defaultState);
 

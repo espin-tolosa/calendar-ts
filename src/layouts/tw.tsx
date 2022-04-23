@@ -9,7 +9,7 @@ flex flex-col
 `;
 
 export const TWcontroller = tw.div<{ $display: boolean }>`
-${({ $display }) =>
+${({ $display }: { $display: boolean }) =>
   ($display && "max-h-[95vh] customtp:max-h-[38vh] custombp:max-h-[88vh]") ||
   (!$display && "max-h-0") ||
   ""}	

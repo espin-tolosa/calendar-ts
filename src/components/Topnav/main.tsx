@@ -39,7 +39,7 @@ export const Topnav = () => {
       {/*right-header*/}
       <StyledTopnav.TWlogout
         title={"Cleans up your session token | Ctrl+Alt+q"}
-        onClick={(evt) => {
+        onClick={(evt: Event) => {
           evt.stopPropagation();
           setSessionIsToClean(true);
         }}
