@@ -1,4 +1,4 @@
-const domain = ""; //http://localhost
+const domain = import.meta.env.MODE === "development" ? "http://localhost" : "";
 
 export const api = {
   routes: {

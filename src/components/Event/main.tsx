@@ -73,15 +73,15 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   return (
     <>
       <StyledEvent.TWflexContainer
-        onMouseDown={(e: MouseEvent) => e.stopPropagation()}
-        onKeyDown={(e: KeyboardEvent) => {
+        onMouseDown={(e) => e.stopPropagation()}
+        onKeyDown={(e) => {
           if (e.ctrlKey && e.code === "Delete") {
             hDelete();
           }
         }}
         draggable={"true"}
         {...mouseHover}
-        onDragStart={(e: MouseEvent) => {
+        onDragStart={(e) => {
           e.stopPropagation();
           console.log("On drag start from Center", parentEvent);
           const copyOfParent: event = { ...parentEvent };
@@ -115,7 +115,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
             style={state}
             title={`Drag here to extend ${event.client}\'s job`}
             draggable={"true"}
-            onDragStart={(e: MouseEvent) => {
+            onDragStart={(e) => {
               e.stopPropagation();
               console.log("On drag start from Left", parentEvent);
               const copyOfParent: event = { ...parentEvent };
@@ -132,7 +132,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
             style={state}
             title={`Drag here to extend ${event.client}\'s job`}
             draggable={"true"}
-            onDragStart={(e: MouseEvent) => {
+            onDragStart={(e) => {
               e.stopPropagation();
               console.log("On drag start from Right", parentEvent);
               const copyOfParent: event = { ...parentEvent };
@@ -147,7 +147,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         <StyledEvent.TWplaceholder
           key={"p" + event.id}
           style={state}
-          onMouseDown={(e: MouseEvent) => {
+          onMouseDown={(e) => {
             //const x = e.clientX;
             //const y = e.clientY;
             //const el = document.elementsFromPoint(x, y);
@@ -235,15 +235,15 @@ export const EventOff = ({ event }: { event: event }) => {
   return (
     <>
       <StyledEvent.TWflexContainer
-        onMouseDown={(e: MouseEvent) => e.stopPropagation()}
-        onKeyDown={(e: KeyboardEvent) => {
+        onMouseDown={(e) => e.stopPropagation()}
+        onKeyDown={(e) => {
           if (e.ctrlKey && e.code === "Delete") {
             hDelete();
           }
         }}
         draggable={"true"}
         {...mouseHover}
-        onDragStart={(e: MouseEvent) => {
+        onDragStart={(e) => {
           e.stopPropagation();
           console.log("On drag start from Center", parentEvent);
           const copyOfParent: event = { ...parentEvent };
@@ -276,7 +276,7 @@ export const EventOff = ({ event }: { event: event }) => {
             style={state}
             title={`Drag here to extend ${event.client}\'s job`}
             draggable={"true"}
-            onDragStart={(e: MouseEvent) => {
+            onDragStart={(e) => {
               e.stopPropagation();
               console.log("On drag start from Left", parentEvent);
               const copyOfParent: event = { ...parentEvent };
@@ -293,7 +293,7 @@ export const EventOff = ({ event }: { event: event }) => {
             style={state}
             title={`Drag here to extend ${event.client}\'s job`}
             draggable={"true"}
-            onDragStart={(e: MouseEvent) => {
+            onDragStart={(e) => {
               e.stopPropagation();
               console.log("On drag start from Right", parentEvent);
               const copyOfParent: event = { ...parentEvent };
@@ -308,7 +308,7 @@ export const EventOff = ({ event }: { event: event }) => {
         <StyledEvent.TWplaceholder
           key={"p" + event.id}
           style={state}
-          onMouseDown={(e: MouseEvent) => {
+          onMouseDown={(e) => {
             //const x = e.clientX;
             //const y = e.clientY;
             //const el = document.elementsFromPoint(x, y);
