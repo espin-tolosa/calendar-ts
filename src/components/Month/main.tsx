@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { useMonthDate } from "@/hooks/useMonthDate";
-import { MemoDay } from "@components/Day/main";
-import { MemoIDayHolder } from "@components/DayHolder/main";
+import { MemoDay } from "@/components/Day/main";
+import { MemoIDayHolder } from "@/components/DayHolder/main";
 import * as StyledMonth from "./tw";
 import { DateService } from "@/utils/Date";
 

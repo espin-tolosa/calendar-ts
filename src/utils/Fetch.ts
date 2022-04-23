@@ -1,6 +1,6 @@
 const FormData = require("form-data");
 import { api } from "@/static/apiRoutes";
-import { event, objectKeys } from "@interfaces/index";
+import { event, objectKeys } from "@/interfaces/index";
 
 //const hostinger = "https://samuelengineer.com";
 

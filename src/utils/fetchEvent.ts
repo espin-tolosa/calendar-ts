@@ -1,5 +1,5 @@
 import { CustomTypes, CustomValues } from "@/customTypes";
-import { event, objectKeys } from "@interfaces/index";
+import { event, objectKeys } from "@/interfaces/index";
 import { api } from "@/static/apiRoutes";
 
 /**

@@ -1,7 +1,7 @@
-import { Event, EventHolder, EventOff } from "@components/Event/main";
+import { Event, EventHolder, EventOff } from "@/components/Event/main";
 import { useEventState } from "@/hooks/useEventsState";
-import { bubblingAlgo } from "@components/EventsThrower/bubblingAlgoUtils";
-import { sendEndReferencesToPlaceholders } from "@components/EventsThrower/sendReferencesToPlaceholders";
+import { bubblingAlgo } from "@/components/EventsThrower/bubblingAlgoUtils";
+import { sendEndReferencesToPlaceholders } from "@/components/EventsThrower/sendReferencesToPlaceholders";
 import { isPlaceholder, isValidPlaceholder } from "@/utils/ValidateEvent";
 import { memo, useEffect, useLayoutEffect } from "react";
 import { DateService } from "@/utils/Date";

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { apifetch } from "@utils/Fetch";
+import { apifetch } from "@/utils/Fetch";
 import { event } from "@/interfaces";
 //import { useEventsReducer } from "../context/DispatchEvents";
 

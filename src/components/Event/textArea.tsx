@@ -1,5 +1,5 @@
 import * as StyledEvent from "./tw";
-import { event } from "@interfaces/index";
+import { event } from "@/interfaces/index";
 
 import { fetchEvent } from "@/utils/fetchEvent";
 import { useState } from "react";

@@ -1,5 +1,5 @@
 import * as StyledEvent from "./tw";
-import { event } from "@interfaces/index";
+import { event } from "@/interfaces/index";
 import { DateService } from "@/utils/Date";
 import { useHoverEvent, useStorage, useTransitionStyle } from "./logic";
 import { useEventState, useGetEventFamily } from "@/hooks/useEventsState";
