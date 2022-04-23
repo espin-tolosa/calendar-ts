@@ -11,7 +11,7 @@ import { useUserSession } from "./useUserSession";
 export const useCleanSession = () => {
   const [isToClean, setIsToClean] = useState(false);
 
-  const setSession = useUserSession();
+  const { clearLoginSession } = useUserSession();
 
   const setEventController = useSetEventSelected();
   const dispatchController = useControllerDispatch();
@@ -21,7 +21,7 @@ export const useCleanSession = () => {
       return;
     }
 
-    setSession.clearLoginSession();
+    clearLoginSession();
     setEventController(null);
 
     dispatchController({
