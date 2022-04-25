@@ -32,14 +32,15 @@ export interface loginForm {
 }
 
 export type encodedTokenFromAPI = { data: string };
+
 export interface token {
   exp: number;
   aud: string;
   data: { iss: string; usr: string; aut: string; rus: string };
-  // whatever else is in the JWT.
 }
 
 export type setstate<S> = React.Dispatch<React.SetStateAction<S>>;
 
 export type children = { children: React.ReactNode };
+
 export type composition = React.FC<children>;

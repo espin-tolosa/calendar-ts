@@ -7,23 +7,55 @@ import {
   recoverEncodedTokensFromCookies,
 } from "@/io/cookieStorage";
 
+const token0 =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTA4ODY1NTgsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.ktUG4M850xD0xXHfrgRlxX9VF5KkPCoYoIB_OQ0ZX_U";
+const token1 =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTA4ODY1NTgsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.eWgPyvz7BnCNLAqoCqx1bGFrdGUqAPmZzhdQErPLyBU";
+const token2 =
+  "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDAwMDAwMDAsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.YTbzSVjr8ihHblsdTusL_5lUMLWem72A2R54Gnw7m38";
+
 function mockAnyDataAs<T = unknown>(data: any): T {
   return JSON.parse(JSON.stringify(data));
 }
 
-//Object.defineProperty(window.document, "cookie", {
-//  writable: true,
-//  value:
-//    "PHPSESSID=5c1b4b23b3068cf9558ec2129aa320b6; 5ca5ade74b8328dd482fb0e863b0e8a3=%7B%22data%22%3A%22eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTA4ODM2NTksImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.99M5ejQmdR6HKhkFhq1dCBq_6DTmc0M-eVxMOwzixUg%22%7D",
-//});
+Object.defineProperty(window.document, "cookie", {
+  writable: true,
+});
 //
-//test("Within 31 days from 01 of march will be 01 of april", () => {
-//  const encodedTokens = recoverEncodedTokensFromCookies();
-//  const uriParsedTokens = parseURITokens(encodedTokens);
-//
-//  //console.log(uriParsedTokens);
-//});
-//
+test("Within 31 days from 01 of march will be 01 of april", () => {
+  const token1 =
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTA4ODY1NTgsImRhdGEiOnsiaXNzIjoibG9jYWxob3N0IiwidXNyIjoic2FtdWVsIiwiYXV0IjoicmVhZC13cml0ZSIsInJ1cyI6ImFsbCJ9fQ.8YByi-JVJR2mX7PeJuZGo7EmHgs2uA42y4cxhytED58";
+  const token2 =
+    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTA4ODY1NTgsImRhdGEiOnsiaXNzIjoibG9jYWxob3N0IiwidXNyIjoic2FtdWVsIiwiYXV0IjoicmVhZC13cml0ZSIsInJ1cyI6ImFsbCJ9fQ.iVfEX_VgcHU1Nr95Qyb0vcfHZSTFnvazqn2K1toLuuw";
+  window.document.cookie = `PHPSESSID=3fc65ec6c17a9cb6482be8378a6414fb; 762459e65c7f3357f4009b093d237344=%7B%22data%22%3A%22${token1}%22%7D; 762459e65c7f3357f4009b093d237344=%7B%22data%22%3A%22${token2}%22%7D`;
+  const encodedTokens = recoverEncodedTokensFromCookies();
+  const uriParsedTokens = parseURITokens(encodedTokens);
+
+  console.log("ANY COOKIES", uriParsedTokens);
+});
+
+describe("Testing Token Class", () => {
+  test("Get the valid newer Token from cookies with multiple tokens", () => {
+    const uriToken = (token: string) =>
+      `762459e65c7f3357f4009b093d237344=%7B%22data%22%3A%22${token}%22%7D`;
+
+    window.document.cookie = `PHPSESSID=3fc65ec6c17a9cb6482be8378a6414fb;
+		${uriToken(token0)}; ${uriToken(token1)}; ${uriToken(token2)}`;
+
+    const result = new Token();
+    expect(result.token).toStrictEqual({
+      exp: 1700000000,
+      aud: "6eee49870e5c6989f577212ccad87a71bcfc7bff",
+      data: {
+        iss: "localhost",
+        usr: "samuel",
+        aut: "read-write",
+        rus: "all",
+      },
+    });
+  });
+});
+
 describe("Testing custom object instances", () => {
   test("Multiple instances of Null Token create different objects each time", () => {
     const token1 = CustomValues.nullToken();

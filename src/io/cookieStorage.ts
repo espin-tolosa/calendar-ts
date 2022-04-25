@@ -6,17 +6,14 @@
 //so there is no easy pattern in there. In fact yes it is, anyone could
 //make a function called isJWTToken matching some sort of JWT pattern
 
-import { CustomTypes, CustomValues } from "@/customTypes";
+import { CustomValues } from "@/customTypes";
+import { encodedTokenFromAPI } from "@/interfaces";
+import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
 
 export const recoverEncodedTokensFromCookies = () => {
   const cookies = window.document.cookie
     .split(";")
-    .map((cookie) => cookie.trim())
-    .filter((cookie) => {
-      const cookieName = cookie.split("=")[0];
-      return cookieName !== "PHPSESSID";
-    })
-    .map((cookie) => cookie.split("=")[1]);
+    .map((cookie) => cookie.trim().split("=")[1]);
 
   return cookies;
 };
@@ -27,29 +24,33 @@ export const parseURITokens = (encodedTokens: string[]) => {
   return tokensPull;
 };
 
-const decodeURIhandler = (cookie: string) => {
-  type encodedTokenFromAPI = { data: string };
+const decodeURIhandler = (cookie: string): encodedTokenFromAPI => {
+  const nullEncodedToken = CustomValues.nullEncodedToken();
   if (!cookie) {
-    return { data: "" } as encodedTokenFromAPI;
+    return nullEncodedToken;
   }
 
-  let decoded: string = "";
+  let decoded: string;
   try {
     decoded = decodeURIComponent(cookie);
-  } catch (e: any) {
-    console.error("URIError", e instanceof URIError);
+  } catch {
+    return nullEncodedToken;
   }
 
-  if (!decoded) {
-    return { data: "" } as encodedTokenFromAPI;
+  if (decoded === "") {
+    return nullEncodedToken;
   }
 
-  let token = CustomValues.nullEncodedToken(); //{data: ""}
+  let encodedToken: encodedTokenFromAPI;
   try {
-    token = JSON.parse(decoded);
+    encodedToken = JSON.parse(decoded);
   } catch (e: any) {
-    console.error("JSON parse SyntaxError", e instanceof SyntaxError);
+    return nullEncodedToken;
   }
 
-  return token;
+  if (!checkObjectValidKeys(nameAndType(nullEncodedToken), encodedToken)) {
+    return nullEncodedToken;
+  }
+
+  return { ...encodedToken };
 };

@@ -2,12 +2,12 @@ import { Token } from "@/classes/token";
 import React, { useEffect, useState } from "react";
 
 export const useToken = () => {
-  const [token, setToken] = useState(Token.getToken());
+  const [token, setToken] = useState(new Token());
 
   // This effect long polling keep track of a valid token and the user name of the current token
   useEffect(() => {
     const updateTokenIfChangesNameOrValidity = () => {
-      const currentToken = Token.getToken();
+      const currentToken = new Token();
       //Change the name of the person if the token name changes
       // TODO: user shouldbe identified by its id, as user name it's not unique: Change name tracking by id Id tracking whenever the token reflect this information, so after a backend commit
       if (!currentToken.isSamePerson(token)) {

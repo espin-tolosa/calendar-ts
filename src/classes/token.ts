@@ -6,6 +6,7 @@ import {
   recoverEncodedTokensFromCookies,
 } from "@/io/cookieStorage";
 import { CustomValues } from "@/customTypes";
+import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
 
 //This class recieves any data from external api and returns a parsed valid object of either type:
 // - CustomType.null...
@@ -13,6 +14,7 @@ import { CustomValues } from "@/customTypes";
 export namespace ExternalParser {
   //any because In fact encodedToken from external api could be anything
   //even when actually its type is encodedTokenFromAPI I might change in future
+
   export function fromTokenPHP(encodedToken: encodedTokenFromAPI) {
     //Full tested
     const checkValid =
@@ -21,41 +23,23 @@ export namespace ExternalParser {
       return CustomValues.nullToken(); //checked
     }
 
+    let token: token;
     try {
-      const token = jwt_decode<token>(encodedToken.data);
-      if (
-        typeof token === "object" &&
-        "exp" in token &&
-        typeof token.exp === "number" &&
-        "aud" in token &&
-        typeof token.aud === "string" &&
-        typeof token.data === "object" &&
-        "iss" in token.data &&
-        typeof token.data.iss === "string" &&
-        "usr" in token.data &&
-        typeof token.data.usr === "string" &&
-        "aut" in token.data &&
-        typeof token.data.aut === "string" &&
-        "rus" in token.data &&
-        typeof token.data.rus === "string"
-      ) {
-        const filteredToken: token = {
-          exp: token.exp,
-          aud: token.aud,
-          data: {
-            iss: token.data.iss,
-            usr: token.data.usr,
-            aut: token.data.aut,
-            rus: token.data.rus,
-          },
-        };
-        return filteredToken; //checked
-      } else {
-        return CustomValues.nullToken(); //checked
-      }
+      token = jwt_decode<token>(encodedToken.data);
     } catch {
       return CustomValues.nullToken(); //checked
     }
+    //Check decoded token match all the fields of an empty token
+    //TODO:  this block could be engaged inside checkObjectValidkeys by improving the function with recursive object key searching
+    const { data, ...header } = CustomValues.nullToken();
+    const validHeader = checkObjectValidKeys(nameAndType(header), token);
+    const validData = checkObjectValidKeys(nameAndType(data), token.data);
+    if (!validHeader || !validData) {
+      return CustomValues.nullToken(); //checked
+    }
+
+    //Check-passed and return a valid token
+    return { ...token, data: { ...token.data } };
   }
 }
 
@@ -73,9 +57,9 @@ export namespace ExternalParser {
  */
 
 export class Token {
-  private token;
-  constructor(token = CustomValues.nullToken()) {
-    this.token = token;
+  public token;
+  constructor() {
+    this.token = this.getToken();
   }
 
   // Is valid token just do some checks in any found token
@@ -99,41 +83,27 @@ export class Token {
     return sameAuth && sameName;
   }
 
-  public createTokenFromCookies = () => {
+  //Todo
+  private createTokenFromCookies = () => {
     const tokenCookies = recoverEncodedTokensFromCookies();
     const tokensPull = parseURITokens(tokenCookies);
     return tokensPull;
   };
 
-  public decodeTokens = (tokensPull: Array<encodedTokenFromAPI>) => {
+  private decodeTokens = (tokensPull: Array<encodedTokenFromAPI>) => {
     const parsedToken: Array<token> = tokensPull
       .map(ExternalParser.fromTokenPHP)
-      .sort((prev, next) => prev.exp - next.exp);
+      .sort((prev, next) => next.exp - prev.exp);
     return parsedToken;
   };
 
-  public static getToken = () => {
-    const tokenCookies = recoverEncodedTokensFromCookies();
-    const tokensPull = parseURITokens(tokenCookies);
-    //Mapping all remaining cookies of type JWT Token to decode and parse them
-    // It should be only one, but if cookies deletion failed could be more
-
-    try {
-      const decodedTokens: Array<Token> = tokensPull.map((encodeToken) => {
-        return new Token(jwt_decode<token>(encodeToken.data || ""));
-      });
-
-      //Sort tokens giving the bigger exp date in the first position of the array
-      const sortedTokens = decodedTokens.sort(
-        (prev, next) => next.token.exp - prev.token.exp
-      );
-      if (!sortedTokens[0].isValid()) {
-        throw Error("Invalid token");
-      }
-
-      return sortedTokens[0];
-    } catch {
-      return new Token(); //returns an empty token
+  private getToken = () => {
+    const tokensPull = this.createTokenFromCookies();
+    const tokens = this.decodeTokens(tokensPull);
+    if (tokens.length === 0) {
+      return CustomValues.nullToken();
+    } else {
+      return tokens[0];
     }
   };
 }

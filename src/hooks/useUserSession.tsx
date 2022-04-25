@@ -32,7 +32,8 @@ export function useUserSession() {
 
 // * dep: src/main.tsx
 export const UserSession: composition = ({ children }) => {
-  const [isUserLogged, setIsLogged] = useState(Token.getToken().isValid());
+  const myToken = new Token();
+  const [isUserLogged, setIsLogged] = useState(myToken.isValid());
 
   // * Dispatcher closure wrapping setState:
   // * case dispatch true:	updates login status
@@ -61,7 +62,8 @@ export const UserSession: composition = ({ children }) => {
         deleteSession();
       })
       .finally(() => {
-        isUserLoggedDispatcher(Token.getToken().isValid());
+        const myToken = new Token();
+        isUserLoggedDispatcher(myToken.isValid());
       });
   };
 

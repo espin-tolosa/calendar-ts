@@ -40,7 +40,6 @@ export namespace CustomTypes {
   };
 }
 
-//TODO: create instantiation method to avoid sharing same ref in hole code for objects
 export namespace CustomValues {
   /**
    * A constant that stores an event that is considered null by any consumer
