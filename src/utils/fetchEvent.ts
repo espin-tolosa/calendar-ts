@@ -7,7 +7,7 @@ import { api } from "@/static/apiRoutes";
  */
 export async function fetchEvent_Day(
   action: CustomTypes.OptionsEventsAPI,
-  event: event = CustomValues.nullEvent
+  event: event = CustomValues.nullEvent()
 ) {
   const data = new FormData();
   const { mutable, ...filteredEvent } = event;
@@ -30,7 +30,7 @@ export async function fetchEvent_Day(
 }
 export async function fetchEvent(
   action: CustomTypes.OptionsEventsAPI,
-  event: event = CustomValues.nullEvent
+  event: event = CustomValues.nullEvent()
 ) {
   const data = new FormData();
   const { mutable, ...filteredEvent } = event;

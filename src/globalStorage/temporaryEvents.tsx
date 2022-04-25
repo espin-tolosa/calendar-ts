@@ -5,7 +5,7 @@ import { CustomValues } from "@/customTypes";
 //Template param: StateName
 
 //1. Choose your state
-const defaultState = CustomValues.nullEvent;
+const defaultState = CustomValues.nullEvent();
 
 const defaultDispaatcher: React.Dispatch<
   React.SetStateAction<typeof defaultState>

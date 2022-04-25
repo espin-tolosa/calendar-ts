@@ -36,8 +36,8 @@ describe("Testing custom object instances", () => {
     expect(token1).not.toBe(token2);
   });
   test("instantiating independent nullEvent objects", () => {
-    const token1 = CustomValues.nullEvent;
-    const token2 = CustomValues.nullEvent;
+    const token1 = CustomValues.nullEvent();
+    const token2 = CustomValues.nullEvent();
     expect(token1).not.toBe(token2);
   });
 });

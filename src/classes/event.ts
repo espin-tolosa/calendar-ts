@@ -37,7 +37,7 @@ export class EventClass {
   }
 
   static getParentEventFrom(state: Array<event>, id: number) {
-    return state.find((e) => e.id === id) || CustomValues.nullEvent;
+    return state.find((e) => e.id === id) || CustomValues.nullEvent();
   }
   static getParentEvent(family: Array<event>) {
     const parentId = family.at(0)?.id || 0;
@@ -47,7 +47,7 @@ export class EventClass {
         (e) =>
           EventClass.transformToParentId(e) === parentId &&
           e.job !== "#isChildren"
-      ) || CustomValues.nullEvent
+      ) || CustomValues.nullEvent()
     );
   }
 

@@ -19,7 +19,7 @@ export const useGetAllEventsFrom = ({ year, month }: CustomTypes.Month) => {
     //my local version of MySQL responds in the same way, but the version of freehostia gives an empty array with success code 201
     const start = `${fromYear}-${fromMonth}-01`;
     (async () => {
-      const eventDate = { ...CustomValues.nullEvent, start, end: start };
+      const eventDate = { ...CustomValues.nullEvent(), start, end: start };
       const response = await fetchEvent("GET_FROM", eventDate);
       try {
         const state = await response.json();

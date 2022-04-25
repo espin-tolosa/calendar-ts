@@ -45,13 +45,13 @@ export namespace CustomValues {
   /**
    * A constant that stores an event that is considered null by any consumer
    */
-  export const nullEvent: event = {
+  export const nullEvent = (): event => ({
     id: 0,
     client: "",
     job: "",
     start: "",
     end: "",
-  };
+  });
 
   // Create new instances each time a nullToken is required
   // it prevents againts sharing multiple instances of same object in different parts of the code

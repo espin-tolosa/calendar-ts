@@ -260,7 +260,7 @@ export const useStorage = (event: event) => {
 //    temporaryEventDispatcher(parentEvent);
 //  }}
 //  onTouchEnd={() => {
-//    temporaryEventDispatcher(CustomValues.nullEvent);
+//    temporaryEventDispatcher(CustomValues.nullEvent());
 //  }}
 //  onTouchMove={(e) => {
 //    e.preventDefault();
