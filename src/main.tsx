@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import "@/index.css";
 import App from "@/App";
 import { UserSession } from "@/hooks/useUserSession";
@@ -18,8 +17,9 @@ import { TemporaryEvent } from "@/globalStorage/temporaryEvents";
 import { KeyBuffer } from "@/globalStorage/keyBuffer";
 import { EventInController } from "@/globalStorage/eventSelected";
 import { PushedDays } from "@/hooks/usePushDays";
+import { createRoot } from "react-dom/client";
 
-ReactDOM.render(
+createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <DOMRefs.Context>
       <PushedDays>
@@ -52,6 +52,5 @@ ReactDOM.render(
         </KeyBuffer>
       </PushedDays>
     </DOMRefs.Context>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );

@@ -31,9 +31,10 @@ export interface loginForm {
   password: string;
 }
 
+export type encodedTokenFromAPI = { data: string };
 export interface token {
-  name: string;
   exp: number;
+  aud: string;
   data: { iss: string; usr: string; aut: string; rus: string };
   // whatever else is in the JWT.
 }

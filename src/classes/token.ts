@@ -1,30 +1,87 @@
 import jwt_decode from "jwt-decode";
 import { DateService } from "@/utils/Date";
-import { token } from "@/interfaces";
-type EncodedToken = {
-  data: string | undefined;
-};
+import { encodedTokenFromAPI, token } from "@/interfaces";
+import {
+  parseURITokens,
+  recoverEncodedTokensFromCookies,
+} from "@/io/cookieStorage";
+import { CustomValues } from "@/customTypes";
 
-const nullToken: token = {
-  name: "",
-  exp: 0,
-  data: { iss: "", usr: "", aut: "", rus: "" },
-};
+//This class recieves any data from external api and returns a parsed valid object of either type:
+// - CustomType.null...
+// - Valid Object
+export namespace ExternalParser {
+  //any because In fact encodedToken from external api could be anything
+  //even when actually its type is encodedTokenFromAPI I might change in future
+  export function fromTokenPHP(encodedToken: encodedTokenFromAPI) {
+    //Full tested
+    const checkValid =
+      typeof encodedToken == "object" && "data" in encodedToken;
+    if (!checkValid) {
+      return CustomValues.nullToken(); //checked
+    }
+
+    try {
+      const token = jwt_decode<token>(encodedToken.data);
+      if (
+        typeof token === "object" &&
+        "exp" in token &&
+        typeof token.exp === "number" &&
+        "aud" in token &&
+        typeof token.aud === "string" &&
+        typeof token.data === "object" &&
+        "iss" in token.data &&
+        typeof token.data.iss === "string" &&
+        "usr" in token.data &&
+        typeof token.data.usr === "string" &&
+        "aut" in token.data &&
+        typeof token.data.aut === "string" &&
+        "rus" in token.data &&
+        typeof token.data.rus === "string"
+      ) {
+        const filteredToken: token = {
+          exp: token.exp,
+          aud: token.aud,
+          data: {
+            iss: token.data.iss,
+            usr: token.data.usr,
+            aut: token.data.aut,
+            rus: token.data.rus,
+          },
+        };
+        return filteredToken; //checked
+      } else {
+        return CustomValues.nullToken(); //checked
+      }
+    } catch {
+      return CustomValues.nullToken(); //checked
+    }
+  }
+}
+
+/**
+ * Token class current usage:
+ *
+ * Calendar Access:
+ *  - new Token: to emitt null Tokens
+ *  - Token.getToken(): to retrieve and decode a token from document.cookie
+ *
+ * Calendar Credential Level:
+ *  - Token.user
+ *  - Token.isAuth
+ *  -
+ */
 
 export class Token {
-  constructor(token: token = nullToken) {
+  private token;
+  constructor(token = CustomValues.nullToken()) {
     this.token = token;
   }
-  private token: token;
 
   // Is valid token just do some checks in any found token
   public isValid() {
     const expired = this.token.exp > DateService.secondsSinceEpoch();
     return expired && !!this.token.data.usr.length;
-  }
-
-  public expires() {
-    return this.token.exp;
   }
 
   public user() {
@@ -42,50 +99,24 @@ export class Token {
     return sameAuth && sameName;
   }
 
+  public createTokenFromCookies = () => {
+    const tokenCookies = recoverEncodedTokensFromCookies();
+    const tokensPull = parseURITokens(tokenCookies);
+    return tokensPull;
+  };
+
+  public decodeTokens = (tokensPull: Array<encodedTokenFromAPI>) => {
+    const parsedToken: Array<token> = tokensPull
+      .map(ExternalParser.fromTokenPHP)
+      .sort((prev, next) => prev.exp - next.exp);
+    return parsedToken;
+  };
+
   public static getToken = () => {
-    const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
-
-    //All captured cookies are filtered to remove session cookies
-    //there is no other way to get token cookies.
-    //By design emitted tokens change its name randomly each 24hours
-    //so there is no easy pattern in there. In fact yes it is, anyone could
-    //make a function called isJWTToken matching some sort of JWT pattern
-    //TODO: make a function isJWTToken to filter cookies exactly
-    const tokenCookies: Array<string | undefined> = cookies
-      .filter((cookie) => {
-        const cookieName = cookie.split("=").at(0);
-        return cookieName !== "PHPSESSID";
-      })
-      .map((cookie) => cookie.split("=").at(1));
-
+    const tokenCookies = recoverEncodedTokensFromCookies();
+    const tokensPull = parseURITokens(tokenCookies);
     //Mapping all remaining cookies of type JWT Token to decode and parse them
     // It should be only one, but if cookies deletion failed could be more
-    const tokensPull = tokenCookies.map((cookie): EncodedToken => {
-      if (!cookie) {
-        return { data: undefined };
-      }
-
-      let decoded: string = "";
-      try {
-        decoded = decodeURIComponent(cookie);
-      } catch (e: any) {
-        //catch type must be any, Typescript doesn't allow to specify type as URIError
-        console.error("URIError", e instanceof URIError); // true
-      }
-
-      if (!decoded) {
-        return { data: undefined };
-      }
-
-      let token: EncodedToken = { data: undefined };
-      try {
-        token = JSON.parse(decoded);
-      } catch (e: any) {
-        console.error("JSON parse SyntaxError", e instanceof SyntaxError);
-      }
-
-      return token;
-    });
 
     try {
       const decodedTokens: Array<Token> = tokensPull.map((encodeToken) => {
@@ -94,7 +125,7 @@ export class Token {
 
       //Sort tokens giving the bigger exp date in the first position of the array
       const sortedTokens = decodedTokens.sort(
-        (prev, next) => next.expires() - prev.expires()
+        (prev, next) => next.token.exp - prev.token.exp
       );
       if (!sortedTokens[0].isValid()) {
         throw Error("Invalid token");

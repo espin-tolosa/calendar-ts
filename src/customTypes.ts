@@ -1,4 +1,4 @@
-import { event } from "./interfaces";
+import { encodedTokenFromAPI, event, token } from "./interfaces";
 
 export namespace CustomTypes {
   /**
@@ -40,6 +40,7 @@ export namespace CustomTypes {
   };
 }
 
+//TODO: create instantiation method to avoid sharing same ref in hole code for objects
 export namespace CustomValues {
   /**
    * A constant that stores an event that is considered null by any consumer
@@ -51,4 +52,14 @@ export namespace CustomValues {
     start: "",
     end: "",
   };
+
+  // Create new instances each time a nullToken is required
+  // it prevents againts sharing multiple instances of same object in different parts of the code
+  export const nullToken = (): token => ({
+    exp: 0,
+    aud: "",
+    data: { iss: "", usr: "", aut: "", rus: "" },
+  });
+
+  export const nullEncodedToken = (): encodedTokenFromAPI => ({ data: "" });
 }
