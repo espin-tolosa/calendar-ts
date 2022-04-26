@@ -1,30 +1,31 @@
-//type EncodedToken = string | undefined;
-//TODO: make a function isJWTToken to filter cookies exactly
-//All captured cookies are filtered to remove session cookies
-//there is no other way to get token cookies.
-//By design emitted tokens change its name randomly each 24hours
-//so there is no easy pattern in there. In fact yes it is, anyone could
-//make a function called isJWTToken matching some sort of JWT pattern
-
 import { nullEncodedToken } from "@/customTypes";
 import { encodedTokenFromAPI } from "@/interfaces";
 import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
 
-export const recoverEncodedTokensFromCookies = () => {
+export namespace DocumentIO {
+  //This function read all cookies from the document and returns non-empty parsed objects as {data: "encoded token..."}
+  export function readCookies() {
+    const tokenCookies = arrangeDocumentCookies();
+    return parseURITokens(tokenCookies);
+  }
+}
+
+function arrangeDocumentCookies() {
   const cookies = window.document.cookie
     .split(";")
     .map((cookie) => cookie.trim().split("=")[1]);
 
   return cookies;
-};
+}
 
-export const parseURITokens = (encodedTokens: string[]) => {
-  const tokensPull = encodedTokens.map(decodeURIhandler);
+function parseURITokens(encodedTokens: string[]) {
+  return encodedTokens
+    .map(hDecodeURI)
+    .filter((encodedToken) => encodedToken.data !== "");
+}
 
-  return tokensPull;
-};
-
-const decodeURIhandler = (cookie: string): encodedTokenFromAPI => {
+//map handler
+const hDecodeURI = (cookie: string): encodedTokenFromAPI => {
   if (!cookie) {
     return nullEncodedToken();
   }
@@ -47,6 +48,8 @@ const decodeURIhandler = (cookie: string): encodedTokenFromAPI => {
     return nullEncodedToken();
   }
 
+  // This line parses the outcoming cookie to check if it fits the current implementation of the API which sends an object as: {data: "..."}
+  // if the parsed cookie doesn't fit this object an nullEncodedToken is returned
   if (!checkObjectValidKeys(nameAndType(nullEncodedToken), encodedToken)) {
     return nullEncodedToken();
   }

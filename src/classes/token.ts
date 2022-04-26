@@ -1,12 +1,9 @@
 import jwt_decode from "jwt-decode";
+import { nullToken } from "@/customTypes";
 import { DateService } from "@/utils/Date";
 import { encodedTokenFromAPI, token } from "@/interfaces";
-import {
-  parseURITokens,
-  recoverEncodedTokensFromCookies,
-} from "@/io/cookieStorage";
 import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
-import { nullToken } from "@/customTypes";
+import { DocumentIO } from "@/window/cookieStorage";
 
 //This class recieves any data from external api and returns a parsed valid object of either type:
 // - CustomType.null...
@@ -15,8 +12,8 @@ export namespace ExternalParser {
   //any because In fact encodedToken from external api could be anything
   //even when actually its type is encodedTokenFromAPI I might change in future
 
+  //Full tested
   export function fromTokenPHP(encodedToken: encodedTokenFromAPI) {
-    //Full tested
     const checkValid =
       typeof encodedToken == "object" && "data" in encodedToken;
     if (!checkValid) {
@@ -30,7 +27,6 @@ export namespace ExternalParser {
       return nullToken(); //checked
     }
     //Check decoded token match all the fields of an empty token
-    //TODO:  this block could be engaged inside checkObjectValidkeys by improving the function with recursive object key searching
     const { data, ...header } = nullToken();
     const validHeader = checkObjectValidKeys(nameAndType(header), token);
     const validData = checkObjectValidKeys(nameAndType(data), token.data);
@@ -63,6 +59,7 @@ export class Token {
   }
 
   // Is valid token just do some checks in any found token
+  //TODO: check external methods
   public isValid() {
     const expired = this.token.exp > DateService.secondsSinceEpoch();
     return expired && !!this.token.data.usr.length;
@@ -83,11 +80,8 @@ export class Token {
     return sameAuth && sameName;
   }
 
-  //Todo
   private createTokenFromCookies = () => {
-    const tokenCookies = recoverEncodedTokensFromCookies();
-    const tokensPull = parseURITokens(tokenCookies);
-    return tokensPull;
+    return DocumentIO.readCookies();
   };
 
   private decodeTokens = (tokensPull: Array<encodedTokenFromAPI>) => {

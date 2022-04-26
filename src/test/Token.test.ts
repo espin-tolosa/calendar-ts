@@ -2,10 +2,7 @@
 import { ExternalParser, Token } from "@/classes/token";
 import { nullEncodedToken, nullEvent, nullToken } from "@/customTypes";
 import { encodedTokenFromAPI, event, token } from "@/interfaces";
-import {
-  parseURITokens,
-  recoverEncodedTokensFromCookies,
-} from "@/io/cookieStorage";
+import { DocumentIO } from "@/window/cookieStorage";
 
 const token0 =
   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTA4ODY1NTgsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.ktUG4M850xD0xXHfrgRlxX9VF5KkPCoYoIB_OQ0ZX_U";
@@ -28,10 +25,10 @@ test("Within 31 days from 01 of march will be 01 of april", () => {
   const token2 =
     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTA4ODY1NTgsImRhdGEiOnsiaXNzIjoibG9jYWxob3N0IiwidXNyIjoic2FtdWVsIiwiYXV0IjoicmVhZC13cml0ZSIsInJ1cyI6ImFsbCJ9fQ.iVfEX_VgcHU1Nr95Qyb0vcfHZSTFnvazqn2K1toLuuw";
   window.document.cookie = `PHPSESSID=3fc65ec6c17a9cb6482be8378a6414fb; 762459e65c7f3357f4009b093d237344=%7B%22data%22%3A%22${token1}%22%7D; 762459e65c7f3357f4009b093d237344=%7B%22data%22%3A%22${token2}%22%7D`;
-  const encodedTokens = recoverEncodedTokensFromCookies();
-  const uriParsedTokens = parseURITokens(encodedTokens);
+  const tokens = DocumentIO.readCookies();
 
-  //console.log("ANY COOKIES", uriParsedTokens);
+  const expected = [{ data: token1 }, { data: token2 }];
+  expect(tokens).toStrictEqual(expected);
 });
 
 describe("Testing Token Class", () => {
