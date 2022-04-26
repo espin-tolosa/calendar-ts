@@ -282,7 +282,7 @@ export const EventsDispatcher: composition = ({ children }) => {
 const useFetchEvents = () => {};
 //export function fetchEvent_v2(
 //  action: CustomTypes.OptionsEventsAPI,
-//  event: event = CustomValues.nullEvent()
+//  event: event = nullFactory<event>("event")
 //): Promise<Array<event>> {
 //  const method = "POST"; //https method, nothing to do with action
 //  const body = new FormData();

@@ -36,7 +36,14 @@ export type encodedTokenFromAPI = { data: string };
 export interface token {
   exp: number;
   aud: string;
-  data: { iss: string; usr: string; aut: string; rus: string };
+  data: tokenData;
+}
+
+export interface tokenData {
+  iss: string;
+  usr: string;
+  aut: string;
+  rus: string;
 }
 
 export type setstate<S> = React.Dispatch<React.SetStateAction<S>>;
