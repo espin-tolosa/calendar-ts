@@ -5,8 +5,8 @@ import {
   parseURITokens,
   recoverEncodedTokensFromCookies,
 } from "@/io/cookieStorage";
-import { nullFactory } from "@/customTypes";
 import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
+import { nullToken } from "@/customTypes";
 
 //This class recieves any data from external api and returns a parsed valid object of either type:
 // - CustomType.null...
@@ -20,22 +20,22 @@ export namespace ExternalParser {
     const checkValid =
       typeof encodedToken == "object" && "data" in encodedToken;
     if (!checkValid) {
-      return nullFactory<token>("token"); //checked
+      return nullToken(); //checked
     }
 
     let token: token;
     try {
       token = jwt_decode<token>(encodedToken.data);
     } catch {
-      return nullFactory<token>("token"); //checked
+      return nullToken(); //checked
     }
     //Check decoded token match all the fields of an empty token
     //TODO:  this block could be engaged inside checkObjectValidkeys by improving the function with recursive object key searching
-    const { data, ...header } = nullFactory<token>("token");
+    const { data, ...header } = nullToken();
     const validHeader = checkObjectValidKeys(nameAndType(header), token);
     const validData = checkObjectValidKeys(nameAndType(data), token.data);
     if (!validHeader || !validData) {
-      return nullFactory<token>("token"); //checked
+      return nullToken(); //checked
     }
 
     //Check-passed and return a valid token
@@ -101,7 +101,7 @@ export class Token {
     const tokensPull = this.createTokenFromCookies();
     const tokens = this.decodeTokens(tokensPull);
     if (tokens.length === 0) {
-      return nullFactory<token>("token"); //checked
+      return nullToken(); //checked
     } else {
       return tokens[0];
     }

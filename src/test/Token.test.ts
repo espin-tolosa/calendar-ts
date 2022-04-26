@@ -1,6 +1,6 @@
 /** @jest-environment jsdom */
 import { ExternalParser, Token } from "@/classes/token";
-import { nullFactory } from "@/customTypes";
+import { nullEncodedToken, nullEvent, nullToken } from "@/customTypes";
 import { encodedTokenFromAPI, event, token } from "@/interfaces";
 import {
   parseURITokens,
@@ -58,18 +58,19 @@ describe("Testing Token Class", () => {
 
 describe("Testing custom object instances", () => {
   test("Multiple instances of Null Token create different objects each time", () => {
-    const token1 = nullFactory<token>("token");
-    const token2 = nullFactory<token>("token");
+    const token1 = nullToken();
+    const token2 = nullToken();
+    token2.aud = "dsa";
     expect(token1).not.toBe(token2);
   });
   test("Multiple instances of Null Encoded Token create different objects each time", () => {
-    const token1 = nullFactory<encodedTokenFromAPI>("encoded");
-    const token2 = nullFactory<encodedTokenFromAPI>("encoded");
+    const token1 = nullEncodedToken();
+    const token2 = nullEncodedToken();
     expect(token1).not.toBe(token2);
   });
   test("instantiating independent nullEvent objects", () => {
-    const token1 = nullFactory<event>("event");
-    const token2 = nullFactory<event>("event");
+    const token1 = nullEvent();
+    const token2 = nullEvent();
     expect(token1).not.toBe(token2);
   });
 });
@@ -80,7 +81,7 @@ describe("Testing Parser of Token from External API", () => {
   test("Parse any given invalid data as nullToken", () => {
     const invalidToken = mockAnyDataAs<encodedTokenFromAPI>({});
     const result = ExternalParser.fromTokenPHP(invalidToken);
-    expect(result).toStrictEqual(nullFactory<token>("token"));
+    expect(result).toStrictEqual(nullToken());
   });
 
   test("Parse a Valid Token from External Parser API", () => {
@@ -105,7 +106,7 @@ describe("Testing Parser of Token from External API", () => {
       data: "",
     });
     const result = ExternalParser.fromTokenPHP(validToken);
-    expect(result).toEqual(nullFactory<token>("token"));
+    expect(result).toEqual(nullToken());
   });
 
   test("Parse a incoplete token from External Parser API as nullToken", () => {
@@ -113,7 +114,7 @@ describe("Testing Parser of Token from External API", () => {
       data: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEyNTA4ODY1NTgsImRhdGEiOnsiaXNzIjoibG9jYWxob3N0IiwidXNyIjoic2FtdWVsIiwiYXV0IjoicmVhZC13cml0ZSIsInJ1cyI6ImFsbCJ9fQ.wRvVQoOCz4XV6lf92k9dQcw8qaGdQA2hffOo-hY5tC4",
     });
     const result = ExternalParser.fromTokenPHP(validToken);
-    expect(result).toEqual(nullFactory<token>("token"));
+    expect(result).toEqual(nullToken());
   });
 });
 //

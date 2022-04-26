@@ -1,4 +1,4 @@
-import { CustomTypes, nullFactory } from "@/customTypes";
+import { CustomTypes, nullEvent } from "@/customTypes";
 import { event, objectKeys } from "@/interfaces/index";
 import { api } from "@/static/apiRoutes";
 
@@ -7,7 +7,7 @@ import { api } from "@/static/apiRoutes";
  */
 export async function fetchEvent_Day(
   action: CustomTypes.OptionsEventsAPI,
-  event: event = nullFactory<event>("event")
+  event: event = nullEvent()
 ) {
   const data = new FormData();
   const { mutable, ...filteredEvent } = event;
@@ -30,7 +30,7 @@ export async function fetchEvent_Day(
 }
 export async function fetchEvent(
   action: CustomTypes.OptionsEventsAPI,
-  event: event = nullFactory<event>("event")
+  event: event = nullEvent()
 ) {
   const data = new FormData();
   const { mutable, ...filteredEvent } = event;

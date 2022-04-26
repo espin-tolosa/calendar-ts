@@ -1,11 +1,11 @@
-import { nullFactory } from "@/customTypes";
-import { composition, event } from "@/interfaces";
+import { nullEvent } from "@/customTypes";
+import { composition } from "@/interfaces";
 import { createContext, useContext, useState } from "react";
 
 //Template param: StateName
 
 //1. Choose your state
-const defaultState = nullFactory<event>("event");
+const defaultState = nullEvent();
 
 const defaultDispaatcher: React.Dispatch<
   React.SetStateAction<typeof defaultState>

@@ -6,7 +6,7 @@
 //so there is no easy pattern in there. In fact yes it is, anyone could
 //make a function called isJWTToken matching some sort of JWT pattern
 
-import { nullFactory } from "@/customTypes";
+import { nullEncodedToken } from "@/customTypes";
 import { encodedTokenFromAPI } from "@/interfaces";
 import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
 
@@ -25,31 +25,30 @@ export const parseURITokens = (encodedTokens: string[]) => {
 };
 
 const decodeURIhandler = (cookie: string): encodedTokenFromAPI => {
-  const nullEncodedToken = nullFactory<encodedTokenFromAPI>("encoded");
   if (!cookie) {
-    return nullEncodedToken;
+    return nullEncodedToken();
   }
 
   let decoded: string;
   try {
     decoded = decodeURIComponent(cookie);
   } catch {
-    return nullEncodedToken;
+    return nullEncodedToken();
   }
 
   if (decoded === "") {
-    return nullEncodedToken;
+    return nullEncodedToken();
   }
 
   let encodedToken: encodedTokenFromAPI;
   try {
     encodedToken = JSON.parse(decoded);
   } catch (e: any) {
-    return nullEncodedToken;
+    return nullEncodedToken();
   }
 
   if (!checkObjectValidKeys(nameAndType(nullEncodedToken), encodedToken)) {
-    return nullEncodedToken;
+    return nullEncodedToken();
   }
 
   return { ...encodedToken };

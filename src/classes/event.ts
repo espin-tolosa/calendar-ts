@@ -1,6 +1,6 @@
 // Type of event data
 
-import { nullFactory } from "@/customTypes";
+import { nullEvent } from "@/customTypes";
 import { event } from "@/interfaces";
 
 // Parent: has all its attributes matched with some database entry
@@ -37,7 +37,7 @@ export class EventClass {
   }
 
   static getParentEventFrom(state: Array<event>, id: number) {
-    return state.find((e) => e.id === id) || nullFactory<event>("event");
+    return state.find((e) => e.id === id) || nullEvent();
   }
   static getParentEvent(family: Array<event>) {
     const parentId = family.at(0)?.id || 0;
@@ -47,7 +47,7 @@ export class EventClass {
         (e) =>
           EventClass.transformToParentId(e) === parentId &&
           e.job !== "#isChildren"
-      ) || nullFactory<event>("event")
+      ) || nullEvent()
     );
   }
 

@@ -1,11 +1,10 @@
-import { CustomTypes, nullFactory } from "@/customTypes";
+import { CustomTypes, nullEvent } from "@/customTypes";
 import { fetchEvent } from "@/utils/fetchEvent";
 import { zeroPadd } from "@/utils/zeroPadd";
 import { useEffect } from "react";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 import { useEventDispatch } from "../hooks/useEventsState";
 import { useCleanSession } from "@/hooks/useCleanSession";
-import { event } from "@/interfaces";
 
 export const useGetAllEventsFrom = ({ year, month }: CustomTypes.Month) => {
   const fromYear = year;
@@ -20,7 +19,7 @@ export const useGetAllEventsFrom = ({ year, month }: CustomTypes.Month) => {
     //my local version of MySQL responds in the same way, but the version of freehostia gives an empty array with success code 201
     const start = `${fromYear}-${fromMonth}-01`;
     (async () => {
-      const eventDate = { ...nullFactory<event>("event"), start, end: start };
+      const eventDate = { ...nullEvent(), start, end: start };
       const response = await fetchEvent("GET_FROM", eventDate);
       try {
         const state = await response.json();
