@@ -1,5 +1,3 @@
-import { ReactChildren, ReactChild } from "react";
-
 export namespace event {
   export type date = string;
 }
@@ -9,7 +7,7 @@ export interface objectKeys<V> {
 }
 
 export interface Children {
-  children: ReactChild | ReactChildren;
+  children: React.ReactNode;
 }
 
 export interface event {
@@ -42,6 +40,7 @@ export interface token {
 
 export interface tokenData {
   iss: string;
+  uid: string;
   usr: string;
   aut: string;
   rus: string;

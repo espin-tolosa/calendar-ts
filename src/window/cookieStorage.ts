@@ -2,9 +2,11 @@ import { nullEncodedToken } from "@/customTypes";
 import { encodedTokenFromAPI } from "@/interfaces";
 import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
 
+//Tested on describe: "Testing window api read encoded tokens"
 export namespace DocumentIO {
   //This function read all cookies from the document and returns non-empty parsed objects as {data: "encoded token..."}
-  export function readCookies() {
+
+  export function readTokens() {
     const tokenCookies = arrangeDocumentCookies();
     return parseURITokens(tokenCookies);
   }

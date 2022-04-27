@@ -1,101 +1,63 @@
-import jwt_decode from "jwt-decode";
 import { nullToken } from "@/customTypes";
 import { DateService } from "@/utils/Date";
-import { encodedTokenFromAPI, token } from "@/interfaces";
-import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
 import { DocumentIO } from "@/window/cookieStorage";
-
-//This class recieves any data from external api and returns a parsed valid object of either type:
-// - CustomType.null...
-// - Valid Object
-export namespace ExternalParser {
-  //any because In fact encodedToken from external api could be anything
-  //even when actually its type is encodedTokenFromAPI I might change in future
-
-  //Full tested
-  export function fromTokenPHP(encodedToken: encodedTokenFromAPI) {
-    const checkValid =
-      typeof encodedToken == "object" && "data" in encodedToken;
-    if (!checkValid) {
-      return nullToken(); //checked
-    }
-
-    let token: token;
-    try {
-      token = jwt_decode<token>(encodedToken.data);
-    } catch {
-      return nullToken(); //checked
-    }
-    //Check decoded token match all the fields of an empty token
-    const { data, ...header } = nullToken();
-    const validHeader = checkObjectValidKeys(nameAndType(header), token);
-    const validData = checkObjectValidKeys(nameAndType(data), token.data);
-    if (!validHeader || !validData) {
-      return nullToken(); //checked
-    }
-
-    //Check-passed and return a valid token
-    return { ...token, data: { ...token.data } };
-  }
-}
+import { safeDecodeJWT } from "@/modules/jwt";
 
 /**
  * Token class current usage:
  *
+ * Important:
+ * new instances of class Token hides side effect data accessing from window.document.cookie
+ * but access is well controlled
+ *
  * Calendar Access:
- *  - new Token: to emitt null Tokens
- *  - Token.getToken(): to retrieve and decode a token from document.cookie
  *
  * Calendar Credential Level:
+ *
  *  - Token.user
  *  - Token.isAuth
  *  -
  */
-
 export class Token {
-  public token;
+  private token;
   constructor() {
-    this.token = this.getToken();
+    this.token = this.readAndDecodeTokens(); //hidden deps: [jwt_decode, DocumentIO.readTokens]
   }
 
-  // Is valid token just do some checks in any found token
-  //TODO: check external methods
-  public isValid() {
-    const expired = this.token.exp > DateService.secondsSinceEpoch();
-    return expired && !!this.token.data.usr.length;
+  public data() {
+    return Object.freeze(this.token.data);
   }
 
   public user() {
     return this.token.data.usr || "invited";
+  }
+  /**
+   * A valid token is not expired and has a non-empty user name
+   */
+  public isValid() {
+    const expired = this.token.exp > DateService.secondsSinceEpoch();
+    return expired && !!this.token.data.usr.length;
   }
 
   public isAuth() {
     return this.token.data.aut === "read-write";
   }
 
-  public isSamePerson(other: Token) {
-    const sameAuth = this.isAuth() === other.isAuth();
-    const sameName = this.user() === other.user();
-
-    return sameAuth && sameName;
+  public isSameUser(other: Token) {
+    return this.token.data.uid === other.token.data.uid;
   }
 
-  private createTokenFromCookies = () => {
-    return DocumentIO.readCookies();
-  };
-
-  private decodeTokens = (tokensPull: Array<encodedTokenFromAPI>) => {
-    const parsedToken: Array<token> = tokensPull
-      .map(ExternalParser.fromTokenPHP)
+  /**
+   * call to no-throw module wrapper: safeDecodeJWT <- jwt_decode
+   * call to window.document accessor: cookie
+   * @returns last valid decoded token
+   */
+  private readAndDecodeTokens = () => {
+    const tokens = DocumentIO.readTokens()
+      .map(safeDecodeJWT)
       .sort((prev, next) => next.exp - prev.exp);
-    return parsedToken;
-  };
-
-  private getToken = () => {
-    const tokensPull = this.createTokenFromCookies();
-    const tokens = this.decodeTokens(tokensPull);
     if (tokens.length === 0) {
-      return nullToken(); //checked
+      return nullToken();
     } else {
       return tokens[0];
     }

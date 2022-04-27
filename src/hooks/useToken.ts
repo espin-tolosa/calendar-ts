@@ -10,7 +10,7 @@ export const useToken = () => {
       const currentToken = new Token();
       //Change the name of the person if the token name changes
       // TODO: user shouldbe identified by its id, as user name it's not unique: Change name tracking by id Id tracking whenever the token reflect this information, so after a backend commit
-      if (!currentToken.isSamePerson(token)) {
+      if (!currentToken.isSameUser(token)) {
         setToken(currentToken);
       }
       //Set to null Token if current token is not valid

@@ -8,7 +8,7 @@ type primitiveTypes =
   | "symbol"
   | "undefined";
 
-type kv = {
+type propTypes = {
   name: PropertyKey;
   type: primitiveTypes;
 };
@@ -25,7 +25,10 @@ function hasOwnProperty<X extends {}, Y extends PropertyKey>(
 }
 
 // This function could recieve anything as object is intended to come from outside, so even if I type object as object I can't remove the first check because it is checking the run-time
-export function checkObjectValidKeys(propsToCheck: Array<kv>, object: unknown) {
+export function checkObjectValidKeys(
+  propsToCheck: Array<propTypes>,
+  object: unknown
+) {
   //Run-time check
   if (object === null || typeof object !== "object") {
     return false;

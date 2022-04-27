@@ -1,54 +1,99 @@
 /** @jest-environment jsdom */
-import { ExternalParser, Token } from "@/classes/token";
+import { Token } from "@/classes/token";
 import { nullEncodedToken, nullEvent, nullToken } from "@/customTypes";
-import { encodedTokenFromAPI, event, token } from "@/interfaces";
+import { encodedTokenFromAPI, token } from "@/interfaces";
+import { safeDecodeJWT } from "@/modules/jwt";
 import { DocumentIO } from "@/window/cookieStorage";
 
-const token0 =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTA4ODY1NTgsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.ktUG4M850xD0xXHfrgRlxX9VF5KkPCoYoIB_OQ0ZX_U";
-const token1 =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTA4ODY1NTgsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.eWgPyvz7BnCNLAqoCqx1bGFrdGUqAPmZzhdQErPLyBU";
-const token2 =
-  "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDAwMDAwMDAsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.YTbzSVjr8ihHblsdTusL_5lUMLWem72A2R54Gnw7m38";
+// Note about testing thread execution:
+// after defining some constants and helper functions I need to mock the content of window.document.cookie
+// take into account that each time I assign a new value to that mock, it will be available for the rest of the thread execution from this point
+// so the paradigm used here is to change it puntually, each change is marked down with a comment, to ease readability.
 
-function mockAnyDataAs<T = unknown>(data: any): T {
+const token0 =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTA4ODY1NTgsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVpZCI6IjEiLCJ1c3IiOiJzYW11ZWwiLCJhdXQiOiJyZWFkLXdyaXRlIiwicnVzIjoiYWxsIn19.AIz7jwEXxDMpYdz0VvfoIECXF44gv93yVSS4RXT07iw";
+const token1 =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTA4ODY1NTgsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVpZCI6IjEiLCJ1c3IiOiJzYW11ZWwiLCJhdXQiOiJyZWFkLXdyaXRlIiwicnVzIjoiYWxsIn19.jdB69MJrYAb5j51In0kVqgyyBD1K_TqJ78bIFDRJimg";
+/**
+ * parse valid token with exp:1700000000
+ */
+const token2 =
+  "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDAwMDAwMDAsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVpZCI6IjEiLCJ1c3IiOiJzYW11ZWwiLCJhdXQiOiJyZWFkLXdyaXRlIiwicnVzIjoiYWxsIn19.S9SzUoP1EHTosfU_NmStidvy5VfOUArHJ4oKu0aKAJQ";
+/**
+ * parse a valid token:
+			exp: 1650886558,
+      aud: "6eee49870e5c6989f577212ccad87a71bcfc7bff",
+      data: {
+        iss: "localhost",
+				uid: "1",
+        usr: "samuel",
+        aut: "read-write",
+        rus: "all",
+ */
+const token3 = //parse valid token
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTA4ODY1NTgsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVpZCI6IjEiLCJ1c3IiOiJzYW11ZWwiLCJhdXQiOiJyZWFkLXdyaXRlIiwicnVzIjoiYWxsIn19.AIz7jwEXxDMpYdz0VvfoIECXF44gv93yVSS4RXT07iw";
+/**
+ * parse falsy or ill-formed token
+ */
+const token4 =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEyNTA4ODY1NTgsImRhdGEiOnsiaXNzIjoibG9jYWxob3N0IiwidWlkIjoiMSIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.WCEWZBcrafkVaThL0_YfQvDhILZT-nKMUS0o2xd4f6I";
+
+/**
+ * parse a valid token:
+			exp: 1650886558,
+      aud: "6eee49870e5c6989f577212ccad87a71bcfc7bff",
+      data: {
+        iss: "localhost",
+				uid: "2",
+        usr: "thomas",
+        aut: "read",
+        rus: "all",
+ */
+const token5 =
+  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEyNTA4ODY1NTgsImRhdGEiOnsiaXNzIjoibG9jYWxob3N0IiwidWlkIjoiMiIsInVzciI6InRob21hcyIsImF1dCI6InJlYWQiLCJydXMiOiJhbGwifX0.EJBfyBnLjdx0OxzSaG8TaJNIISEXzj4B3c7WkhNxKh8";
+
+const expidedPHPSESSID = "PHPSESSID=3fc65ec6c17a9cb6482be8378a6414fb";
+const expidedToken = (token: string) =>
+  `762459e65c7f3357f4009b093d237344=%7B%22data%22%3A%22${token}%22%7D`;
+
+/**
+ * Allows to generate any kind data coming from external api
+ * It's usefull to create ill-formed data of certain custom type
+ * or event to create valid data as needed
+ */
+
+function ExternalData<T>(data: any): T {
   return JSON.parse(JSON.stringify(data));
 }
 
+//! Mock window.document and assign a first value
 Object.defineProperty(window.document, "cookie", {
   writable: true,
+  value: `
+	${expidedPHPSESSID};
+	${expidedToken(token0)};
+	${expidedToken(token1)};
+	${expidedToken(token2)}`,
 });
-//
-test("Within 31 days from 01 of march will be 01 of april", () => {
-  const token1 =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NTA4ODY1NTgsImRhdGEiOnsiaXNzIjoibG9jYWxob3N0IiwidXNyIjoic2FtdWVsIiwiYXV0IjoicmVhZC13cml0ZSIsInJ1cyI6ImFsbCJ9fQ.8YByi-JVJR2mX7PeJuZGo7EmHgs2uA42y4cxhytED58";
-  const token2 =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTA4ODY1NTgsImRhdGEiOnsiaXNzIjoibG9jYWxob3N0IiwidXNyIjoic2FtdWVsIiwiYXV0IjoicmVhZC13cml0ZSIsInJ1cyI6ImFsbCJ9fQ.iVfEX_VgcHU1Nr95Qyb0vcfHZSTFnvazqn2K1toLuuw";
-  window.document.cookie = `PHPSESSID=3fc65ec6c17a9cb6482be8378a6414fb; 762459e65c7f3357f4009b093d237344=%7B%22data%22%3A%22${token1}%22%7D; 762459e65c7f3357f4009b093d237344=%7B%22data%22%3A%22${token2}%22%7D`;
-  const tokens = DocumentIO.readCookies();
 
-  const expected = [{ data: token1 }, { data: token2 }];
-  expect(tokens).toStrictEqual(expected);
+describe("Testing window api read encoded tokens", () => {
+  test("Mock document cookies with all kind of cookies expided from server: PHPSESSID and Tokens", () => {
+    const tokens = DocumentIO.readTokens();
+    const expected = [{ data: token0 }, { data: token1 }, { data: token2 }];
+
+    expect(tokens).toStrictEqual(expected);
+  });
 });
 
 describe("Testing Token Class", () => {
   test("Get the valid newer Token from cookies with multiple tokens", () => {
-    const uriToken = (token: string) =>
-      `762459e65c7f3357f4009b093d237344=%7B%22data%22%3A%22${token}%22%7D`;
-
-    window.document.cookie = `PHPSESSID=3fc65ec6c17a9cb6482be8378a6414fb;
-		${uriToken(token0)}; ${uriToken(token1)}; ${uriToken(token2)}`;
-
     const result = new Token();
-    expect(result.token).toStrictEqual({
-      exp: 1700000000,
-      aud: "6eee49870e5c6989f577212ccad87a71bcfc7bff",
-      data: {
-        iss: "localhost",
-        usr: "samuel",
-        aut: "read-write",
-        rus: "all",
-      },
+    expect(result.data()).toStrictEqual({
+      iss: "localhost",
+      uid: "1",
+      usr: "samuel",
+      aut: "read-write",
+      rus: "all",
     });
   });
 });
@@ -72,81 +117,91 @@ describe("Testing custom object instances", () => {
   });
 });
 
-describe("Testing Parser of Token from External API", () => {
-  //
-
-  test("Parse any given invalid data as nullToken", () => {
-    const invalidToken = mockAnyDataAs<encodedTokenFromAPI>({});
-    const result = ExternalParser.fromTokenPHP(invalidToken);
+describe("Testing module wrapper for jwt_decode called safeDecodeJWT", () => {
+  test("Parse unexpected data as nullToken", () => {
+    const unexpectedToken = ExternalData<encodedTokenFromAPI>({});
+    const result = safeDecodeJWT(unexpectedToken);
     expect(result).toStrictEqual(nullToken());
   });
 
-  test("Parse a Valid Token from External Parser API", () => {
-    const validToken = mockAnyDataAs<encodedTokenFromAPI>({
-      data: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTA4ODY1NTgsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.ktUG4M850xD0xXHfrgRlxX9VF5KkPCoYoIB_OQ0ZX_U",
+  test("Parse a falsy or ill-formed token as nullToken", () => {
+    const illFormedToken = ExternalData<encodedTokenFromAPI>({
+      data: "",
     });
-    const result = ExternalParser.fromTokenPHP(validToken);
+    const result = safeDecodeJWT(illFormedToken);
+    expect(result).toEqual(nullToken());
+  });
+
+  test("Parse an incomplete token as nullToken", () => {
+    const validToken = ExternalData<encodedTokenFromAPI>({
+      data: token4,
+    });
+    const result = safeDecodeJWT(validToken);
+    expect(result).toEqual(nullToken());
+  });
+
+  test("Parse a valid token", () => {
+    const validToken = ExternalData<encodedTokenFromAPI>({
+      data: token3,
+    });
+    const result = safeDecodeJWT(validToken);
     expect(result).toEqual({
       exp: 1650886558,
       aud: "6eee49870e5c6989f577212ccad87a71bcfc7bff",
       data: {
         iss: "localhost",
+        uid: "1",
         usr: "samuel",
         aut: "read-write",
         rus: "all",
       },
     });
   });
+});
 
-  test("Parse a falsy or malformed token that will throw an InvalidTokenError error within jwt_decode", () => {
-    const validToken = mockAnyDataAs<encodedTokenFromAPI>({
-      data: "",
-    });
-    const result = ExternalParser.fromTokenPHP(validToken);
-    expect(result).toEqual(nullToken());
+describe("Testing getters methods from Token class with a valid expided token", () => {
+  test("Testing get name in case of valid token", () => {
+    const token = new Token();
+    expect(token.user()).toBe("samuel");
   });
 
-  test("Parse a incoplete token from External Parser API as nullToken", () => {
-    const validToken = mockAnyDataAs<encodedTokenFromAPI>({
-      data: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEyNTA4ODY1NTgsImRhdGEiOnsiaXNzIjoibG9jYWxob3N0IiwidXNyIjoic2FtdWVsIiwiYXV0IjoicmVhZC13cml0ZSIsInJ1cyI6ImFsbCJ9fQ.wRvVQoOCz4XV6lf92k9dQcw8qaGdQA2hffOo-hY5tC4",
-    });
-    const result = ExternalParser.fromTokenPHP(validToken);
-    expect(result).toEqual(nullToken());
+  test("Testing getter isValid expect to be true", () => {
+    const token = new Token();
+    expect(token.isValid()).toBe(true);
+  });
+
+  test("Testing getter isAuth expect to be true", () => {
+    const token = new Token();
+    expect(token.isAuth()).toBe(true);
+  });
+
+  test("Testing getter is the same user", () => {
+    const token = new Token();
+    window.document.cookie = `${expidedToken(token5)};`; //!cookie content changed: to simulate another user is now logged
+    const other = new Token();
+    expect(token.isSameUser(other)).toBe(false);
+  });
+
+  test("Testing getter isAuth expect to be false as user is Thomas with aut = read", () => {
+    const token = new Token();
+    expect(token.isAuth()).toBe(false);
   });
 });
-//
-//test("No Cookies", () => {
-//  window.document.cookie =
-//    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-//  const encodedTokens = recoverEncodedTokensFromCookies();
-//  const uriParsedTokens = parseURITokens(encodedTokens);
-//
-//  console.log(uriParsedTokens);
-//});
-//
-//test("Parse a Non Expected Token to nullToken", () => {
-//  const mockToken = (cookie: string) => {
-//    const fromAPI: encodedTokenFromAPI = JSON.parse(
-//      JSON.stringify({ data: cookie })
-//    );
-//    return fromAPI;
-//  };
-//  const result1 = mockToken(
-//    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-//  );
-//  const result2 = mockToken(
-//    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjEyNTA4ODY1NTgsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.5E1BC5w6HLT8A8VYCopvOS5YlcZnSIaBOWABeXLnS-Q"
-//  );
-//  const result3 = mockToken(
-//    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTA4ODY1NTgsImF1ZCI6IjZlZWU0OTg3MGU1YzY5ODlmNTc3MjEyY2NhZDg3YTcxYmNmYzdiZmYiLCJkYXRhIjp7ImlzcyI6ImxvY2FsaG9zdCIsInVzciI6InNhbXVlbCIsImF1dCI6InJlYWQtd3JpdGUiLCJydXMiOiJhbGwifX0.ktUG4M850xD0xXHfrgRlxX9VF5KkPCoYoIB_OQ0ZX_U"
-//  );
-//
-//  //const result1 = ExternalParser.fromTokenPHP(fromAPI);
-//  const myToken = new Token();
-//
-//  const result = myToken.decodeTokens([result1, result2, result3]);
-//
-//  console.log("Result");
-//  console.log(result);
-//});
-//
+
+describe("Testing getters methods from Token class with a invalid expided token", () => {
+  test("Testing get name in case of valid token", () => {
+    window.document.cookie = ""; //!cookie content changed: to simulate no cookies stored in document
+    const token = new Token();
+    expect(token.user()).toBe("invited");
+  });
+
+  test("Testing getter isValid expect to be false", () => {
+    const token = new Token();
+    expect(token.isValid()).toBe(false);
+  });
+
+  test("Testing getter isAuth expect to be false", () => {
+    const token = new Token();
+    expect(token.isAuth()).toBe(false);
+  });
+});
