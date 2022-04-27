@@ -4,7 +4,8 @@ import Login from "@/components/Login/main";
 import { useUserSession } from "./hooks/useUserSession";
 
 export default function App() {
-  const { isUserLogged } = useUserSession();
+  const { token } = useUserSession();
 
-  return !isUserLogged ? <Login /> : <LayoutMain />;
+  console.log("Rendering App");
+  return !token.isValid() ? <Login /> : <LayoutMain />;
 }

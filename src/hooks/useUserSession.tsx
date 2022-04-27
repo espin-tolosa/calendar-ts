@@ -1,20 +1,18 @@
 import { useState, useContext, createContext } from "react";
 import { composition, loginForm } from "@/interfaces";
 import { api } from "@/static/apiRoutes";
+import { useToken } from "./useToken";
+import { nullToken } from "@/customTypes";
 import { Token } from "@/classes/token";
 
 // * 1. Create context: Logged
 
-const isUserLogged: boolean = false;
-const isUserLoggedDispatcher: (update: boolean) => void = () => {};
-//const fakeLogin: (payload: SubmitHandler<FieldValues>) => void = () => {};
-//const fetchLogin: (payload: SubmitHandler<FieldValues>) => void = () => {};
+const token = new Token();
 const clearLoginSession: () => void = () => {};
 const fetchLogin: (payload: any) => void = () => {};
 
 const cUserSession = createContext({
-  isUserLogged,
-  isUserLoggedDispatcher,
+  token,
   fetchLogin,
   clearLoginSession,
 });
@@ -32,18 +30,11 @@ export function useUserSession() {
 
 // * dep: src/main.tsx
 export const UserSession: composition = ({ children }) => {
-  const myToken = new Token();
-  const [isUserLogged, setIsLogged] = useState(myToken.isValid());
+  const token = useToken();
 
   // * Dispatcher closure wrapping setState:
   // * case dispatch true:	updates login status
   // * case dispatch false:	updates login status and clear all cookies coming from login api
-  const isUserLoggedDispatcher = (value: boolean) => {
-    setIsLogged(() => {
-      !value && deleteSession();
-      return value;
-    });
-  };
 
   const fetchLogin = (payload: any) => {
     const data = new FormData();
@@ -60,10 +51,6 @@ export const UserSession: composition = ({ children }) => {
       })
       .catch(() => {
         deleteSession();
-      })
-      .finally(() => {
-        const myToken = new Token();
-        isUserLoggedDispatcher(myToken.isValid());
       });
   };
 
@@ -75,8 +62,7 @@ export const UserSession: composition = ({ children }) => {
   return (
     <cUserSession.Provider
       value={{
-        isUserLogged,
-        isUserLoggedDispatcher,
+        token,
         fetchLogin,
         clearLoginSession,
       }}
