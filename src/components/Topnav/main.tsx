@@ -1,9 +1,9 @@
 import { DateService } from "@/utils/Date";
 import * as StyledTopnav from "./tw";
-import { useCtxCurrentMonthRef } from "@/globalStorage/currentMonthReference";
-import { useCtxTopNavRef } from "@/globalStorage/topNavSize";
+import { useCtxCurrentMonthRef } from "@/context/currentMonthReference";
+import { useCtxTopNavRef } from "@/context/topNavSize";
 import { useEffect } from "react";
-import { DOMRefs } from "@/globalStorage/DOMRefs";
+import { DOMRefs } from "@/context/DOMRefs";
 import { useCleanSession } from "@/hooks/useCleanSession";
 import { useUserSession } from "@/hooks/useUserSession";
 

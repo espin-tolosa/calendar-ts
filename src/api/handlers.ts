@@ -1,8 +1,5 @@
 import { EventClass } from "@/classes/event";
-import {
-  useEventSelected,
-  useSetEventSelected,
-} from "@/globalStorage/eventSelected";
+import { useEventSelected, useSetEventSelected } from "@/context/eventSelected";
 import { useControllerDispatch } from "@/hooks/useController";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 import { useEventDispatch } from "@/hooks/useEventsState";

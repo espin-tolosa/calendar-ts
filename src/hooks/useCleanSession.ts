@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { clearLogin } from "@/window/fetch";
-import { useSetEventSelected } from "@/globalStorage/eventSelected";
+import { useSetEventSelected } from "@/context/eventSelected";
 import { useControllerDispatch } from "@/hooks/useController";
 import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 

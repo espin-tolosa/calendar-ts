@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useCtxCurrentMonthRef } from "@/globalStorage/currentMonthReference";
+import { useCtxCurrentMonthRef } from "@/context/currentMonthReference";
 import { isToday, _renderDate } from "@/utils/Date_v2";
-import { useCtxTopNavRef } from "@/globalStorage/topNavSize";
-import { DOMRefs } from "@/globalStorage/DOMRefs";
+import { useCtxTopNavRef } from "@/context/topNavSize";
+import { DOMRefs } from "@/context/DOMRefs";
 import { CustomTypes } from "@/customTypes";
 export const CurrentMonthScrollAnchor = ({
   year,

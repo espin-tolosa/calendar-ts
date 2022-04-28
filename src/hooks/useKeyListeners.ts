@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useControllerDispatch } from "@/hooks/useController";
 
 import { useGethCancel } from "@/api/handlers";
-import { useCtxKeyBufferDispatcher } from "@/globalStorage/keyBuffer";
-import { useEventSelected } from "@/globalStorage/eventSelected";
+import { useCtxKeyBufferDispatcher } from "@/context/keyBuffer";
+import { useEventSelected } from "@/context/eventSelected";
 
 export const useKeyboardShortcuts = () => {
   const dispatchKeyBuffer = useCtxKeyBufferDispatcher();

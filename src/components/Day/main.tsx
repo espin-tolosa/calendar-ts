@@ -6,7 +6,7 @@ import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import {
   useTemporaryEvent,
   useTemporaryEventDispatcher,
-} from "@/globalStorage/temporaryEvents";
+} from "@/context/temporaryEvents";
 import { fetchEvent_Day } from "@/utils/fetchEvent";
 import { usePostQuery } from "@/api/queries";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
