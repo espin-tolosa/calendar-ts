@@ -3,7 +3,7 @@ import { LayoutMain } from "@/layouts/Main";
 import Login from "@/components/Login/main";
 import { useUserSession } from "./hooks/useUserSession";
 
-export default function App() {
+export function App() {
   const { token } = useUserSession();
 
   console.log("Rendering App");

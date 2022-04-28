@@ -1,27 +1,26 @@
 import React from "react";
+import { createRoot } from "react-dom/client";
 import "@/index.css";
-import App from "@/App";
-import { UserSession } from "@/hooks/useUserSession";
-import { EventsDispatcher } from "@/hooks/useEventsState";
-import { UserPreferences } from "@/hooks/useLocalUserPreferences";
-
+import { App } from "@/App";
+import { DOMRefsContext } from "@/globalStorage/DOMRefs";
+import { PushedDays } from "@/hooks/usePushDays";
+import { KeyBuffer } from "@/globalStorage/keyBuffer";
+import { TemporaryEvent } from "@/globalStorage/temporaryEvents";
+import { TopNavRef } from "@/globalStorage/topNavSize";
+import { CurrentMonthRef } from "@/globalStorage/currentMonthReference";
+import { IsFetchingEvents } from "@/hooks/useIsFetchingEvents";
+import { IsDraggingEvent } from "@/hooks/useIsDragging";
 import { ControllerProvider } from "@/hooks/useController";
 import { ControllerProviderDates } from "@/hooks/useControllerDate";
-import { IsDraggingEvent } from "@/hooks/useIsDragging";
-import { EventsStatus } from "@/hooks/useEventsStatus";
-import { IsFetchingEvents } from "@/hooks/useIsFetchingEvents";
-import { CurrentMonthRef } from "@/globalStorage/currentMonthReference";
-import { TopNavRef } from "@/globalStorage/topNavSize";
-import { DOMRefs } from "@/globalStorage/DOMRefs";
-import { TemporaryEvent } from "@/globalStorage/temporaryEvents";
-import { KeyBuffer } from "@/globalStorage/keyBuffer";
+import { UserPreferences } from "@/hooks/useLocalUserPreferences";
+import { EventsDispatcher } from "@/hooks/useEventsState";
 import { EventInController } from "@/globalStorage/eventSelected";
-import { PushedDays } from "@/hooks/usePushDays";
-import { createRoot } from "react-dom/client";
+import { EventsStatus } from "@/hooks/useEventsStatus";
+import { UserSession } from "@/hooks/useUserSession";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <DOMRefs.Context>
+    <DOMRefsContext>
       <PushedDays>
         <KeyBuffer>
           <TemporaryEvent>
