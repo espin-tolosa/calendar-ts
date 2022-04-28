@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import { clearLogin } from "@/window/fetch";
 import { useSetEventSelected } from "@/context/eventSelected";
 import { useControllerDispatch } from "@/hooks/useController";
@@ -11,16 +11,12 @@ import { nullEvent } from "@/customTypes";
 // Eventually this will grow up, to host clear options,
 // so the useState hook will be interchanged by useReducer
 export const useCleanSession = () => {
-  const [isToClean, setIsToClean] = useState(false);
-
   const setEventController = useSetEventSelected();
   const dispatchController = useControllerDispatch();
   const dispatchControllerDates = useControllerDispatchDates();
   const dispatchEvent = useEventDispatch();
-  useEffect(() => {
-    if (!isToClean) {
-      return;
-    }
+
+  const cleanContextState = useCallback(() => {
     clearLogin();
 
     setEventController(null);
@@ -39,9 +35,7 @@ export const useCleanSession = () => {
       payload: [nullEvent()],
       callback: () => {},
     });
+  }, []);
 
-    setIsToClean(false);
-  }, [isToClean]);
-
-  return setIsToClean;
+  return cleanContextState;
 };

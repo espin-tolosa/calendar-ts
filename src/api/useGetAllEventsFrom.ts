@@ -10,7 +10,7 @@ export const useGetAllEventsFrom = ({ year, month }: CustomTypes.Month) => {
   const fromYear = year;
   const fromMonth = zeroPadd(month);
   const pushDatesDispatcher = usePushedDaysDispatcher();
-  const setSessionIsToClean = useCleanSession();
+  const cleanSession = useCleanSession();
 
   const eventsDispatcher = useEventDispatch();
 
@@ -32,7 +32,7 @@ export const useGetAllEventsFrom = ({ year, month }: CustomTypes.Month) => {
         setTimeout(() => {
           window.alert("Session is expired");
 
-          setSessionIsToClean(true);
+          cleanSession();
         }, 1000);
       }
     })();

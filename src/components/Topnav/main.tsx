@@ -17,7 +17,7 @@ export const Topnav = () => {
   const dispatchDOMRef = DOMRefs.useDispatch();
 
   //Custom hook to clean session, gives a handler to set to true when session is to clean
-  const setSessionIsToClean = useCleanSession();
+  const cleanSession = useCleanSession();
 
   const monthRef = useCtxCurrentMonthRef();
 
@@ -42,7 +42,7 @@ export const Topnav = () => {
         title={"Cleans up your session token | Ctrl+Alt+q"}
         onClick={(evt) => {
           evt.stopPropagation();
-          setSessionIsToClean(true);
+          cleanSession();
         }}
       >
         {token.isValid() ? "Logout" : "Sign in"}
