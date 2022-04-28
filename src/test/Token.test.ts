@@ -3,7 +3,7 @@ import { Token } from "@/classes/token";
 import { nullEncodedToken, nullEvent, nullToken } from "@/customTypes";
 import { encodedTokenFromAPI, token } from "@/interfaces";
 import { safeDecodeJWT } from "@/modules/jwt";
-import { DocumentIO } from "@/window/cookieStorage";
+import { DocumentIO } from "@/window/cookie/cookieStorage";
 
 // Note about testing thread execution:
 // after defining some constants and helper functions I need to mock the content of window.document.cookie

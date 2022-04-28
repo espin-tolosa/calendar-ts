@@ -1,8 +1,8 @@
 import { useSetEventSelected } from "@/globalStorage/eventSelected";
+import { clearLogin } from "@/window/fetch/login";
 import { useEffect, useState } from "react";
 import { useControllerDispatch } from "./useController";
 import { useControllerDispatchDates } from "./useControllerDate";
-import { useUserSession } from "./useUserSession";
 
 // This is the reference hook to clean te entire memory,
 // any component should consume this to clear temporary states
@@ -11,8 +11,6 @@ import { useUserSession } from "./useUserSession";
 export const useCleanSession = () => {
   const [isToClean, setIsToClean] = useState(false);
 
-  const { clearLoginSession } = useUserSession();
-
   const setEventController = useSetEventSelected();
   const dispatchController = useControllerDispatch();
   const dispatchControllerDates = useControllerDispatchDates();
@@ -20,8 +18,8 @@ export const useCleanSession = () => {
     if (!isToClean) {
       return;
     }
+    clearLogin();
 
-    clearLoginSession();
     setEventController(null);
 
     dispatchController({
