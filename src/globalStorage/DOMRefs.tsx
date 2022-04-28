@@ -25,17 +25,16 @@ export namespace DOMRefs {
     return useContext(Dispatcher);
   }
   //Context Provider
-
-  export const Context: composition = ({ children }) => {
-    const [state, dispatch] = useReducer(reducer, defaultState);
-
-    return (
-      <State.Provider value={state}>
-        <Dispatcher.Provider value={dispatch}>{children}</Dispatcher.Provider>
-      </State.Provider>
-    );
-  };
 }
+export const DOMRefsContext: composition = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, defaultState);
+
+  return (
+    <State.Provider value={state}>
+      <Dispatcher.Provider value={dispatch}>{children}</Dispatcher.Provider>
+    </State.Provider>
+  );
+};
 //Reducer
 /*
  * action: {type:"update",payload:"HTMLDiv ref"}
