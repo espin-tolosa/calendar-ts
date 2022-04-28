@@ -21,7 +21,14 @@ import { safeDecodeJWT } from "@/modules/jwt";
 export class Token {
   private token;
   constructor() {
-    this.token = this.readAndDecodeTokens(); //hidden deps: [jwt_decode, DocumentIO.readTokens]
+    this.token = this.readAndDecode(); //hidden deps: [jwt_decode, DocumentIO.readTokens]
+  }
+
+  /** Public method to instantiate new Token class objects with private member token set to nullToken  */
+  public static null() {
+    const token = new Token();
+    token.token = nullToken();
+    return token;
   }
 
   public data() {
@@ -52,16 +59,17 @@ export class Token {
    * call to window.document accessor: cookie
    * @returns last valid decoded token
    */
-  private readAndDecodeTokens = () => {
-    const tokens = DocumentIO.readTokens()
+  private readAndDecode(input = DocumentIO.readTokens()) {
+    const tokens = input
       .map(safeDecodeJWT)
       .sort((prev, next) => next.exp - prev.exp);
+
     if (tokens.length === 0) {
       return nullToken();
     } else {
       return tokens[0];
     }
-  };
+  }
 }
 
 // DONE

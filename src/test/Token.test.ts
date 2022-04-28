@@ -175,6 +175,12 @@ describe("Testing getters methods from Token class with a valid expided token", 
     expect(token.isAuth()).toBe(true);
   });
 
+  test("Testing null Token method", () => {
+    const token = Token.null();
+
+    expect(token.isValid()).toBe(false);
+  });
+
   test("Testing getter is the same user", () => {
     const token = new Token();
     window.document.cookie = `${expidedToken(token5)};`; //!cookie content changed: to simulate another user is now logged
