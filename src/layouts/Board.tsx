@@ -10,7 +10,7 @@ export const LayoutBoard = () => {
   const nextDates = useInfiniteScroll(1);
   const prevDates = ListPrevDates(nextDates[0], 2);
   //Query All Events
-  useGetAllEventsFrom(nextDates[0]);
+  useGetAllEventsFrom(prevDates[1]);
 
   //Fetch event after login
 
