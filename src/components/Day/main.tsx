@@ -82,6 +82,7 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
     } else {
       newEvent.start = date;
       newEvent.end = date;
+      temporaryEventDispatcher(newEvent);
     }
     //-------------------------------------------------------------------------------------------
     eventDispatcher({
@@ -90,7 +91,6 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
       callback: pushDaysDispatcher,
     });
     fetchEvent_Day("PUT", newEvent);
-    //temporaryEventDispatcher(newEvent);
   };
 
   const dayEvents = useEventState(fullDate);
