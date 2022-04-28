@@ -27,7 +27,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 
   useEffect(() => {
     const sameRow = eventsOfWeek
-      .filter((e) => e.mutable!.index === event.mutable!.index)
+      .filter((e) => e.mutable?.index === event.mutable!.index) //!Bug solved: e.mutable is undefined
       .filter((e) => e.id > 0);
     const allH = sameRow.map((r) => r.mutable!.eventRef.clientHeight);
     const maxH = Math.max(...allH);
