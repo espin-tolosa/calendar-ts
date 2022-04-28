@@ -9,7 +9,7 @@ import { TemporaryEvent } from "@/context/temporaryEvents";
 import { TopNavRef } from "@/context/topNavSize";
 import { CurrentMonthRef } from "@/context/currentMonthReference";
 import { IsFetchingEvents } from "@/hooks/useIsFetchingEvents";
-import { IsDraggingEvent } from "@/hooks/useIsDragging";
+import { IsDraggingProvider } from "@/hooks/useIsDragging";
 import { ControllerProvider } from "@/hooks/useController";
 import { ControllerProviderDates } from "@/hooks/useControllerDate";
 import { UserPreferences } from "@/hooks/useLocalUserPreferences";
@@ -27,23 +27,21 @@ createRoot(document.getElementById("root")!).render(
             <TopNavRef>
               <CurrentMonthRef>
                 <IsFetchingEvents>
-                  <IsDraggingEvent>
-                    <ControllerProvider>
-                      <ControllerProviderDates>
-                        <UserPreferences>
-                          <EventsDispatcher>
-                            <EventInController>
-                              <EventsStatus>
-                                <UserSession>
-                                  <App />
-                                </UserSession>
-                              </EventsStatus>
-                            </EventInController>
-                          </EventsDispatcher>
-                        </UserPreferences>
-                      </ControllerProviderDates>
-                    </ControllerProvider>
-                  </IsDraggingEvent>
+                  <ControllerProvider>
+                    <ControllerProviderDates>
+                      <UserPreferences>
+                        <EventsDispatcher>
+                          <EventInController>
+                            <EventsStatus>
+                              <UserSession>
+                                <App />
+                              </UserSession>
+                            </EventsStatus>
+                          </EventInController>
+                        </EventsDispatcher>
+                      </UserPreferences>
+                    </ControllerProviderDates>
+                  </ControllerProvider>
                 </IsFetchingEvents>
               </CurrentMonthRef>
             </TopNavRef>

@@ -1,27 +1,28 @@
-import { composition } from "@/interfaces";
-import React, { createContext, useContext, useState } from "react";
-type IsDragginType = {
-  state: boolean;
-  setState: React.Dispatch<React.SetStateAction<boolean>>;
-};
+import React, { createContext, useCallback, useContext, useState } from "react";
 
-const cIsDragging = createContext<IsDragginType>({
-  state: false,
-  setState: () => {},
-});
-
+const cIsDragging = createContext(false);
 cIsDragging.displayName = "Is Dragging";
 
-export const useIsDragging = () => {
-  return useContext(cIsDragging);
+type IsDraggingProvider = {
+  children: React.ReactNode;
+  isDragging: boolean;
 };
 
-export const IsDraggingEvent: composition = ({ children }) => {
-  const [state, setState] = useState(false);
-
+export const IsDraggingProvider = ({
+  children,
+  isDragging,
+}: IsDraggingProvider) => {
   return (
-    <cIsDragging.Provider value={{ state, setState }}>
-      {children}
-    </cIsDragging.Provider>
+    <cIsDragging.Provider value={isDragging}>{children}</cIsDragging.Provider>
   );
+};
+
+export const useIsDragging = () => {
+  const [isDragging, setState] = useState(false);
+  const setIsDragging = useCallback(
+    (value: boolean) => setState(() => value),
+    []
+  );
+
+  return { isDragging, setIsDragging };
 };

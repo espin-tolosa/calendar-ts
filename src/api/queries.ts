@@ -10,12 +10,12 @@ import { event } from "@/interfaces";
 export const usePostQuery = (fullDate: event.date) => {
   const pushDaysDispatcher = usePushedDaysDispatcher();
   const eventDispatcher = useEventDispatch();
-  const isDragging = useIsDragging();
+  const { isDragging } = useIsDragging();
   const isWeekend = DateService.IsWeekend(fullDate);
   const isLocked = false;
   //Closure
   return async () => {
-    if (isDragging.state || isLocked || isWeekend) {
+    if (isDragging || isLocked || isWeekend) {
       return;
     }
     queryEvent(fullDate, eventDispatcher, pushDaysDispatcher);
