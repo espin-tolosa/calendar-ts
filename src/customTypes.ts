@@ -20,7 +20,8 @@ export namespace CustomTypes {
     | "syncDB"
     | "delete"
     | "update"
-    | "override";
+    | "override"
+    | "unmount";
 
   /**
    * Options to send a query by POST method using fetch to Backend API events

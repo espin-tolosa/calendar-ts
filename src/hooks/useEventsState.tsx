@@ -213,6 +213,10 @@ export function reducerEvents(
       result.sort((prev, next) => sortCriteria(prev, next));
       return result;
     }
+
+    case "unmount": {
+      return [];
+    }
   }
 }
 
