@@ -1,6 +1,6 @@
 import { nullToken } from "@/customTypes";
 import { DateService } from "@/utils/Date";
-import { DocumentIO } from "@/window/cookie/cookieStorage";
+import { DocumentIO } from "@/window/cookie";
 import { safeDecodeJWT } from "@/modules/jwt";
 
 /**

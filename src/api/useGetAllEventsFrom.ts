@@ -3,7 +3,7 @@ import { fetchEvent } from "@/utils/fetchEvent";
 import { zeroPadd } from "@/utils/zeroPadd";
 import { useEffect } from "react";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
-import { useEventDispatch } from "../hooks/useEventsState";
+import { useEventDispatch } from "@/hooks/useEventsState";
 import { useCleanSession } from "@/hooks/useCleanSession";
 
 export const useGetAllEventsFrom = ({ year, month }: CustomTypes.Month) => {

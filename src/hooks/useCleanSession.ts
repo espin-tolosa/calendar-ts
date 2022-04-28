@@ -1,8 +1,8 @@
-import { useSetEventSelected } from "@/globalStorage/eventSelected";
-import { clearLogin } from "@/window/fetch/login";
 import { useEffect, useState } from "react";
-import { useControllerDispatch } from "./useController";
-import { useControllerDispatchDates } from "./useControllerDate";
+import { clearLogin } from "@/window/fetch";
+import { useSetEventSelected } from "@/globalStorage/eventSelected";
+import { useControllerDispatch } from "@/hooks/useController";
+import { useControllerDispatchDates } from "@/hooks/useControllerDate";
 
 // This is the reference hook to clean te entire memory,
 // any component should consume this to clear temporary states

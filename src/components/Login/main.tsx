@@ -2,7 +2,7 @@ import { TWloginButton, TWloginForm, TWloginInput, TWloginWrapper } from "./tw";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useListenWindowSize } from "@/hooks/useResponsiveLayout";
-import { clearLogin, fetchLogin } from "@/window/fetch/login";
+import { clearLogin, fetchLogin } from "@/window/fetch";
 
 export default function Login() {
   const { register, handleSubmit, formState } = useForm();
