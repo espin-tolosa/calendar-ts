@@ -9,6 +9,7 @@ import { useTemporaryEventDispatcher } from "@/context/temporaryEvents";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { EventCard, EventTail } from "./eventCard";
 import { useGethDeleteEvent } from "@/api/handlers";
+import { useIsDragging } from "@/hooks/useIsDragging";
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();
@@ -69,6 +70,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   );
 
   const dayRef = useRef<Element>();
+  const { setIsDragging } = useIsDragging();
 
   return (
     <>
@@ -84,6 +86,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         onDragStart={(e) => {
           e.stopPropagation();
           console.log("On drag start from Center", parentEvent);
+          setIsDragging(true);
           const copyOfParent: event = { ...parentEvent };
           copyOfParent.mutable!.bubble = 0;
           temporaryEventDispatcher(parentEvent);
