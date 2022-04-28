@@ -29,7 +29,7 @@ export const EventTextArea = ({ event }: TextArea) => {
         }}
         onBlur={() => {
           console.log("Element finished");
-          location.reload();
+          //window.location.reload();
         }}
       >
         {state}
