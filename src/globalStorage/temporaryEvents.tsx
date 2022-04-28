@@ -14,6 +14,9 @@ const defaultDispaatcher: React.Dispatch<
 const cTemporaryEvent = createContext(defaultState);
 const cTemporaryEventDispatcher = createContext(defaultDispaatcher);
 
+cTemporaryEvent.displayName = "Temporary Event State";
+cTemporaryEventDispatcher.displayName = "Temporary Event Dispatcher";
+
 //2. State consumers
 export const useTemporaryEvent = () => {
   return useContext(cTemporaryEvent);

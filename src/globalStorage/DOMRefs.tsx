@@ -12,6 +12,9 @@ const defaultState: State = [];
 const State = createContext<State>(defaultState);
 const Dispatcher = createContext<React.Dispatch<Action>>(() => {});
 
+State.displayName = "DOM Refs state";
+Dispatcher.displayName = "DOM Refs dispatcher";
+
 export namespace DOMRefs {
   //State Context
   export function useState() {

@@ -18,6 +18,8 @@ export function useUserSession() {
   return useContext(cUserSession);
 }
 
+cUserSession.displayName = "User Session";
+
 // * 3. Create and export provider
 export const UserSession: composition = ({ children }) => {
   const token = useToken();

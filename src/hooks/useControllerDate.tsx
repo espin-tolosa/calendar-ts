@@ -6,6 +6,9 @@ const init = { start: "", end: "" };
 const cControllerState = createContext(init);
 const cControllerDispatch = createContext<React.Dispatch<Action>>(() => {});
 
+cControllerState.displayName = "controller state dates";
+cControllerDispatch.displayName = "controller dispatch dates";
+
 /* to consume in controller and other  components that wants to dispatch to controller */
 export const useControllerStateDates = () => useContext(cControllerState);
 export const useControllerDispatchDates = () => useContext(cControllerDispatch);

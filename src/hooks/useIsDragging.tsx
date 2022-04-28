@@ -10,6 +10,8 @@ const cIsDragging = createContext<IsDragginType>({
   setState: () => {},
 });
 
+cIsDragging.displayName = "Is Dragging";
+
 export const useIsDragging = () => {
   return useContext(cIsDragging);
 };

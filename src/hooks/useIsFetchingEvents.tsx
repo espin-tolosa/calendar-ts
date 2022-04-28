@@ -11,6 +11,8 @@ const cIsFetchingEvents = createContext<IsFetchingType>({
   setIsFetching: () => {},
 });
 
+cIsFetchingEvents.displayName = "Is Fetching Events";
+
 export const useIsFetchingEvents = () => {
   return useContext(cIsFetchingEvents);
 };

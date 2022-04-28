@@ -9,6 +9,8 @@ const defaultDispatcher = (newValue: number) => {};
 
 const cEventsStatus = createContext(defaultState);
 const cEventsStatusDispatcher = createContext(defaultDispatcher);
+cEventsStatus.displayName = "Event Status";
+cEventsStatusDispatcher.displayName = "Event Status Dispatcher";
 
 export const useEventsStatus = () => {
   return useContext(cEventsStatus);

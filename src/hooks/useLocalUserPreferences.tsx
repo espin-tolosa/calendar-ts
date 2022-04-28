@@ -58,6 +58,8 @@ const cUseLocalUserPreferences = createContext({
   dispatchLocalState: dispatch,
 });
 
+cUseLocalUserPreferences.displayName = "Local User Preferences";
+
 export const useLocalUserPreferencesContext = () => {
   return useContext(cUseLocalUserPreferences);
 };

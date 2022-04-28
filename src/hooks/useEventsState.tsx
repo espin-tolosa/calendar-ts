@@ -225,6 +225,7 @@ const cEventDispatch = createContext<React.Dispatch<Action>>(() => {});
 
 cEventState.displayName = "Event State: a interpretation of database events";
 cEventBuffer.displayName = "Event Buffer: a temporal state";
+cBufferDispatch.displayName = "Event Buffer dispatch";
 cEventDispatch.displayName = "Event State Dispatch";
 
 export function useEventState(day?: string | { from: string; to: string }) {
