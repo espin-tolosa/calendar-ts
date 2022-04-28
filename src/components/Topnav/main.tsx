@@ -11,7 +11,7 @@ export const TOPNAV_ID = "Topnav";
 
 export const Topnav = () => {
   console.log("Rendering TopNav");
-  const { token } = useUserSession();
+  const token = useUserSession();
   const user = token.data().usr;
   const topNavRef = useCtxTopNavRef();
   const dispatchDOMRef = DOMRefs.useDispatch();
