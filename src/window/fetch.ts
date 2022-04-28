@@ -1,6 +1,6 @@
 import { loginForm } from "@/interfaces";
 import { api } from "@/static/apiRoutes";
-import { deleteCookies } from "@/window/cookie/deleteAllCookies";
+import { DocumentIO } from "@/window/cookie";
 
 export function fetchLogin(payload: any) {
   const data = new FormData();
@@ -16,7 +16,7 @@ export function fetchLogin(payload: any) {
       }
     })
     .catch(() => {
-      deleteCookies();
+      DocumentIO.deleteAllCookies();
     });
 }
 
