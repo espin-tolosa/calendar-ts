@@ -1,6 +1,6 @@
 /** @jest-environment jsdom */
 import React from "react";
-import { IsDraggingEvent, useIsDragging } from "@/hooks/useIsDragging";
+import { IsDraggingEvent, Context } from "@/hooks/useIsDragging";
 import { renderHook, act } from "@testing-library/react-hooks";
 
 describe("Context test", () => {
@@ -15,7 +15,7 @@ describe("Context test", () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <IsDraggingEvent>{children}</IsDraggingEvent>
     );
-    const { result } = renderHook(() => useIsDragging(), { wrapper });
+    const { result } = renderHook(() => Context.useIsDragging(), { wrapper });
 
     //From: false
     expect(result.current.isDragging).toBe(false);
