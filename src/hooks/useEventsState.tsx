@@ -16,6 +16,7 @@ import { isWellDefined } from "@/utils/ValidateEvent";
 import { CustomTypes } from "@/customTypes";
 import { DateService } from "@/utils/Date";
 import { EventClass } from "@/classes/event";
+import { copyFileSync } from "fs";
 
 const DEFERRAL_TIME = 0;
 
@@ -212,6 +213,33 @@ export function reducerEvents(
       //Sort again
       result.sort((prev, next) => sortCriteria(prev, next));
       return result;
+    }
+
+    case "changeId": {
+      const origin = action.payload[0];
+
+      //Deep-cloning the array ref and the objects inside removing the origin
+      const newState = state
+        .filter((event) => Math.abs(event.id) !== Math.abs(origin.id))
+        .map((event) => {
+          return { ...event };
+        });
+
+      //Scape if there is no temp event
+      const target = newState.find((event) => event.id === 123456789);
+      if (!target) {
+        return state;
+      }
+
+      target.id = action.payload[0].id;
+
+      //      const index = newState.findIndex((event) => event.id === 123456789);
+      //      const toOverride = state[index];
+      //      console.log(action.payload[0]);
+      //      toOverride.id = action.payload[0].id;
+      //      console.log(toOverride);
+
+      return newState;
     }
 
     case "unmount": {

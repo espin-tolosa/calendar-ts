@@ -2,7 +2,11 @@ import * as StyledEvent from "./tw";
 import { event } from "@/interfaces/index";
 import { DateService } from "@/utils/Date";
 import { useHoverEvent, useStorage, useTransitionStyle } from "./logic";
-import { useEventState, useGetEventFamily } from "@/hooks/useEventsState";
+import {
+  useEventDispatch,
+  useEventState,
+  useGetEventFamily,
+} from "@/hooks/useEventsState";
 import { useTemporaryEventDispatcher } from "@/context/temporaryEvents";
 //import { useCtxKeyBuffer } from "@/context/keyBuffer";
 //import { useSetEventSelected } from "@/context/eventSelected";
@@ -10,6 +14,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { EventCard, EventTail } from "./eventCard";
 import { useGethDeleteEvent } from "@/api/handlers";
 import { Context } from "@/hooks/useIsDragging";
+import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();
@@ -71,6 +76,8 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 
   const dayRef = useRef<Element>();
   const { setIsDragging } = Context.useIsDragging();
+  const eventDispatcher = useEventDispatch();
+  const pushDaysDispatcher = usePushedDaysDispatcher();
 
   return (
     <>
@@ -94,6 +101,12 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         onDragEnd={(e) => {
           console.log("drag end");
           setIsDragging(false);
+          //const lastAdded
+          eventDispatcher({
+            type: "changeId",
+            payload: [event],
+            callback: pushDaysDispatcher,
+          });
         }}
         onMouseUp={(e) => {
           console.log("mouse up");

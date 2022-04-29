@@ -10,19 +10,19 @@ import { event } from "@/interfaces";
 export const usePostQuery = (fullDate: event.date) => {
   const pushDaysDispatcher = usePushedDaysDispatcher();
   const eventDispatcher = useEventDispatch();
-  const { isDragging } = Context.useIsDragging();
+  //const { isDragging } = Context.useIsDragging();
   const isWeekend = DateService.IsWeekend(fullDate);
   const isLocked = false;
   //Closure
-  return async () => {
-    if (isDragging || isLocked || isWeekend) {
+  return () => {
+    if (/*isDragging ||*/ isLocked || isWeekend) {
       return;
     }
     queryEvent(fullDate, eventDispatcher, pushDaysDispatcher);
   };
 };
 
-const queryEvent = async (
+const queryEvent = (
   date: event.date,
   eventDispatcher: React.Dispatch<Action>,
   pushDaysDispatcher: Dispatch<Set<event.date>>

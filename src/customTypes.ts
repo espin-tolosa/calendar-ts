@@ -21,6 +21,7 @@ export namespace CustomTypes {
     | "delete"
     | "update"
     | "override"
+    | "changeId"
     | "unmount";
 
   /**
