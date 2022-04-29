@@ -1,61 +1,34 @@
 import { composition } from "@/interfaces";
 import { createContext, useCallback, useContext, useState } from "react";
+
 type IsDragginType = {
   isDragging: boolean;
   setIsDragging: (_value: boolean) => void;
 };
 
-const cIsDragging = createContext<IsDragginType>({
+const defaultValue = {
   isDragging: false,
   setIsDragging: (_value: boolean) => {},
-});
-
-export const useIsDragging = () => {
-  return useContext(cIsDragging);
 };
 
-const useIsDraggingHook = () => {
-  const [isDragging, setState] = useState(false);
-  const setIsDragging = useCallback((value: boolean) => {
-    setState(() => value);
-  }, []);
+const context = createContext<IsDragginType>(defaultValue);
+context.displayName = "Is Dragging";
+
+export namespace Context {
+  export const useIsDragging = () => useContext(context);
+}
+
+const useIsDragging = () => {
+  const [isDragging, setIsDragging] = useState(false);
 
   return { isDragging, setIsDragging };
 };
 export const IsDraggingEvent: composition = ({ children }) => {
-  const { isDragging, setIsDragging } = useIsDraggingHook();
+  const { isDragging, setIsDragging } = useIsDragging();
 
   return (
-    <cIsDragging.Provider value={{ isDragging, setIsDragging }}>
+    <context.Provider value={{ isDragging, setIsDragging }}>
       {children}
-    </cIsDragging.Provider>
+    </context.Provider>
   );
 };
-/*
-const cIsDragging = createContext(false);
-cIsDragging.displayName = "Is Dragging";
-
-type IsDraggingProvider = {
-  children: React.ReactNode;
-  isDragging: boolean;
-};
-
-export const IsDraggingProvider = ({
-  children,
-  isDragging,
-}: IsDraggingProvider) => {
-  return (
-    <cIsDragging.Provider value={isDragging}>{children}</cIsDragging.Provider>
-  );
-};
-
-export const useIsDragging = () => {
-  const [isDragging, setState] = useState(false);
-  const setIsDragging = useCallback(
-    (value: boolean) => setState(() => value),
-    []
-  );
-
-  return { isDragging, setIsDragging };
-};
-*/

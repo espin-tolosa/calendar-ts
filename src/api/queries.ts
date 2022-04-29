@@ -3,14 +3,14 @@ import { fetchEvent_Day } from "@/utils/fetchEvent";
 import React, { Dispatch } from "react";
 import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
 import { DateService } from "@/utils/Date";
-import { useIsDragging } from "@/hooks/useIsDragging";
+import { Context } from "@/hooks/useIsDragging";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 import { event } from "@/interfaces";
 
 export const usePostQuery = (fullDate: event.date) => {
   const pushDaysDispatcher = usePushedDaysDispatcher();
   const eventDispatcher = useEventDispatch();
-  const { isDragging } = useIsDragging();
+  const { isDragging } = Context.useIsDragging();
   const isWeekend = DateService.IsWeekend(fullDate);
   const isLocked = false;
   //Closure
