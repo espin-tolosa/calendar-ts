@@ -85,6 +85,7 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
       temporaryEventDispatcher(newEvent);
     }
     //-------------------------------------------------------------------------------------------
+    newEvent.id = 10000;
     eventDispatcher({
       type: "update",
       payload: [newEvent],

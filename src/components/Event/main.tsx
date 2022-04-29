@@ -9,7 +9,7 @@ import { useTemporaryEventDispatcher } from "@/context/temporaryEvents";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { EventCard, EventTail } from "./eventCard";
 import { useGethDeleteEvent } from "@/api/handlers";
-import { useIsDragging } from "@/hooks/useIsDragging";
+import { Context } from "@/hooks/useIsDragging";
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();
@@ -70,7 +70,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   );
 
   const dayRef = useRef<Element>();
-  const { setIsDragging } = useIsDragging();
+  const { setIsDragging } = Context.useIsDragging();
 
   return (
     <>
@@ -90,6 +90,14 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           const copyOfParent: event = { ...parentEvent };
           copyOfParent.mutable!.bubble = 0;
           temporaryEventDispatcher(parentEvent);
+        }}
+        onDragEnd={(e) => {
+          console.log("drag end");
+          setIsDragging(false);
+        }}
+        onMouseUp={(e) => {
+          console.log("mouse up");
+          //e.stopPropagation();
         }}
       >
         <StyledEvent.TWtextContent
