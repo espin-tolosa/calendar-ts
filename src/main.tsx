@@ -18,6 +18,7 @@ import { EventInController } from "@/context/eventSelected";
 import { EventsStatus } from "@/hooks/useEventsStatus";
 import { UserSession } from "@/hooks/useUserSession";
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <DOMRefsContext>

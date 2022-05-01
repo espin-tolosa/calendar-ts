@@ -16,9 +16,15 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": ["react", "react-hooks", "@typescript-eslint"],
   "rules": {
     // suppress errors for missing 'import React' in files
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-namespace": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

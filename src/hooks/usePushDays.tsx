@@ -8,7 +8,9 @@ export type Action = {
 };
 
 const defaultPushDates: Set<event.date> = new Set();
-const defaultPushDatesDispatcher: Dispatch<Set<event.date>> = () => {};
+const defaultPushDatesDispatcher: Dispatch<Set<event.date>> = {} as Dispatch<
+  Set<event.date>
+>;
 
 const cPushDates = createContext(defaultPushDates);
 const cPushDatesDispatcher = createContext(defaultPushDatesDispatcher);
@@ -23,14 +25,14 @@ export const usePushedDaysDispatcher = () => {
   return useContext(cPushDatesDispatcher);
 };
 
-export const PushedDays: composition = ({ children }) => {
+export const PushedDays: composition = (Props) => {
   //const [state, dispatch] = useReducer(reducerEvents, defaultState);
   const [days, dispatchDays] = useState<Set<event.date>>(new Set());
 
   return (
     <cPushDates.Provider value={days}>
       <cPushDatesDispatcher.Provider value={dispatchDays}>
-        {children}
+        {Props.children}
       </cPushDatesDispatcher.Provider>
     </cPushDates.Provider>
   );
