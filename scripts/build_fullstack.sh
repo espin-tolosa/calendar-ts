@@ -12,5 +12,6 @@ yarn build;
 cp -r ../../php-server/CRUD/backend ./dist;
 
 # 3. Copy the entire project to lamp server
-cp -r /home/set/dev/projects/calendar/app/* /opt/lampp/htdocs/.
+rm -r /opt/lampp/htdocs/*
+cp -r ./dist/* /opt/lampp/htdocs/.
 

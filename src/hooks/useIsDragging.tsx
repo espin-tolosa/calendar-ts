@@ -1,5 +1,5 @@
 import { composition } from "@/interfaces";
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 type IsDragginType = {
   isDragging: boolean;
@@ -8,7 +8,9 @@ type IsDragginType = {
 
 const defaultValue = {
   isDragging: false,
-  setIsDragging: (_value: boolean) => {},
+  setIsDragging: (value: boolean) => {
+    return value;
+  },
 };
 
 const context = createContext<IsDragginType>(defaultValue);
@@ -23,12 +25,12 @@ const useIsDragging = () => {
 
   return { isDragging, setIsDragging };
 };
-export const IsDraggingEvent: composition = ({ children }) => {
+export const IsDraggingEvent: composition = (Props) => {
   const { isDragging, setIsDragging } = useIsDragging();
 
   return (
     <context.Provider value={{ isDragging, setIsDragging }}>
-      {children}
+      {Props.children}
     </context.Provider>
   );
 };

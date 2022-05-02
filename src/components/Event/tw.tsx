@@ -4,8 +4,9 @@ export const TWjobContent = tw.div`
 flex whitespace-normal break-words overflow-hidden overflow-ellipsis
 `;
 
-export const TWflexContainer = tw.div`
+export const TWflexContainer = tw.div<{ $hidde: boolean }>`
   flex flex-col justify-start my-1 transition-colors
+	${({ $hidde }: { $hidde: boolean }) => ($hidde && "hidden") || ""}
 	`;
 
 export const TWtextContent = tw.div<{

@@ -5,12 +5,11 @@ import { DateService } from "@/utils/Date";
 import { usePostQuery } from "@/api/queries";
 import { useOnDragEnter } from "./logic";
 
-type WithChildren<T = {}> = T & { children?: React.ReactNode };
-type Day = WithChildren<{
+interface Day {
   daynumber: number;
   fullDate: string;
   pushedDays: Set<string>;
-}>;
+}
 
 // Used Context in Day Component:
 //

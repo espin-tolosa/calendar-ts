@@ -7,7 +7,6 @@ import { ClientColorStyles } from "@/utils/giveMeColor";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { fetchEvent } from "@/utils/fetchEvent";
 import { useEventDispatch } from "@/hooks/useEventsState";
-import { resourceLimits } from "worker_threads";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 
 export const useTransitionStyle = (
@@ -149,7 +148,7 @@ export const useStorage = (event: event) => {
   //Inline Edit
   const [isSelected, setIsSelected] = useState(false);
   const isFocus = useRef<HTMLInputElement>(null);
-  const [jobInput, setJobInput] = useState(event.job);
+  //const jobInput = event.job;
   const eventDispatcher = useEventDispatch();
 
   const readyToSubmit = useRef<boolean>(false);
@@ -182,7 +181,7 @@ export const useStorage = (event: event) => {
 
   const hOnBlur = () => {
     if (readyToSubmit.current) {
-      updateEvent({ ...event, job: jobInput });
+      updateEvent({ ...event });
       readyToSubmit.current = false;
     }
 
@@ -224,13 +223,17 @@ export const useStorage = (event: event) => {
         payload: [{ ...event, job: `${event.job} - ` }],
         callback: pushDaysDispatcher,
       });
-      isFocus.current!.blur();
+      if (isFocus.current !== null) {
+        isFocus.current.blur();
+      }
     }
 
     const cancel = e.key === "Escape";
     if (cancel) {
       readyToSubmit.current = false;
-      isFocus.current!.blur();
+      if (isFocus.current !== null) {
+        isFocus.current.blur();
+      }
     }
   };
 
@@ -243,8 +246,6 @@ export const useStorage = (event: event) => {
 
   const toComponent = {
     isSelected,
-    jobInput,
-    isFocus,
     ...eventUpdater,
   };
 

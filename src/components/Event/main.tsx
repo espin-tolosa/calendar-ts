@@ -10,7 +10,7 @@ import {
 import { useTemporaryEventDispatcher } from "@/context/temporaryEvents";
 //import { useCtxKeyBuffer } from "@/context/keyBuffer";
 //import { useSetEventSelected } from "@/context/eventSelected";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { EventCard, EventTail } from "./eventCard";
 import { useGethDeleteEvent } from "@/api/handlers";
 import { Context } from "@/hooks/useIsDragging";
@@ -24,30 +24,50 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   //week.from = event.start;
   const eventsOfWeek = useEventState(week);
   useLayoutEffect(() => {
-    event.mutable = {
-      height: `${eventRef.current!.clientHeight}px`,
-      eventRef: eventRef.current!,
-      index: index, //!Corrected bug: was using event.end wich is zero
-    };
+    if (typeof eventRef.current !== "undefined") {
+      event.mutable = {
+        height: `${eventRef.current.clientHeight}px`,
+        eventRef: eventRef.current,
+        index: index, //!Corrected bug: was using event.end wich is zero
+      };
+    }
   }, [event]);
 
   useEffect(() => {
-    const sameRow = eventsOfWeek
-      .filter((e) => e.mutable?.index === event.mutable!.index) //!Bug solved: e.mutable is undefined
-      .filter((e) => e.id > 0);
-    const allH = sameRow.map((r) => r.mutable!.eventRef.clientHeight);
-    const maxH = Math.max(...allH);
-    const newState = { height: `${maxH}px` };
+    if (typeof event.mutable === "object") {
+      const sameRow = eventsOfWeek
+        .filter((e) => {
+          if (
+            typeof e.mutable === "object" &&
+            typeof event.mutable === "object"
+          ) {
+            return e.mutable.index === event.mutable.index;
+          }
+        }) //!Bug solved: e.mutable is undefined
+        .filter((e) => e.id > 0);
+      const allH = sameRow.map((r) => {
+        if (typeof r.mutable === "object") {
+          return r.mutable.eventRef.clientHeight;
+        } else {
+          return 0;
+        }
+      });
 
-    event.mutable!.height = newState.height;
-    setState(newState);
+      const maxH = Math.max(...allH);
+      const newState = { height: `${maxH}px` };
+
+      if (typeof event.mutable === "object") {
+        event.mutable.height = newState.height;
+      }
+      setState(newState);
+    }
   }, [event]);
 
   //--------------------------------------------
 
   const isChildren = event.job.includes("#isChildren");
   //edit mode
-  const [parentEvent, family] = useGetEventFamily(event);
+  const [parentEvent] = useGetEventFamily(event);
 
   //drag and drop
   //const temporaryEvent = useTemporaryEvent();
@@ -66,7 +86,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventInlineStyle = useTransitionStyle(isChildren, hover, event);
 
   // Database storage logic
-  const { isSelected, isFocus, jobInput, ...eventUpdater } = useStorage(event);
+  const { isSelected, ...eventUpdater } = useStorage(event);
 
   //TODO: avoid magic numbers
   const spreadCells = Math.min(
@@ -74,14 +94,17 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
     8
   );
 
-  const dayRef = useRef<Element>();
+  //const dayRef = useRef<Element>();
   const { setIsDragging } = Context.useIsDragging();
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
 
+  const [localIsDragging, setLocalIsDragging] = useState(false);
+
   return (
     <>
       <StyledEvent.TWflexContainer
+        $hidde={localIsDragging}
         onMouseDown={(e) => e.stopPropagation()}
         onKeyDown={(e) => {
           if (e.ctrlKey && e.code === "Delete") {
@@ -94,13 +117,18 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           e.stopPropagation();
           console.log("On drag start from Center", parentEvent);
           setIsDragging(true);
+          setLocalIsDragging(true);
           const copyOfParent: event = { ...parentEvent };
-          copyOfParent.mutable!.bubble = 0;
+
+          if (typeof copyOfParent.mutable === "object") {
+            copyOfParent.mutable.bubble = 0;
+          }
           temporaryEventDispatcher(parentEvent);
         }}
-        onDragEnd={(e) => {
+        onDragEnd={() => {
           console.log("drag end");
           setIsDragging(false);
+          setLocalIsDragging(false);
           //const lastAdded
           eventDispatcher({
             type: "changeId",
@@ -108,7 +136,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
             callback: pushDaysDispatcher,
           });
         }}
-        onMouseUp={(e) => {
+        onMouseUp={() => {
           console.log("mouse up");
           //e.stopPropagation();
         }}
@@ -137,14 +165,20 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           <StyledEvent.TWextend_Left
             $cells={spreadCells}
             style={state}
-            title={`Drag here to extend ${event.client}\'s job`}
+            title={`Drag here to extend ${event.client}'s job`}
             draggable={"true"}
             onDragStart={(e) => {
               e.stopPropagation();
+              setLocalIsDragging(true);
               console.log("On drag start from Left", parentEvent);
               const copyOfParent: event = { ...parentEvent };
-              copyOfParent.mutable!.bubble = -1;
+              if (typeof copyOfParent.mutable === "object") {
+                copyOfParent.mutable.bubble = -1;
+              }
               temporaryEventDispatcher(parentEvent);
+            }}
+            onDragEnd={() => {
+              // setLocalIsDragging(false);
             }}
           >
             {"+"}
@@ -154,14 +188,20 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           <StyledEvent.TWextend
             $cells={spreadCells}
             style={state}
-            title={`Drag here to extend ${event.client}\'s job`}
+            title={`Drag here to extend ${event.client}'s job`}
             draggable={"true"}
             onDragStart={(e) => {
               e.stopPropagation();
+              setLocalIsDragging(true);
               console.log("On drag start from Right", parentEvent);
               const copyOfParent: event = { ...parentEvent };
-              copyOfParent.mutable!.bubble = 1;
+              if (typeof copyOfParent.mutable === "object") {
+                copyOfParent.mutable.bubble = 1;
+              }
               temporaryEventDispatcher(parentEvent);
+            }}
+            onDragEnd={() => {
+              // setLocalIsDragging(false);
             }}
           >
             {"+"}
@@ -171,7 +211,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         <StyledEvent.TWplaceholder
           key={"p" + event.id}
           style={state}
-          onMouseDown={(e) => {
+          onMouseDown={() => {
             //const x = e.clientX;
             //const y = e.clientY;
             //const el = document.elementsFromPoint(x, y);
@@ -187,17 +227,20 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 };
 
 export const EventHolder = ({ event }: { event: event }) => {
-  const [parent, family] = useGetEventFamily(event);
+  const [parent] = useGetEventFamily(event);
   const eventRef = useRef<HTMLDivElement>();
   const [state, setState] = useState<{ height: string }>({ height: "0px" });
   //
   useLayoutEffect(() => {
-    event.mutable = {
-      height: `${eventRef.current!.clientHeight}px`,
-      eventRef: eventRef.current!,
-      index: parent.mutable?.index!, //!Corrected bug: was using event.end wich is zero
-    };
-    const h0 = parent.mutable?.height || "0px";
+    if (typeof eventRef.current !== "undefined") {
+      event.mutable = {
+        height: `${eventRef.current.clientHeight}px`,
+        eventRef: eventRef.current,
+        index: typeof parent.mutable === "object" ? parent.mutable.index : 0, //!Corrected bug: was using event.end wich is zero
+      };
+    }
+    const h0 =
+      typeof parent.mutable === "object" ? parent.mutable.height : "0px";
     const h1 = parseInt(h0.split("px")[0]);
     const newState = { height: `${h1}px` };
     setState(newState);
@@ -209,7 +252,7 @@ export const EventHolder = ({ event }: { event: event }) => {
 
   //
   return (
-    <StyledEvent.TWflexContainer ref={eventRef}>
+    <StyledEvent.TWflexContainer $hidde={false} ref={eventRef}>
       <StyledEvent.TWplaceholder style={newState}>
         {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
@@ -218,16 +261,17 @@ export const EventHolder = ({ event }: { event: event }) => {
 };
 
 export const EventOff = ({ event }: { event: event }) => {
-  const [state, setState] = useState<{ height: string }>({ height: "0px" });
-  const week = DateService.GetWeekRangeOf(event.start);
+  const state = { height: "0px" };
+
+  //const week = DateService.GetWeekRangeOf(event.start);
   //week.from = event.start;
-  const eventsOfWeek = useEventState(week);
+  //const eventsOfWeek = useEventState(week);
 
   //--------------------------------------------
 
   const isChildren = event.job.includes("#isChildren");
   //edit mode
-  const [parentEvent, family] = useGetEventFamily(event);
+  const [parentEvent] = useGetEventFamily(event);
 
   //drag and drop
   //const temporaryEvent = useTemporaryEvent();
@@ -246,7 +290,7 @@ export const EventOff = ({ event }: { event: event }) => {
   const eventInlineStyle = useTransitionStyle(isChildren, hover, event);
 
   // Database storage logic
-  const { isSelected, isFocus, jobInput, ...eventUpdater } = useStorage(event);
+  const { isSelected, ...eventUpdater } = useStorage(event);
 
   //TODO: avoid magic numbers
   const spreadCells = Math.min(
@@ -254,11 +298,12 @@ export const EventOff = ({ event }: { event: event }) => {
     8
   );
 
-  const dayRef = useRef<Element>();
+  //const dayRef = useRef<Element>();
 
   return (
     <>
       <StyledEvent.TWflexContainer
+        $hidde={false}
         onMouseDown={(e) => e.stopPropagation()}
         onKeyDown={(e) => {
           if (e.ctrlKey && e.code === "Delete") {
@@ -271,7 +316,9 @@ export const EventOff = ({ event }: { event: event }) => {
           e.stopPropagation();
           console.log("On drag start from Center", parentEvent);
           const copyOfParent: event = { ...parentEvent };
-          copyOfParent.mutable!.bubble = 0;
+          if (typeof copyOfParent.mutable === "object") {
+            copyOfParent.mutable.bubble = 0;
+          }
           temporaryEventDispatcher(parentEvent);
         }}
       >
@@ -298,13 +345,15 @@ export const EventOff = ({ event }: { event: event }) => {
           <StyledEvent.TWextend_Left
             $cells={spreadCells}
             style={state}
-            title={`Drag here to extend ${event.client}\'s job`}
+            title={`Drag here to extend ${event.client}'s job`}
             draggable={"true"}
             onDragStart={(e) => {
               e.stopPropagation();
               console.log("On drag start from Left", parentEvent);
               const copyOfParent: event = { ...parentEvent };
-              copyOfParent.mutable!.bubble = -1;
+              if (typeof copyOfParent.mutable === "object") {
+                copyOfParent.mutable.bubble = -1;
+              }
               temporaryEventDispatcher(parentEvent);
             }}
           >
@@ -315,13 +364,15 @@ export const EventOff = ({ event }: { event: event }) => {
           <StyledEvent.TWextend
             $cells={spreadCells}
             style={state}
-            title={`Drag here to extend ${event.client}\'s job`}
+            title={`Drag here to extend ${event.client}'s job`}
             draggable={"true"}
             onDragStart={(e) => {
               e.stopPropagation();
               console.log("On drag start from Right", parentEvent);
               const copyOfParent: event = { ...parentEvent };
-              copyOfParent.mutable!.bubble = 1;
+              if (typeof copyOfParent.mutable === "object") {
+                copyOfParent.mutable.bubble = 1;
+              }
               temporaryEventDispatcher(parentEvent);
             }}
           >
@@ -332,7 +383,7 @@ export const EventOff = ({ event }: { event: event }) => {
         <StyledEvent.TWplaceholder
           key={"p" + event.id}
           style={state}
-          onMouseDown={(e) => {
+          onMouseDown={() => {
             //const x = e.clientX;
             //const y = e.clientY;
             //const el = document.elementsFromPoint(x, y);
