@@ -9,36 +9,16 @@ import { fetchEvent_Day } from "@/utils/fetchEvent";
 
 type date = string;
 
-export const useOnDragEnter = (fullDate: date) => {
-  const events = useEventState();
+export const useOnDragEnter = () => {
+  // const events = useEventState();
   const temporaryEvent = useTemporaryEvent();
   const temporaryEventDispatcher = useTemporaryEventDispatcher();
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
 
-  return (e: React.DragEvent<HTMLDivElement>) => {
-    console.log("calendar-ts-cope");
-    if (temporaryEvent.end === fullDate) {
-      return;
-    }
-    //e.stopPropagation();
-    const x = e.clientX;
-    const y = e.clientY;
-    const el = document.elementsFromPoint(x, y);
-    const dayDiv = el.find((e) => e.id.includes("day"));
-    //All of this is the same as Board callback
-    const id = dayDiv?.id;
-
-    if (!id) {
-      return;
-    }
-
-    const date = id.split("day-")[1];
-    const current = events.find((event) => event.id === 123456789);
-    if (date === current?.start) {
-      return;
-    }
+  return (date: date) => {
     const newEvent = { ...temporaryEvent };
+    console.log("NEW EVENT", newEvent);
     //TODO: pulling from red is working like this, but pulling from green it is more or less the opposite
     if (temporaryEvent.mutable?.bubble === 1) {
       newEvent.end = date;
@@ -56,14 +36,15 @@ export const useOnDragEnter = (fullDate: date) => {
       newEvent.start = date;
       newEvent.end = date;
     }
-    temporaryEventDispatcher(newEvent);
+    //temporaryEventDispatcher(newEvent);
     //-------------------------------------------------------------------------------------------
 
     eventDispatcher({
       type: "update",
-      payload: [{ ...newEvent, id: 123456789 }],
+      payload: [{ ...newEvent, start: "2022-05-03", id: 123456789 }],
       callback: pushDaysDispatcher,
     });
+    console.log("Dispatching", newEvent);
     fetchEvent_Day("PUT", newEvent);
   };
 };

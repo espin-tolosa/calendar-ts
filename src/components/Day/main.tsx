@@ -24,7 +24,7 @@ interface Day {
 function Day({ daynumber, fullDate, pushedDays }: Day) {
   //Callbacks
   const addEvent = usePostQuery(fullDate);
-  const onDragEnter = useOnDragEnter(fullDate);
+  //const onDragEnter = useOnDragEnter();
 
   //Computed:
   //TODO: Locked days not impl
@@ -35,14 +35,16 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
 
   return (
     <styles.contain
-      id={`day-${fullDate}`}
+      id={`day:${fullDate}`}
       {...styledProps}
       //ref={dayDivRef}
       onMouseDown={addEvent}
-      onDragEnter={onDragEnter}
     >
-      <styles.header {...styledProps}>
-        <styles.daySpot $isToday={isToday}>{`${daynumber}`}</styles.daySpot>
+      <styles.header id={`day-header:${fullDate}`} {...styledProps}>
+        <styles.daySpot
+          id={`day-spot:${fullDate}`}
+          $isToday={isToday}
+        >{`${daynumber}`}</styles.daySpot>
       </styles.header>
 
       <MemoEventsThrower day={fullDate} pushedDays={pushedDays} />

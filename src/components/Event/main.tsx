@@ -115,26 +115,29 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         {...mouseHover}
         onDragStart={(e) => {
           e.stopPropagation();
-          console.log("On drag start from Center", parentEvent);
-          setIsDragging(true);
-          setLocalIsDragging(true);
-          const copyOfParent: event = { ...parentEvent };
+          console.log("drag start: flex container");
+          //e.stopPropagation();
+          //console.log("On drag start from Center", parentEvent);
+          //setIsDragging(true);
+          //setLocalIsDragging(true);
+          //const copyOfParent: event = { ...parentEvent };
 
-          if (typeof copyOfParent.mutable === "object") {
-            copyOfParent.mutable.bubble = 0;
-          }
-          temporaryEventDispatcher(parentEvent);
+          //if (typeof copyOfParent.mutable === "object") {
+          //  copyOfParent.mutable.bubble = 0;
+          //}
+          //temporaryEventDispatcher(parentEvent);
         }}
-        onDragEnd={() => {
-          console.log("drag end");
-          setIsDragging(false);
-          setLocalIsDragging(false);
+        onDragEnd={(e) => {
+          e.stopPropagation();
+          console.log("drag end: flex container");
+          //setIsDragging(false);
+          //setLocalIsDragging(false);
           //const lastAdded
-          eventDispatcher({
-            type: "changeId",
-            payload: [event],
-            callback: pushDaysDispatcher,
-          });
+          //eventDispatcher({
+          //  type: "changeId",
+          //  payload: [event],
+          //  callback: pushDaysDispatcher,
+          //});
         }}
         onMouseUp={() => {
           console.log("mouse up");
@@ -169,15 +172,18 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
             draggable={"true"}
             onDragStart={(e) => {
               e.stopPropagation();
-              setLocalIsDragging(true);
-              console.log("On drag start from Left", parentEvent);
-              const copyOfParent: event = { ...parentEvent };
-              if (typeof copyOfParent.mutable === "object") {
-                copyOfParent.mutable.bubble = -1;
-              }
-              temporaryEventDispatcher(parentEvent);
+              //e.stopPropagation();
+              //setLocalIsDragging(true);
+              console.log("On drag start from extend Left", parentEvent);
+              //const copyOfParent: event = { ...parentEvent };
+              //if (typeof copyOfParent.mutable === "object") {
+              //  copyOfParent.mutable.bubble = -1;
+              //}
+              //temporaryEventDispatcher(parentEvent);
             }}
-            onDragEnd={() => {
+            onDragEnd={(e) => {
+              e.stopPropagation();
+              console.log("On drag end from extend Left", parentEvent);
               // setLocalIsDragging(false);
             }}
           >
@@ -192,15 +198,18 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
             draggable={"true"}
             onDragStart={(e) => {
               e.stopPropagation();
-              setLocalIsDragging(true);
-              console.log("On drag start from Right", parentEvent);
-              const copyOfParent: event = { ...parentEvent };
-              if (typeof copyOfParent.mutable === "object") {
-                copyOfParent.mutable.bubble = 1;
-              }
+              // setLocalIsDragging(true);
+              // const copyOfParent: event = { ...parentEvent };
+              // if (typeof copyOfParent.mutable === "object") {
+              //   copyOfParent.mutable.bubble = 1;
+              // }
+              console.log("On drag start from extend Right", parentEvent);
+              //!ISSUE: parentEvent isn't available in other context consumers (e.g: useOnDragEnter) after firing this dispatch order:
               temporaryEventDispatcher(parentEvent);
             }}
-            onDragEnd={() => {
+            onDragEnd={(e) => {
+              e.stopPropagation();
+              console.log("On drag end from extend Right", parentEvent);
               // setLocalIsDragging(false);
             }}
           >
@@ -315,11 +324,14 @@ export const EventOff = ({ event }: { event: event }) => {
         onDragStart={(e) => {
           e.stopPropagation();
           console.log("On drag start from Center", parentEvent);
-          const copyOfParent: event = { ...parentEvent };
-          if (typeof copyOfParent.mutable === "object") {
-            copyOfParent.mutable.bubble = 0;
-          }
-          temporaryEventDispatcher(parentEvent);
+          //const copyOfParent: event = { ...parentEvent };
+          //if (typeof copyOfParent.mutable === "object") {
+          //  copyOfParent.mutable.bubble = 0;
+          //}
+          //temporaryEventDispatcher(parentEvent);
+        }}
+        onDragOver={(e) => {
+          console.log("on drag over", e.target);
         }}
       >
         <StyledEvent.TWtextContent
@@ -350,11 +362,11 @@ export const EventOff = ({ event }: { event: event }) => {
             onDragStart={(e) => {
               e.stopPropagation();
               console.log("On drag start from Left", parentEvent);
-              const copyOfParent: event = { ...parentEvent };
-              if (typeof copyOfParent.mutable === "object") {
-                copyOfParent.mutable.bubble = -1;
-              }
-              temporaryEventDispatcher(parentEvent);
+              //const copyOfParent: event = { ...parentEvent };
+              //if (typeof copyOfParent.mutable === "object") {
+              //  copyOfParent.mutable.bubble = -1;
+              //}
+              //temporaryEventDispatcher(parentEvent);
             }}
           >
             {"+"}
@@ -368,11 +380,12 @@ export const EventOff = ({ event }: { event: event }) => {
             draggable={"true"}
             onDragStart={(e) => {
               e.stopPropagation();
-              console.log("On drag start from Right", parentEvent);
-              const copyOfParent: event = { ...parentEvent };
-              if (typeof copyOfParent.mutable === "object") {
-                copyOfParent.mutable.bubble = 1;
-              }
+              console.log("On drag start from Right x", parentEvent);
+              //const copyOfParent: event = { ...parentEvent };
+              //if (typeof copyOfParent.mutable === "object") {
+              //  copyOfParent.mutable.bubble = 1;
+              //}
+              console.log("storing", parentEvent);
               temporaryEventDispatcher(parentEvent);
             }}
           >

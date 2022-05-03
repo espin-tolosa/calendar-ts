@@ -1,5 +1,6 @@
 import { composition } from "@/interfaces";
 import { createContext, useContext, useState } from "react";
+import PropTypes from "prop-types";
 
 type IsDragginType = {
   isDragging: boolean;
@@ -25,12 +26,20 @@ const useIsDragging = () => {
 
   return { isDragging, setIsDragging };
 };
-export const IsDraggingEvent: composition = (Props) => {
+
+// check react prop-types out: https://reactjs.org/docs/typechecking-with-proptypes.html
+const IsDraggingEvent: composition = (propTypes) => {
   const { isDragging, setIsDragging } = useIsDragging();
 
   return (
     <context.Provider value={{ isDragging, setIsDragging }}>
-      {Props.children}
+      {propTypes.children}
     </context.Provider>
   );
 };
+
+IsDraggingEvent.propTypes = {
+  children: PropTypes.element.isRequired,
+};
+
+export { IsDraggingEvent };
