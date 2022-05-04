@@ -24,6 +24,10 @@ export const useOnDragEnter = () => {
   const pushDaysDispatcher = usePushedDaysDispatcher();
 
   return (date: date, dndEvent: event) => {
+    const isWeekend = DateService.IsWeekend(date);
+    if (isWeekend) {
+      return;
+    }
     if (typeof dndEvent === "undefined") {
       return;
     }
