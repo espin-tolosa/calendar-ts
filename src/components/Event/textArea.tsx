@@ -31,6 +31,16 @@ export const EventTextArea = ({ event }: TextArea) => {
           }
         }}
         onKeyDown={(e) => {
+          //  window.alert(
+          //    "key down: " +
+          //      e.charCode +
+          //      ", " +
+          //      e.code +
+          //      ", " +
+          //      e.key +
+          //      ", " +
+          //      e.keyCode
+          //  );
           if (e.code === "Enter") {
             const job = e.currentTarget.textContent || "";
             fetchEvent("PUT", { ...event, job });
@@ -40,8 +50,11 @@ export const EventTextArea = ({ event }: TextArea) => {
             e.currentTarget.blur();
           }
         }}
-        onBlur={() => {
-          console.log("Element finished");
+        onBlur={(e) => {
+          const job = e.currentTarget.textContent || "";
+          console.log("Element finished", job);
+          setState(job);
+          fetchEvent("PUT", { ...event, job });
           //window.location.reload();
         }}
       >
