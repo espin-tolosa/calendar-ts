@@ -22,7 +22,9 @@ export namespace CustomTypes {
     | "update"
     | "override"
     | "changeId"
-    | "unmount";
+    | "unmount"
+    | "tonull"
+    | "fromnull";
 
   /**
    * Options to send a query by POST method using fetch to Backend API events

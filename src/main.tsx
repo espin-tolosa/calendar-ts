@@ -17,40 +17,43 @@ import { EventsDispatcher } from "@/hooks/useEventsState";
 import { EventInController } from "@/context/eventSelected";
 import { EventsStatus } from "@/hooks/useEventsStatus";
 import { UserSession } from "@/hooks/useUserSession";
+import { EventInDnD } from "./context/dndEventRef";
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <DOMRefsContext>
-      <PushedDays>
-        <KeyBuffer>
-          <TemporaryEvent>
-            <TopNavRef>
-              <CurrentMonthRef>
-                <IsFetchingEvents>
-                  <IsDraggingEvent>
-                    <ControllerProvider>
-                      <ControllerProviderDates>
-                        <UserPreferences>
-                          <EventsDispatcher>
-                            <EventInController>
-                              <EventsStatus>
-                                <UserSession>
-                                  <App />
-                                </UserSession>
-                              </EventsStatus>
-                            </EventInController>
-                          </EventsDispatcher>
-                        </UserPreferences>
-                      </ControllerProviderDates>
-                    </ControllerProvider>
-                  </IsDraggingEvent>
-                </IsFetchingEvents>
-              </CurrentMonthRef>
-            </TopNavRef>
-          </TemporaryEvent>
-        </KeyBuffer>
-      </PushedDays>
+      <EventInDnD>
+        <PushedDays>
+          <KeyBuffer>
+            <TemporaryEvent>
+              <TopNavRef>
+                <CurrentMonthRef>
+                  <IsFetchingEvents>
+                    <IsDraggingEvent>
+                      <ControllerProvider>
+                        <ControllerProviderDates>
+                          <UserPreferences>
+                            <EventsDispatcher>
+                              <EventInController>
+                                <EventsStatus>
+                                  <UserSession>
+                                    <App />
+                                  </UserSession>
+                                </EventsStatus>
+                              </EventInController>
+                            </EventsDispatcher>
+                          </UserPreferences>
+                        </ControllerProviderDates>
+                      </ControllerProvider>
+                    </IsDraggingEvent>
+                  </IsFetchingEvents>
+                </CurrentMonthRef>
+              </TopNavRef>
+            </TemporaryEvent>
+          </KeyBuffer>
+        </PushedDays>
+      </EventInDnD>
     </DOMRefsContext>
   </React.StrictMode>
 );

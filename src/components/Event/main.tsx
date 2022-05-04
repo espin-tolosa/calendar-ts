@@ -15,6 +15,9 @@ import { EventCard, EventTail } from "./eventCard";
 import { useGethDeleteEvent } from "@/api/handlers";
 import { Context } from "@/hooks/useIsDragging";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
+import { useDnDEventRef, useSetDnDEventRef } from "@/context/dndEventRef";
+import { useSetEventSelected } from "@/context/eventSelected";
+import { nullEvent } from "@/customTypes";
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();
@@ -99,7 +102,47 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
 
+  const setDnDEventRef = useSetDnDEventRef();
+  const dndEvent = useDnDEventRef();
+
   const [localIsDragging, setLocalIsDragging] = useState(false);
+
+  const hOnDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    direction: number
+  ) => {
+    e.stopPropagation();
+    const parentCopy: event = {
+      ...parentEvent,
+    };
+    if (typeof parentEvent.mutable === "object") {
+      parentCopy.mutable = { ...parentEvent.mutable };
+      parentCopy.mutable.bubble = direction;
+    }
+    //!ISSUE: parentEvent isn't available in other context consumers (e.g: useOnDragEnter) after firing this dispatch order:
+    //temporaryEventDispatcher(parentEvent);
+    console.warn("drag start", parentCopy);
+    setDnDEventRef(parentCopy);
+    setTimeout(() => {
+      eventDispatcher({
+        type: "tonull",
+        payload: [{ ...event }],
+        callback: pushDaysDispatcher,
+      });
+
+      //setLocalIsDragging(true);
+    }, 1000);
+  };
+  const hOnDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setDnDEventRef(nullEvent());
+    ////setLocalIsDragging(false);
+    eventDispatcher({
+      type: "fromnull",
+      payload: [{ ...dndEvent }],
+      callback: pushDaysDispatcher,
+    });
+  };
 
   return (
     <>
@@ -111,34 +154,12 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
             hDelete();
           }
         }}
-        draggable={"true"}
         {...mouseHover}
+        draggable={"true"}
         onDragStart={(e) => {
-          e.stopPropagation();
-          console.log("drag start: flex container");
-          //e.stopPropagation();
-          //console.log("On drag start from Center", parentEvent);
-          //setIsDragging(true);
-          //setLocalIsDragging(true);
-          //const copyOfParent: event = { ...parentEvent };
-
-          //if (typeof copyOfParent.mutable === "object") {
-          //  copyOfParent.mutable.bubble = 0;
-          //}
-          //temporaryEventDispatcher(parentEvent);
+          hOnDragStart(e, 0);
         }}
-        onDragEnd={(e) => {
-          e.stopPropagation();
-          console.log("drag end: flex container");
-          //setIsDragging(false);
-          //setLocalIsDragging(false);
-          //const lastAdded
-          //eventDispatcher({
-          //  type: "changeId",
-          //  payload: [event],
-          //  callback: pushDaysDispatcher,
-          //});
-        }}
+        onDragEnd={hOnDragEnd}
         onMouseUp={() => {
           console.log("mouse up");
           //e.stopPropagation();
@@ -171,21 +192,9 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
             title={`Drag here to extend ${event.client}'s job`}
             draggable={"true"}
             onDragStart={(e) => {
-              e.stopPropagation();
-              //e.stopPropagation();
-              //setLocalIsDragging(true);
-              console.log("On drag start from extend Left", parentEvent);
-              //const copyOfParent: event = { ...parentEvent };
-              //if (typeof copyOfParent.mutable === "object") {
-              //  copyOfParent.mutable.bubble = -1;
-              //}
-              //temporaryEventDispatcher(parentEvent);
+              hOnDragStart(e, -1);
             }}
-            onDragEnd={(e) => {
-              e.stopPropagation();
-              console.log("On drag end from extend Left", parentEvent);
-              // setLocalIsDragging(false);
-            }}
+            onDragEnd={hOnDragEnd}
           >
             {"+"}
           </StyledEvent.TWextend_Left>
@@ -197,21 +206,9 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
             title={`Drag here to extend ${event.client}'s job`}
             draggable={"true"}
             onDragStart={(e) => {
-              e.stopPropagation();
-              // setLocalIsDragging(true);
-              // const copyOfParent: event = { ...parentEvent };
-              // if (typeof copyOfParent.mutable === "object") {
-              //   copyOfParent.mutable.bubble = 1;
-              // }
-              console.log("On drag start from extend Right", parentEvent);
-              //!ISSUE: parentEvent isn't available in other context consumers (e.g: useOnDragEnter) after firing this dispatch order:
-              temporaryEventDispatcher(parentEvent);
+              hOnDragStart(e, 1);
             }}
-            onDragEnd={(e) => {
-              e.stopPropagation();
-              console.log("On drag end from extend Right", parentEvent);
-              // setLocalIsDragging(false);
-            }}
+            onDragEnd={hOnDragEnd}
           >
             {"+"}
           </StyledEvent.TWextend>
@@ -284,7 +281,8 @@ export const EventOff = ({ event }: { event: event }) => {
 
   //drag and drop
   //const temporaryEvent = useTemporaryEvent();
-  const temporaryEventDispatcher = useTemporaryEventDispatcher();
+  //const temporaryEventDispatcher = useTemporaryEventDispatcher();
+  const setDnDEventRef = useSetDnDEventRef();
   //const eventDispatcher = useEventDispatch();
   //keybuffer to detect when control keyword is pressed
   //const keyBuffer = useCtxKeyBuffer();
@@ -319,20 +317,21 @@ export const EventOff = ({ event }: { event: event }) => {
             hDelete();
           }
         }}
-        draggable={"true"}
         {...mouseHover}
-        onDragStart={(e) => {
-          e.stopPropagation();
-          console.log("On drag start from Center", parentEvent);
-          //const copyOfParent: event = { ...parentEvent };
-          //if (typeof copyOfParent.mutable === "object") {
-          //  copyOfParent.mutable.bubble = 0;
-          //}
-          //temporaryEventDispatcher(parentEvent);
-        }}
-        onDragOver={(e) => {
-          console.log("on drag over", e.target);
-        }}
+        //draggable={"true"}
+        // onDragStart={(e) => {
+        //   e.stopPropagation();
+        //   console.log("On drag start from Center", parentEvent);
+        //   const copyOfParent: event = { ...parentEvent };
+        //   if (typeof copyOfParent.mutable === "object") {
+        //     copyOfParent.mutable.bubble = 1;
+        //   }
+        //   //temporaryEventDispatcher(parentEvent);
+        //   setDnDEventRef(parentEvent);
+        // }}
+        // onDragOver={(e) => {
+        //   console.log("on drag over", e.target);
+        // }}
       >
         <StyledEvent.TWtextContent
           $isChildren={isChildren}
@@ -358,16 +357,17 @@ export const EventOff = ({ event }: { event: event }) => {
             $cells={spreadCells}
             style={state}
             title={`Drag here to extend ${event.client}'s job`}
-            draggable={"true"}
-            onDragStart={(e) => {
-              e.stopPropagation();
-              console.log("On drag start from Left", parentEvent);
-              //const copyOfParent: event = { ...parentEvent };
-              //if (typeof copyOfParent.mutable === "object") {
-              //  copyOfParent.mutable.bubble = -1;
-              //}
-              //temporaryEventDispatcher(parentEvent);
-            }}
+            //   draggable={"true"}
+            //   onDragStart={(e) => {
+            //     e.stopPropagation();
+            //     console.log("On drag start from Left", parentEvent);
+            //     const copyOfParent: event = { ...parentEvent };
+            //     if (typeof copyOfParent.mutable === "object") {
+            //       copyOfParent.mutable.bubble = -1;
+            //     }
+            //     //temporaryEventDispatcher(parentEvent);
+            //     setDnDEventRef(parentEvent);
+            //   }}
           >
             {"+"}
           </StyledEvent.TWextend_Left>
@@ -377,17 +377,18 @@ export const EventOff = ({ event }: { event: event }) => {
             $cells={spreadCells}
             style={state}
             title={`Drag here to extend ${event.client}'s job`}
-            draggable={"true"}
-            onDragStart={(e) => {
-              e.stopPropagation();
-              console.log("On drag start from Right x", parentEvent);
-              //const copyOfParent: event = { ...parentEvent };
-              //if (typeof copyOfParent.mutable === "object") {
-              //  copyOfParent.mutable.bubble = 1;
-              //}
-              console.log("storing", parentEvent);
-              temporaryEventDispatcher(parentEvent);
-            }}
+            //  draggable={"true"}
+            //  onDragStart={(e) => {
+            //    e.stopPropagation();
+            //    console.log("On drag start from Right x", parentEvent);
+            //    //const copyOfParent: event = { ...parentEvent };
+            //    //if (typeof copyOfParent.mutable === "object") {
+            //    //  copyOfParent.mutable.bubble = 1;
+            //    //}
+            //    console.log("storing", parentEvent);
+            //    //temporaryEventDispatcher(parentEvent);
+            //    setDnDEventRef(parentEvent);
+            //  }}
           >
             {"+"}
           </StyledEvent.TWextend>

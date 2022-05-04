@@ -6,45 +6,58 @@ import {
   useTemporaryEventDispatcher,
 } from "@/context/temporaryEvents";
 import { fetchEvent_Day } from "@/utils/fetchEvent";
+import { useDnDEventRef, useSetDnDEventRef } from "@/context/dndEventRef";
+import { event } from "@/interfaces";
 
 type date = string;
 
 export const useOnDragEnter = () => {
   // const events = useEventState();
-  const temporaryEvent = useTemporaryEvent();
-  const temporaryEventDispatcher = useTemporaryEventDispatcher();
+  const dndEventRef = useDnDEventRef();
+  console.log("REading dnd event", dndEventRef);
+  const setDnDEventRef = useSetDnDEventRef();
+  if (dndEventRef === null) {
+    return;
+  }
+  // const temporaryEventDispatcher = useTemporaryEventDispatcher();
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
 
-  return (date: date) => {
-    const newEvent = { ...temporaryEvent };
-    console.log("NEW EVENT", newEvent);
+  return (date: date, dndEvent: event) => {
+    if (typeof dndEvent === "undefined") {
+      return;
+    }
+    console.warn("closure", date, dndEvent);
     //TODO: pulling from red is working like this, but pulling from green it is more or less the opposite
-    if (temporaryEvent.mutable?.bubble === 1) {
-      newEvent.end = date;
-      const isRewind = DateService.DaysFrom(temporaryEvent.start, date) < 0;
+    if (dndEvent.mutable?.bubble === 1) {
+      console.warn("Right");
+      dndEvent.end = date;
+      const isRewind = DateService.DaysFrom(dndEvent.start, date) < 0;
       if (isRewind) {
-        newEvent.start = date;
+        dndEvent.start = date;
       }
-    } else if (temporaryEvent.mutable?.bubble === -1) {
-      newEvent.start = date;
-      const isRewind = DateService.DaysFrom(temporaryEvent.end, date) > 0;
+    } else if (dndEvent.mutable?.bubble === -1) {
+      console.warn("Left");
+      dndEvent.start = date;
+      const isRewind = DateService.DaysFrom(dndEvent.end, date) > 0;
       if (isRewind) {
-        newEvent.end = date;
+        dndEvent.end = date;
       }
-    } else {
-      newEvent.start = date;
-      newEvent.end = date;
+    } else if (dndEvent.mutable?.bubble === 0) {
+      console.warn("Center");
+      dndEvent.start = date;
+      dndEvent.end = date;
     }
     //temporaryEventDispatcher(newEvent);
+    setDnDEventRef(dndEvent);
     //-------------------------------------------------------------------------------------------
 
+    fetchEvent_Day("PUT", dndEvent);
     eventDispatcher({
       type: "update",
-      payload: [{ ...newEvent, start: "2022-05-03", id: 123456789 }],
+      payload: [{ ...dndEvent }],
       callback: pushDaysDispatcher,
     });
-    console.log("Dispatching", newEvent);
-    fetchEvent_Day("PUT", newEvent);
+    console.log("Dispatching", dndEvent);
   };
 };

@@ -242,6 +242,55 @@ export function reducerEvents(
       return newState;
     }
 
+    case "tonull": {
+      const origin = action.payload[0];
+
+      //Deep-cloning the array ref and the objects inside removing the origin
+      const newState = state
+        .filter((event) => Math.abs(event.id) !== Math.abs(origin.id))
+        .map((event) => {
+          return { ...event };
+        });
+
+      //Scape if there is no temp event
+      const target = newState.find((event) => event.id === origin.id);
+      if (!target) {
+        return state;
+      }
+
+      target.id = action.payload[0].id;
+
+      //      const index = newState.findIndex((event) => event.id === 123456789);
+      //      const toOverride = state[index];
+      //      console.log(action.payload[0]);
+      //      toOverride.id = action.payload[0].id;
+      //      console.log(toOverride);
+
+      return newState;
+    }
+
+    //Overrides whatever is in null with the payload
+    case "fromnull": {
+      const toReplace = action.payload[0];
+      const cleanState = state.filter((event) => event.id !== 0);
+
+      //State before and after cleaning is the same, event is not in state so won't add
+      const affectedEvents = state.length - cleanState.length;
+      if (affectedEvents === 0) {
+        return [...state];
+      }
+
+      //Recompute the new representation of that event
+      const spread = eventSpreader(toReplace);
+
+      //Append to previous cleaned state
+      const result = [...cleanState, toReplace, ...spread];
+
+      //Sort again
+      result.sort((prev, next) => sortCriteria(prev, next));
+      return result;
+    }
+
     case "unmount": {
       return [];
     }
