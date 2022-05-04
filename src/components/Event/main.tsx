@@ -146,6 +146,15 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 
   return (
     <>
+      {isSelected && (
+        <div
+          className="absolute z-1 top-0 left-0 w-screen h-screen bg-[rgba(100,100,100,0.5)]"
+          onMouseDown={(e) => {
+            e.currentTarget.blur();
+            e.stopPropagation();
+          }}
+        ></div>
+      )}
       <StyledEvent.TWflexContainer
         $hidde={localIsDragging}
         onMouseDown={(e) => e.stopPropagation()}

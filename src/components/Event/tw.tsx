@@ -5,7 +5,7 @@ flex whitespace-normal break-words overflow-hidden overflow-ellipsis
 `;
 
 export const TWflexContainer = tw.div<{ $hidde: boolean }>`
-  flex flex-col justify-start my-1 transition-colors
+  flex flex-col justify-start my-1 transition-colors z-TopLayer
 	${({ $hidde }: { $hidde: boolean }) => ($hidde && "hidden") || ""}
 	`;
 
