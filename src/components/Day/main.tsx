@@ -1,9 +1,10 @@
 import { styles } from "@/components/Day/tw";
 import { MemoEventsThrower } from "@/components/EventsThrower/main";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { DateService } from "@/utils/Date";
 import { usePostQuery } from "@/api/queries";
 import { useOnDragEnter } from "./logic";
+import { useDoubleClick } from "@/hooks/useDoubleClick";
 
 interface Day {
   daynumber: number;
@@ -24,7 +25,6 @@ interface Day {
 function Day({ daynumber, fullDate, pushedDays }: Day) {
   //Callbacks
   const addEvent = usePostQuery(fullDate);
-  //const onDragEnter = useOnDragEnter();
 
   //Computed:
   //TODO: Locked days not impl
@@ -32,14 +32,10 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
   const $isWeekend = DateService.IsWeekend(fullDate);
   const styledProps = { $isWeekend, $isLock };
   const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
+  const hAddEvent = useDoubleClick(addEvent);
 
   return (
-    <styles.contain
-      id={`day:${fullDate}`}
-      {...styledProps}
-      //ref={dayDivRef}
-      onMouseDown={addEvent}
-    >
+    <styles.contain id={`day:${fullDate}`} {...styledProps} {...hAddEvent}>
       <styles.header id={`day-header:${fullDate}`} {...styledProps}>
         <styles.daySpot
           id={`day-spot:${fullDate}`}

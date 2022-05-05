@@ -146,18 +146,13 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 
   return (
     <>
-      {isSelected && (
-        <div
-          className="absolute z-1 top-0 left-0 w-screen h-screen bg-[rgba(100,100,100,0.5)]"
-          onMouseDown={(e) => {
-            e.currentTarget.blur();
-            e.stopPropagation();
-          }}
-        ></div>
-      )}
       <StyledEvent.TWflexContainer
+        onClick={(e) => {
+          console.warn("Click on placehoder");
+          e.stopPropagation();
+          e.preventDefault();
+        }}
         $hidde={localIsDragging}
-        onMouseDown={(e) => e.stopPropagation()}
         onKeyDown={(e) => {
           if (e.ctrlKey && e.code === "Delete") {
             hDelete();
@@ -169,9 +164,9 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           hOnDragStart(e, 0);
         }}
         onDragEnd={hOnDragEnd}
-        onMouseUp={() => {
+        onMouseUp={(e) => {
           console.log("mouse up");
-          //e.stopPropagation();
+          e.stopPropagation();
         }}
       >
         <StyledEvent.TWtextContent
@@ -223,17 +218,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           </StyledEvent.TWextend>
         )}
 
-        <StyledEvent.TWplaceholder
-          key={"p" + event.id}
-          style={state}
-          onMouseDown={() => {
-            //const x = e.clientX;
-            //const y = e.clientY;
-            //const el = document.elementsFromPoint(x, y);
-            //const dayDiv = el.find((e) => e.id.includes("day"));
-            //console.log("Clicked on placeholder", dayDiv);
-          }}
-        >
+        <StyledEvent.TWplaceholder key={"p" + event.id} style={state}>
           {"placeholder"}
         </StyledEvent.TWplaceholder>
       </StyledEvent.TWflexContainer>
@@ -267,11 +252,17 @@ export const EventHolder = ({ event }: { event: event }) => {
 
   //
   return (
-    <StyledEvent.TWflexContainer $hidde={false} ref={eventRef}>
+    <StyledEvent.TWflexContainer_Holder
+      $hidde={false}
+      ref={eventRef}
+      onClick={() => {
+        console.warn("EVENT HOLDER");
+      }}
+    >
       <StyledEvent.TWplaceholder style={newState}>
         {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
-    </StyledEvent.TWflexContainer>
+    </StyledEvent.TWflexContainer_Holder>
   );
 };
 
@@ -320,27 +311,12 @@ export const EventOff = ({ event }: { event: event }) => {
     <>
       <StyledEvent.TWflexContainer
         $hidde={false}
-        onMouseDown={(e) => e.stopPropagation()}
         onKeyDown={(e) => {
           if (e.ctrlKey && e.code === "Delete") {
             hDelete();
           }
         }}
         {...mouseHover}
-        //draggable={"true"}
-        // onDragStart={(e) => {
-        //   e.stopPropagation();
-        //   console.log("On drag start from Center", parentEvent);
-        //   const copyOfParent: event = { ...parentEvent };
-        //   if (typeof copyOfParent.mutable === "object") {
-        //     copyOfParent.mutable.bubble = 1;
-        //   }
-        //   //temporaryEventDispatcher(parentEvent);
-        //   setDnDEventRef(parentEvent);
-        // }}
-        // onDragOver={(e) => {
-        //   console.log("on drag over", e.target);
-        // }}
       >
         <StyledEvent.TWtextContent
           $isChildren={isChildren}
@@ -362,58 +338,25 @@ export const EventOff = ({ event }: { event: event }) => {
           //DnD Logic
         }
         {!isSelected && (
-          <StyledEvent.TWextend_Left
-            $cells={spreadCells}
-            style={state}
-            title={`Drag here to extend ${event.client}'s job`}
-            //   draggable={"true"}
-            //   onDragStart={(e) => {
-            //     e.stopPropagation();
-            //     console.log("On drag start from Left", parentEvent);
-            //     const copyOfParent: event = { ...parentEvent };
-            //     if (typeof copyOfParent.mutable === "object") {
-            //       copyOfParent.mutable.bubble = -1;
-            //     }
-            //     //temporaryEventDispatcher(parentEvent);
-            //     setDnDEventRef(parentEvent);
-            //   }}
-          >
-            {"+"}
-          </StyledEvent.TWextend_Left>
-        )}
-        {!isSelected && (
-          <StyledEvent.TWextend
-            $cells={spreadCells}
-            style={state}
-            title={`Drag here to extend ${event.client}'s job`}
-            //  draggable={"true"}
-            //  onDragStart={(e) => {
-            //    e.stopPropagation();
-            //    console.log("On drag start from Right x", parentEvent);
-            //    //const copyOfParent: event = { ...parentEvent };
-            //    //if (typeof copyOfParent.mutable === "object") {
-            //    //  copyOfParent.mutable.bubble = 1;
-            //    //}
-            //    console.log("storing", parentEvent);
-            //    //temporaryEventDispatcher(parentEvent);
-            //    setDnDEventRef(parentEvent);
-            //  }}
-          >
-            {"+"}
-          </StyledEvent.TWextend>
+          <>
+            <StyledEvent.TWextend_Left
+              $cells={spreadCells}
+              style={state}
+              title={`Drag here to extend ${event.client}'s job`}
+            >
+              {"+"}
+            </StyledEvent.TWextend_Left>
+            <StyledEvent.TWextend
+              $cells={spreadCells}
+              style={state}
+              title={`Drag here to extend ${event.client}'s job`}
+            >
+              {"+"}
+            </StyledEvent.TWextend>
+          </>
         )}
 
-        <StyledEvent.TWplaceholder
-          key={"p" + event.id}
-          style={state}
-          onMouseDown={() => {
-            //const x = e.clientX;
-            //const y = e.clientY;
-            //const el = document.elementsFromPoint(x, y);
-            //const dayDiv = el.find((e) => e.id.includes("day"));
-            //console.log("Clicked on placeholder", dayDiv);
-          }}
-        >
+        <StyledEvent.TWplaceholder key={"p" + event.id} style={state}>
           {"placeholder"}
         </StyledEvent.TWplaceholder>
       </StyledEvent.TWflexContainer>

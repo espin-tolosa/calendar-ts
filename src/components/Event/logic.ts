@@ -128,6 +128,7 @@ export const useHoverEvent = (event: event) => {
     hover: Math.abs(controllerState.id) === Math.abs(event.id),
 
     onMouseEnter: () => {
+      console.log("Mouse enter");
       controllerStateDispatch({
         type: "setId",
         payload: { id: Math.abs(event.id) },
@@ -135,6 +136,7 @@ export const useHoverEvent = (event: event) => {
     },
 
     onMouseLeave: () => {
+      console.log("Mouse leave");
       controllerStateDispatch({
         type: "setId",
         payload: { id: Math.abs(0) },

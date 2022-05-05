@@ -4,6 +4,10 @@ export const TWjobContent = tw.div`
 flex whitespace-normal break-words overflow-hidden overflow-ellipsis
 `;
 
+export const TWflexContainer_Holder = tw.div<{ $hidde: boolean }>`
+  flex flex-col justify-start my-1 transition-colors z-0 border-2 border-red-900
+	${({ $hidde }: { $hidde: boolean }) => ($hidde && "hidden") || ""}
+	`;
 export const TWflexContainer = tw.div<{ $hidde: boolean }>`
   flex flex-col justify-start my-1 transition-colors z-TopLayer
 	${({ $hidde }: { $hidde: boolean }) => ($hidde && "hidden") || ""}
@@ -43,7 +47,7 @@ ${({ $isHover, $isChildren }: { $isHover: boolean; $isChildren: boolean }) =>
 `;
 
 export const TWextend = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event-e min-w-[7.14%] z-ExtendEvent /*border-2 border-red-500*/
+	mt-[1px] absolute text-transparent extend-event-e min-w-[7.14%] z-ExtendEvent border-2 border-red-500
 
 	${({ $cells }: { $cells: number }) =>
     ($cells === 1 && "extend-event-1") ||
@@ -58,7 +62,7 @@ export const TWextend = tw.div<{ $cells: number }>`
 `;
 
 export const TWextend_Left = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event-w min-w-[7.14%] z-ExtendEvent /*border-2 border-green-500*/
+	mt-[1px] absolute text-transparent extend-event-w min-w-[7.14%] z-ExtendEvent border-2 border-green-900
 
 	${({ $cells }: { $cells: number }) =>
     ($cells === 1 && "extend-event-l-1") ||
@@ -73,7 +77,7 @@ export const TWextend_Left = tw.div<{ $cells: number }>`
 `;
 
 export const TWplaceholder = tw.div`
-	text-transparent /*border-2 border-red-900 border-dashed bg-red-200*/
+	text-transparent
 `;
 
 export const TWStyledSelect = tw.select`

@@ -7,7 +7,7 @@ type EventCard = TextArea & ClientSelector;
 
 export const EventCard = ({ event, style }: EventCard) => {
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full z-100">
       <EventClientSelector event={event} style={style} />
 
       <EventTextArea event={event} />
