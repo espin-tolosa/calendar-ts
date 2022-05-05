@@ -1,5 +1,6 @@
 import * as StyledEvent from "./tw";
-import { event } from "@/interfaces/index";
+import React, { useCallback } from "react";
+import { useDoubleClick } from "@/hooks/useDoubleClick";
 const CLIENTS = [
   "Client_1",
   "Client_2",
@@ -14,27 +15,24 @@ const CLIENTS = [
 ];
 
 export type ClientSelector = {
-  event: event;
   style: object;
 };
 
-export const EventClientSelector = ({ event, style }: ClientSelector) => {
+//export const EventCard: React.FC<EventCard> = (propTypes): JSX.Element => {
+export const EventClientSelector: React.FC<ClientSelector> = (
+  propTypes
+): JSX.Element => {
+  const doubleClick = useCallback(() => {
+    console.log("Click on client selector");
+  }, []);
+  const hDoubleClick = useDoubleClick(doubleClick);
   return (
     <StyledEvent.TWStyledSelect
-      value={event.client}
-      style={style}
+      style={propTypes.style}
       id={"select"}
+      {...hDoubleClick}
     >
-      <option value="default" hidden>
-        Select Client
-      </option>
-      {CLIENTS.map((clientIterator, index) => {
-        return (
-          <option key={index} value={clientIterator}>
-            {clientIterator}
-          </option>
-        );
-      })}
+      Select Client
     </StyledEvent.TWStyledSelect>
   );
 };

@@ -77,52 +77,52 @@
     grid-column-start: min(6, 7);
   }
   .extend-event-1 {
-    margin-left: calc(1 * 100% / 7 - 50% / 7);
+    margin-left: calc(1 * 100% / 7 - 30% / 7);
   }
   .extend-event-2 {
-    margin-left: calc(2 * 100% / 7 - 50% / 7);
+    margin-left: calc(2 * 100% / 7 - 30% / 7);
   }
   .extend-event-3 {
-    margin-left: calc(3 * 100% / 7 - 50% / 7);
+    margin-left: calc(3 * 100% / 7 - 30% / 7);
   }
   .extend-event-4 {
-    margin-left: calc(4 * 100% / 7 - 50% / 7);
+    margin-left: calc(4 * 100% / 7 - 30% / 7);
   }
   .extend-event-5 {
-    margin-left: calc(5 * 100% / 7 - 50% / 7);
+    margin-left: calc(5 * 100% / 7 - 30% / 7);
   }
   .extend-event-6 {
-    margin-left: calc(6 * 100% / 7 - 50% / 7);
+    margin-left: calc(6 * 100% / 7 - 30% / 7);
   }
   .extend-event-7 {
-    margin-left: calc(7 * 100% / 7 - 50% / 7);
+    margin-left: calc(7 * 100% / 7 - 30% / 7);
   }
   .extend-event-8 {
-    margin-left: calc(8 * 100% / 7 - 50% / 7);
+    margin-left: calc(8 * 100% / 7 - 30% / 7);
   }
   .extend-event-l-1 {
-    margin-right: calc(1 * 100% / 7 - 50% / 7);
+    margin-right: calc(1 * 100% / 7 - 30% / 7);
   }
   .extend-event-l-2 {
-    margin-right: calc(2 * 100% / 7 - 50% / 7);
+    margin-right: calc(2 * 100% / 7 - 30% / 7);
   }
   .extend-event-l-3 {
-    margin-right: calc(3 * 100% / 7 - 50% / 7);
+    margin-right: calc(3 * 100% / 7 - 30% / 7);
   }
   .extend-event-l-4 {
-    margin-right: calc(4 * 100% / 7 - 50% / 7);
+    margin-right: calc(4 * 100% / 7 - 30% / 7);
   }
   .extend-event-l-5 {
-    margin-right: calc(5 * 100% / 7 - 50% / 7);
+    margin-right: calc(5 * 100% / 7 - 30% / 7);
   }
   .extend-event-l-6 {
-    margin-right: calc(6 * 100% / 7 - 50% / 7);
+    margin-right: calc(6 * 100% / 7 - 30% / 7);
   }
   .extend-event-l-7 {
-    margin-right: calc(7 * 100% / 7 - 50% / 7);
+    margin-right: calc(7 * 100% / 7 - 30% / 7);
   }
   .extend-event-l-8 {
-    margin-right: calc(8 * 100% / 7 - 50% / 7);
+    margin-right: calc(8 * 100% / 7 - 30% / 7);
   }
 
   .event-span-1 {

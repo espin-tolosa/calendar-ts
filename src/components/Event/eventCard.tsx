@@ -5,12 +5,12 @@ import { event } from "@/interfaces";
 
 type EventCard = TextArea & ClientSelector;
 
-export const EventCard = ({ event, style }: EventCard) => {
+export const EventCard: React.FC<EventCard> = (propTypes): JSX.Element => {
   return (
     <div className="flex flex-col w-full z-100">
-      <EventClientSelector event={event} style={style} />
+      <EventClientSelector style={propTypes.style} />
 
-      <EventTextArea event={event} />
+      <EventTextArea event={propTypes.event} />
     </div>
   );
 };

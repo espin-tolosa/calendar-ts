@@ -37,7 +37,9 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
         const keyValue = Math.abs(event.id);
         if (isPlaceholder(event)) {
           return (
-            <EventHolder key={`p-${keyValue}`} event={event}></EventHolder>
+            <div className="border-2 border-dashed border-red-900 bg-red-200">
+              <EventHolder key={`p-${keyValue}`} event={event}></EventHolder>
+            </div>
           );
         }
         //Mutable instruction for global state of events

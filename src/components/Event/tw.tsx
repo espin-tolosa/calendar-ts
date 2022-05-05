@@ -4,8 +4,9 @@ export const TWjobContent = tw.div`
 flex whitespace-normal break-words overflow-hidden overflow-ellipsis
 `;
 
+//I needed to create this component which is a copy of flexContainer just to change z-index and give its corresponding holder behavior
 export const TWflexContainer_Holder = tw.div<{ $hidde: boolean }>`
-  flex flex-col justify-start my-1 transition-colors z-0 border-2 border-red-900
+  flex flex-col justify-start my-1 transition-colors z-0
 	${({ $hidde }: { $hidde: boolean }) => ($hidde && "hidden") || ""}
 	`;
 export const TWflexContainer = tw.div<{ $hidde: boolean }>`
@@ -47,7 +48,7 @@ ${({ $isHover, $isChildren }: { $isHover: boolean; $isChildren: boolean }) =>
 `;
 
 export const TWextend = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event-e min-w-[7.14%] z-ExtendEvent border-2 border-red-500
+	mt-[1px] absolute text-transparent extend-event-e min-w-[4.14%] z-ExtendEvent border-2 border-red-500
 
 	${({ $cells }: { $cells: number }) =>
     ($cells === 1 && "extend-event-1") ||
@@ -62,7 +63,7 @@ export const TWextend = tw.div<{ $cells: number }>`
 `;
 
 export const TWextend_Left = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event-w min-w-[7.14%] z-ExtendEvent border-2 border-green-900
+	mt-[1px] absolute text-transparent extend-event-w min-w-[4.14%] z-ExtendEvent border-2 border-green-900
 
 	${({ $cells }: { $cells: number }) =>
     ($cells === 1 && "extend-event-l-1") ||
@@ -80,6 +81,6 @@ export const TWplaceholder = tw.div`
 	text-transparent
 `;
 
-export const TWStyledSelect = tw.select`
+export const TWStyledSelect = tw.div`
   border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer outline-none text-white
 `;
