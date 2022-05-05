@@ -1,25 +1,18 @@
-import { Event, EventHolder, EventOff } from "@/components/Event/main";
+import { Event, EventHolder } from "@/components/Event/main";
 import { useEventState } from "@/hooks/useEventsState";
 import { bubblingAlgo } from "@/components/EventsThrower/bubblingAlgoUtils";
 import { sendEndReferencesToPlaceholders } from "@/components/EventsThrower/sendReferencesToPlaceholders";
-import { isPlaceholder, isValidPlaceholder } from "@/utils/ValidateEvent";
-import { memo, useEffect, useLayoutEffect } from "react";
-import { DateService } from "@/utils/Date";
+import { isPlaceholder } from "@/utils/ValidateEvent";
+import { memo } from "react";
 
 interface EventProps {
   day: string;
   pushedDays: Set<string>;
 }
 
-export const EventsThrower: React.FC<EventProps> = ({
-  day,
-  pushedDays,
-}): JSX.Element => {
-  const dayEvents = useEventState(day);
+export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
+  const dayEvents = useEventState(propTypes.day);
   const allEvents = useEventState();
-  const weekRange = DateService.GetWeekRangeOf(day);
-  const eventsOfWeek = useEventState(weekRange);
-  const componentName = "Eventthrown";
 
   //TODO: style height has be passed from eventRef
 
@@ -31,6 +24,11 @@ export const EventsThrower: React.FC<EventProps> = ({
     typeof dayOff !== "undefined" && dayOff.client.includes("Unavailable");
 
   const dayEventsFiltered = isLocked ? [dayOff] : dayEvents;
+
+  if (dayEventsFiltered.length === 0) {
+    return <></>;
+  }
+
   const sortedEvents = bubblingAlgo(dayEventsFiltered);
 
   return (
