@@ -192,7 +192,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         {!isSelected && (
           <StyledEvent.TWextend_Left
             $cells={spreadCells}
-            style={state}
             title={`Drag here to extend ${event.client}'s job`}
             draggable={"true"}
             onDragStart={(e) => {
@@ -206,7 +205,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         {!isSelected && (
           <StyledEvent.TWextend
             $cells={spreadCells}
-            style={state}
             title={`Drag here to extend ${event.client}'s job`}
             draggable={"true"}
             onDragStart={(e) => {
@@ -227,39 +225,82 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 };
 
 export const EventHolder = ({ event }: { event: event }) => {
+  const [force, setForce] = useState(0);
+  const frame = useRef(0);
   const [parent] = useGetEventFamily(event);
   const eventRef = useRef<HTMLDivElement>();
-  const [state, setState] = useState<{ height: string }>({ height: "0px" });
+  //const [state, setState] = useState<{ height: string }>({ height: "0px" });
   //
-  useLayoutEffect(() => {
-    if (typeof eventRef.current !== "undefined") {
-      event.mutable = {
-        height: `${eventRef.current.clientHeight}px`,
-        eventRef: eventRef.current,
-        index: typeof parent.mutable === "object" ? parent.mutable.index : 0, //!Corrected bug: was using event.end wich is zero
-      };
-    }
+  // useLayoutEffect(() => {
+  if (typeof eventRef.current !== "undefined") {
     const h0 =
       typeof parent.mutable === "object" ? parent.mutable.height : "0px";
     const h1 = parseInt(h0.split("px")[0]);
     const newState = { height: `${h1}px` };
-    setState(newState);
-  }, []);
+    event.mutable = {
+      //height: `${eventRef.current.clientHeight}px`,
+      height: newState.height,
+      eventRef: eventRef.current,
+      index: typeof parent.mutable === "object" ? parent.mutable.index : 0, //!Corrected bug: was using event.end wich is zero
+    };
+  }
+  //   setState(newState);
+  // }, []);
 
-  const h0 = parent.mutable?.height || state.height;
-  const h1 = parseInt(h0.split("px")[0]);
-  const newState = { height: `${h1}px` };
+  //  useEffect(() => {
+  //    if (Math.abs(event.id) === 744 && event.start === "2022-05-04") {
+  //      setInterval(() => {
+  //        const currentHeight = eventRef.current?.style.height;
+  //        console.log("Timer on event", event);
+  //        console.log("currentHeight", currentHeight || newState.height);
+  //      }, 1000);
+  //    }
+  //  }, []);
+
+  useLayoutEffect(() => {
+    if (force === 0) {
+      setForce(1);
+    }
+  }, []);
+  //if (typeof eventRef.current !== "undefined") {
+  //  event.mutable = {
+  //    height: "500px",
+  //    eventRef: eventRef.current,
+  //    index: 0, //typeof parent.mutable === "object" ? parent.mutable.index : 0, //!Corrected bug: was using event.end wich is zero
+  //  };
+  //}
+  //
+  //const h0 = event.mutable?.height || "0";
+  //const h1 = parseInt(h0.split("px")[0]);
+  //const newState = { height: `${h1}px` };
+
+  //Debug
+  if (Math.abs(event.id) === 744 && event.start === "2022-05-04") {
+    //      setInterval(() => {
+    //        const currentHeight = eventRef.current?.style.height;
+    const b1 = Math.ceil(Math.random() * 6);
+    const b2 = Math.ceil(Math.random() * 6);
+    const b3 = Math.ceil(Math.random() * 6);
+    console.log(
+      `%c Render frame: ${frame.current++} day: ${event.start}`,
+      `background: #${b1}${b2}${b3}; color: #bada55`
+    );
+    console.log("current event", event);
+    //console.log("currentHeight", currentHeight || newState.height);
+    //      }, 1000);
+  }
 
   //
+  //console.log("Going to return height of event holder", h1);
   return (
     <StyledEvent.TWflexContainer_Holder
       $hidde={false}
       ref={eventRef}
       onClick={() => {
-        console.warn("EVENT HOLDER");
+        console.warn("EVENT HOLDER", event.id);
       }}
     >
-      <StyledEvent.TWplaceholder style={newState}>
+      <StyledEvent.TWplaceholder style={{ height: event.mutable?.height }}>
         {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer_Holder>

@@ -31,29 +31,24 @@ export const useOnDragEnter = () => {
     if (typeof dndEvent === "undefined") {
       return;
     }
-    console.warn("closure", date, dndEvent);
-    //TODO: pulling from red is working like this, but pulling from green it is more or less the opposite
+
     if (dndEvent.mutable?.bubble === 1) {
-      console.warn("Right");
       dndEvent.end = date;
       const isRewind = DateService.DaysFrom(dndEvent.start, date) < 0;
       if (isRewind) {
         dndEvent.start = date;
       }
     } else if (dndEvent.mutable?.bubble === -1) {
-      console.warn("Left");
       dndEvent.start = date;
       const isRewind = DateService.DaysFrom(dndEvent.end, date) > 0;
       if (isRewind) {
         dndEvent.end = date;
       }
     } else if (dndEvent.mutable?.bubble === 0) {
-      console.warn("Center");
       dndEvent.start = date;
       dndEvent.end = date;
     }
     //temporaryEventDispatcher(newEvent);
-    setDnDEventRef(dndEvent);
     //-------------------------------------------------------------------------------------------
 
     fetchEvent_Day("PUT", dndEvent);
@@ -62,6 +57,6 @@ export const useOnDragEnter = () => {
       payload: [{ ...dndEvent }],
       callback: pushDaysDispatcher,
     });
-    console.log("Dispatching", dndEvent);
+    setDnDEventRef(dndEvent);
   };
 };

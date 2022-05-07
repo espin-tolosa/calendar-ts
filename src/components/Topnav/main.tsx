@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { DOMRefs } from "@/context/DOMRefs";
 import { useCleanSession } from "@/hooks/useCleanSession";
 import { useUserSession } from "@/hooks/useUserSession";
+import { env } from "process";
 
 export const TOPNAV_ID = "Topnav";
 
@@ -42,7 +43,15 @@ export const Topnav = () => {
         title={"Cleans up your session token | Ctrl+Alt+q"}
         onClick={(evt) => {
           evt.stopPropagation();
-          cleanSession();
+          //cleanSession();
+          //!Developing
+          const development = () => {
+            window.document.documentElement.requestFullscreen();
+          };
+
+          import.meta.env.MODE === "development"
+            ? development()
+            : cleanSession();
         }}
       >
         {token.isValid() ? "Logout" : "Sign in"}

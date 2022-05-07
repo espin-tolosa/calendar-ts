@@ -48,7 +48,7 @@ ${({ $isHover, $isChildren }: { $isHover: boolean; $isChildren: boolean }) =>
 `;
 
 export const TWextend = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event-e min-w-[4.14%] z-ExtendEvent border-2 border-red-500
+	mt-[1px] absolute text-transparent extend-event-e min-w-[4.14%] z-ExtendEvent border-2 border-green-500
 
 	${({ $cells }: { $cells: number }) =>
     ($cells === 1 && "extend-event-1") ||
