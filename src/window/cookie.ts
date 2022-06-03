@@ -1,8 +1,7 @@
 import { nullEncodedToken } from "@/customTypes";
-import { encodedTokenFromAPI } from "@/interfaces";
 import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
 
-const hDecodeURI = (cookie: string): encodedTokenFromAPI => {
+const hDecodeURI = (cookie: string) => {
   if (!cookie) {
     return nullEncodedToken();
   }
