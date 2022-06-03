@@ -18,20 +18,18 @@ const hDecodeURI = (cookie: string): encodedTokenFromAPI => {
     return nullEncodedToken();
   }
 
-  let encodedToken: encodedTokenFromAPI;
   try {
-    encodedToken = JSON.parse(decoded);
+    const encodedToken = JSON.parse(decoded);
+    // This line parses the outcoming cookie to check if it fits the current implementation of the API which sends an object as: {data: "..."}
+    // if the parsed cookie doesn't fit this object an nullEncodedToken is returned
+    if (!checkObjectValidKeys(nameAndType(nullEncodedToken), encodedToken)) {
+      return nullEncodedToken();
+    }
+
+    return { ...encodedToken };
   } catch (e) {
     return nullEncodedToken();
   }
-
-  // This line parses the outcoming cookie to check if it fits the current implementation of the API which sends an object as: {data: "..."}
-  // if the parsed cookie doesn't fit this object an nullEncodedToken is returned
-  if (!checkObjectValidKeys(nameAndType(nullEncodedToken), encodedToken)) {
-    return nullEncodedToken();
-  }
-
-  return { ...encodedToken };
 };
 function readCookiesBody() {
   const cookies = window.document.cookie
