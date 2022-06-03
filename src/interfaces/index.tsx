@@ -30,6 +30,7 @@ export interface loginForm {
 }
 
 //Encoded tokens from API are expided within array that parses as this object {data: "encodedToken..."}
+//TODO (issue 001)
 export type encodedTokenFromAPI = { data: string };
 
 export interface token {

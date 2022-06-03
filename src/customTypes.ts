@@ -64,4 +64,5 @@ export const nullToken = (): token => ({
   data: { iss: "", uid: "", usr: "", aut: "", rus: "" },
 });
 
+//TODO (issue 001): Refactor this function: it attempts to instantiate an encodedTokenFromAPI in its null form
 export const nullEncodedToken = (): encodedTokenFromAPI => ({ data: "" });

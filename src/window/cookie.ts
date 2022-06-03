@@ -1,3 +1,4 @@
+//TODO (001): nullEncodedToken calls has to be moved to intances of encodedToken class where some sort option allow to specify that the object is null
 import { nullEncodedToken } from "@/customTypes";
 import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
 
