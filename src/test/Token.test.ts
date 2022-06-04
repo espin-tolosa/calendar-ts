@@ -4,7 +4,6 @@ import { nullEncodedToken, nullEvent, nullToken } from "@/customTypes";
 import { encodedTokenFromAPI } from "@/interfaces";
 import { safeDecodeJWT } from "@/modules/jwt";
 import { DocumentIO } from "@/window/cookie";
-import { LastToken } from "@/__entities/tokenEncoded";
 
 // Note about testing thread execution:
 // after defining some constants and helper functions I need to mock the content of window.document.cookie
@@ -210,14 +209,5 @@ describe("Testing getters methods from Token class with a invalid expided token"
   test("Testing getter isAuth expect to be false", () => {
     const token = new Token();
     expect(token.isAuth()).toBe(false);
-  });
-});
-
-describe("Testing new Token class", () => {
-  test("Test empty cookies should set token class to undefined", () => {
-    window.document.cookie = "";
-    const lastToken = new LastToken();
-
-    expect(lastToken.isValid()).toBe(false);
   });
 });
