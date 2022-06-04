@@ -29,24 +29,6 @@ export interface loginForm {
   password: string;
 }
 
-//Encoded tokens from API are expided within array that parses as this object {data: "encodedToken..."}
-//TODO (issue 001)
-export type encodedTokenFromAPI = { data: string };
-
-export interface token {
-  exp: number;
-  aud: string;
-  data: tokenData;
-}
-
-export interface tokenData {
-  iss: string;
-  uid: string;
-  usr: string;
-  aut: string;
-  rus: string;
-}
-
 export type setstate<S> = React.Dispatch<React.SetStateAction<S>>;
 
 export type children = { children: React.ReactNode };

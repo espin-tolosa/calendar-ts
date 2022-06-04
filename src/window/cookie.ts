@@ -1,59 +1,5 @@
-//TODO (001): nullEncodedToken calls has to be moved to intances of encodedToken class where some sort option allow to specify that the object is null
-import { nullEncodedToken } from "@/customTypes";
-import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
-
-const hDecodeURI = (cookie: string) => {
-  if (!cookie) {
-    return nullEncodedToken();
-  }
-
-  let decoded: string;
-  try {
-    decoded = window.decodeURIComponent(cookie);
-  } catch {
-    return nullEncodedToken();
-  }
-
-  if (decoded === "") {
-    return nullEncodedToken();
-  }
-
-  try {
-    const encodedToken = JSON.parse(decoded);
-    // This line parses the outcoming cookie to check if it fits the current implementation of the API which sends an object as: {data: "..."}
-    // if the parsed cookie doesn't fit this object an nullEncodedToken is returned
-    if (!checkObjectValidKeys(nameAndType(nullEncodedToken), encodedToken)) {
-      return nullEncodedToken();
-    }
-
-    return { ...encodedToken };
-  } catch (e) {
-    return nullEncodedToken();
-  }
-};
-function readCookiesBody() {
-  const cookies = window.document.cookie
-    .split(";")
-    .map((cookie) => cookie.trim().split("=")[1]);
-
-  return cookies;
-}
-function parseURITokens(encodedTokens: string[]) {
-  return encodedTokens
-    .map(hDecodeURI)
-    .filter((encodedToken) => encodedToken.data !== "");
-}
-
 //Tested on describe: "Testing window api read encoded tokens"
 export namespace DocumentIO {
-  //map handler
-
-  //This function read all cookies from the document and returns non-empty parsed objects as {data: "encoded token..."}
-  export function readTokens() {
-    const tokenCookies = readCookiesBody();
-    return parseURITokens(tokenCookies);
-  }
-
   export function readCookiesName() {
     return window.document.cookie
       .split(";")

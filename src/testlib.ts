@@ -1,4 +1,4 @@
-import * as read_headers from "./__entities/secure-login/read-headers";
+import * as read_headers from "@/entities/secure-login/read-headers";
 
 //! Testing Cookies Utilities
 const createURI = (token: string) =>

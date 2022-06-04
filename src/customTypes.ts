@@ -1,4 +1,4 @@
-import { encodedTokenFromAPI, event, token } from "@/interfaces";
+import { event } from "@/interfaces";
 
 export namespace CustomTypes {
   /**
@@ -43,26 +43,3 @@ export namespace CustomTypes {
     month: number;
   };
 }
-
-//TODO: create a factory to automate instantiation inside functions by declaring the type
-/**
- * A constant that stores an event that is considered null by any consumer
- */
-export const nullEvent = (): event => ({
-  id: 0,
-  client: "",
-  job: "",
-  start: "",
-  end: "",
-});
-
-// Create new instances each time a nullToken is required
-// it prevents againts sharing multiple instances of same object in different parts of the code
-export const nullToken = (): token => ({
-  exp: 0,
-  aud: "",
-  data: { iss: "", uid: "", usr: "", aut: "", rus: "" },
-});
-
-//TODO (issue 001): Refactor this function: it attempts to instantiate an encodedTokenFromAPI in its null form
-export const nullEncodedToken = (): encodedTokenFromAPI => ({ data: "" });
