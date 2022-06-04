@@ -127,8 +127,11 @@ export class Credentials implements CredentialsMethodsForPresentationLayer {
    * A valid token is not expired and has a non-empty user name
    */
   public isValid(): boolean {
-    const expired = this.token.exp > DateService.secondsSinceEpoch();
-    return expired && Boolean(this.token.data.usr.length);
+    const expired = this.token.exp < DateService.secondsSinceEpoch();
+    const emptyUser = this.token.data.usr.length === 0;
+    const unauthorized = this.token.data.aut === "none";
+    const untargeted = this.token.data.rus.length === 0;
+    return !expired && !emptyUser && !unauthorized && !untargeted;
   }
 
   /**
