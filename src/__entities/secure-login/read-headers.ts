@@ -39,9 +39,13 @@ const dicLevelsFromAPI: {
 namespace Document {
   export namespace Cookie {
     export function readBodies(): string[] {
-      return window.document.cookie
-        .split(";")
-        .map((cookie) => cookie.trim().split("=")[1]);
+      const cookies = window.document.cookie;
+
+      if (typeof cookies !== "string") {
+        return [""];
+      }
+
+      return cookies.split(";").map((cookie) => cookie.trim().split("=")[1]);
     }
   }
 }
@@ -134,27 +138,11 @@ export class Credentials implements CredentialsMethodsForPresentationLayer {
     return this.isValid() && this.token.data.aut === dicLevelsFromAPI[level];
   }
 
-  //TODO ref:apply-solid-in-show-user
-  // This method violates Single Responsability Principle
-  // I would needed another entity to deal with presentation bussines logic
-  // instead of having this "invited" state deep nested in Credentials
-
   /**
-   * !deprecated:
    * Gives information to the presentation layer ready to use
    */
   public showUser() {
-    return this.token.data.usr || "invited";
-  }
-
-  /**
-   * !deprecated:
-   * Check if a friend token has the same id of the current one
-   * friend name is choosen to hint that private fields are accessible
-   * whithin the same class
-   */
-  public isSameUser(friend: Credentials): boolean {
-    return this.token.data.uid === friend.token.data.uid;
+    return this.isValid() ? this.token.data.usr : "invited";
   }
 }
 
