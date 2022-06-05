@@ -87,23 +87,32 @@ class LoadJWT {
       });
 
     if (tokens.length === 0) {
-      return this.empty() as PHP.decodedToken;
+      return this.decodeObjTemplate();
     } else {
-      return tokens[0] as PHP.decodedToken;
+      return tokens[0] !== undefined ? tokens[0] : this.decodeObjTemplate();
     }
   }
 
   /**
-   * Gives an object with all fields nulled, which is useful as type template
+   * ! Templating objects that helps object keys checker to know what to check
    */
-  public template() {
-    return this.empty();
-  }
-  public empty() {
+
+  /**
+   * Gives an decoded token object with all fields sette to nulled and frozen.
+   */
+  private decodeObjTemplate(): PHP.decodedToken {
     return {
       exp: 0,
       aud: "",
       data: Object.freeze({ iss: "", uid: "", usr: "", aut: "none", rus: "" }),
+    };
+  }
+  /**
+   * Gives an encoded token object with all fields sette to nulled and frozen.
+   */
+  public static encodedObjTemplate(): PHP.encodedToken {
+    return {
+      data: "",
     };
   }
 }
@@ -112,8 +121,12 @@ class LoadJWT {
  * ! Interfaces, Types and Dictionaries of PHP Server
  * Defines all interfaces needed to process emmitted credentials from server.
  *
- * TODO: introduce-php-ts-middleware-type-system
- * ! Warning: It needs to manually follow any change in the server specification
+ * TODO: introduce-php-ts-interface-system
+ * Proposal solution given by https://github.com/nikic/PHP-Parser
+ *
+ * Here some usage examples:
+ * https://stackoverflow.com/a/33222854/11231828
+ * https://php.tutorialink.com/export-php-interface-to-typescript-interface-or-vice-versa/
  */
 namespace PHP {
   export interface encodedToken {
@@ -154,11 +167,15 @@ namespace HeaderAPIs {
         const decoded = window.decodeURIComponent(cookie);
         const encodedToken = JSON.parse(decoded) as PHP.encodedToken;
 
-        //TODO ref:restore-method-check-encoded
-        //During the refactor, this check wasn't possible to do so its disabled.
-        //!if (!checkObjectValidKeys(nameAndType(nullEncodedToken), encodedToken)) {
-        //!return undefined;
-        //!}
+        //TODO: test-branch-check-object-valid-keys
+        if (
+          !checkObjectValidKeys(
+            nameAndType(LoadJWT.encodedObjTemplate()),
+            encodedToken
+          )
+        ) {
+          return "";
+        }
 
         return encodedToken.data;
       } catch (e) {

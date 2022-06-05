@@ -61,3 +61,29 @@ describe("Testing Class Credentials method showUser", () => {
     expect(test.showUser()).toBe("invited");
   });
 });
+
+describe("Testing Object Keys while LoadJWT", () => {
+  test("Passing a token with a missing key should return an empty token", () => {
+    window.document.cookie = `
+		${Test.cookies.invalid_jwt.uri}
+		`;
+
+    const encoded = Test.read_headers.loadjwt();
+    const decoded = Test.read_headers.credentials();
+    expect(encoded.isEmpty()).toBe(false); //The token is loaded
+    expect(decoded.isValid()).toBe(false); //but it us null
+  });
+});
+
+describe("Testing Object Keys while LoadJWT", () => {
+  test("Passing a token with all expected keys but with an incorrect type should return an empty token", () => {
+    window.document.cookie = `
+		${Test.cookies.typeerror_jwt.uri}
+		`;
+
+    const encoded = Test.read_headers.loadjwt();
+    const decoded = Test.read_headers.credentials();
+    expect(encoded.isEmpty()).toBe(false); //The token is loaded
+    expect(decoded.isValid()).toBe(false); //But it us null
+  });
+});
