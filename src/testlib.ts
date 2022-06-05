@@ -1,4 +1,5 @@
 import * as read_headers from "@/entities/secure-login/read-headers";
+import * as status_login from "@/entities/presentation/status-login";
 
 //! Testing Cookies Utilities
 const createURI = (token: string) =>
@@ -83,6 +84,7 @@ const cookies = {
 
 //! Test Tool
 export const Test = {
-  read_headers: read_headers.default,
+  read_headers: read_headers.default, //communication layer
+  status_login: status_login.default, //presentation layer
   cookies,
 };
