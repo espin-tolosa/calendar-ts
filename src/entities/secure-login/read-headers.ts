@@ -8,7 +8,7 @@ import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
 export interface CredentialsMethodsForPresentationLayer {
   isValid(): boolean;
   isAuth(level: "rw" | "r"): boolean;
-  showUser(): string;
+  showUser(): string | undefined;
 }
 
 /**
@@ -43,10 +43,10 @@ export class Credentials implements CredentialsMethodsForPresentationLayer {
   }
 
   /**
-   * Gives information to the presentation layer ready to use
+   * Gives information to the presentation layer ready to use: user name or invited
    */
-  public showUser() {
-    return this.isValid() ? this.token.data.usr : "invited";
+  public showUser(): string | undefined {
+    return this.isValid() ? this.token.data.usr : undefined;
   }
 }
 /**

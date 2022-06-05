@@ -58,7 +58,7 @@ describe("Testing Class Credentials method showUser", () => {
     window.document.cookie = "";
 
     const test = Test.read_headers.credentials();
-    expect(test.showUser()).toBe("invited");
+    expect(test.showUser()).toBe(undefined);
   });
 });
 
