@@ -1,5 +1,5 @@
 import * as read_headers from "@/entities/secure-login/read-headers";
-import * as status_login from "@/entities/presentation/status-login";
+import * as status_login from "@/entities/presentation/login-status";
 
 //! Testing Cookies Utilities
 const createURI = (token: string) =>
