@@ -1,9 +1,8 @@
 import { styles } from "@/components/Day/tw";
 import { MemoEventsThrower } from "@/components/EventsThrower/main";
-import { memo, useEffect, useState } from "react";
+import { memo } from "react";
 import { DateService } from "@/utils/Date";
 import { usePostQuery } from "@/api/queries";
-import { useOnDragEnter } from "./logic";
 import { useDoubleClick } from "@/hooks/useDoubleClick";
 
 interface Day {

@@ -1,4 +1,4 @@
-import React from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@/index.css";
 import { App } from "@/App";
@@ -17,11 +17,12 @@ import { EventsDispatcher } from "@/hooks/useEventsState";
 import { EventInController } from "@/context/eventSelected";
 import { EventsStatus } from "@/hooks/useEventsStatus";
 import { UserSession } from "@/hooks/useUserSession";
-import { EventInDnD } from "./context/dndEventRef";
+import { EventInDnD } from "@/context/dndEventRef";
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
+const root = window.document.getElementById("root") as HTMLDivElement;
+
+createRoot(root).render(
+  <StrictMode>
     <DOMRefsContext>
       <EventInDnD>
         <PushedDays>
@@ -55,5 +56,5 @@ createRoot(document.getElementById("root")!).render(
         </PushedDays>
       </EventInDnD>
     </DOMRefsContext>
-  </React.StrictMode>
+  </StrictMode>
 );

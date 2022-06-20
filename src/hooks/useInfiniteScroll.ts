@@ -11,7 +11,7 @@ export function useInfiniteScroll(initLength: number) {
   );
   const [isBottom, setIsBottom] = useState(false);
   useEffect(() => {
-    const onChange = (entries: any) => {
+    const onChange = (entries: Array<IntersectionObserverEntry>) => {
       if (entries[0].isIntersecting) {
         setIsBottom((prev) => {
           return !prev;

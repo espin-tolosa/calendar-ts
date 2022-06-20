@@ -6,11 +6,11 @@ flex whitespace-normal break-words overflow-hidden overflow-ellipsis
 
 //I needed to create this component which is a copy of flexContainer just to change z-index and give its corresponding holder behavior
 export const TWflexContainer_Holder = tw.div<{ $hidde: boolean }>`
-  flex flex-col justify-start my-1 transition-colors z-0
+  flex flex-col justify-start my-1 transition-colors
 	${({ $hidde }: { $hidde: boolean }) => ($hidde && "hidden") || ""}
 	`;
 export const TWflexContainer = tw.div<{ $hidde: boolean }>`
-  flex flex-col justify-start my-1 transition-colors z-TopLayer
+  flex flex-col justify-start my-1 transition-colors
 	${({ $hidde }: { $hidde: boolean }) => ($hidde && "hidden") || ""}
 	`;
 
