@@ -61,7 +61,7 @@ export const nullEvent = (): event => ({
 export const nullToken = (): token => ({
   exp: 0,
   aud: "",
-  data: { iss: "", uid: "", usr: "", aut: "", rus: "" },
+  data: { iss: "", usr: "", aut: "", rus: "" },
 });
 
 export const nullEncodedToken = (): encodedTokenFromAPI => ({ data: "" });

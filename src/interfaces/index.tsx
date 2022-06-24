@@ -40,7 +40,6 @@ export interface token {
 
 export interface tokenData {
   iss: string;
-  uid: string;
   usr: string;
   aut: string;
   rus: string;

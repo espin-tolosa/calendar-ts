@@ -9,5 +9,5 @@ DragAndDropTouch();
 export function App() {
   const token = useUserSession();
 
-  return false ? <Login /> : <LayoutMain />;
+  return token.isValid() ? <LayoutMain /> : <Login />;
 }

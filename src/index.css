@@ -10,8 +10,8 @@
 
 @font-face {
   font-family: "Roboto";
-  src: url(./Roboto-Regular.ttf), url(./Roboto-Medium.ttf),
-    url(./Roboto-Bold.ttf);
+  font-display: swap;
+  src: url(./Roboto-Regular.ttf);
   /* other formats include: 'woff2', 'truetype, 'opentype',
                             'embedded-opentype', and 'svg' */
 }

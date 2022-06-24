@@ -12,19 +12,16 @@ export default function Login() {
     clearLogin();
   }, []);
 
-  const onSubmitLogin = (payload: any) => {
-    //TODO: fix any, understand handleSubmit
-    if (document.fullscreenEnabled && !isLargeWindow) {
-      document.documentElement.requestFullscreen().then((res) => {
-        fetchLogin(payload);
-      });
-    } else {
-      fetchLogin(payload);
-    }
-  };
   return (
     <TWloginWrapper>
-      <TWloginForm onSubmit={handleSubmit(onSubmitLogin)}>
+      <TWloginForm
+        onSubmit={handleSubmit((payload) => {
+          fetchLogin(payload);
+          if (document.fullscreenEnabled && !isLargeWindow) {
+            document.documentElement.requestFullscreen;
+          }
+        })}
+      >
         <TWloginInput
           type="text"
           placeholder="User"

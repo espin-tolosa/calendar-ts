@@ -18,9 +18,12 @@ export function useUserSession() {
 }
 
 // * Create and export provider
-export const UserSession: composition = ({ children }) => {
+export const UserSession: composition = (PropTypes) => {
   const token = useToken();
+
   return (
-    <cUserSession.Provider value={token}>{children}</cUserSession.Provider>
+    <cUserSession.Provider value={token}>
+      {PropTypes.children}
+    </cUserSession.Provider>
   );
 };
