@@ -23,7 +23,7 @@ export const EventClientSelector: React.FC<ClientSelector> = (
   propTypes
 ): JSX.Element => {
   const doubleClick = useCallback(() => {
-    console.log("Click on client selector");
+    console.info("Click on client selector");
   }, []);
   const hDoubleClick = useDoubleClick(doubleClick);
   return (

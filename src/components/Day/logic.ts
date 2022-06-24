@@ -1,10 +1,6 @@
 import { DateService } from "@/utils/Date";
-import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
+import { useEventDispatch } from "@/hooks/useEventsState";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
-import {
-  useTemporaryEvent,
-  useTemporaryEventDispatcher,
-} from "@/context/temporaryEvents";
 import { fetchEvent_Day } from "@/utils/fetchEvent";
 import { useDnDEventRef, useSetDnDEventRef } from "@/context/dndEventRef";
 import { event } from "@/interfaces";
@@ -14,7 +10,6 @@ type date = string;
 export const useOnDragEnter = () => {
   // const events = useEventState();
   const dndEventRef = useDnDEventRef();
-  console.log("REading dnd event", dndEventRef);
   const setDnDEventRef = useSetDnDEventRef();
   if (dndEventRef === null) {
     return;

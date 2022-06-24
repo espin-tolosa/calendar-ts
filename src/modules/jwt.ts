@@ -21,9 +21,6 @@ export function safeDecodeJWT(encodedToken: encodedTokenFromAPI) {
   const validHeader = checkObjectValidKeys(nameAndType(header), token);
   const validData = checkObjectValidKeys(nameAndType(data), token.data);
 
-  console.log("Valid Header", validHeader, token);
-
-  console.log("Valir Data", validData, token.data);
   if (!validHeader || !validData) {
     return nullToken(); //checked
   }

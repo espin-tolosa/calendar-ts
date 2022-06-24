@@ -6,12 +6,10 @@ import { useEffect } from "react";
 import { DOMRefs } from "@/context/DOMRefs";
 import { useCleanSession } from "@/hooks/useCleanSession";
 import { useUserSession } from "@/hooks/useUserSession";
-import { env } from "process";
 
 export const TOPNAV_ID = "Topnav";
 
 export const Topnav = () => {
-  console.log("Rendering TopNav");
   const token = useUserSession();
   const user = token.data().usr;
   const topNavRef = useCtxTopNavRef();
@@ -33,7 +31,10 @@ export const Topnav = () => {
       {/*center-header*/}{" "}
       <StyledTopnav.TWtitle
         onClick={() => {
-          monthRef?.current?.scrollIntoView({ behavior: "smooth" })!;
+          if (monthRef?.current == undefined) {
+            return;
+          }
+          monthRef?.current?.scrollIntoView({ behavior: "smooth" });
         }}
       >
         {DateService.GetTodayDateFormat()}

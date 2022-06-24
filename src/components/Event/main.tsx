@@ -7,16 +7,11 @@ import {
   useEventState,
   useGetEventFamily,
 } from "@/hooks/useEventsState";
-import { useTemporaryEventDispatcher } from "@/context/temporaryEvents";
-//import { useCtxKeyBuffer } from "@/context/keyBuffer";
-//import { useSetEventSelected } from "@/context/eventSelected";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { EventCard, EventTail } from "./eventCard";
 import { useGethDeleteEvent } from "@/api/handlers";
-import { Context } from "@/hooks/useIsDragging";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 import { useDnDEventRef, useSetDnDEventRef } from "@/context/dndEventRef";
-import { useSetEventSelected } from "@/context/eventSelected";
 import { nullEvent } from "@/customTypes";
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
@@ -72,14 +67,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   //edit mode
   const [parentEvent] = useGetEventFamily(event);
 
-  //drag and drop
-  //const temporaryEvent = useTemporaryEvent();
-  const temporaryEventDispatcher = useTemporaryEventDispatcher();
-  //const eventDispatcher = useEventDispatch();
-  //keybuffer to detect when control keyword is pressed
-  //const keyBuffer = useCtxKeyBuffer();
-
-  //const setEventController = useSetEventSelected();
   const hDelete = useGethDeleteEvent(event);
 
   // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
@@ -97,8 +84,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
     8
   );
 
-  //const dayRef = useRef<Element>();
-  const { setIsDragging } = Context.useIsDragging();
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
 
@@ -165,7 +150,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         }}
         onDragEnd={hOnDragEnd}
         onMouseUp={(e) => {
-          console.log("mouse up");
           e.stopPropagation();
         }}
       >
@@ -226,7 +210,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
 
 export const EventHolder = ({ event }: { event: event }) => {
   const [force, setForce] = useState(0);
-  const frame = useRef(0);
   const [parent] = useGetEventFamily(event);
   const eventRef = useRef<HTMLDivElement>();
   //const [state, setState] = useState<{ height: string }>({ height: "0px" });
@@ -244,62 +227,15 @@ export const EventHolder = ({ event }: { event: event }) => {
       index: typeof parent.mutable === "object" ? parent.mutable.index : 0, //!Corrected bug: was using event.end wich is zero
     };
   }
-  //   setState(newState);
-  // }, []);
-
-  //  useEffect(() => {
-  //    if (Math.abs(event.id) === 744 && event.start === "2022-05-04") {
-  //      setInterval(() => {
-  //        const currentHeight = eventRef.current?.style.height;
-  //        console.log("Timer on event", event);
-  //        console.log("currentHeight", currentHeight || newState.height);
-  //      }, 1000);
-  //    }
-  //  }, []);
 
   useLayoutEffect(() => {
     if (force === 0) {
       setForce(1);
     }
   }, []);
-  //if (typeof eventRef.current !== "undefined") {
-  //  event.mutable = {
-  //    height: "500px",
-  //    eventRef: eventRef.current,
-  //    index: 0, //typeof parent.mutable === "object" ? parent.mutable.index : 0, //!Corrected bug: was using event.end wich is zero
-  //  };
-  //}
-  //
-  //const h0 = event.mutable?.height || "0";
-  //const h1 = parseInt(h0.split("px")[0]);
-  //const newState = { height: `${h1}px` };
 
-  //Debug
-  if (Math.abs(event.id) === 744 && event.start === "2022-05-04") {
-    //      setInterval(() => {
-    //        const currentHeight = eventRef.current?.style.height;
-    const b1 = Math.ceil(Math.random() * 6);
-    const b2 = Math.ceil(Math.random() * 6);
-    const b3 = Math.ceil(Math.random() * 6);
-    console.log(
-      `%c Render frame: ${frame.current++} day: ${event.start}`,
-      `background: #${b1}${b2}${b3}; color: #bada55`
-    );
-    console.log("current event", event);
-    //console.log("currentHeight", currentHeight || newState.height);
-    //      }, 1000);
-  }
-
-  //
-  //console.log("Going to return height of event holder", h1);
   return (
-    <StyledEvent.TWflexContainer_Holder
-      $hidde={false}
-      ref={eventRef}
-      onClick={() => {
-        console.warn("EVENT HOLDER", event.id);
-      }}
-    >
+    <StyledEvent.TWflexContainer_Holder $hidde={false} ref={eventRef}>
       <StyledEvent.TWplaceholder style={{ height: event.mutable?.height }}>
         {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
@@ -317,19 +253,6 @@ export const EventOff = ({ event }: { event: event }) => {
   //--------------------------------------------
 
   const isChildren = event.job.includes("#isChildren");
-  //edit mode
-  const [parentEvent] = useGetEventFamily(event);
-
-  //drag and drop
-  //const temporaryEvent = useTemporaryEvent();
-  //const temporaryEventDispatcher = useTemporaryEventDispatcher();
-  const setDnDEventRef = useSetDnDEventRef();
-  //const eventDispatcher = useEventDispatch();
-  //keybuffer to detect when control keyword is pressed
-  //const keyBuffer = useCtxKeyBuffer();
-
-  //const setEventController = useSetEventSelected();
-  const hDelete = useGethDeleteEvent(event);
 
   // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
   const { hover, ...mouseHover } = useHoverEvent(event);
@@ -347,6 +270,7 @@ export const EventOff = ({ event }: { event: event }) => {
   );
 
   //const dayRef = useRef<Element>();
+  const hDelete = useGethDeleteEvent(event);
 
   return (
     <>

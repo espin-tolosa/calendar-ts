@@ -15,13 +15,11 @@ export const useToken = () => {
     //Update Token when: user changes | token expires
     const updateToken = () => {
       const current = new Token();
-      console.log(window.document.cookie);
-      console.log("data", current.data());
-      //const userChanged = !current.isSameUser(token);
-      //const tokenGetInvalid = token.isValid() && !current.isValid();
-      //if (userChanged || tokenGetInvalid) {
-      setToken(current);
-      //}
+      const userChanged = !current.isSameUser(token);
+      const tokenGetInvalid = token.isValid() && !current.isValid();
+      if (userChanged || tokenGetInvalid) {
+        setToken(current);
+      }
     };
 
     const intervalId = setInterval(updateToken, 1000);

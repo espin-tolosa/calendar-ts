@@ -43,12 +43,6 @@ export class Token {
    */
   public isValid() {
     const expired = this.token.exp > DateService.secondsSinceEpoch();
-    console.log(
-      "Check valid token",
-      this.token.exp,
-      DateService.secondsSinceEpoch(),
-      this.token.data.usr.length
-    );
     return expired && !!this.token.data.usr.length;
   }
 
@@ -69,8 +63,6 @@ export class Token {
     const tokens = input
       .map(safeDecodeJWT)
       .sort((prev, next) => next.exp - prev.exp);
-
-    console.log("REAd and decode", input, tokens);
 
     if (tokens.length === 0) {
       return nullToken();

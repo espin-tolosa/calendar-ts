@@ -233,12 +233,6 @@ export function reducerEvents(
 
       target.id = action.payload[0].id;
 
-      //      const index = newState.findIndex((event) => event.id === 123456789);
-      //      const toOverride = state[index];
-      //      console.log(action.payload[0]);
-      //      toOverride.id = action.payload[0].id;
-      //      console.log(toOverride);
-
       return newState;
     }
 
@@ -259,12 +253,6 @@ export function reducerEvents(
       }
 
       target.id = action.payload[0].id;
-
-      //      const index = newState.findIndex((event) => event.id === 123456789);
-      //      const toOverride = state[index];
-      //      console.log(action.payload[0]);
-      //      toOverride.id = action.payload[0].id;
-      //      console.log(toOverride);
 
       return newState;
     }

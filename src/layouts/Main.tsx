@@ -9,7 +9,6 @@ import { useDnDEventRef } from "@/context/dndEventRef";
 export const LayoutMain = () => {
   const onDragEnter = useOnDragEnter();
   const dndEvent = useDnDEventRef();
-  console.log("Rendering Layout main", dndEvent);
   useKeyboardShortcuts();
   const onDate = useRef("");
 
@@ -35,7 +34,6 @@ export const LayoutMain = () => {
       return;
     }
     onDate.current = date;
-    console.log("inside drag over", dndEvent);
 
     onDragEnter(date, dndEvent);
   };

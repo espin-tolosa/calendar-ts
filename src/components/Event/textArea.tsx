@@ -20,7 +20,6 @@ export const EventTextArea = ({ event }: TextArea) => {
         role="textbox"
         contentEditable={true}
         onClick={(e) => {
-          console.log("CLICK");
           e.currentTarget.focus();
           if (textRef.current) {
             const range = window.document.createRange();
@@ -52,7 +51,6 @@ export const EventTextArea = ({ event }: TextArea) => {
         }}
         onBlur={(e) => {
           const job = e.currentTarget.textContent || "";
-          console.log("Element finished", job);
           setState(job);
           fetchEvent("PUT", { ...event, job });
           //window.location.reload();
@@ -66,9 +64,7 @@ export const EventTextArea = ({ event }: TextArea) => {
 
 /*
 onClick={(e) => {
-  console.log("CLICK");
   e.currentTarget.focus();
-  //console.log("Click", e.currentTarget);
   eventDispatcher({
     type: "update",
     payload: [{ ...event, job: "" }],
@@ -76,11 +72,8 @@ onClick={(e) => {
   });
 }}
 onKeyDown={(e) => {
-  console.log("KEYDOWN");
-  //console.log(e.code);
   if (e.code === "Enter") {
     const job = e.currentTarget.textContent || "";
-    console.log("Dispatching", job);
     fetchEvent("PUT", { ...event, job });
     eventDispatcher({
       type: "update",
