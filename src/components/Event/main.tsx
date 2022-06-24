@@ -1,14 +1,18 @@
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
 import { event } from "@/interfaces/index";
 import { DateService } from "@/utils/Date";
-import { useHoverEvent, useStorage, useTransitionStyle } from "./logic";
+import {
+  useHoverEvent,
+  useStorage,
+  useTransitionStyle,
+} from "@/components/Event/logic";
 import {
   useEventDispatch,
   useEventState,
   useGetEventFamily,
 } from "@/hooks/useEventsState";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { EventCard, EventTail } from "./eventCard";
+import { EventCard, EventTail } from "@/components/Event/eventCard";
 import { useGethDeleteEvent } from "@/api/handlers";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 import { useDnDEventRef, useSetDnDEventRef } from "@/context/dndEventRef";
