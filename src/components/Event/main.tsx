@@ -162,7 +162,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           ref={eventRef}
           $isHover={hover}
           style={eventInlineStyle.dinamic}
-          key={event.id}
           $cells={spreadCells}
           title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
           $client={event.client.toLowerCase()}
@@ -204,7 +203,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           </StyledEvent.TWextend>
         )}
 
-        <StyledEvent.TWplaceholder key={"p" + event.id} style={state}>
+        <StyledEvent.TWplaceholder style={state}>
           {"placeholder"}
         </StyledEvent.TWplaceholder>
       </StyledEvent.TWflexContainer>
@@ -291,7 +290,6 @@ export const EventOff = ({ event }: { event: event }) => {
           $isChildren={isChildren}
           $isHover={hover}
           style={eventInlineStyle.dinamic}
-          key={event.id}
           $cells={spreadCells}
           title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
           $client={event.client.toLowerCase()}
@@ -325,7 +323,7 @@ export const EventOff = ({ event }: { event: event }) => {
           </>
         )}
 
-        <StyledEvent.TWplaceholder key={"p" + event.id} style={state}>
+        <StyledEvent.TWplaceholder style={state}>
           {"placeholder"}
         </StyledEvent.TWplaceholder>
       </StyledEvent.TWflexContainer>

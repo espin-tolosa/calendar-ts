@@ -34,10 +34,13 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
   return (
     <div className="flex flex-col gap-1 my-5">
       {sortedEvents.map((event, position) => {
-        const keyValue = Math.abs(event.id);
+        const keyValue = propTypes.day;
         if (isPlaceholder(event)) {
           return (
-            <div className="border-2 border-dashed border-red-900 bg-red-200">
+            <div
+              key={`d-${keyValue}`}
+              className="border-2 border-dashed border-red-900 bg-red-200"
+            >
               <EventHolder key={`p-${keyValue}`} event={event}></EventHolder>
             </div>
           );

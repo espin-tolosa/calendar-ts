@@ -2,8 +2,6 @@ import { TWboard } from "./tw";
 import { MemoMonth } from "@/components/Month/main";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { ListPrevDates } from "@/utils/Date";
-
-import { _renderDate } from "@/utils/Date_v2";
 import { useGetAllEventsFrom } from "@/api/useGetAllEventsFrom";
 
 export const LayoutBoard = () => {

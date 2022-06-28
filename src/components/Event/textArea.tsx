@@ -19,6 +19,7 @@ export const EventTextArea = ({ event }: TextArea) => {
         className="textarea rounded-[5px] w-full p-1 caret-black"
         role="textbox"
         contentEditable={true}
+        suppressContentEditableWarning={true}
         onClick={(e) => {
           e.currentTarget.focus();
           if (textRef.current) {
