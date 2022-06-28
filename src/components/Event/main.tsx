@@ -94,8 +94,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const setDnDEventRef = useSetDnDEventRef();
   const dndEvent = useDnDEventRef();
 
-  const [localIsDragging, setLocalIsDragging] = useState(false);
-
   const hOnDragStart = (
     e: React.DragEvent<HTMLDivElement>,
     direction: number
@@ -125,7 +123,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const hOnDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setDnDEventRef(nullEvent());
-    ////setLocalIsDragging(false);
+    //setLocalIsDragging(false);
     eventDispatcher({
       type: "fromnull",
       payload: [{ ...dndEvent }],
@@ -141,7 +139,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           e.stopPropagation();
           e.preventDefault();
         }}
-        $hidde={localIsDragging}
         onKeyDown={(e) => {
           if (e.ctrlKey && e.code === "Delete") {
             hDelete();
@@ -238,11 +235,11 @@ export const EventHolder = ({ event }: { event: event }) => {
   }, []);
 
   return (
-    <StyledEvent.TWflexContainer_Holder $hidde={false} ref={eventRef}>
+    <StyledEvent.TWflexContainer ref={eventRef}>
       <StyledEvent.TWplaceholder style={{ height: event.mutable?.height }}>
         {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
-    </StyledEvent.TWflexContainer_Holder>
+    </StyledEvent.TWflexContainer>
   );
 };
 
