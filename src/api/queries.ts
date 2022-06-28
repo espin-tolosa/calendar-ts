@@ -30,7 +30,7 @@ const queryEvent = (
   const MaxId = Number.MAX_SAFE_INTEGER;
   const newEvent = {
     id: MaxId,
-    client: `Client_${Math.ceil(10 * Math.random()) + 1}`,
+    client: "Select Client",
     job: "description",
     start: date,
     end: date,

@@ -35,7 +35,6 @@ export const EventTextArea = ({ event }: TextArea) => {
           }
         }}
         onKeyDown={(e) => {
-          console.log(e.code);
           e.currentTarget.scrollIntoView({
             behavior: "smooth",
             block: "center",
@@ -44,7 +43,6 @@ export const EventTextArea = ({ event }: TextArea) => {
           if (e.code === "Enter" || e.code === "Escape") {
             e.currentTarget.blur();
           }
-          console.log("Updating with", event.job);
           setTimeout(() => {
             eventDispatcher({
               type: "update",

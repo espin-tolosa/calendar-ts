@@ -8,7 +8,7 @@ type EventCard = TextArea & ClientSelector;
 export const EventCard: React.FC<EventCard> = (propTypes): JSX.Element => {
   return (
     <div className="flex flex-col w-full z-100">
-      <EventClientSelector style={propTypes.style} />
+      <EventClientSelector style={propTypes.style} event={propTypes.event} />
 
       <EventTextArea event={propTypes.event} />
     </div>
