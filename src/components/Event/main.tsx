@@ -20,11 +20,8 @@ import { nullEvent } from "@/customTypes";
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();
-
   const [state, setState] = useState<{ height: string }>({ height: "0px" });
-  const week = DateService.GetWeekRangeOf(event.start);
-  //week.from = event.start;
-  const eventsOfWeek = useEventState(week);
+
   useLayoutEffect(() => {
     if (typeof eventRef.current !== "undefined") {
       event.mutable = {
@@ -64,20 +61,22 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
       setState(newState);
     }
   }, [event]);
+  const [parentEvent] = useGetEventFamily(event);
+  const hDelete = useGethDeleteEvent(event);
+  const week = DateService.GetWeekRangeOf(event.start);
+  const eventsOfWeek = useEventState(week);
+  //week.from = event.start;
 
   //--------------------------------------------
 
   const isChildren = event.job.includes("#isChildren");
   //edit mode
-  const [parentEvent] = useGetEventFamily(event);
-
-  const hDelete = useGethDeleteEvent(event);
 
   // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
   const { hover, ...mouseHover } = useHoverEvent(event);
 
   // Style hook for state transitions
-  const eventInlineStyle = useTransitionStyle(isChildren, hover, event);
+  const style = useTransitionStyle(isChildren, hover, event);
 
   // Database storage logic
   const { isSelected, ...eventUpdater } = useStorage(event);
@@ -158,14 +157,14 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           $isChildren={isChildren}
           ref={eventRef}
           $isHover={hover}
-          style={eventInlineStyle.dinamic}
+          style={style.dinamic}
           $cells={spreadCells}
           title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
           $client={event.client.toLowerCase()}
           {...eventUpdater}
         >
           {!isChildren ? (
-            <EventCard event={event} style={eventInlineStyle.static} />
+            <EventCard event={event} style={style.static} />
           ) : (
             <EventTail event={event} />
           )}
@@ -258,7 +257,7 @@ export const EventOff = ({ event }: { event: event }) => {
   const { hover, ...mouseHover } = useHoverEvent(event);
 
   // Style hook for state transitions
-  const eventInlineStyle = useTransitionStyle(isChildren, hover, event);
+  const style = useTransitionStyle(isChildren, hover, event);
 
   // Database storage logic
   const { isSelected, ...eventUpdater } = useStorage(event);
@@ -275,7 +274,6 @@ export const EventOff = ({ event }: { event: event }) => {
   return (
     <>
       <StyledEvent.TWflexContainer
-        $hidde={false}
         onKeyDown={(e) => {
           if (e.ctrlKey && e.code === "Delete") {
             hDelete();
@@ -286,14 +284,14 @@ export const EventOff = ({ event }: { event: event }) => {
         <StyledEvent.TWtextContent
           $isChildren={isChildren}
           $isHover={hover}
-          style={eventInlineStyle.dinamic}
+          style={style.dinamic}
           $cells={spreadCells}
           title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
           $client={event.client.toLowerCase()}
           {...eventUpdater}
         >
           {!isChildren ? (
-            <EventCard event={event} style={eventInlineStyle.static} />
+            <EventCard event={event} style={style.static} />
           ) : (
             <EventTail event={event} />
           )}

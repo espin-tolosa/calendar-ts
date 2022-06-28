@@ -31,22 +31,14 @@ export const EventTextArea = ({ event }: TextArea) => {
           }
         }}
         onKeyDown={(e) => {
-          //  window.alert(
-          //    "key down: " +
-          //      e.charCode +
-          //      ", " +
-          //      e.code +
-          //      ", " +
-          //      e.key +
-          //      ", " +
-          //      e.keyCode
-          //  );
-          if (e.code === "Enter") {
-            const job = e.currentTarget.textContent || "";
-            fetchEvent("PUT", { ...event, job });
-            setState(job);
-            e.currentTarget.blur();
-          } else if (e.code === "Escape") {
+          console.log(e.code);
+          e.currentTarget.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "center",
+          });
+          //e.currentTarget.scroll({ top: 300, left: 100, behavior: "smooth" });
+          if (e.code === "Enter" || e.code === "Escape") {
             e.currentTarget.blur();
           }
         }}
@@ -54,6 +46,12 @@ export const EventTextArea = ({ event }: TextArea) => {
           const job = e.currentTarget.textContent || "";
           setState(job);
           fetchEvent("PUT", { ...event, job });
+          e.currentTarget.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "center",
+          });
+          e.currentTarget.scrollTop();
           //window.location.reload();
         }}
       >
