@@ -9,5 +9,7 @@ DragAndDropTouch();
 export function App() {
   const token = useUserSession();
 
-  return true ? <LayoutMain /> : <Login />;
+  const isValid =
+    import.meta.env.MODE === "development" ? true : token.isValid();
+  return isValid ? <LayoutMain /> : <Login />;
 }
