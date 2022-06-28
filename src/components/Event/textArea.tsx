@@ -3,6 +3,8 @@ import { event } from "@/interfaces/index";
 
 import { fetchEvent } from "@/utils/fetchEvent";
 import { useRef, useState } from "react";
+import { useEventDispatch } from "@/hooks/useEventsState";
+import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 
 export type TextArea = {
   event: event;
@@ -11,12 +13,14 @@ export type TextArea = {
 export const EventTextArea = ({ event }: TextArea) => {
   const [state, setState] = useState(event.job);
   const textRef = useRef<HTMLSpanElement>(null);
+  const eventDispatcher = useEventDispatch();
+  const pushDaysDispatcher = usePushedDaysDispatcher();
 
   return (
     <StyledEvent.TWjobContent>
       <span
         ref={textRef}
-        className="textarea rounded-[5px] w-full p-1 caret-black"
+        className="textarea rounded-[5px] w-full p-1 caret-black focus:bg-red-200"
         role="textbox"
         contentEditable={true}
         suppressContentEditableWarning={true}
@@ -37,21 +41,27 @@ export const EventTextArea = ({ event }: TextArea) => {
             block: "center",
             inline: "center",
           });
-          //e.currentTarget.scroll({ top: 300, left: 100, behavior: "smooth" });
           if (e.code === "Enter" || e.code === "Escape") {
             e.currentTarget.blur();
           }
+          console.log("Updating with", event.job);
+          setTimeout(() => {
+            eventDispatcher({
+              type: "update",
+              payload: [{ ...event }],
+              callback: pushDaysDispatcher,
+            });
+          }, 1);
         }}
         onBlur={(e) => {
           const job = e.currentTarget.textContent || "";
           setState(job);
           fetchEvent("PUT", { ...event, job });
-          e.currentTarget.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-            inline: "center",
+          eventDispatcher({
+            type: "update",
+            payload: [{ ...event }],
+            callback: pushDaysDispatcher,
           });
-          e.currentTarget.scrollTop();
           //window.location.reload();
         }}
       >

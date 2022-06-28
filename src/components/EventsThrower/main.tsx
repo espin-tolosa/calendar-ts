@@ -34,7 +34,7 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
   return (
     <div className="flex flex-col gap-1 my-5">
       {sortedEvents.map((event, position) => {
-        const keyValue = propTypes.day;
+        const keyValue = `${event.id}-${propTypes.day}`;
         if (isPlaceholder(event)) {
           return (
             <div
