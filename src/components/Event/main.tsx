@@ -2,11 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
 import { event } from "@/interfaces/index";
 import { DateService } from "@/utils/Date";
-import {
-  useHoverEvent,
-  useStorage,
-  useTransitionStyle,
-} from "@/components/Event/logic";
+import { useHoverEvent, useTransitionStyle } from "@/components/Event/logic";
 import {
   useEventDispatch,
   useEventState,
@@ -79,7 +75,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const style = useTransitionStyle(isChildren, hover, event);
 
   // Database storage logic
-  const { isSelected, ...eventUpdater } = useStorage(event);
 
   //TODO: avoid magic numbers
   const spreadCells = Math.min(
@@ -144,7 +139,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           }
         }}
         {...mouseHover}
-        draggable={"true"}
         onDragStart={(e) => {
           hOnDragStart(e, 0);
         }}
@@ -161,7 +155,6 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           $cells={spreadCells}
           title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
           $client={event.client.toLowerCase()}
-          {...eventUpdater}
         >
           {!isChildren ? (
             <EventCard event={event} style={style.static} />
@@ -172,7 +165,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         {
           //DnD Logic
         }
-        {!isSelected && (
+        {
           <StyledEvent.TWextend_Left
             $cells={spreadCells}
             title={`Drag here to extend ${event.client}'s job`}
@@ -184,8 +177,8 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           >
             {"+"}
           </StyledEvent.TWextend_Left>
-        )}
-        {!isSelected && (
+        }
+        {
           <StyledEvent.TWextend
             $cells={spreadCells}
             title={`Drag here to extend ${event.client}'s job`}
@@ -197,7 +190,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           >
             {"+"}
           </StyledEvent.TWextend>
-        )}
+        }
 
         <StyledEvent.TWplaceholder style={state}>
           {"placeholder"}
@@ -260,7 +253,6 @@ export const EventOff = ({ event }: { event: event }) => {
   const style = useTransitionStyle(isChildren, hover, event);
 
   // Database storage logic
-  const { isSelected, ...eventUpdater } = useStorage(event);
 
   //TODO: avoid magic numbers
   const spreadCells = Math.min(
@@ -288,7 +280,6 @@ export const EventOff = ({ event }: { event: event }) => {
           $cells={spreadCells}
           title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
           $client={event.client.toLowerCase()}
-          {...eventUpdater}
         >
           {!isChildren ? (
             <EventCard event={event} style={style.static} />
@@ -299,7 +290,7 @@ export const EventOff = ({ event }: { event: event }) => {
         {
           //DnD Logic
         }
-        {!isSelected && (
+        {
           <>
             <StyledEvent.TWextend_Left
               $cells={spreadCells}
@@ -316,7 +307,7 @@ export const EventOff = ({ event }: { event: event }) => {
               {"+"}
             </StyledEvent.TWextend>
           </>
-        )}
+        }
 
         <StyledEvent.TWplaceholder style={state}>
           {"placeholder"}

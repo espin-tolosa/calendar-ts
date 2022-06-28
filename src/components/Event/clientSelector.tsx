@@ -32,7 +32,14 @@ export const EventClientSelector: React.FC<ClientSelector> = (
       id={"select"}
       {...hDoubleClick}
     >
-      Select Client
+      <option value="default">Select Client</option>
+      {CLIENTS.map((clientIterator, index) => {
+        return (
+          <option key={index} value={clientIterator}>
+            {clientIterator}
+          </option>
+        );
+      })}
     </StyledEvent.TWStyledSelect>
   );
 };
