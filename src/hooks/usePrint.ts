@@ -9,8 +9,17 @@ export const usePrint = () => {
   const [toPrint, setToPrint] = useState(false);
 
   useEffect(() => {
-    toPrint && window.print();
-    toPrint && setToPrint(false);
+    if (!toPrint) {
+      return;
+    }
+    const isSupported = Object.prototype.hasOwnProperty.call(window, "print");
+
+    if (!isSupported) {
+      window.alert("Print to PDF isn't supported in this device jet");
+      return;
+    }
+    window.print();
+    setToPrint(false);
   }, [toPrint]);
 
   return [toPrint, hPrint] as [typeof toPrint, typeof hPrint];

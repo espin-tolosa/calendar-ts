@@ -31,16 +31,18 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
 
   const sortedEvents = bubblingAlgo(dayEventsFiltered);
 
+  const twStyle =
+    import.meta.env.MODE === "development"
+      ? "border-2 border-dashed border-red-900 bg-red-200"
+      : "";
+
   return (
     <div className="flex flex-col gap-1 my-5">
       {sortedEvents.map((event, position) => {
         const keyValue = `${event.id}-${propTypes.day}`;
         if (isPlaceholder(event)) {
           return (
-            <div
-              key={`d-${keyValue}`}
-              className="border-2 border-dashed border-red-900 bg-red-200"
-            >
+            <div key={`d-${keyValue}`} className={twStyle}>
               <EventHolder key={`p-${keyValue}`} event={event}></EventHolder>
             </div>
           );

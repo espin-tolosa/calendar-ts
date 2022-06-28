@@ -2,7 +2,7 @@ import * as StyledEvent from "./tw";
 import { event } from "@/interfaces/index";
 
 import { fetchEvent } from "@/utils/fetchEvent";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useEventDispatch } from "@/hooks/useEventsState";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 
@@ -11,10 +11,13 @@ export type TextArea = {
 };
 
 export const EventTextArea = ({ event }: TextArea) => {
-  const [state, setState] = useState(event.job);
   const textRef = useRef<HTMLSpanElement>(null);
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
+
+  if (event.job === "") {
+    return <></>;
+  }
 
   return (
     <StyledEvent.TWjobContent>
@@ -53,7 +56,6 @@ export const EventTextArea = ({ event }: TextArea) => {
         }}
         onBlur={(e) => {
           const job = e.currentTarget.textContent || "";
-          setState(job);
           fetchEvent("PUT", { ...event, job });
           eventDispatcher({
             type: "update",
@@ -63,7 +65,7 @@ export const EventTextArea = ({ event }: TextArea) => {
           //window.location.reload();
         }}
       >
-        {state}
+        {event.job}
       </span>
     </StyledEvent.TWjobContent>
   );

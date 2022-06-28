@@ -54,6 +54,9 @@ export const EventClientSelector: React.FC<ClientSelector> = (
       style={propTypes.style}
       id={"select"}
       onChange={(e) => {
+        if (e.currentTarget.value === "Unavailable") {
+          window.alert("delete");
+        }
         updateClient(e.currentTarget.value);
         e.currentTarget.blur();
       }}
