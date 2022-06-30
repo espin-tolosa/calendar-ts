@@ -98,8 +98,8 @@ export const giveMeColor = (search: string) => {
 };
 
 function hsl2rgb(h: number, s: number, l: number) {
-  let a = s * Math.min(l, 1 - l);
-  let f = (n: number, k = (n + h / 30) % 12) =>
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number, k = (n + h / 30) % 12) =>
     Math.floor(255 * (l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)));
   return [f(0), f(8), f(4)];
 }

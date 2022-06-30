@@ -1,9 +1,8 @@
 import { Action } from "@/hooks/useEventsState";
 import { fetchEvent_Day } from "@/utils/fetchEvent";
 import React, { Dispatch } from "react";
-import { useEventDispatch, useEventState } from "@/hooks/useEventsState";
+import { useEventDispatch, } from "@/hooks/useEventsState";
 import { DateService } from "@/utils/Date";
-import { Context } from "@/hooks/useIsDragging";
 import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
 import { event } from "@/interfaces";
 
@@ -56,7 +55,7 @@ const queryEvent = (
     //!continue reviewing drag and drop fetching
     const callManager = async (currentAttempt = 1) => {
       const REFETCHING_TIME = 200; //ms
-      let result = await callFetch();
+      const result = await callFetch();
       setTimeout(async () => {
         if (!result.status && currentAttempt < Max_Attempts) {
           return callManager(++currentAttempt);

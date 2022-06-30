@@ -23,6 +23,7 @@ interface Day {
 
 function Day({ daynumber, fullDate, pushedDays }: Day) {
   //Callbacks
+
   const addEvent = usePostQuery(fullDate);
 
   //Computed:

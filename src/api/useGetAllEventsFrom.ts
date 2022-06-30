@@ -30,7 +30,7 @@ export const useGetAllEventsFrom = ({ year, month }: CustomTypes.Month) => {
         });
       } catch {
         setTimeout(() => {
-          window.alert("Session is expired");
+          window.alert("Session expired");
 
           cleanSession();
         }, 1000);

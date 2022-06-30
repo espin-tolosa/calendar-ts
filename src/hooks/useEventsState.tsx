@@ -119,7 +119,7 @@ export function reducerEvents(
 
     case "syncDB": {
       //I will avoid spread operator [...state] until verify it won't throw RangeError for large arrays
-      let newState: Array<event> = [];
+      const newState: Array<event> = [];
       action.payload.forEach((event) => {
         //Treat event from db to remove hours from data
         event.start = event.start.split(" ")[0];
