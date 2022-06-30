@@ -42,8 +42,8 @@ export const Topnav = () => {
       {/*right-header*/}
       <StyledTopnav.TWlogout
         title={"Cleans up your session token | Ctrl+Alt+q"}
-        onClick={(evt) => {
-          evt.stopPropagation();
+        onClick={(e) => {
+          e.stopPropagation();
           //cleanSession();
           //!Developing
           const development = () => {

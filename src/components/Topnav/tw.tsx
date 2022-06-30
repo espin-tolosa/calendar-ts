@@ -13,6 +13,10 @@ export const TWtitle = tw.div`
 	overflow-hidden whitespace-nowrap text-ellipsis portrait:mr-2 text-white
 `;
 
+//interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+//  title: string;
+//}
+
 export const TWlogout = tw.button`
 	text-white hover:text-black border-[1px] hover:bg-slate-50 my-0.5 mr-4 border-slate-50 hover:border-transparent rounded-full px-4 bg-transparent transition-colors
 `;

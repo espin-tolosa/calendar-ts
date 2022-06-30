@@ -26,7 +26,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         index: index, //!Corrected bug: was using event.end wich is zero
       };
     }
-  }, [event]);
+  });
 
   useEffect(() => {
     if (typeof event.mutable === "object") {
@@ -134,6 +134,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           e.preventDefault();
         }}
         onKeyDown={(e) => {
+          e.stopPropagation();
           if (e.ctrlKey && e.code === "Delete") {
             hDelete();
           }

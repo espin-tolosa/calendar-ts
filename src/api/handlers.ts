@@ -77,6 +77,8 @@ export function useGethDeleteEvent(eventSelected: event): () => void {
     const MAX_ATTEMPTS = 10;
     const success = (code: number) => code === 204;
 
+    console.log(eventSelected);
+
     eventDispatcher({
       type: "delete",
       payload: [eventSelected!],

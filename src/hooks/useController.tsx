@@ -12,7 +12,9 @@ type Action =
   | { type: "resetController" };
 
 const cControllerState = createContext(init);
-const cControllerDispatch = createContext<React.Dispatch<Action>>(() => {});
+const cControllerDispatch = createContext<React.Dispatch<Action>>(() => {
+  return;
+});
 
 cControllerState.displayName = "Controller State";
 cControllerDispatch.displayName = "Controller State Dispatcher";
@@ -47,13 +49,13 @@ function reducerController(state: typeof init, action: Action) {
 }
 
 /* to provide access */
-export const ControllerProvider: composition = ({ children }) => {
+export const ControllerProvider: composition = (propTypes) => {
   const [state, dispatch] = useReducer(reducerController, init);
 
   return (
     <cControllerState.Provider value={state}>
       <cControllerDispatch.Provider value={dispatch}>
-        {children}
+        {propTypes.children}
       </cControllerDispatch.Provider>
     </cControllerState.Provider>
   );

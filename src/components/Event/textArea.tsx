@@ -15,6 +15,8 @@ export const EventTextArea = ({ event }: TextArea) => {
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
 
+  //console.log(event.job);
+
   if (event.job === "") {
     return <></>;
   }

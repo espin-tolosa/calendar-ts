@@ -25,6 +25,13 @@
   }
 }
 
+@layer utilities {
+  .sticky-footer {
+    position: sticky;
+    top: calc(100vh - 50px);
+  }
+}
+
 @layer base {
   input {
     border: none;

@@ -14,7 +14,7 @@ export const useGetAllEventsFrom = ({ year, month }: CustomTypes.Month) => {
 
   const eventsDispatcher = useEventDispatch();
 
-  useEffect(() => {
+  const hFetchAll = () => {
     //The response from database is not the same if I send a query with only year-month
     //my local version of MySQL responds in the same way, but the version of freehostia gives an empty array with success code 201
     const start = `${fromYear}-${fromMonth}-01`;
@@ -36,5 +36,11 @@ export const useGetAllEventsFrom = ({ year, month }: CustomTypes.Month) => {
         }, 1000);
       }
     })();
+  };
+
+  useEffect(() => {
+    hFetchAll();
   }, []);
+
+  return hFetchAll;
 };

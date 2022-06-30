@@ -8,12 +8,26 @@ export const LayoutBoard = () => {
   const nextDates = useInfiniteScroll(1);
   const prevDates = ListPrevDates(nextDates[0], 2);
   //Query All Events
-  useGetAllEventsFrom(prevDates[1]);
+  const hFetchAll = useGetAllEventsFrom(prevDates[1]);
 
   //Fetch event after login
 
   return (
     <TWboard id={"Board"}>
+      <div
+        className="sticky-footer w-min p-5 h-10 z-TopLayer bg-slate-400/50 flex items-center rounded-md text-white"
+        onClick={hFetchAll}
+      >
+        {"📩"}
+      </div>
+      <div
+        className="sticky-footer left-20 w-min p-5 h-10 z-TopLayer bg-slate-400/50 flex items-center rounded-md text-white"
+        onClick={() => {
+          window.alert("Delete event not implemente jet");
+        }}
+      >
+        {"❌"}
+      </div>
       <MemoMonth {...prevDates[1]} />
       <MemoMonth {...prevDates[0]} />
       {nextDates.map((value) => {
