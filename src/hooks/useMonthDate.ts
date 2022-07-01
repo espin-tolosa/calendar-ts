@@ -5,7 +5,7 @@ import {
   GetLastDayMonth,
   GetDate,
   ToFormattedMonth,
-} from "@/utils/Date";
+} from "../utils/Date";
 
 export const WeekDays = {
   Monday: 7,

@@ -1,5 +1,5 @@
-import { nullEvent } from "@/customTypes";
-import { composition } from "@/interfaces";
+import { nullEvent } from "../customTypes";
+import { composition } from "../interfaces";
 import { createContext, useContext, useState } from "react";
 
 //Template param: StateName
@@ -9,7 +9,9 @@ const defaultState = nullEvent();
 
 const defaultDispaatcher: React.Dispatch<
   React.SetStateAction<typeof defaultState>
-> = () => {};
+> = () => {
+  return;
+};
 
 const cTemporaryEvent = createContext(defaultState);
 const cTemporaryEventDispatcher = createContext(defaultDispaatcher);
@@ -26,13 +28,13 @@ export const useTemporaryEventDispatcher = () => {
 };
 
 //3. State provider
-export const TemporaryEvent: composition = ({ children }) => {
+export const TemporaryEvent: composition = (propTypes) => {
   const [state, setState] = useState(defaultState);
 
   return (
     <cTemporaryEvent.Provider value={state}>
       <cTemporaryEventDispatcher.Provider value={setState}>
-        {children}
+        {propTypes.children}
       </cTemporaryEventDispatcher.Provider>
     </cTemporaryEvent.Provider>
   );

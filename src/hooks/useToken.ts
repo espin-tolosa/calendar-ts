@@ -4,7 +4,7 @@
 //	it exposes the class Token wich has some public methods to access data from token
 //
 
-import { Token } from "@/classes/token";
+import { Token } from "../classes/token";
 import { useEffect, useState } from "react";
 
 export const useToken = () => {

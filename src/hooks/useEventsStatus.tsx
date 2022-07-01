@@ -1,14 +1,17 @@
-import { composition } from "@/interfaces";
+import { composition } from "../interfaces";
 import { createContext, useContext, useState } from "react";
 
 const defaultState = { id: 0 };
 //const defaultDispaatcher: React.Dispatch<
 //  React.SetStateAction<typeof defaultState>
 //> = () => {};
-const defaultDispatcher = (newValue: number) => {};
 
 const cEventsStatus = createContext(defaultState);
-const cEventsStatusDispatcher = createContext(defaultDispatcher);
+
+type EventsStatusDispatcher = (newValue: number) => void;
+const cEventsStatusDispatcher = createContext<EventsStatusDispatcher>(() => {
+  return;
+});
 cEventsStatus.displayName = "Event Status";
 cEventsStatusDispatcher.displayName = "Event Status Dispatcher";
 
@@ -19,7 +22,7 @@ export const useEventsStatusDispatcher = () => {
   return useContext(cEventsStatusDispatcher);
 };
 
-export const EventsStatus: composition = ({ children }) => {
+export const EventsStatus: composition = (propTypes) => {
   const [state, setState] = useState(defaultState);
   const dispatchState = (newValue: number) => {
     setState({ id: newValue });
@@ -28,7 +31,7 @@ export const EventsStatus: composition = ({ children }) => {
   return (
     <cEventsStatus.Provider value={state}>
       <cEventsStatusDispatcher.Provider value={dispatchState}>
-        {children}
+        {propTypes.children}
       </cEventsStatusDispatcher.Provider>
     </cEventsStatus.Provider>
   );

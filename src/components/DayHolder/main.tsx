@@ -1,4 +1,4 @@
-import * as StyledDay from "@/components/DayHolder/tw";
+import * as StyledDay from "../../components/DayHolder/tw";
 import { memo } from "react";
 type IDayProps = {
   fullDate: string;

@@ -139,12 +139,18 @@ export const DragAndDropTouch = () => {
         // detect passive event support
         // https://github.com/Modernizr/Modernizr/issues/1894
         var supportsPassive = false;
-        document.addEventListener("test", function () {}, {
-          get passive() {
-            supportsPassive = true;
-            return true;
+        document.addEventListener(
+          "test",
+          function () {
+            return;
           },
-        });
+          {
+            get passive() {
+              supportsPassive = true;
+              return true;
+            },
+          }
+        );
         // listen to touch events
         if (navigator.maxTouchPoints) {
           var d = document,
@@ -166,7 +172,6 @@ export const DragAndDropTouch = () => {
       };
       // ** event handlers
       DragDropTouch.prototype._touchstart = function (e) {
-        var _this = this;
         if (this._shouldHandle(e)) {
           // raise double-click and prevent zooming
           if (Date.now() - this._lastClick < DragDropTouch._DBLCLICK) {
@@ -192,17 +197,17 @@ export const DragAndDropTouch = () => {
               this._lastTouch = e;
               e.preventDefault();
               // show context menu if the user hasn't started dragging after a while
-              setTimeout(function () {
-                if (_this._dragSource == src && _this._img == null) {
-                  if (_this._dispatchEvent(e, "contextmenu", src)) {
-                    _this._reset();
+              setTimeout(() => {
+                if (this._dragSource == src && this._img == null) {
+                  if (this._dispatchEvent(e, "contextmenu", src)) {
+                    this._reset();
                   }
                 }
               }, DragDropTouch._CTXMENU);
               if (DragDropTouch._ISPRESSHOLDMODE) {
-                this._pressHoldInterval = setTimeout(function () {
-                  _this._isDragEnabled = true;
-                  _this._touchmove(e);
+                this._pressHoldInterval = setTimeout(() => {
+                  this._isDragEnabled = true;
+                  this._touchmove(e);
                 }, DragDropTouch._PRESSHOLDAWAIT);
               }
             }
@@ -380,16 +385,15 @@ export const DragAndDropTouch = () => {
       };
       // move the drag image element
       DragDropTouch.prototype._moveImage = function (e) {
-        var _this = this;
-        requestAnimationFrame(function () {
-          if (_this._img) {
-            var pt = _this._getPoint(e, true),
-              s = _this._img.style;
+        requestAnimationFrame(() => {
+          if (this._img) {
+            var pt = this._getPoint(e, true),
+              s = this._img.style;
             s.position = "absolute";
             s.pointerEvents = "none";
             s.zIndex = "999999";
-            s.left = Math.round(pt.x - _this._imgOffset.x) + "px";
-            s.top = Math.round(pt.y - _this._imgOffset.y) + "px";
+            s.left = Math.round(pt.x - this._imgOffset.x) + "px";
+            s.top = Math.round(pt.y - this._imgOffset.y) + "px";
           }
         });
       };
@@ -415,7 +419,7 @@ export const DragAndDropTouch = () => {
         }
         // copy style (without transitions)
         var cs = getComputedStyle(src);
-        for (var i = 0; i < cs.length; i++) {
+        for (let i = 0; i < cs.length; i++) {
           var key = cs[i];
           if (key.indexOf("transition") < 0) {
             dst.style[key] = cs[key];
@@ -423,7 +427,7 @@ export const DragAndDropTouch = () => {
         }
         dst.style.pointerEvents = "none";
         // and repeat for all children
-        for (var i = 0; i < src.children.length; i++) {
+        for (let i = 0; i < src.children.length; i++) {
           this._copyStyle(src.children[i], dst.children[i]);
         }
       };

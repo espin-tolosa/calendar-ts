@@ -1,12 +1,14 @@
-import { useEffect } from "react";
-import { apifetch } from "@/utils/Fetch";
-import { event } from "@/interfaces";
+import React, { useEffect } from "react";
+import { apifetch } from "../utils/Fetch";
+import { event } from "../interfaces";
 //import { useEventsReducer } from "../context/DispatchEvents";
 
 //const hostinger = "https://samuelengineer.com";
 
+//!TODO: This hook isn't used, it is dead code
+
 interface UseFetchEvents {
-  isMount: any;
+  isMount: React.MutableRefObject<boolean>;
   click: any;
   action: any;
   event: event;

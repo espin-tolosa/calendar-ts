@@ -1,5 +1,5 @@
-import { CustomTypes } from "@/customTypes";
-import { composition } from "@/interfaces";
+import { CustomTypes } from "../customTypes";
+import { composition } from "../interfaces";
 import React, { createContext, useContext, useReducer } from "react";
 
 type Payload = CustomTypes.NullableRef<HTMLDivElement>;
@@ -10,7 +10,9 @@ type Action = {
 };
 const defaultState: State = [];
 const State = createContext<State>(defaultState);
-const Dispatcher = createContext<React.Dispatch<Action>>(() => {});
+const Dispatcher = createContext<React.Dispatch<Action>>(() => {
+  return;
+});
 
 State.displayName = "DOM Refs state";
 Dispatcher.displayName = "DOM Refs dispatcher";
@@ -26,12 +28,14 @@ export namespace DOMRefs {
   }
   //Context Provider
 }
-export const DOMRefsContext: composition = ({ children }) => {
+export const DOMRefsContext: composition = (propTypes) => {
   const [state, dispatch] = useReducer(reducer, defaultState);
 
   return (
     <State.Provider value={state}>
-      <Dispatcher.Provider value={dispatch}>{children}</Dispatcher.Provider>
+      <Dispatcher.Provider value={dispatch}>
+        {propTypes.children}
+      </Dispatcher.Provider>
     </State.Provider>
   );
 };

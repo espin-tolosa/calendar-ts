@@ -1,4 +1,4 @@
-import { DateService } from "@/utils/Date";
+import { DateService } from "../../utils/Date";
 
 export const totalCellsInLastRow = (start: string, length: number) => {
   const DayStart = DateService.GetDayNumberOfDay(start);

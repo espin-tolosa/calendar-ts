@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { GetDateNextMonth } from "@/utils/Date";
-import { useInitMonths } from "@/hooks/useInitMonths";
-import { useListenWindowSize } from "@/hooks/useResponsiveLayout";
+import { GetDateNextMonth } from "../utils/Date";
+import { useInitMonths } from "../hooks/useInitMonths";
+import { useListenWindowSize } from "../hooks/useResponsiveLayout";
 
 //Infinite scrolling
 export function useInfiniteScroll(initLength: number) {

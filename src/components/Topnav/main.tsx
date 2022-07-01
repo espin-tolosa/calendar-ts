@@ -1,11 +1,11 @@
-import { DateService } from "@/utils/Date";
+import { DateService } from "../../utils/Date";
 import * as StyledTopnav from "./tw";
-import { useCtxCurrentMonthRef } from "@/context/currentMonthReference";
-import { useCtxTopNavRef } from "@/context/topNavSize";
+import { useCtxCurrentMonthRef } from "../../context/currentMonthReference";
+import { useCtxTopNavRef } from "../../context/topNavSize";
 import { useEffect } from "react";
-import { DOMRefs } from "@/context/DOMRefs";
-import { useCleanSession } from "@/hooks/useCleanSession";
-import { useUserSession } from "@/hooks/useUserSession";
+import { DOMRefs } from "../../context/DOMRefs";
+import { useCleanSession } from "../../hooks/useCleanSession";
+import { useUserSession } from "../../hooks/useUserSession";
 
 export const TOPNAV_ID = "Topnav";
 

@@ -1,8 +1,8 @@
-import { Event, EventHolder } from "@/components/Event/main";
-import { useEventState } from "@/hooks/useEventsState";
-import { bubblingAlgo } from "@/components/EventsThrower/bubblingAlgoUtils";
-import { sendEndReferencesToPlaceholders } from "@/components/EventsThrower/sendReferencesToPlaceholders";
-import { isPlaceholder } from "@/utils/ValidateEvent";
+import { Event, EventHolder } from "../../components/Event/main";
+import { useEventState } from "../../hooks/useEventsState";
+import { bubblingAlgo } from "../../components/EventsThrower/bubblingAlgoUtils";
+import { sendEndReferencesToPlaceholders } from "../../components/EventsThrower/sendReferencesToPlaceholders";
+import { isPlaceholder } from "../../utils/ValidateEvent";
 import { memo } from "react";
 
 interface EventProps {

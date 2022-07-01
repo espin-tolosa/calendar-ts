@@ -1,4 +1,4 @@
-import { composition } from "@/interfaces";
+import { composition } from "../interfaces";
 import React, { createContext, useContext, useReducer } from "react";
 const init = { id: 0, client: "", job: "" };
 type Action =

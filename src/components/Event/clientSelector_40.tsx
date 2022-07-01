@@ -1,5 +1,5 @@
 import * as StyledEvent from "./tw";
-import { event } from "@/interfaces/index";
+import { event } from "../../interfaces/index";
 const CLIENTS = [
   "Client_1",
   "Client_2",

@@ -5,9 +5,9 @@
 //
 
 import { useContext, createContext } from "react";
-import { composition } from "@/interfaces";
+import { composition } from "../interfaces";
 import { useToken } from "./useToken";
-import { Token } from "@/classes/token";
+import { Token } from "../classes/token";
 
 // * Create and export context
 const cUserSession = createContext(Token.null());

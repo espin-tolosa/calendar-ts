@@ -1,9 +1,9 @@
 import {
   useControllerDispatch,
   useControllerState,
-} from "@/hooks/useController";
-import { event } from "@/interfaces";
-import { ClientColorStyles } from "@/utils/giveMeColor";
+} from "../../hooks/useController";
+import { event } from "../../interfaces";
+import { ClientColorStyles } from "../../utils/giveMeColor";
 import { useEffect, useMemo, useState } from "react";
 
 export const useTransitionStyle = (

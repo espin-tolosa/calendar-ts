@@ -1,4 +1,4 @@
-import { event } from "@/interfaces";
+import { event } from "../../interfaces";
 
 const filterPlaceholdersByEvent = (allEvents: Array<event>, event: event) => {
   return allEvents.filter((placeholder) => placeholder.id === -event.id) || [];

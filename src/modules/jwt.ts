@@ -1,7 +1,7 @@
 import jwt_decode from "jwt-decode";
-import { nullToken } from "@/customTypes";
-import { encodedTokenFromAPI, token } from "@/interfaces";
-import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
+import { nullToken } from "../customTypes";
+import { encodedTokenFromAPI, token } from "../interfaces";
+import { checkObjectValidKeys, nameAndType } from "../patterns/reflection";
 
 // This function wraps jwt_decode to create a nothrow function that allways gives you a token either valid or empty (null)
 export function safeDecodeJWT(encodedToken: encodedTokenFromAPI) {

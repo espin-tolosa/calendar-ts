@@ -1,10 +1,10 @@
 import * as StyledEvent from "./tw";
-import { event } from "@/interfaces/index";
+import { event } from "../../interfaces/index";
 
-import { fetchEvent } from "@/utils/fetchEvent";
+import { fetchEvent } from "../../utils/fetchEvent";
 import { useRef } from "react";
-import { useEventDispatch } from "@/hooks/useEventsState";
-import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
+import { useEventDispatch } from "../../hooks/useEventsState";
+import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 
 export type TextArea = {
   event: event;

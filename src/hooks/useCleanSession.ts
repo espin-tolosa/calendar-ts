@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import { clearLogin } from "@/window/fetch";
-import { useSetEventSelected } from "@/context/eventSelected";
-import { useControllerDispatch } from "@/hooks/useController";
-import { useControllerDispatchDates } from "@/hooks/useControllerDate";
+import { clearLogin } from "../window/fetch";
+import { useSetEventSelected } from "../context/eventSelected";
+import { useControllerDispatch } from "../hooks/useController";
+import { useControllerDispatchDates } from "../hooks/useControllerDate";
 import { useEventDispatch } from "./useEventsState";
-import { nullEvent } from "@/customTypes";
+import { nullEvent } from "../customTypes";
 
 // This is the reference hook to clean te entire memory,
 // any component should consume this to clear temporary states
@@ -33,7 +33,9 @@ export const useCleanSession = () => {
     dispatchEvent({
       type: "unmount",
       payload: [nullEvent()],
-      callback: () => {},
+      callback: () => {
+        return;
+      },
     });
   }, []);
 

@@ -1,11 +1,15 @@
-import { EventClass } from "@/classes/event";
-import { useEventSelected, useSetEventSelected } from "@/context/eventSelected";
-import { useControllerDispatch } from "@/hooks/useController";
-import { useControllerDispatchDates } from "@/hooks/useControllerDate";
-import { useEventDispatch } from "@/hooks/useEventsState";
-import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
-import { event } from "@/interfaces";
-import { fetchEvent } from "@/utils/fetchEvent";
+import { nullEvent } from "@/customTypes";
+import { EventClass } from "../classes/event";
+import {
+  useEventSelected,
+  useSetEventSelected,
+} from "../context/eventSelected";
+import { useControllerDispatch } from "../hooks/useController";
+import { useControllerDispatchDates } from "../hooks/useControllerDate";
+import { useEventDispatch } from "../hooks/useEventsState";
+import { usePushedDaysDispatcher } from "../hooks/usePushDays";
+import { event } from "../interfaces";
+import { fetchEvent } from "../utils/fetchEvent";
 
 // Custom-hook: useGethCancel
 //
@@ -21,7 +25,7 @@ import { fetchEvent } from "@/utils/fetchEvent";
 //
 
 export function useGethCancel() {
-  const eventSelected = useEventSelected();
+  const eventSelected = useEventSelected() ?? nullEvent(); //!TODO Important change to debug
   const setEventController = useSetEventSelected();
   const dispatchController = useControllerDispatch();
   const eventDispatcher = useEventDispatch();
@@ -31,7 +35,7 @@ export function useGethCancel() {
     setEventController(null);
     eventDispatcher({
       type: "delete",
-      payload: [{ ...eventSelected!, id: EventClass.getUnusedId() }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
+      payload: [{ ...eventSelected, id: EventClass.getUnusedId() }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
       callback: pushDaysDispatcher,
     });
 
@@ -65,6 +69,7 @@ export function useGethDeleteEvent(eventSelected: event): () => void {
   // First time I'm able to catch error Failed to Fetch
   // it needs async function to get caught
   return async () => {
+    //!TODO: Important to debug: why I'm checking a condition that is not reflected in its type? eventSelect can't be nothing than :event
     if (!eventSelected) {
       return;
     }
@@ -77,23 +82,23 @@ export function useGethDeleteEvent(eventSelected: event): () => void {
     const MAX_ATTEMPTS = 10;
     const success = (code: number) => code === 204;
 
-    console.log(eventSelected);
-
     eventDispatcher({
       type: "delete",
-      payload: [eventSelected!],
+      payload: [eventSelected],
       callback: pushDaysDispatcher,
     });
 
     //This try to fetch 10 times before refresh the web page
-
+    /*eslint no-empty: "error"*/
     for (let i = 0; i < MAX_ATTEMPTS; i++) {
       try {
         const status = await deleteResourceInAPI();
         if (success(status)) {
           break;
         }
-      } catch (e) {}
+      } catch {
+        /* empty */
+      }
       if (i === MAX_ATTEMPTS - 1) {
         // It migth happen
         alert("Something went wrong, unable to delete event");

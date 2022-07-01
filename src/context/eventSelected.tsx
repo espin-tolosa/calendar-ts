@@ -4,10 +4,14 @@
 //
 
 import { createContext, useContext, useState } from "react";
-import { composition, event } from "@/interfaces";
+import { composition, event } from "../interfaces";
 
 const cEventSelected = createContext<event | null>(null);
-const cSetEventSelected = createContext((event: event | null) => {});
+
+type SetEventSelected = (event: event | null) => void;
+const cSetEventSelected = createContext<SetEventSelected>(() => {
+  return;
+});
 
 cEventSelected.displayName = "Selected Event: value";
 cSetEventSelected.displayName = "Selected Event: dispatch";
@@ -19,7 +23,7 @@ export const useSetEventSelected = () => {
   return useContext(cSetEventSelected);
 };
 
-export const EventInController: composition = ({ children }) => {
+export const EventInController: composition = (propTypes) => {
   const [eventSelected, setEventSelected] = useState<event | null>(null);
   const SetEventSelected = (event: event | null) => {
     setEventSelected(event);
@@ -28,7 +32,7 @@ export const EventInController: composition = ({ children }) => {
   return (
     <cEventSelected.Provider value={eventSelected}>
       <cSetEventSelected.Provider value={SetEventSelected}>
-        {children}
+        {propTypes.children}
       </cSetEventSelected.Provider>
     </cEventSelected.Provider>
   );

@@ -1,10 +1,10 @@
-import { Action } from "@/hooks/useEventsState";
-import { fetchEvent_Day } from "@/utils/fetchEvent";
+import { Action } from "../hooks/useEventsState";
+import { fetchEvent_Day } from "../utils/fetchEvent";
 import React, { Dispatch } from "react";
-import { useEventDispatch } from "@/hooks/useEventsState";
-import { DateService } from "@/utils/Date";
-import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
-import { event } from "@/interfaces";
+import { useEventDispatch } from "../hooks/useEventsState";
+import { DateService } from "../utils/Date";
+import { usePushedDaysDispatcher } from "../hooks/usePushDays";
+import { event } from "../interfaces";
 
 export const usePostQuery = (fullDate: event.date) => {
   const pushDaysDispatcher = usePushedDaysDispatcher();

@@ -1,7 +1,7 @@
 import { EventTextArea } from "./textArea";
 import { ClientSelector, EventClientSelector } from "./clientSelector";
 import { TextArea } from "./textArea";
-import { event } from "@/interfaces";
+import { event } from "../../interfaces";
 
 type EventCard = TextArea & ClientSelector;
 

@@ -1,9 +1,9 @@
-import { styles } from "@/components/Day/tw";
-import { MemoEventsThrower } from "@/components/EventsThrower/main";
+import { styles } from "../../components/Day/tw";
+import { MemoEventsThrower } from "../../components/EventsThrower/main";
 import { memo } from "react";
-import { DateService } from "@/utils/Date";
-import { usePostQuery } from "@/api/queries";
-import { useDoubleClick } from "@/hooks/useDoubleClick";
+import { DateService } from "../../utils/Date";
+import { usePostQuery } from "../../api/queries";
+import { useDoubleClick } from "../../hooks/useDoubleClick";
 
 interface Day {
   daynumber: number;

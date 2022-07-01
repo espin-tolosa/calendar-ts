@@ -1,22 +1,12 @@
-import { composition } from "@/interfaces";
-import React, {
-  createContext,
-  Dispatch,
-  DispatchWithoutAction,
-  ReducerWithoutAction,
-  useContext,
-  useEffect,
-  useMemo,
-  useReducer,
-} from "react";
-import { event } from "@/interfaces/index";
-import { month0 } from "@/static/initEvents";
-import { eventSpreader } from "@/algorithms/eventSpreader";
-import { isWellDefined } from "@/utils/ValidateEvent";
-import { CustomTypes } from "@/customTypes";
-import { DateService } from "@/utils/Date";
-import { EventClass } from "@/classes/event";
-import { copyFileSync } from "fs";
+import { composition } from "../interfaces";
+import React, { createContext, Dispatch, useContext, useReducer } from "react";
+import { event } from "../interfaces/index";
+import { month0 } from "../static/initEvents";
+import { eventSpreader } from "../algorithms/eventSpreader";
+import { isWellDefined } from "../utils/ValidateEvent";
+import { CustomTypes } from "../customTypes";
+import { DateService } from "../utils/Date";
+import { EventClass } from "../classes/event";
 
 const DEFERRAL_TIME = 0;
 
@@ -289,8 +279,12 @@ export function reducerEvents(
 const defaultState = month0;
 const cEventState = createContext<Array<event>>(defaultState);
 const cEventBuffer = createContext<Array<event>>(defaultState);
-const cBufferDispatch = createContext<React.Dispatch<Action>>(() => {});
-const cEventDispatch = createContext<React.Dispatch<Action>>(() => {});
+const cBufferDispatch = createContext<React.Dispatch<Action>>(() => {
+  return;
+});
+const cEventDispatch = createContext<React.Dispatch<Action>>(() => {
+  return;
+});
 
 cEventState.displayName = "Event State: a interpretation of database events";
 cEventBuffer.displayName = "Event Buffer: a temporal state";
@@ -333,7 +327,7 @@ export function useGetEventFamily(event: event) {
 
 // Context Dispatcher of Event Reducer
 
-export const EventsDispatcher: composition = ({ children }) => {
+export const EventsDispatcher: composition = (propTypes) => {
   const [state, dispatch] = useReducer(reducerEvents, defaultState);
 
   return (
@@ -341,69 +335,10 @@ export const EventsDispatcher: composition = ({ children }) => {
       <cEventBuffer.Provider value={state}>
         <cEventDispatch.Provider value={dispatch}>
           <cBufferDispatch.Provider value={dispatch}>
-            {children}
+            {propTypes.children}
           </cBufferDispatch.Provider>
         </cEventDispatch.Provider>
       </cEventBuffer.Provider>
     </cEventState.Provider>
   );
 };
-
-const useFetchEvents = () => {};
-//export function fetchEvent_v2(
-//  action: CustomTypes.OptionsEventsAPI,
-//  event: event = nullEvent();
-//): Promise<Array<event>> {
-//  const method = "POST"; //https method, nothing to do with action
-//  const body = new FormData();
-//  const dataJSON = JSON.stringify({ action, ...event });
-//  body.append("json", dataJSON);
-//
-//  const handleFetchErrors = async (response: Response) => {
-//    if (response.status === 401) {
-//      throw Error("No JWT");
-//    }
-//
-//    if (response.status === 404) {
-//      throw Error("No credentials"); //!
-//    }
-//
-//    const dbResponse: Array<event> = await response.json();
-//    return new Promise((resolve, reject) => {
-//      resolve(dbResponse);
-//    });
-//  };
-//
-//  fetch(api.routes.events, { method, body })
-//    .then((response) => {
-//      //  if (response.status === 401) {
-//      //    throw Error("No JWT");
-//      //  }
-//
-//      //  if (response.status === 404) {
-//      //    throw Error("No credentials"); //!
-//      //  }
-//      return response.json();
-//    })
-//    .then((response) => {
-//      return response as Array<event>;
-//    })
-//  	.catch(error =>{
-//
-//  		    return new Promise((resolve, reject) => {
-//  		      setTimeout(() => {
-//  		        resolve([
-//  		          {
-//  		            id: 10,
-//  		            client: "Client_1",
-//  		            job: "local",
-//  		            start: "2022-03-01",
-//  		            end: "2022-03-02",
-//  		          },
-//
-//  		        ]);
-//  		      }, 1000)})}
-//
-//  	)
-//
-//}

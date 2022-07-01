@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
-import { composition, event } from "@/interfaces";
-import { nullEvent } from "@/customTypes";
+import { composition, event } from "../interfaces";
+import { nullEvent } from "../customTypes";
 
 const cDnDEventRef = createContext<event>(nullEvent());
 const cSetDnDEventRef = createContext((event: event) => {

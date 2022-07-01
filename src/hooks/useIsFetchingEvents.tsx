@@ -1,4 +1,4 @@
-import { composition } from "@/interfaces";
+import { composition } from "../interfaces";
 import { createContext, useContext, useState } from "react";
 
 type IsFetchingType = {
@@ -8,7 +8,9 @@ type IsFetchingType = {
 
 const cIsFetchingEvents = createContext<IsFetchingType>({
   isFetching: true,
-  setIsFetching: () => {},
+  setIsFetching: () => {
+    return;
+  },
 });
 
 cIsFetchingEvents.displayName = "Is Fetching Events";
@@ -17,12 +19,12 @@ export const useIsFetchingEvents = () => {
   return useContext(cIsFetchingEvents);
 };
 
-export const IsFetchingEvents: composition = ({ children }) => {
+export const IsFetchingEvents: composition = (propTypes) => {
   const [isFetching, setIsFetching] = useState(true);
 
   return (
     <cIsFetchingEvents.Provider value={{ isFetching, setIsFetching }}>
-      {children}
+      {propTypes.children}
     </cIsFetchingEvents.Provider>
   );
 };

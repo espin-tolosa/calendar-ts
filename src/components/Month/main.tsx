@@ -1,15 +1,15 @@
 import { memo } from "react";
-import { useMonthDate } from "@/hooks/useMonthDate";
-import { MemoDay } from "@/components/Day/main";
-import { MemoIDayHolder } from "@/components/DayHolder/main";
+import { useMonthDate } from "../../hooks/useMonthDate";
+import { MemoDay } from "../../components/Day/main";
+import { MemoIDayHolder } from "../../components/DayHolder/main";
 import * as StyledMonth from "./tw";
-import { DateService } from "@/utils/Date";
+import { DateService } from "../../utils/Date";
 
-import { zeroPadd } from "@/utils/zeroPadd";
-import { useLocalUserPreferencesContext } from "@/hooks/useLocalUserPreferences";
-import { usePrint } from "@/hooks/usePrint";
-import { usePushedDays } from "@/hooks/usePushDays";
-import { CustomTypes } from "@/customTypes";
+import { zeroPadd } from "../../utils/zeroPadd";
+//import { useLocalUserPreferencesContext } from "../../hooks/useLocalUserPreferences";
+import { usePrint } from "../../hooks/usePrint";
+import { usePushedDays } from "../../hooks/usePushDays";
+import { CustomTypes } from "../../customTypes";
 import { CurrentMonthScrollAnchor } from "./MonthToScrollBack";
 import { totalCellsInLastRow } from "./totalCellsInLastRow";
 
@@ -20,7 +20,7 @@ const Month = ({ year, month }: CustomTypes.Month) => {
   //2. locked days
 
   //3. user preferences
-  const { showWeekends } = useLocalUserPreferencesContext().localState;
+  //const { showWeekends } = useLocalUserPreferencesContext().localState;
 
   //4. print config
   const [toPrint, hPrint] = usePrint();

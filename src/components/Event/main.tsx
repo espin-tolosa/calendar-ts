@@ -1,18 +1,21 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
-import { event } from "@/interfaces/index";
-import { DateService } from "@/utils/Date";
-import { useHoverEvent, useTransitionStyle } from "@/components/Event/logic";
+import { event } from "../../interfaces/index";
+import { DateService } from "../../utils/Date";
+import {
+  useHoverEvent,
+  useTransitionStyle,
+} from "../../components/Event/logic";
 import {
   useEventDispatch,
   useEventState,
   useGetEventFamily,
-} from "@/hooks/useEventsState";
-import { EventCard, EventTail } from "@/components/Event/eventCard";
-import { useGethDeleteEvent } from "@/api/handlers";
-import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
-import { useDnDEventRef, useSetDnDEventRef } from "@/context/dndEventRef";
-import { nullEvent } from "@/customTypes";
+} from "../../hooks/useEventsState";
+import { EventCard, EventTail } from "../../components/Event/eventCard";
+import { useGethDeleteEvent } from "../../api/handlers";
+import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
+import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
+import { nullEvent } from "../../customTypes";
 
 export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();

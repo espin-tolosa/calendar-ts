@@ -1,7 +1,7 @@
-import { nullToken } from "@/customTypes";
-import { DateService } from "@/utils/Date";
-import { DocumentIO } from "@/window/cookie";
-import { safeDecodeJWT } from "@/modules/jwt";
+import { nullToken } from "../customTypes";
+import { DateService } from "../utils/Date";
+import { DocumentIO } from "../window/cookie";
+import { safeDecodeJWT } from "../modules/jwt";
 
 /**
  * Token class current usage:
@@ -57,7 +57,7 @@ export class Token {
   /**
    * call to no-throw module wrapper: safeDecodeJWT <- jwt_decode
    * call to window.document accessor: cookie
-   * @returns last valid decoded token
+   * ..returns last valid decoded token
    */
   private readAndDecode(input = DocumentIO.readTokens()) {
     const tokens = input

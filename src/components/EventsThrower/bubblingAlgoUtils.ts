@@ -1,11 +1,11 @@
-import { sortCriteria } from "@/hooks/useEventsState";
-import { event } from "@/interfaces";
-import { isValidPlaceholder } from "@/utils/ValidateEvent";
+import { sortCriteria } from "../..//hooks/useEventsState";
+import { isValidPlaceholder } from "../../utils/ValidateEvent";
+import { event } from "../../interfaces";
 const isPreviousElement = (index: number) => {
   return index > 0;
 };
 
-const getEndPosition = (arr: Array<any>) => {
+const getEndPosition = (arr: Array<event>) => {
   return arr.length;
 };
 

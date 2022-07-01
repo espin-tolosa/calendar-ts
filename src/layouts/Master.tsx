@@ -1,5 +1,5 @@
-import * as tw_Layouts from "@/layouts/tw";
-import { LayoutBoard } from "@/layouts/Board";
+import * as tw_Layouts from "../layouts/tw";
+import { LayoutBoard } from "../layouts/Board";
 
 export const LayoutMaster = () => {
   return (

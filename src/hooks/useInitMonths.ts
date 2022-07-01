@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DateService } from "@/utils/Date";
+import { DateService } from "../utils/Date";
 
 export function useInitMonths(length: number) {
   //Case for one month

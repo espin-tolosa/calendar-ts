@@ -1,9 +1,9 @@
-import { DateService } from "@/utils/Date";
-import { useEventDispatch } from "@/hooks/useEventsState";
-import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
-import { fetchEvent_Day } from "@/utils/fetchEvent";
-import { useDnDEventRef, useSetDnDEventRef } from "@/context/dndEventRef";
-import { event } from "@/interfaces";
+import { DateService } from "../../utils/Date";
+import { useEventDispatch } from "../../hooks/useEventsState";
+import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
+import { fetchEvent_Day } from "../../utils/fetchEvent";
+import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
+import { event } from "../../interfaces";
 
 type date = string;
 

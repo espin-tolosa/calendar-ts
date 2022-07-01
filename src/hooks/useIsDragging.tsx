@@ -1,4 +1,4 @@
-import { composition } from "@/interfaces";
+import { composition } from "../interfaces";
 import { createContext, useContext, useState } from "react";
 import PropTypes from "prop-types";
 

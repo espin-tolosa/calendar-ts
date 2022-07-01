@@ -1,5 +1,5 @@
-import { event } from "@/interfaces";
-import { DateService } from "@/utils/Date";
+import { event } from "../interfaces";
+import { DateService } from "../utils/Date";
 /**
  * Event Spreader extends the local state to represent those events
  * that spans along multiple days.

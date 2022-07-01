@@ -1,10 +1,12 @@
-import { composition } from "@/interfaces";
-import { DateService } from "@/utils/Date";
+import { composition } from "../interfaces";
+import { DateService } from "../utils/Date";
 import React, { createContext, useContext, useReducer } from "react";
 const init = { start: "", end: "" };
 
 const cControllerState = createContext(init);
-const cControllerDispatch = createContext<React.Dispatch<Action>>(() => {});
+const cControllerDispatch = createContext<React.Dispatch<Action>>(() => {
+  return;
+});
 
 cControllerState.displayName = "controller state dates";
 cControllerDispatch.displayName = "controller dispatch dates";
@@ -42,13 +44,13 @@ function reducerController(state: dates, action: Action) {
 }
 
 /* to provide access */
-export const ControllerProviderDates: composition = ({ children }) => {
+export const ControllerProviderDates: composition = (propTypes) => {
   const [state, dispatch] = useReducer(reducerController, init);
 
   return (
     <cControllerState.Provider value={state}>
       <cControllerDispatch.Provider value={dispatch}>
-        {children}
+        {propTypes.children}
       </cControllerDispatch.Provider>
     </cControllerState.Provider>
   );

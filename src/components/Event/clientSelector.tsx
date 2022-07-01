@@ -1,11 +1,11 @@
 import * as StyledEvent from "./tw";
-import { event } from "@/interfaces";
+import { event } from "../../interfaces";
 import React, { useCallback } from "react";
-import { useDoubleClick } from "@/hooks/useDoubleClick";
-import { fetchEvent } from "@/utils/fetchEvent";
-import { usePushedDaysDispatcher } from "@/hooks/usePushDays";
-import { useEventDispatch } from "@/hooks/useEventsState";
-import { useControllerDispatch } from "@/hooks/useController";
+import { useDoubleClick } from "../../hooks/useDoubleClick";
+import { fetchEvent } from "../../utils/fetchEvent";
+import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
+import { useEventDispatch } from "../../hooks/useEventsState";
+import { useControllerDispatch } from "../../hooks/useController";
 const CLIENTS = [
   "Client_1",
   "Client_2",

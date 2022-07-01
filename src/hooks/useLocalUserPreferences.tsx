@@ -1,12 +1,12 @@
 import { createContext, useContext, useReducer } from "react";
-import { composition } from "@/interfaces";
+import { composition } from "../interfaces";
 
 // The reducer needs to recieve typed strings for limited actions, change: action.type : string by "action1" | "action2" | ...
 
 import {
   UserPreferencesState,
   defaultUserState,
-} from "@/static/defaultUserState";
+} from "../static/defaultUserState";
 
 const getInitDisplayState = () => {
   /*
@@ -51,7 +51,10 @@ export const useLocalUserPreferences = () => {
 
 // Context to give global access to useLocalUserPreferences
 
-const dispatch: ({ type }: { type: string }) => void = () => {};
+type Dispatch = ({ type }: { type: string }) => void;
+const dispatch: Dispatch = () => {
+  return;
+};
 
 const cUseLocalUserPreferences = createContext({
   localState: defaultUserState,
@@ -64,7 +67,7 @@ export const useLocalUserPreferencesContext = () => {
   return useContext(cUseLocalUserPreferences);
 };
 
-export const UserPreferences: composition = ({ children }) => {
+export const UserPreferences: composition = (propTypes) => {
   //const [state, setState] = useState(isCookie("PHPSESSID"));
   const [localState, dispatchLocalState] = useLocalUserPreferences();
 
@@ -74,7 +77,7 @@ export const UserPreferences: composition = ({ children }) => {
     <cUseLocalUserPreferences.Provider
       value={{ localState, dispatchLocalState }}
     >
-      {children}
+      {propTypes.children}
     </cUseLocalUserPreferences.Provider>
   );
 };

@@ -1,10 +1,10 @@
-import { LayoutMaster } from "@/layouts/Master";
-import { LayoutHeader } from "@/layouts/Header";
-import * as tw_Layouts from "@/layouts/tw";
-import { useKeyboardShortcuts } from "@/hooks/useKeyListeners";
+import { LayoutMaster } from "../layouts/Master";
+import { LayoutHeader } from "../layouts/Header";
+import * as tw_Layouts from "../layouts/tw";
+import { useKeyboardShortcuts } from "../hooks/useKeyListeners";
 import { useLayoutEffect, useRef } from "react";
-import { useOnDragEnter } from "@/components/Day/logic";
-import { useDnDEventRef } from "@/context/dndEventRef";
+import { useOnDragEnter } from "../components/Day/logic";
+import { useDnDEventRef } from "../context/dndEventRef";
 
 export const LayoutMain = () => {
   const onDragEnter = useOnDragEnter();
