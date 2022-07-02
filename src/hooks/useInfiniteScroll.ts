@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { GetDateNextMonth } from "../utils/Date";
-import { useInitMonths } from "../hooks/useInitMonths";
+import { useMonthsBoardState } from "../hooks/useMonthBoardState";
 import { useListenWindowSize } from "../hooks/useResponsiveLayout";
+import { ListPrevDates } from "../utils/Date";
 
 //Infinite scrolling
-export function useInfiniteScroll(initLength: number) {
+export function useInfiniteScroll() {
   const isLargeWindow = useListenWindowSize();
-  const [monthKeys, setMonthKeys] = useInitMonths(
-    2 * Math.round(initLength / 2)
-  );
+  const [monthKeys, setMonthKeys] = useMonthsBoardState();
+  console.log(monthKeys);
   const [isBottom, setIsBottom] = useState(false);
   useEffect(() => {
     const onChange = (entries: Array<IntersectionObserverEntry>) => {
@@ -26,6 +26,7 @@ export function useInfiniteScroll(initLength: number) {
     observer.observe(document.getElementById("BottomEdge") as HTMLElement);
   }, []);
   useEffect(() => {
+    console.log("Updating month list");
     if (isBottom) {
       const month_entry1 = GetDateNextMonth(
         monthKeys[monthKeys.length - 1].year,
@@ -42,6 +43,7 @@ export function useInfiniteScroll(initLength: number) {
     }
   }, [isBottom]);
 
-  return monthKeys;
+  const prevDates = ListPrevDates(monthKeys[0], 2).reverse();
+  return prevDates.concat(monthKeys);
 }
 //*--------------------------*/
