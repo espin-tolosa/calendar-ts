@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "shell": "./scripts/test.sh $pwd",
     "graph": "./scripts/depcruise_file.sh $1",
-    "graphAll": "find src/ -type f -exec ./scripts/depcruise_file.experimental.sh '{}' \\;",
+    "graph-all": "find src/ -type f -name '*.ts*' -exec ./scripts/depcruise_file.sh '{}' \\;",
     "eslint": "eslint --cache ./src/**"
   },
   "dependencies": {

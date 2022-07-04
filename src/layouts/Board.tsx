@@ -4,7 +4,7 @@ import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
 import { useGetAllEventsFrom } from "../api/useGetAllEventsFrom";
 
 export const LayoutBoard = () => {
-  const monthsOfBoard = useInfiniteScroll();
+  const [monthsOfBoard, last] = useInfiniteScroll();
 
   //Query All Events
   const hFetchAll = useGetAllEventsFrom(monthsOfBoard[0]);
@@ -30,7 +30,7 @@ export const LayoutBoard = () => {
       {monthsOfBoard.map((value) => {
         return <MemoMonth key={`${value.year}-${value.month}`} {...value} />;
       })}
-      <div id="BottomEdge"></div>
+      <div ref={last}></div>
     </TWboard>
   );
 };

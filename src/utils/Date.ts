@@ -208,7 +208,6 @@ export function GetPrevDate(startDate: { year: number; month: number }) {
     return { ...state };
   };
 }
-type yearMonth = { year: number; month: number };
 
 export function ListPrevDates(
   start: yearMonth,
@@ -220,7 +219,7 @@ export function ListPrevDates(
     result.push(prevState());
   }
 
-  return result;
+  return result.reverse();
 }
 
 function GetDateFrom(fullDate: string, offset: number) {

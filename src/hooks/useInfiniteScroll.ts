@@ -1,49 +1,41 @@
-import { useState, useEffect } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import { GetDateNextMonth } from "../utils/Date";
 import { useMonthsBoardState } from "../hooks/useMonthBoardState";
-import { useListenWindowSize } from "../hooks/useResponsiveLayout";
-import { ListPrevDates } from "../utils/Date";
 
 //Infinite scrolling
 export function useInfiniteScroll() {
-  const isLargeWindow = useListenWindowSize();
   const [monthKeys, setMonthKeys] = useMonthsBoardState();
-  console.log(monthKeys);
-  const [isBottom, setIsBottom] = useState(false);
+
+  const last = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const onChange = (entries: Array<IntersectionObserverEntry>) => {
       if (entries[0].isIntersecting) {
-        setIsBottom((prev) => {
-          return !prev;
-        });
+        const { year, month } = monthKeys[monthKeys.length - 1];
+        setMonthKeys(() => [...monthKeys, GetDateNextMonth(year, month)]);
       }
     };
 
     const observer = new IntersectionObserver(onChange, {
-      rootMargin: isLargeWindow ? "500px" : "200px",
+      rootMargin: "500px",
     });
 
-    observer.observe(document.getElementById("BottomEdge") as HTMLElement);
-  }, []);
-  useEffect(() => {
-    console.log("Updating month list");
-    if (isBottom) {
-      const month_entry1 = GetDateNextMonth(
-        monthKeys[monthKeys.length - 1].year,
-        monthKeys[monthKeys.length - 1].month
-      );
-      const month_entry2 = GetDateNextMonth(
-        month_entry1.year,
-        month_entry1.month
-      );
-
-      setMonthKeys([...monthKeys, month_entry1, month_entry2]);
-
-      setIsBottom((prev) => !prev);
+    if (last.current === null) {
+      return;
     }
-  }, [isBottom]);
 
-  const prevDates = ListPrevDates(monthKeys[0], 2).reverse();
-  return prevDates.concat(monthKeys);
+    observer.observe(last.current);
+
+    return () => {
+      if (last.current === null) {
+        return;
+      }
+      observer.unobserve(last.current);
+    };
+  }, [monthKeys]);
+
+  return [monthKeys, last] as [
+    Array<yearMonth>,
+    React.RefObject<HTMLDivElement>
+  ];
 }
 //*--------------------------*/

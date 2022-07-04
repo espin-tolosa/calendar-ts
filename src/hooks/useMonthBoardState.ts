@@ -1,20 +1,15 @@
 import { useState } from "react";
-import { DateService } from "../utils/Date";
+import { DateService, ListPrevDates } from "../utils/Date";
 //TODO: move to env config this constant
-const INITIAL_NUMBER_OF_MONTHS = 1;
+const NUMBER_OF_PREV_MONTHS = 2;
 
 export function useMonthsBoardState() {
   //Load first element
-  const currentMonth = DateService.GetDateNextMonth();
-  const monthList = new Array<{ year: number; month: number }>(currentMonth);
-  for (let i = 1; i < INITIAL_NUMBER_OF_MONTHS; i++) {
-    monthList.push(
-      DateService.GetDateNextMonth(
-        monthList[i - 1].year,
-        monthList[i - 1].month
-      )
-    );
-  }
+  const currentDate: yearMonth = DateService.GetDateNextMonth();
+  const pastDates: yearMonth[] = ListPrevDates(
+    currentDate,
+    NUMBER_OF_PREV_MONTHS
+  );
   //debugger;
-  return useState(monthList);
+  return useState<yearMonth[]>([...pastDates, currentDate]);
 }
