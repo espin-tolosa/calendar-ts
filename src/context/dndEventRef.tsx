@@ -3,9 +3,9 @@ import { composition, event } from "../interfaces";
 import { nullEvent } from "../customTypes";
 
 const cDnDEventRef = createContext<event>(nullEvent());
-const cSetDnDEventRef = createContext((event: event) => {
-  return;
-});
+
+type SetDnDEventRef = (dragging: event) => void;
+const cSetDnDEventRef = createContext<SetDnDEventRef>(() => undefined);
 
 cDnDEventRef.displayName = "Selected Event: value";
 

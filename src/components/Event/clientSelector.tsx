@@ -1,23 +1,23 @@
 import * as StyledEvent from "./tw";
 import { event } from "../../interfaces";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDoubleClick } from "../../hooks/useDoubleClick";
 import { fetchEvent } from "../../utils/fetchEvent";
 import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { useEventDispatch } from "../../hooks/useEventsState";
 import { useControllerDispatch } from "../../hooks/useController";
-const CLIENTS = [
-  "Client_1",
-  "Client_2",
-  "Client_3",
-  "Client_4",
-  "Client_5",
-  "Client_6",
-  "Client_7",
-  "Client_8",
-  "Client_9",
-  "Unavailable",
-];
+import { useClientsStyles } from "@/context/queryClientStyles";
+
+function useQueryClientsStyles() {
+  const [clients, setClients] = useState<Array<string>>([]);
+  //fetch("http://192.168.1.141/backend/routes/client_styles.api.php")
+
+  useEffect(() => {
+    setClients([]);
+  }, []);
+
+  return clients;
+}
 
 export type ClientSelector = {
   style: object;
@@ -28,8 +28,11 @@ export type ClientSelector = {
 export const EventClientSelector: React.FC<ClientSelector> = (
   propTypes
 ): JSX.Element => {
+  const clients = useQueryClientsStyles();
+  const cStyles = useClientsStyles();
+  console.log(cStyles?.success);
   const doubleClick = useCallback(() => {
-    console.info("Click on client selector");
+    //console.info("Click on client selector");
   }, []);
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
@@ -51,7 +54,8 @@ export const EventClientSelector: React.FC<ClientSelector> = (
   return (
     <StyledEvent.TWStyledSelect
       value={propTypes.event.client}
-      style={propTypes.style}
+      //style={propTypes.style}
+      $name={propTypes.event.client}
       id={"select"}
       onChange={(e) => {
         if (e.currentTarget.value === "Unavailable") {
@@ -69,13 +73,14 @@ export const EventClientSelector: React.FC<ClientSelector> = (
       >
         Select Client
       </option>
-      {CLIENTS.map((clientIterator, index) => {
-        return (
-          <option key={index} value={clientIterator}>
-            {clientIterator}
-          </option>
-        );
-      })}
+      {cStyles?.success &&
+        cStyles.clients.map((clientIterator, index) => {
+          return (
+            <option key={index} value={clientIterator}>
+              {clientIterator}
+            </option>
+          );
+        })}
     </StyledEvent.TWStyledSelect>
   );
 };

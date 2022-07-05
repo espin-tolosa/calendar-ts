@@ -1,38 +1,29 @@
 import { composition } from "../interfaces";
 import { createContext, useContext, useState } from "react";
 
-const defaultState = { id: 0 };
-//const defaultDispaatcher: React.Dispatch<
-//  React.SetStateAction<typeof defaultState>
-//> = () => {};
-
-const cEventsStatus = createContext(defaultState);
-
+type Status = { id: number };
 type EventsStatusDispatcher = (newValue: number) => void;
-const cEventsStatusDispatcher = createContext<EventsStatusDispatcher>(() => {
-  return;
-});
-cEventsStatus.displayName = "Event Status";
-cEventsStatusDispatcher.displayName = "Event Status Dispatcher";
 
-export const useEventsStatus = () => {
-  return useContext(cEventsStatus);
-};
-export const useEventsStatusDispatcher = () => {
-  return useContext(cEventsStatusDispatcher);
-};
+const State = createContext<Status>({ id: 0 });
+const Dispatch = createContext<EventsStatusDispatcher>(() => undefined);
+
+State.displayName = "Event Status";
+Dispatch.displayName = "Event Status Dispatcher";
+
+export const useEventsStatus = () => useContext(State);
+export const useEventsStatusDispatcher = () => useContext(Dispatch);
 
 export const EventsStatus: composition = (propTypes) => {
-  const [state, setState] = useState(defaultState);
+  const [state, setState] = useState({ id: 0 });
   const dispatchState = (newValue: number) => {
     setState({ id: newValue });
   };
 
   return (
-    <cEventsStatus.Provider value={state}>
-      <cEventsStatusDispatcher.Provider value={dispatchState}>
+    <State.Provider value={state}>
+      <Dispatch.Provider value={dispatchState}>
         {propTypes.children}
-      </cEventsStatusDispatcher.Provider>
-    </cEventsStatus.Provider>
+      </Dispatch.Provider>
+    </State.Provider>
   );
 };

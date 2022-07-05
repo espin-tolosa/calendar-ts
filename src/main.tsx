@@ -22,43 +22,46 @@ import { UserPreferences } from "./hooks/useLocalUserPreferences";
 import { EventsDispatcher } from "./hooks/useEventsState";
 import { EventsStatus } from "./hooks/useEventsStatus";
 import { UserSession } from "./hooks/useUserSession";
+import { ClientsStyles } from "./context/queryClientStyles";
 
 const root = window.document.getElementById("root") as HTMLDivElement;
 
 createRoot(root).render(
   <StrictMode>
-    <DOMRefsContext>
-      <CurrentMonthRef>
-        <EventInDnD>
-          <EventInController>
-            <KeyBuffer>
-              <TemporaryEvent>
-                <TopNavRef>
-                  <PushedDays>
-                    <IsFetchingEvents>
-                      <IsDraggingEvent>
-                        <ControllerProvider>
-                          <ControllerProviderDates>
-                            <UserPreferences>
-                              <EventsDispatcher>
-                                <EventsStatus>
-                                  <UserSession>
-                                    <App />
-                                  </UserSession>
-                                </EventsStatus>
-                              </EventsDispatcher>
-                            </UserPreferences>
-                          </ControllerProviderDates>
-                        </ControllerProvider>
-                      </IsDraggingEvent>
-                    </IsFetchingEvents>
-                  </PushedDays>
-                </TopNavRef>
-              </TemporaryEvent>
-            </KeyBuffer>
-          </EventInController>
-        </EventInDnD>
-      </CurrentMonthRef>
-    </DOMRefsContext>
+    <ClientsStyles>
+      <DOMRefsContext>
+        <CurrentMonthRef>
+          <EventInDnD>
+            <EventInController>
+              <KeyBuffer>
+                <TemporaryEvent>
+                  <TopNavRef>
+                    <PushedDays>
+                      <IsFetchingEvents>
+                        <IsDraggingEvent>
+                          <ControllerProvider>
+                            <ControllerProviderDates>
+                              <UserPreferences>
+                                <EventsDispatcher>
+                                  <EventsStatus>
+                                    <UserSession>
+                                      <App />
+                                    </UserSession>
+                                  </EventsStatus>
+                                </EventsDispatcher>
+                              </UserPreferences>
+                            </ControllerProviderDates>
+                          </ControllerProvider>
+                        </IsDraggingEvent>
+                      </IsFetchingEvents>
+                    </PushedDays>
+                  </TopNavRef>
+                </TemporaryEvent>
+              </KeyBuffer>
+            </EventInController>
+          </EventInDnD>
+        </CurrentMonthRef>
+      </DOMRefsContext>
+    </ClientsStyles>
   </StrictMode>
 );

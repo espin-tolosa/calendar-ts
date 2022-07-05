@@ -11,7 +11,7 @@ declare +i -r TARGET="../graph-$PROJECT/$SOURCE";
 #which is actually part of same project
 mkdir -p $( dirname "$TARGET")
 
-yarn depcruise -x "^node_modules" -T dot -f "$TARGET.dot" "$SOURCE"
+yarn depcruise --max-depth 2 -x "^node_modules" -T dot -f "$TARGET.dot" "$SOURCE"
 
 dot "$TARGET.dot" -Tsvg > "$TARGET.svg"
 
