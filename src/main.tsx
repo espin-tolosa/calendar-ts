@@ -22,7 +22,7 @@ import { UserPreferences } from "./hooks/useLocalUserPreferences";
 import { EventsDispatcher } from "./hooks/useEventsState";
 import { EventsStatus } from "./hooks/useEventsStatus";
 import { UserSession } from "./hooks/useUserSession";
-import { ClientsStyles } from "./context/queryClientStyles";
+import { ClientsStyles } from "./context/useFetchClientStyle";
 
 const root = window.document.getElementById("root") as HTMLDivElement;
 

@@ -10,6 +10,6 @@ export const api = {
     login: pathGenerator("login"),
     events: pathGenerator("events"),
     clients: pathGenerator("client_styles"),
-    styles: pathGenerator("client_styles", "css"),
+    styles: pathGenerator("client_styles_css"),
   },
 };

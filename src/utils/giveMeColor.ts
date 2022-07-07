@@ -1,15 +1,11 @@
-export const ClientColorStyles = (h: number, s: number, l: number) => {
-  return hsl2rgb(h, s, l);
+export const ClientColorStyles = (h: number, s: number, l: number): string => {
+  const [r, g, b] = hsl2rgb(h, s, l);
+  return `rgb(${r}, ${g}, ${b})`;
 };
 
 export const giveMeColor = (search: string) => {
   const linearGradientTemplate = (color: number) => {
     return `linear-gradient(0.25turn, hsl(${color}, 40%, 40%), hsl(${color},50%,50%),  hsl(${color}, 60%, 60%))`;
-  };
-
-  const highContrastText = (bgColor: number) => {
-    // hsl system colors are in range [0º, 360º]
-    return "white";
   };
 
   const ClientsStylesMap = [
@@ -18,7 +14,7 @@ export const giveMeColor = (search: string) => {
       style: {
         transition: "background-color 0.5s ease",
         background: linearGradientTemplate(10),
-        color: highContrastText(10),
+        color: "white",
       },
     },
     {
@@ -26,7 +22,7 @@ export const giveMeColor = (search: string) => {
       style: {
         transition: "background-color 0.5s ease",
         background: linearGradientTemplate(20),
-        color: highContrastText(20),
+        color: "white",
       },
     },
     {
@@ -34,7 +30,7 @@ export const giveMeColor = (search: string) => {
       style: {
         transition: "background-color 0.5s ease",
         background: linearGradientTemplate(30),
-        color: highContrastText(30),
+        color: "white",
       },
     },
     {
@@ -42,7 +38,7 @@ export const giveMeColor = (search: string) => {
       style: {
         transition: "background-color 0.5s ease",
         background: linearGradientTemplate(40),
-        color: highContrastText(40),
+        color: "white",
       },
     },
     {
@@ -50,7 +46,7 @@ export const giveMeColor = (search: string) => {
       style: {
         transition: "background-color 0.5s ease",
         background: linearGradientTemplate(50),
-        color: highContrastText(50),
+        color: "white",
       },
     },
     {
@@ -58,7 +54,7 @@ export const giveMeColor = (search: string) => {
       style: {
         transition: "background-color 0.5s ease",
         background: linearGradientTemplate(60),
-        color: highContrastText(60),
+        color: "white",
       },
     },
     {
@@ -66,7 +62,7 @@ export const giveMeColor = (search: string) => {
       style: {
         transition: "background-color 0.5s ease",
         background: linearGradientTemplate(70),
-        color: highContrastText(70),
+        color: "white",
       },
     },
     {
@@ -74,7 +70,7 @@ export const giveMeColor = (search: string) => {
       style: {
         transition: "background-color 0.5s ease",
         background: linearGradientTemplate(80),
-        color: highContrastText(80),
+        color: "white",
       },
     },
     {
@@ -82,7 +78,7 @@ export const giveMeColor = (search: string) => {
       style: {
         transition: "background-color 0.5s ease",
         background: linearGradientTemplate(90),
-        color: highContrastText(90),
+        color: "white",
       },
     },
   ];
@@ -93,7 +89,7 @@ export const giveMeColor = (search: string) => {
     ? result.style
     : {
         background: linearGradientTemplate(350),
-        color: highContrastText(350),
+        color: "white",
       };
 };
 

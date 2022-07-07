@@ -32,10 +32,16 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
   const $isWeekend = DateService.IsWeekend(fullDate);
   const styledProps = { $isWeekend, $isLock };
   const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
-  const hAddEvent = useDoubleClick(addEvent);
+
+  const onClick = useDoubleClick(addEvent, fullDate);
 
   return (
-    <styles.contain id={`day:${fullDate}`} {...styledProps} {...hAddEvent}>
+    <styles.contain
+      id={`day:${fullDate}`}
+      {...styledProps}
+      onClick={onClick}
+      onPointerDown={onClick}
+    >
       <styles.header id={`day-header:${fullDate}`} {...styledProps}>
         <styles.daySpot
           id={`day-spot:${fullDate}`}

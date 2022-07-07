@@ -23,10 +23,10 @@ export const useTransitionStyle = (
   } else if (!isNaN(clientID) && clientID > 5) {
     mapClientToColor = (360 * (clientID - 6)) / 5 + 180 / 5;
   }
-  const [r, g, b] = ClientColorStyles(mapClientToColor, 0.8, 0.8);
-  const [r_h, g_h, b_h] = ClientColorStyles(mapClientToColor, 0.4, 0.7);
-  const [r_b, g_b, b_b] = ClientColorStyles(mapClientToColor, 0.8, 0.2);
-  const [r_c, g_c, b_c] = ClientColorStyles(mapClientToColor, 0.7, 0.3);
+  const cTransition = ClientColorStyles(mapClientToColor, 0.8, 0.8);
+  const cHover = ClientColorStyles(mapClientToColor, 0.4, 0.7);
+  const cBase = ClientColorStyles(mapClientToColor, 0.8, 0.2);
+  const cHeader = ClientColorStyles(mapClientToColor, 0.7, 0.3);
   //Check if event is temporary and in that case return a steady style
   //this will be skiped when then event become sync with database
   if (event.id === Number.MAX_SAFE_INTEGER) {
@@ -36,7 +36,7 @@ export const useTransitionStyle = (
       "2px solid transparent"
     );
     const header = composeStyle(
-      `rgb(${r_c}, ${g_c}, ${b_c})`,
+      cHeader,
       "2px solid transparent",
       "2px solid transparent"
     );
@@ -66,15 +66,11 @@ export const useTransitionStyle = (
           )
         : !hover
         ? composeStyle(
-            `rgb(${r}, ${g}, ${b})`,
+            cTransition,
             "2px solid transparent",
             "2px solid transparent"
           )
-        : composeStyle(
-            `rgb(${r_h},${g_h},${b_h})`,
-            `2px solid rgb(${r_b},${g_b},${b_b})`,
-            "2px solid transparent"
-          );
+        : composeStyle(cHover, `2px solid ${cBase}`, "2px solid transparent");
     } else {
       result = justThrown
         ? composeStyle(
@@ -83,21 +79,13 @@ export const useTransitionStyle = (
             "2px solid transparent"
           )
         : !hover
-        ? composeStyle(
-            `rgb(${r_h}, ${g_h}, ${b_h})`,
-            "2px solid transparent",
-            "2px solid transparent"
-          )
-        : composeStyle(
-            `rgb(${r_h}, ${g_h}, ${b_h})`,
-            `2px solid rgb(${r_b}, ${g_b},${b_b})`,
-            `2px solid rgb(${r_b}, ${g_b},${b_b})`
-          );
+        ? composeStyle(cHover, "2px solid transparent", "2px solid transparent")
+        : composeStyle(cHover, `2px solid ${cBase}`, `2px solid ${cBase}`);
     }
 
     return {
       dinamic: result,
-      static: { background: `rgb(${r_b}, ${g_c}, ${b_c})` },
+      static: { background: cHeader },
     };
   }, [justThrown, hover]);
 };

@@ -28,6 +28,7 @@ export const EventTextArea = ({ event }: TextArea) => {
         className="textarea rounded-[5px] w-full p-1 caret-black focus:bg-red-200"
         role="textbox"
         contentEditable={true}
+        //TODO: read this to gain control over the component: https://goshacmd.com/controlled-vs-uncontrolled-inputs-react/
         suppressContentEditableWarning={true}
         onClick={(e) => {
           e.currentTarget.focus();
