@@ -25,7 +25,7 @@ export const EventTextArea = ({ event }: TextArea) => {
     <StyledEvent.TWjobContent>
       <span
         ref={textRef}
-        className="textarea rounded-[5px] w-full p-1 caret-black focus:bg-green-200 print:text-xs"
+        className="textarea rounded-[5px] w-full p-1 caret-black focus:bg-green-200 print:text-xs text-sm"
         role="textbox"
         contentEditable={true}
         //TODO: read this to gain control over the component: https://goshacmd.com/controlled-vs-uncontrolled-inputs-react/
