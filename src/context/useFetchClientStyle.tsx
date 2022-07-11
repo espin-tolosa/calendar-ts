@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { api } from "../static/apiRoutes";
+import { report } from "../logger/report";
 
 // This file exports one context that brings styles from API
 export { useClientsStyles, ClientsStyles };
@@ -51,11 +52,15 @@ function useAddStylesClientCSSlasses() {
         if (!isMount.current) {
           return;
         }
+
         setClients(Object.keys(json));
         setStyles(json);
         setSuccess(true);
         id.current != null && clearInterval(id.current);
-      }).catch;
+      })
+      .catch((error) => {
+        report("local", error);
+      });
   };
 
   useEffect(() => {
@@ -68,9 +73,9 @@ function useAddStylesClientCSSlasses() {
       attemps += 1;
       if (attemps > MAX_ATTEMPS) {
         id.current != null && clearInterval(id.current);
-        id.current = setInterval(() => {
-          handleFetch();
-        }, 1000);
+        //  id.current = setInterval(() => {
+        //    handleFetch();
+        //  }, 1000);
       }
     }, 100);
 

@@ -84,8 +84,6 @@ export const TWplaceholder = tw.div`
 	text-transparent
 `;
 
-export const TWStyledSelect = tw.select<{ $name: string }>`
+export const TWStyledSelect = tw.select`
   border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer outline-none text-white
-	
-	${({ $name }: { $name: string }) => "client-" + $name}
 	`;

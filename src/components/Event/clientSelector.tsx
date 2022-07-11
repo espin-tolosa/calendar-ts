@@ -36,7 +36,6 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
     <StyledEvent.TWStyledSelect
       value={props.event.client}
       //style={propTypes.style}
-      $name={props.event.client}
       id={eventID(props.event.id, "master", "clientSelector")}
       onChange={(e) => {
         if (e.currentTarget.value === "Unavailable") {
@@ -65,7 +64,7 @@ const ClientOptionList = ({
   list: Maybe<ResponseFromAPI>;
 }): JSX.Element => {
   if (!list.success) {
-    return <option>{"loading client list"}</option>;
+    return <option>{"loading client list..."}</option>;
   }
   return (
     <>

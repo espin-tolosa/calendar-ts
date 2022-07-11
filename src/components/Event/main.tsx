@@ -5,6 +5,7 @@ import { DateService } from "../../utils/Date";
 import {
   useHoverEvent,
   useTransitionStyle,
+  useTransitionCSSStyle,
 } from "../../components/Event/logic";
 import {
   useEventDispatch,
@@ -16,6 +17,7 @@ import { useGethDeleteEvent } from "../../api/handlers";
 import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
 import { nullEvent } from "../../customTypes";
+import { useClientsStyles } from "@/context/useFetchClientStyle";
 
 export function eventID(id: number, role: string, subcomponent: string) {
   return `event:${role}:${id}:${subcomponent}`;
@@ -83,7 +85,17 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const { hover, ...mouseHover } = useHoverEvent(event);
 
   // Style hook for state transitions
-  const style = useTransitionStyle(isChildren, hover, event);
+  const styleOLD = useTransitionStyle(isChildren, hover, event);
+  const clientsStyles = useClientsStyles();
+
+  const color = clientsStyles.response?.styles[event.client] || {
+    primary: "#ffffff",
+    secondary: "#aaaaaa",
+  };
+
+  console.log(color, clientsStyles, event.client);
+  const style = useTransitionCSSStyle(isChildren, hover, event, color.primary);
+  //ººconsole.log(styleTest);
 
   // Database storage logic
 
