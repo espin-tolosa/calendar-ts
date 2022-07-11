@@ -17,6 +17,14 @@ import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
 import { nullEvent } from "../../customTypes";
 
+export function eventID(id: number, role: string, subcomponent: string) {
+  return `event:${role}:${id}:${subcomponent}`;
+}
+
+/**
+ * Event interactive component, expected functions
+ *
+ */
 export const Event = ({ event, index }: { event: event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();
   const [state, setState] = useState<{ height: string }>({ height: "0px" });
@@ -131,6 +139,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   return (
     <>
       <StyledEvent.TWflexContainer
+        id={eventID(event.id, "master", "eventListener")}
         onClick={(e) => {
           console.warn("Click on placehoder");
           e.stopPropagation();
@@ -152,6 +161,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
         }}
       >
         <StyledEvent.TWtextContent
+          id={eventID(event.id, "master", "sizeAndPosition")}
           $isChildren={isChildren}
           ref={eventRef}
           $isHover={hover}

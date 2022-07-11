@@ -4,16 +4,7 @@ import { api } from "../static/apiRoutes";
 // This file exports one context that brings styles from API
 export { useClientsStyles, ClientsStyles };
 
-// Types From API: those are determined by the PHP server
-type ClientsFromAPI = Array<string>;
-type StylesFromAPI = Record<string, { primary: string; secondary: string }>;
-type ResponseFromAPI = {
-  clients: ClientsFromAPI;
-  styles: StylesFromAPI;
-  success: boolean;
-};
-
-const ClientsStyle = createContext<ResponseFromAPI | null>(null);
+const ClientsStyle = createContext<Maybe<ResponseFromAPI>>({ success: false });
 ClientsStyle.displayName = "Clients Style";
 const useClientsStyles = () => useContext(ClientsStyle);
 
@@ -27,7 +18,10 @@ function ClientsStyles(propTypes: ClientStyles) {
   const clients = clientsData.clients;
   const styles = clientsData.styles;
 
-  const ctx: ResponseFromAPI = { clients, styles, success };
+  const ctx: Maybe<ResponseFromAPI> = {
+    success,
+    response: { clients, styles },
+  };
 
   return (
     <ClientsStyle.Provider value={ctx}>
