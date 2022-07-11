@@ -17,9 +17,9 @@ export const useTransitionCSSStyle = (
     return;
   }
   const cTransition = HSLController(mapClientToColor.h, 0.8, 0.8);
-  const cHover = HSLController(mapClientToColor.h, 0.4, 0.7);
-  const cBase = HSLController(mapClientToColor.h, 0.8, 0.2);
-  const cHeader = HSLController(mapClientToColor.h, 0.7, 0.3);
+  const cHover = HSLController(mapClientToColor.h, 0.6, 0.9); //controls the text
+  const cBase = HSLController(mapClientToColor.h, 0.8, 0.6); //controls the border on hover
+  const cHeader = HSLController(mapClientToColor.h, 0.7, 0.6); //controls the top bar
   //Check if event is temporary and in that case return a steady style
   //this will be skiped when then event become sync with database
   if (event.id === Number.MAX_SAFE_INTEGER) {

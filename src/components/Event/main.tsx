@@ -85,15 +85,14 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const { hover, ...mouseHover } = useHoverEvent(event);
 
   // Style hook for state transitions
-  const styleOLD = useTransitionStyle(isChildren, hover, event);
   const clientsStyles = useClientsStyles();
 
+  //TODO: make this a function
   const color = clientsStyles.response?.styles[event.client] || {
-    primary: "#ffffff",
+    primary: "#abcabc",
     secondary: "#aaaaaa",
   };
 
-  console.log(color, clientsStyles, event.client);
   const style = useTransitionCSSStyle(isChildren, hover, event, color.primary);
   //ººconsole.log(styleTest);
 
@@ -177,13 +176,13 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
           $isChildren={isChildren}
           ref={eventRef}
           $isHover={hover}
-          style={style.dinamic}
+          style={style?.dinamic}
           $cells={spreadCells}
           title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
           $client={event.client.toLowerCase()}
         >
           {!isChildren ? (
-            <EventCard event={event} style={style.static} />
+            <EventCard event={event} style={style?.static || {}} />
           ) : (
             <EventTail event={event} />
           )}
@@ -276,7 +275,15 @@ export const EventOff = ({ event }: { event: event }) => {
   const { hover, ...mouseHover } = useHoverEvent(event);
 
   // Style hook for state transitions
-  const style = useTransitionStyle(isChildren, hover, event);
+  const clientsStyles = useClientsStyles();
+
+  //TODO: make this a function
+  const color = clientsStyles.response?.styles[event.client] || {
+    primary: "#abcabc",
+    secondary: "#aaaaaa",
+  };
+
+  const style = useTransitionCSSStyle(isChildren, hover, event, color.primary);
 
   // Database storage logic
 
@@ -302,13 +309,13 @@ export const EventOff = ({ event }: { event: event }) => {
         <StyledEvent.TWtextContent
           $isChildren={isChildren}
           $isHover={hover}
-          style={style.dinamic}
+          style={style?.dinamic || {}}
           $cells={spreadCells}
           title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
           $client={event.client.toLowerCase()}
         >
           {!isChildren ? (
-            <EventCard event={event} style={style.static} />
+            <EventCard event={event} style={style?.static || {}} />
           ) : (
             <EventTail event={event} />
           )}

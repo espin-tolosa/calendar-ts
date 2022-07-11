@@ -12,10 +12,9 @@ const useClientsStyles = () => useContext(ClientsStyle);
 type ClientStyles = { children: JSX.Element };
 
 function ClientsStyles(propTypes: ClientStyles) {
-  const stylesData = useAddStyles("clients-styles", api.routes.styles);
   const clientsData = useAddStylesClientCSSlasses();
 
-  const success = stylesData.success && clientsData.success;
+  const success = clientsData.success;
   const clients = clientsData.clients;
   const styles = clientsData.styles;
 
@@ -86,40 +85,4 @@ function useAddStylesClientCSSlasses() {
   }, []);
 
   return { clients, styles, success };
-}
-
-//-------------------------------------------------------------------------------------
-// This is purely side effect, it should always be used
-function useAddStyles(name: string, path: string) {
-  const [success, setSuccess] = useState(false);
-  useEffect(() => {
-    fetch(path)
-      .then((res) => res.text())
-      .then((styles) => {
-        createStyles(name, styles);
-        setSuccess(true);
-      });
-
-    return () => {
-      deleteStyles(name);
-    };
-  }, []);
-
-  return { success };
-}
-
-function createStyles(id: string, styles: string) {
-  deleteStyles(id);
-
-  const element = window.document.createElement("style");
-  element.id = id;
-  console.log(styles);
-  element.innerText = styles.replace(/<br\s*\/?>/gi, " ");
-  window.document.head.appendChild(element);
-}
-function deleteStyles(id: string) {
-  const node = window.document.getElementById(id);
-  if (node != null) {
-    window.document.head.removeChild(node);
-  }
 }

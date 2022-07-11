@@ -46,10 +46,13 @@ ${({ $isHover, $isChildren }: { $isHover: boolean; $isChildren: boolean }) =>
 `;
 
 export const TWextend = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event-e min-w-[4.14%] z-ExtendEvent
+	mt-[1px] absolute text-transparent extend-event-e min-w-[4.14%] z-ExtendEvent h-16
 
 	${() =>
-    import.meta.env.MODE === "development" ? "border-2 border-green-500" : ""}
+    import.meta.env.MODE === "development-none"
+      ? "border-2 border-green-500"
+      : ""}
+
 
 	${({ $cells }: { $cells: number }) =>
     ($cells === 1 && "extend-event-1") ||
@@ -64,9 +67,11 @@ export const TWextend = tw.div<{ $cells: number }>`
 `;
 
 export const TWextend_Left = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event-w min-w-[4.14%] z-ExtendEvent
+	mt-[1px] absolute text-transparent extend-event-w min-w-[4.14%] z-ExtendEvent h-16
 	${() =>
-    import.meta.env.MODE === "development" ? "border-2 border-green-900" : ""}
+    import.meta.env.MODE === "development-none"
+      ? "border-2 border-green-900"
+      : ""}
 
 	${({ $cells }: { $cells: number }) =>
     ($cells === 1 && "extend-event-l-1") ||

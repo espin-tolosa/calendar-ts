@@ -24,14 +24,20 @@ export const CurrentMonthScrollAnchor = ({
   }, []);
 
   //TODO:Give a name to this custom hook
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isToday(year, month)) {
       return;
     }
 
     dispatchDOMRef({ type: "update", payload: monthRef });
 
-    monthRef?.current?.scrollIntoView();
+    //nthRef?.current?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      monthRef?.current?.scrollIntoView({ behavior: "smooth" });
+    }, 500);
+    setTimeout(() => {
+      monthRef?.current?.scrollIntoView({ behavior: "smooth" });
+    }, 700);
   }, [topNavHeight]); //TODO: use ref state context as it was created to access TopNav Ref after it is rendered
 
   return (

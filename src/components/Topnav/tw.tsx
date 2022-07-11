@@ -1,7 +1,7 @@
 import tw from "tailwind-styled-components";
 
 export const TWcontainer = tw.div`
-	bg-slate-900 font-normal sm:text-lg custombp:text-xs customtp:text-xs flex justify-between items-center
+	bg-stone-900 font-normal sm:text-lg custombp:text-xs customtp:text-xs flex justify-between items-center
 	print:hidden
 `;
 

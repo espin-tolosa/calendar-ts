@@ -35,7 +35,7 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
   return (
     <StyledEvent.TWStyledSelect
       value={props.event.client}
-      //style={propTypes.style}
+      style={props.style}
       id={eventID(props.event.id, "master", "clientSelector")}
       onChange={(e) => {
         if (e.currentTarget.value === "Unavailable") {
