@@ -56,7 +56,7 @@ ${() => toPrint}
 `;
 
   export const daySpot = tw.div<{ $isToday: boolean }>`
-	flex justify-center items-center rounded-full bg-white w-7 h-7 custombp:w-5 custombp:h-5 customtp:w-5 customtp:h-5 sm:my-1 ml-1 mx-1
+	flex justify-center items-center rounded-full bg-white w-7 h-7 custombp:w-5 custombp:h-5 customtp:w-5 customtp:h-5 sm:my-1 ml-1 mx-1 print:text-xs
 	${({ $isToday }: { $isToday: boolean }) =>
     ($isToday && "bg-blue-400 text-white") || ""}
 	${() => toPrint}
