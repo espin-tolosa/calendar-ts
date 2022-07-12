@@ -1,4 +1,4 @@
-import { encodedTokenFromAPI, event, token, tokenData } from "./interfaces";
+import { encodedTokenFromAPI, event, token } from "./interfaces";
 
 export namespace CustomTypes {
   /**

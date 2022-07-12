@@ -5,14 +5,14 @@
   "scripts": {
     "dev": "vite",
     "test": "jest",
-    "build": "tsc && vite build && ./scripts/include_php_index.sh && rsync -ar ./ ../.deployed/app-1.0/webapp --exclude node_modules --exclude .git --exclude scripts --exclude dist",
+    "build": "tsc && vite build && ./scripts/include_php_index.sh && rsync -ar ./ ../.deployed/app-1.0/webapp --exclude node_modules --exclude .git --exclude scripts --exclude dist --exclude .eslintcache",
     "bbuild": "./scripts/build_fullstack.sh",
     "backend": "./scripts/backend_fullstack.sh",
     "preview": "vite preview",
     "shell": "./scripts/test.sh $pwd",
     "graph": "./scripts/depcruise_file.sh $1",
     "graph-all": "find src/ -type f -name '*.ts*' -exec ./scripts/depcruise_file.sh '{}' \\;",
-    "eslint": "eslint --cache ./src/**"
+    "eslint": "eslint --ext ts,tsx --cache src"
   },
   "dependencies": {
     "jwt-decode": "3.1.2",

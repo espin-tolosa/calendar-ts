@@ -8,7 +8,9 @@ const defaultState = { hoverId: 0 };
 
 const defaultDispaatcher: React.Dispatch<
   React.SetStateAction<typeof defaultState>
-> = () => {};
+> = () => {
+  return;
+};
 
 const cStateName = createContext(defaultState);
 const cStateNameDispatcher = createContext(defaultDispaatcher);
@@ -22,13 +24,13 @@ export const useStateNameDispatcher = () => {
 };
 
 //3. State provider
-export const StateName: composition = ({ children }) => {
+export const StateName: composition = (propTypes) => {
   const [state, setState] = useState(defaultState);
 
   return (
     <cStateName.Provider value={state}>
       <cStateNameDispatcher.Provider value={setState}>
-        {children}
+        {propTypes.children}
       </cStateNameDispatcher.Provider>
     </cStateName.Provider>
   );

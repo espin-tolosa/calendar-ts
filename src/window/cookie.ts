@@ -1,6 +1,6 @@
-import { nullEncodedToken } from "@/customTypes";
-import { encodedTokenFromAPI } from "@/interfaces";
-import { checkObjectValidKeys, nameAndType } from "@/patterns/reflection";
+import { nullEncodedToken } from "../customTypes";
+import { encodedTokenFromAPI, isEncodedToken } from "../interfaces";
+
 const hDecodeURI = (cookie: string): encodedTokenFromAPI => {
   if (!cookie) {
     return nullEncodedToken();
@@ -26,7 +26,7 @@ const hDecodeURI = (cookie: string): encodedTokenFromAPI => {
 
   // This line parses the outcoming cookie to check if it fits the current implementation of the API which sends an object as: {data: "..."}
   // if the parsed cookie doesn't fit this object an nullEncodedToken is returned
-  if (!checkObjectValidKeys(nameAndType(nullEncodedToken), encodedToken)) {
+  if (!isEncodedToken(encodedToken)) {
     return nullEncodedToken();
   }
 

@@ -9,8 +9,8 @@ import { event } from "../interfaces";
 
 interface UseFetchEvents {
   isMount: React.MutableRefObject<boolean>;
-  click: any;
-  action: any;
+  click: number;
+  action: string;
   event: event;
   debug: string;
 }
@@ -40,7 +40,7 @@ export function useFetchEvents({
             action: action,
             ...event,
             debug: `useFetchEvents ${debug}`,
-          }).then((res: any) => {
+          }).then((res) => {
             if (!res) {
               return;
             }
