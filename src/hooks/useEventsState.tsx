@@ -79,26 +79,27 @@ export function diffStates(state: Array<event>, newState: Array<event>) {
 
 const sortCriteriaFIFO = (prev: event, next: event) =>
   Math.abs(prev.id) - Math.abs(next.id);
-const sortCriteriaLonger = (prev: event, next: event) => {
-  const prevRange = DateService.DaysFrom(prev.start, prev.end);
-  const nextRange = DateService.DaysFrom(next.start, next.end);
-  return nextRange - prevRange;
-};
+//TODO: strategy pattern
 export const sortCriteria = sortCriteriaFIFO;
-const diff_byId = (
-  newState: CustomTypes.State,
-  state: CustomTypes.State
-): CustomTypes.State => {
-  const { bigger, lower } =
-    newState.length >= state.length
-      ? { bigger: newState, lower: state }
-      : { bigger: state, lower: newState };
-
-  return bigger.filter(
-    ({ id: id1 }) => !lower.some(({ id: id2 }) => id2 === id1)
-  );
-};
-
+//const sortCriteriaLonger = (prev: event, next: event) => {
+//  const prevRange = DateService.DaysFrom(prev.start, prev.end);
+//  const nextRange = DateService.DaysFrom(next.start, next.end);
+//  return nextRange - prevRange;
+//};
+//const diff_byId = (
+//  newState: CustomTypes.State,
+//  state: CustomTypes.State
+//): CustomTypes.State => {
+//  const { bigger, lower } =
+//    newState.length >= state.length
+//      ? { bigger: newState, lower: state }
+//      : { bigger: state, lower: newState };
+//
+//  return bigger.filter(
+//    ({ id: id1 }) => !lower.some(({ id: id2 }) => id2 === id1)
+//  );
+//};
+//
 export function reducerEvents(
   state: CustomTypes.State,
   action: Action

@@ -102,7 +102,7 @@ function _processDate(dt: Date): ProcessDate {
 function _getTodayDay() {
   const today = new Date();
   const p = _processDate(today);
-  return parseInt(p.at(2)!);
+  return parseInt(p.at(2) || "2020"); //TODO: substitute fallback value for something less literal
 }
 
 export function _renderToday() {

@@ -83,7 +83,7 @@ export function GetMonthKeyName(dt: Idt) {
   return monthNames[GetMonth(dt) - 1]; //index of array starts at 0
 }
 
-export function GetDayPad(dt: any) {
+export function GetDayPad(dt: Idt) {
   return zeroPad(dt.getDate());
 }
 

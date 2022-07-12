@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const FormData = require("form-data");
 import { api } from "@/static/apiRoutes";
 import { event, objectKeys } from "@/interfaces/index";
@@ -13,43 +14,6 @@ const http_response_code: objectKeys<number> = {
   DELETE_ALL: 204,
 };
 
-type ACTIONS =
-  | "GET_ALL"
-  | "GET_FROM"
-  | "POST"
-  | "PUT"
-  | "DELETE"
-  | "DELETE_ALL";
-
-//apifetch({action: "POST",})
-
-/*
-useEffect(() => {
-	if (isMount.current) {
-		if (click === 1) {
-			(async () => {
-				await apifetch({
-					action: action,
-					...event,
-				}).then((res) => {
-					if (!res) {
-						return;
-					}
-
-					dispatch({
-						type: action,
-						payload: res,
-					});
-				});
-			})();
-		}
-	} else {
-		isMount.current = true;
-	}
-	// eslint-disable-next-line
-}, [isMount, click]);
-}
-*/
 export async function fetchEvent_v2(
   action: string,
   event: event = { id: 0, client: "", job: "", start: "", end: "" }
@@ -91,14 +55,14 @@ export async function apifetch(query: { action: string; debug: string }) {
         return res.json();
       } else {
         //* NOTE: I'm removing the action from the query, and then returning the event, It's horrible but API returns nothing, I need the idevent
-        const { action, ...event } = query;
-        return event;
+        //! QUE MIERDA ES ESTO JODER
+        return query.debug;
       }
     })
     .then((res) => {
       return res;
     })
-    .catch((err) => {
+    .catch(() => {
       alert("Error No internet connection");
       return false;
     });

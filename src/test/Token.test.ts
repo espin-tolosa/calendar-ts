@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
 import { Token } from "@/classes/token";
 import { nullEncodedToken, nullEvent, nullToken } from "@/customTypes";
-import { encodedTokenFromAPI, token } from "@/interfaces";
+import { encodedTokenFromAPI } from "@/interfaces";
 import { safeDecodeJWT } from "@/modules/jwt";
 import { DocumentIO } from "@/window/cookie";
 
@@ -62,7 +62,7 @@ const expidedToken = (token: string) =>
  * or event to create valid data as needed
  */
 
-function ExternalData<T>(data: any): T {
+function ExternalData<T>(data: unknown): T {
   return JSON.parse(JSON.stringify(data));
 }
 
