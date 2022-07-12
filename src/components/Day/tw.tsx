@@ -52,7 +52,6 @@ ${({ $isWeekend }: { $isWeekend: boolean }) =>
   ""}	
 
 ${() => toPrint}
-
 `;
 
   export const daySpot = tw.div<{ $isToday: boolean }>`

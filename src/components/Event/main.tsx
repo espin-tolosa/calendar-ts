@@ -2,11 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
 import { event } from "../../interfaces/index";
 import { DateService } from "../../utils/Date";
-import {
-  useHoverEvent,
-  useTransitionStyle,
-  useTransitionCSSStyle,
-} from "../../components/Event/logic";
+import { useHoverEvent, useStyles } from "../../components/Event/logic";
 import {
   useEventDispatch,
   useEventState,
@@ -17,7 +13,7 @@ import { useGethDeleteEvent } from "../../api/handlers";
 import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
 import { nullEvent } from "../../customTypes";
-import { useClientsStyles } from "@/context/useFetchClientStyle";
+import { useClientsStyles } from "../../context/useFetchClientStyle";
 
 export function eventID(id: number, role: string, subcomponent: string) {
   return `event:${role}:${id}:${subcomponent}`;
@@ -93,7 +89,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
     secondary: "#aaaaaa",
   };
 
-  const style = useTransitionCSSStyle(isChildren, hover, event, color.primary);
+  const style = useStyles(isChildren, hover, event, color.primary);
   //ººconsole.log(styleTest);
 
   // Database storage logic
@@ -283,7 +279,7 @@ export const EventOff = ({ event }: { event: event }) => {
     secondary: "#aaaaaa",
   };
 
-  const style = useTransitionCSSStyle(isChildren, hover, event, color.primary);
+  const style = useStyles(isChildren, hover, event, color.primary);
 
   // Database storage logic
 

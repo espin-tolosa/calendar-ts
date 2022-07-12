@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useCtxCurrentMonthRef } from "../../context/currentMonthReference";
 import { isToday } from "../../utils/Date_v2";
 import { useCtxTopNavRef } from "../../context/topNavSize";
