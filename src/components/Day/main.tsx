@@ -39,7 +39,6 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
     <styles.contain
       id={`day:${fullDate}`}
       {...styledProps}
-      onClick={onClick}
       onPointerDown={onClick}
     >
       <styles.header id={`day-header:${fullDate}`} {...styledProps}>
