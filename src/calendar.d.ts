@@ -33,13 +33,6 @@ declare namespace jh {
 
 declare namespace CustomTypes {
   /**
-   * Template type created to store React ref to HTML DOM elements
-   * which allows null values required in cases such as:
-   * - before the first DOM is rendered
-   * - after the component is unmounted
-   */
-  export type NullableRef<T> = React.RefObject<T> | null;
-  /**
    * Type designed to store a local representation of the remote events state
    */
   export type State = Array<jh.event>;

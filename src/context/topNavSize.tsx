@@ -1,17 +1,14 @@
-import { composition } from "../interfaces";
-import { createContext, useContext, useRef } from "react";
+import React, { createContext, createRef, useContext, useRef } from "react";
 
-const cTopNavRef = createContext<CustomTypes.NullableRef<HTMLDivElement>>(null);
+const cTopNavRef = createContext<React.RefObject<HTMLDivElement>>(createRef());
 
 export const useCtxTopNavRef = () => {
   return useContext(cTopNavRef);
 };
 
-export const TopNavRef: composition = (propTypes) => {
+export function TopNavRef({ children }: { children: JSX.Element }) {
   const topNavRef = useRef<HTMLDivElement>(null);
   return (
-    <cTopNavRef.Provider value={topNavRef}>
-      {propTypes.children}
-    </cTopNavRef.Provider>
+    <cTopNavRef.Provider value={topNavRef}>{children}</cTopNavRef.Provider>
   );
-};
+}

@@ -1,14 +1,15 @@
 import { composition } from "../interfaces";
 import React, { createContext, useContext, useReducer } from "react";
 
-type Payload = CustomTypes.NullableRef<HTMLDivElement>;
+type Payload = React.RefObject<HTMLDivElement>;
 type State = Array<Payload>;
 type Action = {
   type: "update";
   payload: Payload;
 };
-const defaultState: State = [];
-const State = createContext<State>(defaultState);
+
+const State = createContext<State>([]);
+
 const Dispatcher = createContext<React.Dispatch<Action>>(() => {
   return;
 });
@@ -28,7 +29,7 @@ export namespace DOMRefs {
   //Context Provider
 }
 export const DOMRefsContext: composition = (propTypes) => {
-  const [state, dispatch] = useReducer(reducer, defaultState);
+  const [state, dispatch] = useReducer(reducer, []);
 
   return (
     <State.Provider value={state}>
@@ -42,7 +43,7 @@ export const DOMRefsContext: composition = (propTypes) => {
 /*
  * action: {type:"update",payload:"HTMLDiv ref"}
  */
-function reducer(state: State, action: Action) {
+function reducer(state: State, action: Action): State {
   switch (action.type) {
     //
     case "update": {
