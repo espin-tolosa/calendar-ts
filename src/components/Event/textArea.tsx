@@ -4,6 +4,7 @@ import * as StyledEvent from "./tw";
 import { fetchEvent } from "../../utils/fetchEvent";
 import { useEventDispatch } from "../../hooks/useEventsState";
 import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
+import { useToken } from "@/hooks/useToken";
 
 export type TextArea = {
   event: jh.event;
@@ -16,8 +17,19 @@ export const EventTextArea = ({ event }: TextArea) => {
 
   //console.log(event.job);
 
+  const user = useToken();
   if (event.job === "") {
     return <></>;
+  }
+  if (!user.isAuth()) {
+    //TODO: unify span component into StyledEvent.TWjobDesciption
+    return (
+      <StyledEvent.TWjobContent>
+        <span className="textarea rounded-[5px] w-full p-1 caret-black focus:bg-green-200 print:text-xs text-sm">
+          {event.job}
+        </span>
+      </StyledEvent.TWjobContent>
+    );
   }
 
   return (

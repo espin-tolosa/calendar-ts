@@ -92,3 +92,7 @@ export const TWplaceholder = tw.div`
 export const TWStyledSelect = tw.select`
   border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer outline-none text-white print:text-xs text-sm
 	`;
+
+export const TWStyledNonSelect = tw.div`
+  border-none py-px padding-x-clamp button-shadow text-effect rounded-sm outline-none text-white print:text-xs text-sm
+	`;

@@ -5,6 +5,7 @@ import { useEventDispatch } from "../../hooks/useEventsState";
 import { useControllerDispatch } from "../../hooks/useController";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
 import { eventID } from "./main";
+import { useToken } from "@/hooks/useToken";
 
 export type ClientSelector = {
   style: object;
@@ -30,6 +31,18 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
       payload: { id: Math.abs(props.event.id) },
     });
   };
+
+  const user = useToken();
+  if (!user.isAuth()) {
+    return (
+      <StyledEvent.TWStyledNonSelect
+        style={props.style}
+        id={eventID(props.event.id, "master", "clientSelector")}
+      >
+        {props.event.client}
+      </StyledEvent.TWStyledNonSelect>
+    );
+  }
 
   return (
     <StyledEvent.TWStyledSelect
