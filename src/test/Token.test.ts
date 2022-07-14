@@ -1,9 +1,8 @@
 /** @jest-environment jsdom */
-import { Token } from "@/classes/token";
-import { nullEncodedToken, nullEvent, nullToken } from "@/customTypes";
-import { encodedTokenFromAPI } from "@/interfaces";
-import { safeDecodeJWT } from "@/modules/jwt";
-import { DocumentIO } from "@/window/cookie";
+import { Token } from "../classes/token";
+import * as Interfaces from "../interfaces";
+import { safeDecodeJWT } from "../modules/jwt";
+import { DocumentIO } from "../window/cookie";
 
 // Note about testing thread execution:
 // after defining some constants and helper functions I need to mock the content of window.document.cookie
@@ -100,48 +99,48 @@ describe("Testing Token Class", () => {
 
 describe("Testing custom object instances", () => {
   test("Multiple instances of Null Token create different objects each time", () => {
-    const token1 = nullToken();
-    const token2 = nullToken();
+    const token1 = Interfaces.nullToken();
+    const token2 = Interfaces.nullToken();
     token2.aud = "dsa";
     expect(token1).not.toBe(token2);
   });
   test("Multiple instances of Null Encoded Token create different objects each time", () => {
-    const token1 = nullEncodedToken();
-    const token2 = nullEncodedToken();
+    const token1 = Interfaces.nullEncodedToken();
+    const token2 = Interfaces.nullEncodedToken();
     expect(token1).not.toBe(token2);
   });
   test("instantiating independent nullEvent objects", () => {
-    const token1 = nullEvent();
-    const token2 = nullEvent();
+    const token1 = Interfaces.nullEvent();
+    const token2 = Interfaces.nullEvent();
     expect(token1).not.toBe(token2);
   });
 });
 
 describe("Testing module wrapper for jwt_decode called safeDecodeJWT", () => {
   test("Parse unexpected data as nullToken", () => {
-    const unexpectedToken = ExternalData<encodedTokenFromAPI>({});
+    const unexpectedToken = ExternalData<Interfaces.encodedTokenFromAPI>({});
     const result = safeDecodeJWT(unexpectedToken);
-    expect(result).toStrictEqual(nullToken());
+    expect(result).toStrictEqual(Interfaces.nullToken());
   });
 
   test("Parse a falsy or ill-formed token as nullToken", () => {
-    const illFormedToken = ExternalData<encodedTokenFromAPI>({
+    const illFormedToken = ExternalData<Interfaces.encodedTokenFromAPI>({
       data: "",
     });
     const result = safeDecodeJWT(illFormedToken);
-    expect(result).toEqual(nullToken());
+    expect(result).toEqual(Interfaces.nullToken());
   });
 
   test("Parse an incomplete token as nullToken", () => {
-    const validToken = ExternalData<encodedTokenFromAPI>({
+    const validToken = ExternalData<Interfaces.encodedTokenFromAPI>({
       data: token4,
     });
     const result = safeDecodeJWT(validToken);
-    expect(result).toEqual(nullToken());
+    expect(result).toEqual(Interfaces.nullToken());
   });
 
   test("Parse a valid token", () => {
-    const validToken = ExternalData<encodedTokenFromAPI>({
+    const validToken = ExternalData<Interfaces.encodedTokenFromAPI>({
       data: token3,
     });
     const result = safeDecodeJWT(validToken);

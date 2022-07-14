@@ -1,5 +1,5 @@
 import jwt_decode from "jwt-decode";
-import { nullToken } from "../customTypes";
+import { nullToken } from "../interfaces";
 import { encodedTokenFromAPI, isData, isToken, token } from "../interfaces";
 
 // This function wraps jwt_decode to create a nothrow function that allways gives you a token either valid or empty (null)

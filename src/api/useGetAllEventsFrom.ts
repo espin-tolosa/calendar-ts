@@ -1,4 +1,4 @@
-import { nullEvent } from "../customTypes";
+import { nullEvent } from "../interfaces";
 import { fetchEvent } from "../utils/fetchEvent";
 import { zeroPadd } from "../utils/zeroPadd";
 import { useEffect } from "react";

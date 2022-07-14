@@ -1,5 +1,5 @@
-import { nullEvent } from "@/customTypes";
-import { api } from "@/static/apiRoutes";
+import { nullEvent } from "../interfaces";
+import { api } from "../static/apiRoutes";
 
 /**
  * Fetch events to API

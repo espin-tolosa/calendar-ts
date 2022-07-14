@@ -1,4 +1,4 @@
-import { nullToken } from "../customTypes";
+import { nullToken } from "../interfaces";
 import { DateService } from "../utils/Date";
 import { DocumentIO } from "../window/cookie";
 import { safeDecodeJWT } from "../modules/jwt";

@@ -1,4 +1,4 @@
-import { nullEncodedToken } from "../customTypes";
+import { nullEncodedToken } from "../interfaces";
 import { encodedTokenFromAPI, isEncodedToken } from "../interfaces";
 
 const hDecodeURI = (cookie: string): encodedTokenFromAPI => {

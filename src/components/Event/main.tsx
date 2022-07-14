@@ -11,7 +11,7 @@ import { EventCard, EventTail } from "../../components/Event/eventCard";
 import { useGethDeleteEvent } from "../../api/handlers";
 import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
-import { nullEvent } from "../../customTypes";
+import { nullEvent } from "../../interfaces";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
 
 export function eventID(id: number, role: string, subcomponent: string) {

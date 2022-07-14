@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { nullEvent } from "../customTypes";
+import { nullEvent } from "../interfaces";
 
 const cDnDEventRef = createContext<jh.event>(nullEvent());
 

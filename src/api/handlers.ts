@@ -1,4 +1,4 @@
-import { nullEvent } from "@/customTypes";
+import { nullEvent } from "../interfaces";
 import { EventClass } from "../classes/event";
 import {
   useEventSelected,

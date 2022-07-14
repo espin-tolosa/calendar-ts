@@ -4,7 +4,7 @@ import { useSetEventSelected } from "../context/eventSelected";
 import { useControllerDispatch } from "../hooks/useController";
 import { useControllerDispatchDates } from "../hooks/useControllerDate";
 import { useEventDispatch } from "./useEventsState";
-import { nullEvent } from "../customTypes";
+import { nullEvent } from "../interfaces";
 
 // This is the reference hook to clean te entire memory,
 // any component should consume this to clear temporary states

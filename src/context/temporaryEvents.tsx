@@ -1,5 +1,4 @@
-import { nullEvent } from "../customTypes";
-import { composition } from "../interfaces";
+import { nullEvent } from "../interfaces";
 import { createContext, useContext, useState } from "react";
 
 //Template param: StateName
@@ -28,7 +27,7 @@ export const useTemporaryEventDispatcher = () => {
 };
 
 //3. State provider
-export const TemporaryEvent: composition = (propTypes) => {
+export const TemporaryEvent = (propTypes: { children: JSX.Element }) => {
   const [state, setState] = useState(defaultState);
 
   return (

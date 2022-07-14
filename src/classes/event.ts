@@ -1,6 +1,6 @@
 // Type of event data
 
-import { nullEvent } from "../customTypes";
+import { nullEvent } from "../interfaces";
 
 // Parent: has all its attributes matched with some database entry
 
