@@ -4,6 +4,7 @@ import { memo } from "react";
 import { DateService } from "../../utils/Date";
 import { usePostQuery } from "../../api/queries";
 import { useDoubleClick } from "../../hooks/useDoubleClick";
+import { useToken } from "@/hooks/useToken";
 
 interface Day {
   daynumber: number;
@@ -24,8 +25,6 @@ interface Day {
 function Day({ daynumber, fullDate, pushedDays }: Day) {
   //Callbacks
 
-  const addEvent = usePostQuery(fullDate);
-
   //Computed:
   //TODO: Locked days not impl
   const $isLock = false;
@@ -33,13 +32,18 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
   const styledProps = { $isWeekend, $isLock };
   const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
 
+  const token = useToken();
+  const addEvent = usePostQuery(fullDate);
+
   const onClick = useDoubleClick(addEvent, fullDate);
 
   return (
     <styles.contain
       id={`day:${fullDate}`}
       {...styledProps}
-      onPointerDown={onClick}
+      onPointerDown={() => {
+        token.isAuth() && onClick();
+      }}
     >
       <styles.header id={`day-header:${fullDate}`} {...styledProps}>
         <styles.daySpot
@@ -52,6 +56,9 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
     </styles.contain>
   );
 }
+
+//TODO: Profile the difference between memo and not memo, because in practice I don't see any extra renders jet
+//export const MemoDay = Day;
 
 export const MemoDay = memo(Day, (prev, next) => {
   const isDayToPush = next.pushedDays.has(next.fullDate);
