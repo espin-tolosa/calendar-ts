@@ -9,11 +9,10 @@ import { zeroPadd } from "../../utils/zeroPadd";
 //import { useLocalUserPreferencesContext } from "../../hooks/useLocalUserPreferences";
 import { usePrint } from "../../hooks/usePrint";
 import { usePushedDays } from "../../hooks/usePushDays";
-import { CustomTypes } from "../../customTypes";
 import { CurrentMonthScrollAnchor } from "./MonthToScrollBack";
 import { totalCellsInLastRow } from "./totalCellsInLastRow";
 
-const Month = ({ year, month }: CustomTypes.Month) => {
+const Month = ({ year, month }: jh.date.monthData) => {
   const pushedDays = usePushedDays(); //!days affected by event dispatcher
   const date = useMonthDate(year, month); //memoized date stats needed to render a month grid
 

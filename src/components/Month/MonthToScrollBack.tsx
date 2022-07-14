@@ -3,11 +3,11 @@ import { useCtxCurrentMonthRef } from "../../context/currentMonthReference";
 import { isToday } from "../../utils/Date_v2";
 import { useCtxTopNavRef } from "../../context/topNavSize";
 import { DOMRefs } from "../../context/DOMRefs";
-import { CustomTypes } from "../../customTypes";
+
 export const CurrentMonthScrollAnchor = ({
   year,
   month,
-}: CustomTypes.Month) => {
+}: jh.date.monthData) => {
   const topNavRef = useCtxTopNavRef();
   const [topNavHeight, setTopNavHeight] = useState({ top: "" });
   const dispatchDOMRef = DOMRefs.useDispatch();

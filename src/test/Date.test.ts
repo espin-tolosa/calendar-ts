@@ -1,6 +1,5 @@
 import { Action, reducerEvents } from "@/hooks/useEventsState";
 import { DateService } from "@/utils/Date";
-import { CustomTypes } from "@/customTypes";
 
 const genEventCall = (
   type: CustomTypes.DispatchLocalStateEvents,

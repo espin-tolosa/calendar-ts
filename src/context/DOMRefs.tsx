@@ -1,4 +1,3 @@
-import { CustomTypes } from "../customTypes";
 import { composition } from "../interfaces";
 import React, { createContext, useContext, useReducer } from "react";
 

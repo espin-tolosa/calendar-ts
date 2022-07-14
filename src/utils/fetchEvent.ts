@@ -1,4 +1,4 @@
-import { CustomTypes, nullEvent } from "@/customTypes";
+import { nullEvent } from "@/customTypes";
 import { api } from "@/static/apiRoutes";
 
 /**

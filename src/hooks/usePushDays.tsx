@@ -1,6 +1,5 @@
 import { composition } from "../interfaces";
 import { createContext, Dispatch, useContext, useState } from "react";
-import { CustomTypes } from "../customTypes";
 
 export type Action = {
   type: CustomTypes.DispatchLocalStateEvents;

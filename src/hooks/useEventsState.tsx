@@ -2,7 +2,6 @@ import { composition } from "../interfaces";
 import React, { createContext, Dispatch, useContext, useReducer } from "react";
 import { eventSpreader } from "../algorithms/eventSpreader";
 import { isWellDefined } from "../utils/ValidateEvent";
-import { CustomTypes } from "../customTypes";
 import { DateService } from "../utils/Date";
 import { EventClass } from "../classes/event";
 
