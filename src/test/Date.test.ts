@@ -1,6 +1,5 @@
 import { Action, reducerEvents } from "@/hooks/useEventsState";
 import { DateService } from "@/utils/Date";
-import { event } from "@/interfaces/index";
 import { CustomTypes } from "@/customTypes";
 
 const genEventCall = (
@@ -25,8 +24,8 @@ const genEventCall = (
   return { type, payload } as Action;
 };
 
-const emptyState: Array<event> = [];
-const state1Event: Array<event> = reducerEvents(
+const emptyState: Array<jh.event> = [];
+const state1Event: Array<jh.event> = reducerEvents(
   emptyState,
   genEventCall("syncDB", 1, "Client_1", "Job_1", "2022-03-01", "2022-03-10")
 );
@@ -35,7 +34,7 @@ const state2Event = reducerEvents(
   genEventCall("syncDB", 2, "Client_1", "Job_1", "2022-03-01", "2022-03-10")
 );
 
-const expectToBe = (input: event, output: event) => {
+const expectToBe = (input: jh.event, output: jh.event) => {
   expect(input.id).toBe(output.id);
   expect(input.client).toBe(output.client);
   expect(input.job).toBe(output.job);
@@ -57,7 +56,7 @@ test("Today is 2022-03-01 and yesterday was 2022-02-28", () => {
 });
 
 test("append one day duration is represented by one entry in the local state", () => {
-  const state: Array<event> = [];
+  const state: Array<jh.event> = [];
   const action = genEventCall(
     "syncDB",
     1,
@@ -72,7 +71,7 @@ test("append one day duration is represented by one entry in the local state", (
 });
 
 test("append two day duration is represented by two entry in the local state", () => {
-  const state: Array<event> = [];
+  const state: Array<jh.event> = [];
   const action = genEventCall(
     "syncDB",
     1,
@@ -92,7 +91,7 @@ test("append two day duration is represented by two entry in the local state", (
 });
 
 test("append one week duration is represented by 1+6 per week in local state", () => {
-  const state: Array<event> = [];
+  const state: Array<jh.event> = [];
   const action = genEventCall(
     "syncDB",
     1,
@@ -112,7 +111,7 @@ test("append one week duration is represented by 1+6 per week in local state", (
 });
 
 test("no append if end is before start", () => {
-  const state: Array<event> = [];
+  const state: Array<jh.event> = [];
   const action = genEventCall(
     "syncDB",
     1,
@@ -126,7 +125,7 @@ test("no append if end is before start", () => {
 });
 
 test("replace by id a single day event", () => {
-  const state: Array<event> = [
+  const state: Array<jh.event> = [
     {
       id: 1,
       client: "client2",
@@ -247,7 +246,7 @@ test("object are different content", () => {
   const newState = reducerDemo(state1Event);
 
   //state is passed by ref
-  function reducerDemo(state: Array<event>) {
+  function reducerDemo(state: Array<jh.event>) {
     const newState = [...state];
     newState[0].id = 100;
     return newState;

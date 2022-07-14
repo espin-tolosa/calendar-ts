@@ -1,5 +1,4 @@
 import * as StyledEvent from "./tw";
-import { event } from "../../interfaces/index";
 const CLIENTS = [
   "Client_1",
   "Client_2",
@@ -14,7 +13,7 @@ const CLIENTS = [
 ];
 
 export type ClientSelector = {
-  event: event;
+  event: jh.event;
   style: object;
 };
 

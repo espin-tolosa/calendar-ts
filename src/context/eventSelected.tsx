@@ -4,11 +4,10 @@
 //
 
 import { createContext, useContext, useState } from "react";
-import { composition, event } from "../interfaces";
 
-const cEventSelected = createContext<event | null>(null);
+const cEventSelected = createContext<jh.event | null>(null);
 
-type SetEventSelected = (event: event | null) => void;
+type SetEventSelected = (event: jh.event | null) => void;
 const cSetEventSelected = createContext<SetEventSelected>(() => {
   return;
 });
@@ -23,9 +22,9 @@ export const useSetEventSelected = () => {
   return useContext(cSetEventSelected);
 };
 
-export const EventInController: composition = (propTypes) => {
-  const [eventSelected, setEventSelected] = useState<event | null>(null);
-  const SetEventSelected = (event: event | null) => {
+export function EventInController(propTypes: { children: JSX.Element }) {
+  const [eventSelected, setEventSelected] = useState<jh.event | null>(null);
+  const SetEventSelected = (event: jh.event | null) => {
     setEventSelected(event);
   };
 
@@ -36,4 +35,4 @@ export const EventInController: composition = (propTypes) => {
       </cSetEventSelected.Provider>
     </cEventSelected.Provider>
   );
-};
+}

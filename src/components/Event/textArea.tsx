@@ -1,13 +1,12 @@
 import { useRef } from "react";
 import * as StyledEvent from "./tw";
-import { event } from "../../interfaces/index";
 
 import { fetchEvent } from "../../utils/fetchEvent";
 import { useEventDispatch } from "../../hooks/useEventsState";
 import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 
 export type TextArea = {
-  event: event;
+  event: jh.event;
 };
 
 export const EventTextArea = ({ event }: TextArea) => {

@@ -1,4 +1,4 @@
-import { encodedTokenFromAPI, event, token } from "./interfaces";
+import { encodedTokenFromAPI, token } from "./interfaces";
 
 export namespace CustomTypes {
   /**
@@ -11,7 +11,7 @@ export namespace CustomTypes {
   /**
    * Type designed to store a local representation of the remote events state
    */
-  export type State = Array<event>;
+  export type State = Array<jh.event>;
 
   /**
    * Options to dispatch actions that manipulate the local representation of the events state
@@ -48,7 +48,7 @@ export namespace CustomTypes {
 /**
  * A constant that stores an event that is considered null by any consumer
  */
-export const nullEvent = (): event => ({
+export const nullEvent = (): jh.event => ({
   id: 0,
   client: "",
   job: "",

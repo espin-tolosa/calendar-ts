@@ -1,7 +1,6 @@
 import { eventID } from "./main";
 import { TextArea, EventTextArea } from "./textArea";
 import { ClientSelector, EventClientSelector } from "./clientSelector";
-import { event } from "../../interfaces";
 
 type EventCard = TextArea & ClientSelector;
 
@@ -18,6 +17,6 @@ export const EventCard: React.FC<EventCard> = (propTypes): JSX.Element => {
   );
 };
 
-export const EventTail = ({ event }: { event: event }) => {
+export const EventTail = ({ event }: { event: jh.event }) => {
   return <div className="text-transparent ">{event.client}</div>;
 };

@@ -1,7 +1,6 @@
 // Type of event data
 
 import { nullEvent } from "../customTypes";
-import { event } from "../interfaces";
 
 // Parent: has all its attributes matched with some database entry
 
@@ -32,14 +31,14 @@ export class EventClass {
     this.end = end;
   }
 
-  static transformToParentId(event: event) {
+  static transformToParentId(event: jh.event) {
     return Math.abs(event.id);
   }
 
-  static getParentEventFrom(state: Array<event>, id: number) {
+  static getParentEventFrom(state: Array<jh.event>, id: number) {
     return state.find((e) => e.id === id) || nullEvent();
   }
-  static getParentEvent(family: Array<event>) {
+  static getParentEvent(family: Array<jh.event>) {
     const parentId = family.at(0)?.id || 0;
     //return all events that has the same parentId
     return (
@@ -51,21 +50,21 @@ export class EventClass {
     );
   }
 
-  static isNull(event: event) {
+  static isNull(event: jh.event) {
     return (
       !event.id && !event.client && !event.job && !event.start && !event.end
     );
   }
 
-  static isChildren(event: event): boolean {
+  static isChildren(event: jh.event): boolean {
     return event.job === "#isChildren";
   }
 
-  static isPlaceholder(event: event): boolean {
+  static isPlaceholder(event: jh.event): boolean {
     return event.id < 0;
   }
 
-  static isParent(event: event): boolean {
+  static isParent(event: jh.event): boolean {
     return !this.isChildren(event) && !this.isPlaceholder(event);
   }
 

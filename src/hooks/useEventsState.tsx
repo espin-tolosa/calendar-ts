@@ -1,7 +1,5 @@
 import { composition } from "../interfaces";
 import React, { createContext, Dispatch, useContext, useReducer } from "react";
-import { event } from "../interfaces/index";
-import { month0 } from "../static/initEvents";
 import { eventSpreader } from "../algorithms/eventSpreader";
 import { isWellDefined } from "../utils/ValidateEvent";
 import { CustomTypes } from "../customTypes";
@@ -30,7 +28,7 @@ function rangeOfDates(start: string, end: string) {
 }
 
 // Return a range of dates affecting the difference between prev and next state of events
-export function diffStates(state: Array<event>, newState: Array<event>) {
+export function diffStates(state: Array<jh.event>, newState: Array<jh.event>) {
   const prevState = state.filter((event) => event.id > 0);
   const nextState = newState.filter((event) => event.id > 0);
 
@@ -77,7 +75,7 @@ export function diffStates(state: Array<event>, newState: Array<event>) {
   return DaysToPush;
 }
 
-const sortCriteriaFIFO = (prev: event, next: event) =>
+const sortCriteriaFIFO = (prev: jh.event, next: jh.event) =>
   Math.abs(prev.id) - Math.abs(next.id);
 //TODO: strategy pattern
 export const sortCriteria = sortCriteriaFIFO;
@@ -103,14 +101,14 @@ export const sortCriteria = sortCriteriaFIFO;
 export function reducerEvents(
   state: CustomTypes.State,
   action: Action
-): Array<event> {
+): Array<jh.event> {
   switch (action.type) {
     // Add new event coming from database, it doesn't allow to add events with duplicated id's
     //Notice: use it only forfetch events from  the database, it clears the state
 
     case "syncDB": {
       //I will avoid spread operator [...state] until verify it won't throw RangeError for large arrays
-      const newState: Array<event> = [];
+      const newState: Array<jh.event> = [];
       action.payload.forEach((event) => {
         //Treat event from db to remove hours from data
         event.start = event.start.split(" ")[0];
@@ -277,9 +275,8 @@ export function reducerEvents(
 }
 
 // Context
-const defaultState = month0;
-const cEventState = createContext<Array<event>>(defaultState);
-const cEventBuffer = createContext<Array<event>>(defaultState);
+const cEventState = createContext<Array<jh.event>>([]);
+const cEventBuffer = createContext<Array<jh.event>>([]);
 const cBufferDispatch = createContext<React.Dispatch<Action>>(() => {
   return;
 });
@@ -314,7 +311,7 @@ export function useEventDispatch() {
 }
 
 //A children custom hook of useEventState
-export function useGetEventFamily(event: event) {
+export function useGetEventFamily(event: jh.event) {
   const events = useEventState();
   const parentId = EventClass.transformToParentId(event);
   //return all events that has the same parentId
@@ -323,13 +320,13 @@ export function useGetEventFamily(event: event) {
   );
 
   const parent = EventClass.getParentEvent(family);
-  return [parent, family] as [event, Array<event>];
+  return [parent, family] as [jh.event, Array<jh.event>];
 }
 
 // Context Dispatcher of Event Reducer
 
 export const EventsDispatcher: composition = (propTypes) => {
-  const [state, dispatch] = useReducer(reducerEvents, defaultState);
+  const [state, dispatch] = useReducer(reducerEvents, []);
 
   return (
     <cEventState.Provider value={state}>

@@ -1,5 +1,4 @@
 import * as StyledEvent from "./tw";
-import { event } from "../../interfaces";
 import { fetchEvent } from "../../utils/fetchEvent";
 import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { useEventDispatch } from "../../hooks/useEventsState";
@@ -9,7 +8,7 @@ import { eventID } from "./main";
 
 export type ClientSelector = {
   style: object;
-  event: event;
+  event: jh.event;
 };
 
 export function EventClientSelector(props: ClientSelector): JSX.Element {
@@ -61,7 +60,7 @@ const DefaultOption = (props: { client: string }) => (
 const ClientOptionList = ({
   list,
 }: {
-  list: Maybe<ResponseFromAPI>;
+  list: jh.response.maybe<jh.response.styles>;
 }): JSX.Element => {
   if (!list.success) {
     return <option>{"loading client list..."}</option>;

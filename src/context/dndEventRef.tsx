@@ -1,10 +1,9 @@
 import { createContext, useContext, useState } from "react";
-import { composition, event } from "../interfaces";
 import { nullEvent } from "../customTypes";
 
-const cDnDEventRef = createContext<event>(nullEvent());
+const cDnDEventRef = createContext<jh.event>(nullEvent());
 
-type SetDnDEventRef = (dragging: event) => void;
+type SetDnDEventRef = (dragging: jh.event) => void;
 const cSetDnDEventRef = createContext<SetDnDEventRef>(() => undefined);
 
 cDnDEventRef.displayName = "Selected Event: value";
@@ -16,9 +15,9 @@ export const useSetDnDEventRef = () => {
   return useContext(cSetDnDEventRef);
 };
 
-export const EventInDnD: composition = (propTypes) => {
+export function EventInDnD(propTypes: { children: JSX.Element }) {
   const [dndEvent, setDnDEvent] = useState(nullEvent());
-  const setDnDEventRef = (event: event) => {
+  const setDnDEventRef = (event: jh.event) => {
     if (typeof event.mutable === "object") {
       setDnDEvent({ ...event, mutable: { ...event.mutable } });
     } else {
@@ -33,4 +32,4 @@ export const EventInDnD: composition = (propTypes) => {
       </cSetDnDEventRef.Provider>
     </cDnDEventRef.Provider>
   );
-};
+}

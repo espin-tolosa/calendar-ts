@@ -2,14 +2,13 @@ import {
   useControllerDispatch,
   useControllerState,
 } from "../../hooks/useController";
-import { event } from "../../interfaces";
 import { HEXtoHSL, HSLController } from "../../utils/giveMeColor";
 import { useEffect, useMemo, useState } from "react";
 
 export const useStyles = (
   isChildren: boolean,
   hover: boolean,
-  event: event,
+  event: jh.event,
   clientColor: string
 ) => {
   const mapClientToColor = HEXtoHSL(clientColor);
@@ -97,7 +96,7 @@ const composeStyle = (
   };
 };
 
-export const useHoverEvent = (event: event) => {
+export const useHoverEvent = (event: jh.event) => {
   // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
   const controllerState = useControllerState();
   const controllerStateDispatch = useControllerDispatch();

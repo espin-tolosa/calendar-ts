@@ -30,7 +30,7 @@ export function useInfiniteScroll() {
   }, []);
 
   return [monthKeys, last] as [
-    Array<yearMonth>,
+    Array<jh.date.monthData>,
     React.RefObject<HTMLDivElement>
   ];
 }

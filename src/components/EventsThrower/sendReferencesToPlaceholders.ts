@@ -1,12 +1,13 @@
-import { event } from "../../interfaces";
-
-const filterPlaceholdersByEvent = (allEvents: Array<event>, event: event) => {
+const filterPlaceholdersByEvent = (
+  allEvents: Array<jh.event>,
+  event: jh.event
+) => {
   return allEvents.filter((placeholder) => placeholder.id === -event.id) || [];
 };
 
 export const sendEndReferencesToPlaceholders = (
-  allEvents: Array<event>,
-  event: event,
+  allEvents: Array<jh.event>,
+  event: jh.event,
   endRef: number
 ) => {
   const placeholders = filterPlaceholdersByEvent(allEvents, event);

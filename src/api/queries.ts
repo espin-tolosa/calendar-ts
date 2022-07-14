@@ -4,9 +4,8 @@ import React, { Dispatch } from "react";
 import { useEventDispatch } from "../hooks/useEventsState";
 import { DateService } from "../utils/Date";
 import { usePushedDaysDispatcher } from "../hooks/usePushDays";
-import { event } from "../interfaces";
 
-export const usePostQuery = (fullDate: event.date) => {
+export const usePostQuery = (fullDate: jh.date.representation) => {
   const pushDaysDispatcher = usePushedDaysDispatcher();
   const eventDispatcher = useEventDispatch();
   //const { isDragging } = Context.useIsDragging();
@@ -22,9 +21,9 @@ export const usePostQuery = (fullDate: event.date) => {
 };
 
 const queryEvent = (
-  date: event.date,
+  date: jh.date.representation,
   eventDispatcher: React.Dispatch<Action>,
-  pushDaysDispatcher: Dispatch<Set<event.date>>
+  pushDaysDispatcher: Dispatch<Set<jh.date.representation>>
 ) => {
   const MaxId = Number.MAX_SAFE_INTEGER;
   const newEvent = {

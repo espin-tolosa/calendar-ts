@@ -1,31 +1,6 @@
-export namespace event {
-  export type date = string;
-}
-
-export interface objectKeys<V> {
-  [key: string]: V;
-}
-
-export interface Children {
-  children: React.ReactNode;
-}
-
-export interface event {
-  id: number;
-  client: string;
-  job: string;
-  start: string;
-  end: string;
-  mutable?: {
-    bubble?: number;
-    height: string;
-    eventRef: HTMLDivElement;
-    index: number;
-  };
-}
 export function isEvent(
   obj: Record<PropertyKey, unknown>
-): obj is Record<PropertyKey, unknown> & event {
+): obj is Record<PropertyKey, unknown> & jh.event {
   return (
     typeof obj === "object" &&
     obj !== null &&

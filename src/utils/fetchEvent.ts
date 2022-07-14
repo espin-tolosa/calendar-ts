@@ -1,5 +1,4 @@
 import { CustomTypes, nullEvent } from "@/customTypes";
-import { event } from "@/interfaces/index";
 import { api } from "@/static/apiRoutes";
 
 /**
@@ -7,7 +6,7 @@ import { api } from "@/static/apiRoutes";
  */
 export async function fetchEvent_Day(
   action: CustomTypes.OptionsEventsAPI,
-  event: event = nullEvent()
+  event: jh.event = nullEvent()
 ) {
   const data = new FormData();
   const filterEvent = (({ id, client, job, start, end }) => ({
@@ -36,7 +35,7 @@ export async function fetchEvent_Day(
 }
 export async function fetchEvent(
   action: CustomTypes.OptionsEventsAPI,
-  event: event = nullEvent()
+  event: jh.event = nullEvent()
 ) {
   const data = new FormData();
   const filterEvent = (({ id, client, job, start, end }) => ({

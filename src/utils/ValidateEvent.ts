@@ -1,10 +1,9 @@
-import { event } from "@/interfaces";
 import { DateService } from "./Date";
 
 /**
  * Condition that mets any event which is considered to be representable in the UI
  */
-export const isWellDefined = (event: event) => {
+export const isWellDefined = (event: jh.event) => {
   return (
     DateService.isValidKeyDate(event.start) &&
     DateService.isValidKeyDate(event.end) &&
@@ -13,23 +12,23 @@ export const isWellDefined = (event: event) => {
   );
 };
 
-const isChildren = (event: event) => {
+const isChildren = (event: jh.event) => {
   return event.job === "#isChildren";
 };
-export const isPlaceholder = (event: event) => {
+export const isPlaceholder = (event: jh.event) => {
   return event.id < 0;
 };
-export const isValidChildren = (event: event) => {
+export const isValidChildren = (event: jh.event) => {
   return isChildren(event) && isWellDefined(event);
 };
 
-export const isValidPlaceholder = (event: event) => {
+export const isValidPlaceholder = (event: jh.event) => {
   return isPlaceholder(event) /* && isWellDefined(event)*/;
 };
 
 // Valid event is decided by substraction as it is anything that is not a placeholder or a children
 // I use this method because an event could be represented by an higher dimension of possibilities rather than placeholders and childrens
-export const isValidEvent = (event: event) => {
+export const isValidEvent = (event: jh.event) => {
   const isEvent = !isChildren && !isPlaceholder;
   return isEvent && isWellDefined(event);
 };

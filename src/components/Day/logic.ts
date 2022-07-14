@@ -3,7 +3,6 @@ import { useEventDispatch } from "../../hooks/useEventsState";
 import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { fetchEvent_Day } from "../../utils/fetchEvent";
 import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
-import { event } from "../../interfaces";
 
 type date = string;
 
@@ -18,7 +17,7 @@ export const useOnDragEnter = () => {
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
 
-  return (date: date, dndEvent: event) => {
+  return (date: date, dndEvent: jh.event) => {
     const isWeekend = DateService.IsWeekend(date);
     if (isWeekend) {
       return;

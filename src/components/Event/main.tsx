@@ -1,6 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
-import { event } from "../../interfaces/index";
 import { DateService } from "../../utils/Date";
 import { useHoverEvent, useStyles } from "../../components/Event/logic";
 import {
@@ -23,7 +22,7 @@ export function eventID(id: number, role: string, subcomponent: string) {
  * Event interactive component, expected functions
  *
  */
-export const Event = ({ event, index }: { event: event; index: number }) => {
+export const Event = ({ event, index }: { event: jh.event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();
   const [state, setState] = useState<{ height: string }>({ height: "0px" });
 
@@ -84,7 +83,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   const clientsStyles = useClientsStyles();
 
   //TODO: make this a function
-  const color = clientsStyles.response?.styles[event.client] || {
+  const color = clientsStyles.response?.colors[event.client] || {
     primary: "#abcabc",
     secondary: "#aaaaaa",
   };
@@ -111,12 +110,14 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
     direction: number
   ) => {
     e.stopPropagation();
-    const parentCopy: event = {
+    const parentCopy: jh.event = {
       ...parentEvent,
     };
     if (typeof parentEvent.mutable === "object") {
       parentCopy.mutable = { ...parentEvent.mutable };
-      parentCopy.mutable.bubble = direction;
+      if (typeof parentCopy.mutable === "object") {
+        parentCopy.mutable.bubble = direction;
+      }
     }
     //!ISSUE: parentEvent isn't available in other context consumers (e.g: useOnDragEnter) after firing this dispatch order:
     //temporaryEventDispatcher(parentEvent);
@@ -221,7 +222,7 @@ export const Event = ({ event, index }: { event: event; index: number }) => {
   );
 };
 
-export const EventHolder = ({ event }: { event: event }) => {
+export const EventHolder = ({ event }: { event: jh.event }) => {
   const [force, setForce] = useState(0);
   const [parent] = useGetEventFamily(event);
   const eventRef = useRef<HTMLDivElement>();
@@ -256,7 +257,7 @@ export const EventHolder = ({ event }: { event: event }) => {
   );
 };
 
-export const EventOff = ({ event }: { event: event }) => {
+export const EventOff = ({ event }: { event: jh.event }) => {
   const state = { height: "0px" };
 
   //const week = DateService.GetWeekRangeOf(event.start);
@@ -274,7 +275,7 @@ export const EventOff = ({ event }: { event: event }) => {
   const clientsStyles = useClientsStyles();
 
   //TODO: make this a function
-  const color = clientsStyles.response?.styles[event.client] || {
+  const color = clientsStyles.response?.colors[event.client] || {
     primary: "#abcabc",
     secondary: "#aaaaaa",
   };

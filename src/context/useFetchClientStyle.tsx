@@ -5,22 +5,22 @@ import { report } from "../logger/report";
 // This file exports one context that brings styles from API
 export { useClientsStyles, ClientsStyles };
 
-const ClientsStyle = createContext<Maybe<ResponseFromAPI>>({ success: false });
+const ClientsStyle = createContext<jh.response.maybe<jh.response.styles>>({
+  success: false,
+});
 ClientsStyle.displayName = "Clients Style";
 const useClientsStyles = () => useContext(ClientsStyle);
 
-type ClientStyles = { children: JSX.Element };
-
-function ClientsStyles(propTypes: ClientStyles) {
+function ClientsStyles(propTypes: { children: JSX.Element }) {
   const clientsData = useAddStylesClientCSSlasses();
 
   const success = clientsData.success;
   const clients = clientsData.clients;
   const styles = clientsData.styles;
 
-  const ctx: Maybe<ResponseFromAPI> = {
+  const ctx: jh.response.maybe<jh.response.styles> = {
     success,
-    response: { clients, styles },
+    response: { clients, colors: styles },
   };
 
   return (
@@ -35,7 +35,7 @@ function useAddStylesClientCSSlasses() {
   const id = useRef<NodeJS.Timer | null>(null);
   const [success, setSuccess] = useState(false);
   const [clients, setClients] = useState<Array<string>>([]);
-  const [styles, setStyles] = useState<StylesFromAPI>({
+  const [styles, setStyles] = useState<jh.response.colors>({
     default: { primary: "", secondary: "" },
   });
 
@@ -47,7 +47,7 @@ function useAddStylesClientCSSlasses() {
   const handleFetch = () => {
     fetch(api.routes.clients)
       .then((res) => res.json())
-      .then((json: StylesFromAPI) => {
+      .then((json: jh.response.colors) => {
         if (!isMount.current) {
           return;
         }

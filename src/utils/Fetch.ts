@@ -1,11 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const FormData = require("form-data");
 import { api } from "@/static/apiRoutes";
-import { event, objectKeys } from "@/interfaces/index";
 
 //const hostinger = "https://samuelengineer.com";
 
-const http_response_code: objectKeys<number> = {
+const http_response_code: Record<string, number> = {
   GET_ALL: 201,
   GET_FROM: 201,
   POST: 202,
@@ -16,7 +15,7 @@ const http_response_code: objectKeys<number> = {
 
 export async function fetchEvent_v2(
   action: string,
-  event: event = { id: 0, client: "", job: "", start: "", end: "" }
+  event: jh.event = { id: 0, client: "", job: "", start: "", end: "" }
 ) {
   const data = new FormData();
   if (typeof event === "undefined") {

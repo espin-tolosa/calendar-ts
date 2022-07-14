@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { apifetch } from "../utils/Fetch";
-import { event } from "../interfaces";
-//import { useEventsReducer } from "../context/DispatchEvents";
 
 //const hostinger = "https://samuelengineer.com";
 
@@ -11,7 +9,7 @@ interface UseFetchEvents {
   isMount: React.MutableRefObject<boolean>;
   click: number;
   action: string;
-  event: event;
+  event: jh.event;
   debug: string;
 }
 

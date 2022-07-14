@@ -210,11 +210,11 @@ export function GetPrevDate(startDate: { year: number; month: number }) {
 }
 
 export function ListPrevDates(
-  start: yearMonth,
+  start: jh.date.monthData,
   length: number
-): Array<yearMonth> {
+): Array<jh.date.monthData> {
   const prevState = GetPrevDate(start);
-  const result: Array<yearMonth> = [];
+  const result: Array<jh.date.monthData> = [];
   for (let i = 0; i != length; i++) {
     result.push(prevState());
   }

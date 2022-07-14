@@ -20,7 +20,8 @@
   "rules": {
     // suppress errors for missing 'import React' in files
     "react/react-in-jsx-scope": "off",
-    "@typescript-eslint/no-namespace": "off"
+    "@typescript-eslint/no-namespace": "off",
+    "no-constant-binary-expression": "error"
   },
   "settings": {
     "react": {

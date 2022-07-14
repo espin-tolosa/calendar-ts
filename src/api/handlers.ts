@@ -8,7 +8,6 @@ import { useControllerDispatch } from "../hooks/useController";
 import { useControllerDispatchDates } from "../hooks/useControllerDate";
 import { useEventDispatch } from "../hooks/useEventsState";
 import { usePushedDaysDispatcher } from "../hooks/usePushDays";
-import { event } from "../interfaces";
 import { fetchEvent } from "../utils/fetchEvent";
 
 // Custom-hook: useGethCancel
@@ -62,7 +61,7 @@ export function useGethCancel() {
 // A temporary event is tracked by getUnusedId
 //
 
-export function useGethDeleteEvent(eventSelected: event): () => void {
+export function useGethDeleteEvent(eventSelected: jh.event): () => void {
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
 

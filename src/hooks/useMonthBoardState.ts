@@ -5,11 +5,11 @@ const NUMBER_OF_PREV_MONTHS = 2;
 
 export function useMonthsBoardState() {
   //Load first element
-  const currentDate: yearMonth = DateService.GetDateNextMonth();
-  const pastDates: yearMonth[] = ListPrevDates(
+  const currentDate: jh.date.monthData = DateService.GetDateNextMonth();
+  const pastDates: jh.date.monthData[] = ListPrevDates(
     currentDate,
     NUMBER_OF_PREV_MONTHS
   );
   //debugger;
-  return useState<yearMonth[]>([...pastDates, currentDate]);
+  return useState<jh.date.monthData[]>([...pastDates, currentDate]);
 }

@@ -1,4 +1,3 @@
-import { event } from "../interfaces";
 import { DateService } from "../utils/Date";
 /**
  * Event Spreader extends the local state to represent those events
@@ -6,8 +5,8 @@ import { DateService } from "../utils/Date";
  * @param event: directly fetched from database
  * @returns event[]: expanded event to incorporate to the local state events context
  */
-export const eventSpreader = (event: event) => {
-  const spreadEvent: Array<event> = [];
+export const eventSpreader = (event: jh.event) => {
+  const spreadEvent: Array<jh.event> = [];
 
   let nextDt = DateService.GetNextDayOfDate(event.start);
   let nextDay = DateService.FormatDate(nextDt);
@@ -34,10 +33,10 @@ export const eventSpreader = (event: event) => {
   return spreadEvent;
 };
 
-const toPlaceholder = (event: event, targetDay: string) => {
+const toPlaceholder = (event: jh.event, targetDay: string) => {
   return { ...event, id: -event.id, start: targetDay, end: targetDay };
 };
-const toMonday = (event: event, targetDay: string) => {
+const toMonday = (event: jh.event, targetDay: string) => {
   return { ...event, start: targetDay, job: "#isChildren" };
 };
 

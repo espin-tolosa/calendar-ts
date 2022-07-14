@@ -1,11 +1,10 @@
 import { sortCriteria } from "../..//hooks/useEventsState";
 import { isValidPlaceholder } from "../../utils/ValidateEvent";
-import { event } from "../../interfaces";
 const isPreviousElement = (index: number) => {
   return index > 0;
 };
 
-const getEndPosition = (arr: Array<event>) => {
+const getEndPosition = (arr: Array<jh.event>) => {
   return arr.length;
 };
 
@@ -13,16 +12,16 @@ const prevIndex = (current: number) => {
   return current - 1;
 };
 
-const prevIsPlaceholder = (arr: Array<event>, current: number) => {
+const prevIsPlaceholder = (arr: Array<jh.event>, current: number) => {
   const prevEvent = arr[prevIndex(current)];
   return isValidPlaceholder(prevEvent);
 };
 
-const isPrevEventPlaceholder = (arr: Array<event>, current: number) => {
+const isPrevEventPlaceholder = (arr: Array<jh.event>, current: number) => {
   return isPreviousElement(current) && prevIsPlaceholder(arr, current);
 };
 
-const endPosition = (current: event) => {
+const endPosition = (current: jh.event) => {
   if (isValidPlaceholder(current)) {
     return parseInt(current.end);
   } else {
@@ -31,7 +30,7 @@ const endPosition = (current: event) => {
 };
 
 const currentEventCanAscend = (
-  merged: Array<event>,
+  merged: Array<jh.event>,
   currentPosition: number
 ) => {
   const prevEvent = merged[prevIndex(currentPosition)];
@@ -41,14 +40,14 @@ const currentEventCanAscend = (
   );
 };
 
-const ascendOnePos = (arr: Array<event>, current: number) => {
+const ascendOnePos = (arr: Array<jh.event>, current: number) => {
   [arr[prevIndex(current)], arr[current]] = [
     arr[current],
     arr[prevIndex(current)],
   ];
 };
 
-const bubblingEvent = (merged: Array<event>) => {
+const bubblingEvent = (merged: Array<jh.event>) => {
   let currentPos = getEndPosition(merged);
 
   while (currentEventCanAscend(merged, --currentPos)) {
@@ -56,7 +55,7 @@ const bubblingEvent = (merged: Array<event>) => {
   }
 };
 
-export const bubblingAlgo = (dayEvents: Array<event>) => {
+export const bubblingAlgo = (dayEvents: Array<jh.event>) => {
   const placeholders = dayEvents.filter((e) => e.id < 0).sort(sortCriteria);
   const rootEvents = dayEvents.filter((e) => e.id > 0).sort(sortCriteria); //separate the real events of that day
 
