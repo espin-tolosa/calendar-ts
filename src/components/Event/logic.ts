@@ -79,7 +79,7 @@ export const useStyles = (
       dinamic: result,
       static: { background: cHeader },
     };
-  }, [justThrown, hover]);
+  }, [justThrown, hover, clientColor]);
 };
 
 const composeStyle = (
