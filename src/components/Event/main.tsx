@@ -50,9 +50,11 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
         .filter((e) => e.id > 0);
       const allH = sameRow.map((r) => {
         if (typeof r.mutable === "object") {
-          return r.mutable.eventRef.clientHeight;
+          const size = r.mutable.eventRef.getBoundingClientRect();
+          const H = size.height + 10; //pading
+          return H;
         } else {
-          return 0;
+          return 100;
         }
       });
 
@@ -64,7 +66,7 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
       }
       setState(newState);
     }
-  }, [event]);
+  }, [event.mutable?.height, event, event.mutable]);
   const [parentEvent] = useGetEventFamily(event);
   const hDelete = useGethDeleteEvent(event);
   const week = DateService.GetWeekRangeOf(event.start);
@@ -89,9 +91,6 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
   };
 
   const style = useStyles(isChildren, hover, event, color.primary);
-  //ººconsole.log(styleTest);
-
-  // Database storage logic
 
   //TODO: avoid magic numbers
   const spreadCells = Math.min(
@@ -162,8 +161,8 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
       >
         <StyledEvent.TWtextContent
           id={eventID(event.id, "master", "sizeAndPosition")}
-          $isChildren={isChildren}
           ref={eventRef}
+          $isChildren={isChildren}
           $isHover={hover}
           style={style?.dinamic}
           $cells={spreadCells}
