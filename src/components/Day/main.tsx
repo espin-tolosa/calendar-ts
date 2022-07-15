@@ -1,6 +1,6 @@
 import { styles } from "../../components/Day/tw";
 import { MemoEventsThrower } from "../../components/EventsThrower/main";
-import { memo } from "react";
+import { memo, useRef } from "react";
 import { DateService } from "../../utils/Date";
 import { usePostQuery } from "../../api/queries";
 import { useDoubleClick } from "../../hooks/useDoubleClick";
@@ -37,15 +37,21 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
 
   const onClick = useDoubleClick(addEvent);
 
+  const thisNode = useRef(null);
+
   return (
-    <styles.contain
-      id={`day:${fullDate}`}
-      {...styledProps}
-      onPointerDown={() => {
-        token.isAuth() && onClick();
-      }}
-    >
-      <styles.header id={`day-header:${fullDate}`} {...styledProps}>
+    <styles.contain id={`day:${fullDate}`} {...styledProps}>
+      <styles.header
+        id={`day-header:${fullDate}`}
+        {...styledProps}
+        ref={thisNode}
+        onPointerDown={(e) => {
+          if (thisNode.current !== e.target) {
+            return;
+          }
+          token.isAuth() && onClick();
+        }}
+      >
         <styles.daySpot
           id={`day-spot:${fullDate}`}
           $isToday={isToday}

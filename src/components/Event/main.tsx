@@ -148,11 +148,6 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
     <>
       <StyledEvent.TWflexContainer
         id={eventID(event.id, "master", "eventListener")}
-        onClick={(e) => {
-          console.warn("Click on placehoder");
-          e.stopPropagation();
-          e.preventDefault();
-        }}
         onKeyDown={(e) => {
           e.stopPropagation();
           if (e.ctrlKey && e.code === "Delete") {
@@ -164,9 +159,6 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
           hOnDragStart(e, 0);
         }}
         onDragEnd={hOnDragEnd}
-        onMouseUp={(e) => {
-          e.stopPropagation();
-        }}
       >
         <StyledEvent.TWtextContent
           id={eventID(event.id, "master", "sizeAndPosition")}
