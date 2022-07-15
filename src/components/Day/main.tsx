@@ -35,7 +35,7 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
   const token = useToken();
   const addEvent = usePostQuery(fullDate);
 
-  const onClick = useDoubleClick(addEvent, fullDate);
+  const onClick = useDoubleClick(addEvent);
 
   return (
     <styles.contain

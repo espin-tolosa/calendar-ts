@@ -62,6 +62,12 @@ function useAddStylesClientCSSlasses() {
       });
   };
 
+  //TODO: Change Refetch interval by a refetch if fails
+  // There is a bug in the code that causes multiple request to the same resource until one of them each succeed.
+  // It happens because there is an unkonwn delay between server and client communication.
+  // As I wanted is to refetch multiple times if connection fails, this is what I have to implement, instead of set an interval
+  const REFETCH_INTERVAL = 300; // ms
+
   useEffect(() => {
     isMount.current = true;
 
@@ -76,7 +82,7 @@ function useAddStylesClientCSSlasses() {
         //    handleFetch();
         //  }, 1000);
       }
-    }, 100);
+    }, REFETCH_INTERVAL);
 
     return () => {
       isMount.current = false;

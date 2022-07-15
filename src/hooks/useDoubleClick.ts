@@ -12,14 +12,10 @@ const useClickState = () => {
   return { click, isOnState, next, reset };
 };
 
-export const useDoubleClick = (
-  callback: DoubleClickCallback,
-  client?: string
-): (() => void) => {
+export const useDoubleClick = (callback: DoubleClickCallback): (() => void) => {
   const state = useClickState();
   const id = useRef<NodeJS.Timeout | null>(null);
   const stableCallback = useCallback(() => {
-    console.log("memoizing callback", state, client);
     callback();
     state.reset();
   }, [callback]);

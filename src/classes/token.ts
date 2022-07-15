@@ -50,6 +50,8 @@ export class Token {
     return this.token.data.aut === "read-write";
   }
 
+  //TODO: add method to verify token signature it requires a request to the server and store the response in a state member
+
   public isSameUser(other: Token) {
     return this.token.data.usr === other.token.data.usr;
   }
