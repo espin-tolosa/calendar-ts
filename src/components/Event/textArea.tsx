@@ -60,20 +60,20 @@ export const EventTextArea = ({ event }: TextArea) => {
           if (e.code === "Enter" || e.code === "Escape") {
             e.currentTarget.blur();
           }
-          setTimeout(() => {
-            eventDispatcher({
-              type: "update",
-              payload: [{ ...event }],
-              callback: pushDaysDispatcher,
-            });
-          }, 1);
+          // setTimeout(() => {
+          //   eventDispatcher({
+          //     type: "update",
+          //     payload: [{ ...event }],
+          //     callback: pushDaysDispatcher,
+          //   });
+          // }, 1);
         }}
         onBlur={(e) => {
           const job = e.currentTarget.textContent || "";
           fetchEvent("PUT", { ...event, job });
           eventDispatcher({
             type: "update",
-            payload: [{ ...event }],
+            payload: [{ ...event, job }],
             callback: pushDaysDispatcher,
           });
           //window.location.reload();
