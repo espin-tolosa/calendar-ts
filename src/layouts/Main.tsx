@@ -30,11 +30,12 @@ export const LayoutMain = () => {
     const date = dayDiv.id.split(":")[1];
 
     //Check whether or not the cursor is over the current date being already registered
-    if (date === onDate.current) {
+    if (onDate.current === "" || date === onDate.current) {
+      onDate.current = date;
       return;
     }
-    onDate.current = date;
 
+    onDate.current = date;
     onDragEnter(date, dndEvent);
   };
 
@@ -48,6 +49,7 @@ export const LayoutMain = () => {
       window.document.removeEventListener("dragover", hOnDragEnter);
     };
   }, [onDate, onDragEnter, dndEvent]);
+
   return (
     <tw_Layouts.TWapp id={"app"}>
       {/*header-layout*/}
