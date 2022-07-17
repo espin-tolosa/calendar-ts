@@ -66,7 +66,8 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
       }
       setState(newState);
     }
-  }, [event.mutable?.height, event, event.mutable]);
+  }, [event.mutable?.height, event]);
+
   const [parentEvent] = useGetEventFamily(event);
   const hDelete = useGethDeleteEvent(event);
   const week = DateService.GetWeekRangeOf(event.start);
@@ -109,9 +110,7 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
     direction: number
   ) => {
     e.stopPropagation();
-    const parentCopy: jh.event = {
-      ...parentEvent,
-    };
+    const parentCopy: jh.event = { ...parentEvent };
     if (typeof parentEvent.mutable === "object") {
       parentCopy.mutable = { ...parentEvent.mutable };
       if (typeof parentCopy.mutable === "object") {
@@ -120,7 +119,6 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
     }
     //!ISSUE: parentEvent isn't available in other context consumers (e.g: useOnDragEnter) after firing this dispatch order:
     //temporaryEventDispatcher(parentEvent);
-    console.warn("drag start", parentCopy);
     setDnDEventRef(parentCopy);
     setTimeout(() => {
       eventDispatcher({
