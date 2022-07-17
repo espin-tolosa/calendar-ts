@@ -40,17 +40,20 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
   const thisNode = useRef(null);
 
   return (
-    <styles.contain id={`day:${fullDate}`} {...styledProps}>
+    <styles.contain
+      id={`day:${fullDate}`}
+      {...styledProps}
+      onClick={(e) => {
+        if (thisNode.current !== e.target) {
+          return;
+        }
+        token.isAuth() && onClick();
+      }}
+    >
       <styles.header
         id={`day-header:${fullDate}`}
         {...styledProps}
         ref={thisNode}
-        onPointerDown={(e) => {
-          if (thisNode.current !== e.target) {
-            return;
-          }
-          token.isAuth() && onClick();
-        }}
       >
         <styles.daySpot
           id={`day-spot:${fullDate}`}
