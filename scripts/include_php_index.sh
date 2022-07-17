@@ -9,4 +9,6 @@ echo "';" >> test-index.php
 mv test-index.php dist/index.php
 rm dist/index.html
 
-
+last_commit_hash=$(git log | head -n 1 | awk '{ print $2 }');
+version=${last_commit_hash:0:5};
+sed -i "s/build_version/$version/g" dist/index.php;

@@ -13,3 +13,5 @@ $mg = "$ip $dt\n";
 
 error_log($mg, 3, $lf);
 
+setcookie("build", "build_version" );
+
