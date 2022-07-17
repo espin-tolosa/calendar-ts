@@ -33,7 +33,7 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
 
   const twStyle =
     import.meta.env.MODE === "development"
-      ? "border-2 border-dashed border-red-900 bg-red-200"
+      ? "outline-1 outline-dashed outline-red-900 bg-red-50"
       : "";
 
   return (

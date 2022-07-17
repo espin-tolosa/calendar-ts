@@ -8,7 +8,7 @@ export const EventCard: React.FC<EventCard> = (propTypes): JSX.Element => {
   return (
     <div
       id={eventID(propTypes.event.id, "master", "ContentContainer")}
-      className="flex flex-col w-full z-100"
+      className="flex flex-col w-full"
     >
       <EventClientSelector style={propTypes.style} event={propTypes.event} />
 
@@ -18,5 +18,5 @@ export const EventCard: React.FC<EventCard> = (propTypes): JSX.Element => {
 };
 
 export const EventTail = ({ event }: { event: jh.event }) => {
-  return <div className="text-transparent ">{event.client}</div>;
+  return <div className="h-4">{event.client}</div>;
 };

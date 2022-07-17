@@ -239,10 +239,10 @@ export const EventHolder = ({ event }: { event: jh.event }) => {
   }, []);
 
   return (
-    <StyledEvent.TWflexContainer ref={eventRef}>
+    <StyledEvent.TWflexContainer_Holder ref={eventRef}>
       <StyledEvent.TWplaceholder style={{ height: event.mutable?.height }}>
         {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
-    </StyledEvent.TWflexContainer>
+    </StyledEvent.TWflexContainer_Holder>
   );
 };
