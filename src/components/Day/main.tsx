@@ -37,19 +37,23 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
 
   const onClick = useDoubleClick(addEvent);
 
-  const thisNode = useRef(null);
+  const thisNode = useRef<HTMLDivElement>(null);
 
   return (
     <styles.contain
       id={`day:${fullDate}`}
       {...styledProps}
-      onPointerDownCapture={(e) => {
-        if (thisNode.current !== e.target) {
-          return;
+      onClick={(e) => {
+        const target = e.target as HTMLElement;
+        if (thisNode.current !== null && target !== null) {
+          const thisId = thisNode.current.id.split(":")[1];
+          const pointerId = target.id.split(":")[1];
+          if (thisId !== pointerId) {
+            return;
+          }
         }
         token.isAuth() && onClick();
       }}
-      className="outline-1 outline-red-400"
     >
       <styles.header
         id={`day-header:${fullDate}`}
