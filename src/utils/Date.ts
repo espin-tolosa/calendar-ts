@@ -258,6 +258,18 @@ function IsWeekend(today: string) {
   );
 }
 
+function GetDateNextDay(today: string, target: 1 | 2 | 3 | 4 | 5 | 6 | 7) {
+  target %= 7; //convert to: 0 (sunday), 1 (monday), ..., 6 (saturday)
+  let nextDay = GetDateFrom(today, 1);
+  let day = GetDayWeekIndex(nextDay);
+  while (day !== target) {
+    nextDay = GetDateFrom(nextDay, 1);
+    day = GetDayWeekIndex(nextDay);
+  }
+
+  return nextDay;
+}
+
 export const DateService = {
   GetDate,
   GetTodayDateFormat,
@@ -282,4 +294,5 @@ export const DateService = {
   GetDayWeekIndex,
   GetWeekRangeOf,
   IsWeekend,
+  GetDateNextDay,
 };

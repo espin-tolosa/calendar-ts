@@ -94,9 +94,10 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
   const style = useStyles(isChildren, hover, event, color.primary);
 
   //TODO: avoid magic numbers
+  const maxDayAvailable = DateService.GetDateNextDay(event.start, 5);
   const spreadCells = Math.min(
     1 + DateService.DaysFrom(event.start, event.end),
-    8
+    DateService.DaysFrom(event.start, maxDayAvailable)
   );
 
   const eventDispatcher = useEventDispatch();
@@ -243,95 +244,5 @@ export const EventHolder = ({ event }: { event: jh.event }) => {
         {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer>
-  );
-};
-
-export const EventOff = ({ event }: { event: jh.event }) => {
-  const state = { height: "0px" };
-
-  //const week = DateService.GetWeekRangeOf(event.start);
-  //week.from = event.start;
-  //const eventsOfWeek = useEventState(week);
-
-  //--------------------------------------------
-
-  const isChildren = event.job.includes("#isChildren");
-
-  // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
-  const { hover, ...mouseHover } = useHoverEvent(event);
-
-  // Style hook for state transitions
-  const clientsStyles = useClientsStyles();
-
-  //TODO: make this a function
-  const color = clientsStyles.response?.colors[event.client] || {
-    primary: "#abcabc",
-    secondary: "#aaaaaa",
-  };
-
-  const style = useStyles(isChildren, hover, event, color.primary);
-
-  // Database storage logic
-
-  //TODO: avoid magic numbers
-  const spreadCells = Math.min(
-    1 + DateService.DaysFrom(event.start, event.end),
-    8
-  );
-
-  //const dayRef = useRef<Element>();
-  const hDelete = useGethDeleteEvent(event);
-
-  return (
-    <>
-      <StyledEvent.TWflexContainer
-        onKeyDown={(e) => {
-          if (e.ctrlKey && e.code === "Delete") {
-            hDelete();
-          }
-        }}
-        {...mouseHover}
-      >
-        <StyledEvent.TWtextContent
-          $isChildren={isChildren}
-          $isHover={hover}
-          style={style?.dinamic || {}}
-          $cells={spreadCells}
-          title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
-          $client={event.client.toLowerCase()}
-        >
-          {!isChildren ? (
-            <EventCard event={event} style={style?.static || {}} />
-          ) : (
-            <EventTail event={event} />
-          )}
-        </StyledEvent.TWtextContent>
-        {
-          //DnD Logic
-        }
-        {
-          <>
-            <StyledEvent.TWextend_Left
-              $cells={spreadCells}
-              style={state}
-              title={`Drag here to extend ${event.client}'s job`}
-            >
-              {"+"}
-            </StyledEvent.TWextend_Left>
-            <StyledEvent.TWextend
-              $cells={spreadCells}
-              style={state}
-              title={`Drag here to extend ${event.client}'s job`}
-            >
-              {"+"}
-            </StyledEvent.TWextend>
-          </>
-        }
-
-        <StyledEvent.TWplaceholder style={state}>
-          {"placeholder"}
-        </StyledEvent.TWplaceholder>
-      </StyledEvent.TWflexContainer>
-    </>
   );
 };
