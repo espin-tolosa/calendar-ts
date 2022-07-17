@@ -43,12 +43,13 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
     <styles.contain
       id={`day:${fullDate}`}
       {...styledProps}
-      onClick={(e) => {
+      onPointerDownCapture={(e) => {
         if (thisNode.current !== e.target) {
           return;
         }
         token.isAuth() && onClick();
       }}
+      className="outline-1 outline-red-400"
     >
       <styles.header
         id={`day-header:${fullDate}`}
