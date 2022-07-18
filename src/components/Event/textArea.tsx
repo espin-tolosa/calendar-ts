@@ -36,7 +36,7 @@ export const EventTextArea = ({ event }: TextArea) => {
     <StyledEvent.TWjobContent>
       <span
         ref={textRef}
-        className="textarea rounded-[5px] w-full p-1 caret-black focus:bg-green-200 print:text-xs text-sm"
+        className="textarea rounded-[5px] w-full p-1 caret-black focus:bg-green-200 print:text-xs text-sm z-[100]"
         role="textbox"
         contentEditable={true}
         //TODO: read this to gain control over the component: https://goshacmd.com/controlled-vs-uncontrolled-inputs-react/
@@ -59,6 +59,10 @@ export const EventTextArea = ({ event }: TextArea) => {
           });
           if (e.code === "Enter" || e.code === "Escape") {
             e.currentTarget.blur();
+          }
+
+          if (typeof event.mutable === "object") {
+            event.mutable.height = "1500px";
           }
         }}
         onBlur={(e) => {

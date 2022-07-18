@@ -1,6 +1,6 @@
+import { useRef } from "react";
 import { styles } from "../../components/Day/tw";
 import { MemoEventsThrower } from "../../components/EventsThrower/main";
-import { memo, useRef } from "react";
 import { DateService } from "../../utils/Date";
 import { usePostQuery } from "../../api/queries";
 import { useDoubleClick } from "../../hooks/useDoubleClick";
@@ -72,10 +72,10 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
 }
 
 //TODO: Profile the difference between memo and not memo, because in practice I don't see any extra renders jet
-//export const MemoDay = Day;
+export const MemoDay = Day;
 
-export const MemoDay = memo(Day, (prev, next) => {
-  const isDayToPush = next.pushedDays.has(next.fullDate);
-
-  return !isDayToPush;
-});
+//export const MemoDay = memo(Day, (prev, next) => {
+//  const isDayToPush = next.pushedDays.has(next.fullDate);
+//
+//  return !isDayToPush;
+//});

@@ -1,18 +1,12 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { memo, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
 import { DateService } from "../../utils/Date";
 import { useHoverEvent, useStyles } from "../../components/Event/logic";
-import {
-  useEventDispatch,
-  useEventState,
-  useGetEventFamily,
-} from "../../hooks/useEventsState";
+import { useGetEventFamily } from "../../hooks/useEventsState";
 import { EventCard, EventTail } from "../../components/Event/eventCard";
-import { useGethDeleteEvent } from "../../api/handlers";
-import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
-import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
-import { nullEvent } from "../../interfaces";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
+import { DragHandlers } from "./dragHandlers";
+import { Placeholder } from "./placeholder";
 
 export function eventID(id: number, role: string, subcomponent: string) {
   return `event:${role}:${id}:${subcomponent}`;
@@ -20,58 +14,10 @@ export function eventID(id: number, role: string, subcomponent: string) {
 
 /**
  * Event interactive component, expected functions
- *
  */
 export const Event = ({ event, index }: { event: jh.event; index: number }) => {
   const eventRef = useRef<HTMLDivElement>();
-  const [state, setState] = useState<{ height: string }>({ height: "0px" });
 
-  useLayoutEffect(() => {
-    if (typeof eventRef.current !== "undefined") {
-      event.mutable = {
-        height: `${eventRef.current.clientHeight}px`,
-        eventRef: eventRef.current,
-        index: index, //!Corrected bug: was using event.end wich is zero
-      };
-    }
-  });
-
-  useEffect(() => {
-    if (typeof event.mutable === "object") {
-      const sameRow = eventsOfWeek
-        .filter((e) => {
-          if (
-            typeof e.mutable === "object" &&
-            typeof event.mutable === "object"
-          ) {
-            return e.mutable.index === event.mutable.index;
-          }
-        }) //!Bug solved: e.mutable is undefined
-        .filter((e) => e.id > 0);
-      const allH = sameRow.map((r) => {
-        if (typeof r.mutable === "object") {
-          const size = r.mutable.eventRef.getBoundingClientRect();
-          const H = size.height + 10; //pading
-          return H;
-        } else {
-          return 100;
-        }
-      });
-
-      const maxH = Math.max(...allH);
-      const newState = { height: `${maxH}px` };
-
-      if (typeof event.mutable === "object") {
-        event.mutable.height = newState.height;
-      }
-      setState(newState);
-    }
-  }, [event.mutable?.height, event]);
-
-  const [parentEvent] = useGetEventFamily(event);
-  const hDelete = useGethDeleteEvent(event);
-  const week = DateService.GetWeekRangeOf(event.start);
-  const eventsOfWeek = useEventState(week);
   //week.from = event.start;
 
   //--------------------------------------------
@@ -80,7 +26,7 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
   //edit mode
 
   // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
-  const { hover, ...mouseHover } = useHoverEvent(event);
+  const { hover } = useHoverEvent(event);
 
   // Style hook for state transitions
   const clientsStyles = useClientsStyles();
@@ -100,117 +46,37 @@ export const Event = ({ event, index }: { event: jh.event; index: number }) => {
     DateService.DaysFrom(event.start, maxDayAvailable)
   );
 
-  const eventDispatcher = useEventDispatch();
-  const pushDaysDispatcher = usePushedDaysDispatcher();
-
-  const setDnDEventRef = useSetDnDEventRef();
-  const dndEvent = useDnDEventRef();
-
-  const hOnDragStart = (
-    e: React.DragEvent<HTMLDivElement>,
-    direction: number
-  ) => {
-    e.stopPropagation();
-    const parentCopy: jh.event = { ...parentEvent };
-    if (typeof parentEvent.mutable === "object") {
-      parentCopy.mutable = { ...parentEvent.mutable };
-      if (typeof parentCopy.mutable === "object") {
-        parentCopy.mutable.bubble = direction;
-      }
-    }
-    //!ISSUE: parentEvent isn't available in other context consumers (e.g: useOnDragEnter) after firing this dispatch order:
-    //temporaryEventDispatcher(parentEvent);
-    setDnDEventRef(parentCopy);
-    setTimeout(() => {
-      eventDispatcher({
-        type: "tonull",
-        payload: [{ ...event }],
-        callback: pushDaysDispatcher,
-      });
-
-      //setLocalIsDragging(true);
-    }, 1000);
-  };
-  const hOnDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    setDnDEventRef(nullEvent());
-    //setLocalIsDragging(false);
-    eventDispatcher({
-      type: "fromnull",
-      payload: [{ ...dndEvent }],
-      callback: pushDaysDispatcher,
-    });
-  };
-
   return (
     <>
-      <StyledEvent.TWflexContainer
-        id={eventID(event.id, "master", "eventListener")}
-        onKeyDown={(e) => {
-          e.stopPropagation();
-          if (e.ctrlKey && e.code === "Delete") {
-            hDelete();
+      <DragHandlers event={event} spread={spreadCells}>
+        <>
+          <StyledEvent.TWtextContent
+            id={eventID(event.id, "master", "sizeAndPosition")}
+            ref={eventRef}
+            $isChildren={isChildren}
+            $isHover={hover}
+            style={style?.dinamic}
+            $cells={spreadCells}
+            title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
+            $client={event.client.toLowerCase()}
+          >
+            {!isChildren ? (
+              <EventCard event={event} style={style?.static || {}} />
+            ) : (
+              <EventTail event={event} />
+            )}
+          </StyledEvent.TWtextContent>
+          {
+            //!In charged of root spacing
           }
-        }}
-        {...mouseHover}
-        onDragStart={(e) => {
-          hOnDragStart(e, 0);
-        }}
-        onDragEnd={hOnDragEnd}
-      >
-        <StyledEvent.TWtextContent
-          id={eventID(event.id, "master", "sizeAndPosition")}
-          ref={eventRef}
-          $isChildren={isChildren}
-          $isHover={hover}
-          style={style?.dinamic}
-          $cells={spreadCells}
-          title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
-          $client={event.client.toLowerCase()}
-        >
-          {!isChildren ? (
-            <EventCard event={event} style={style?.static || {}} />
-          ) : (
-            <EventTail event={event} />
-          )}
-        </StyledEvent.TWtextContent>
-        {
-          //DnD Logic
-        }
-        {
-          <StyledEvent.TWextend_Left
-            $cells={spreadCells}
-            title={`Drag here to extend ${event.client}'s job`}
-            draggable={"true"}
-            onDragStart={(e) => {
-              hOnDragStart(e, -1);
-            }}
-            onDragEnd={hOnDragEnd}
-          >
-            {"+"}
-          </StyledEvent.TWextend_Left>
-        }
-        {
-          <StyledEvent.TWextend
-            $cells={spreadCells}
-            title={`Drag here to extend ${event.client}'s job`}
-            draggable={"true"}
-            onDragStart={(e) => {
-              hOnDragStart(e, 1);
-            }}
-            onDragEnd={hOnDragEnd}
-          >
-            {"+"}
-          </StyledEvent.TWextend>
-        }
-
-        <StyledEvent.TWplaceholder style={state}>
-          {"placeholder"}
-        </StyledEvent.TWplaceholder>
-      </StyledEvent.TWflexContainer>
+          <Placeholder index={index} event={event} eventRef={eventRef} />
+        </>
+      </DragHandlers>
     </>
   );
 };
+
+export const MemoEvent = memo(Event);
 
 export const EventHolder = ({ event }: { event: jh.event }) => {
   const [force, setForce] = useState(0);
@@ -218,31 +84,37 @@ export const EventHolder = ({ event }: { event: jh.event }) => {
   const eventRef = useRef<HTMLDivElement>();
   //const [state, setState] = useState<{ height: string }>({ height: "0px" });
   //
-  // useLayoutEffect(() => {
   if (typeof eventRef.current !== "undefined") {
     const h0 =
-      typeof parent.mutable === "object" ? parent.mutable.height : "0px";
-    const h1 = parseInt(h0.split("px")[0]);
-    const newState = { height: `${h1}px` };
+      typeof parent.mutable === "object"
+        ? parseInt(parent.mutable.height.split("px")[0])
+        : eventRef.current.clientHeight;
+    const newState = { height: `${h0}px` };
+    //const newState = { height: `${h0}px` };
     event.mutable = {
-      //height: `${eventRef.current.clientHeight}px`,
       height: newState.height,
       eventRef: eventRef.current,
       index: typeof parent.mutable === "object" ? parent.mutable.index : 0, //!Corrected bug: was using event.end wich is zero
     };
   }
-
   useLayoutEffect(() => {
     if (force === 0) {
       setForce(1);
     }
   }, []);
+  const isChildren = event.job.includes("#isChildren");
+  const tailState = { height: "3rem" };
 
   return (
     <StyledEvent.TWflexContainer_Holder ref={eventRef}>
-      <StyledEvent.TWplaceholder style={{ height: event.mutable?.height }}>
+      <StyledEvent.TWplaceholder
+        style={isChildren ? tailState : { height: event.mutable?.height }}
+      >
         {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
     </StyledEvent.TWflexContainer_Holder>
   );
 };
+
+//export const MemoEventHolder = memo(EventHolder);
+export const MemoEventHolder = EventHolder;

@@ -4,8 +4,6 @@ import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { fetchEvent_Day } from "../../utils/fetchEvent";
 import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
 
-type date = string;
-
 export const useOnDragEnter = () => {
   // const events = useEventState();
   const dndEventRef = useDnDEventRef();
@@ -17,40 +15,43 @@ export const useOnDragEnter = () => {
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
 
-  return (date: date, dndEvent: jh.event) => {
-    const isWeekend = DateService.IsWeekend(date);
-    if (isWeekend) {
-      return;
-    }
-    if (typeof dndEvent === "undefined") {
+  return (date: jh.date.representation, dndEvent: jh.event) => {
+    const dndEventRef = { ...dndEvent };
+    //!const isWeekend = DateService.IsWeekend(date);
+    console.log("Enter dnd event", dndEventRef);
+    //if (isWeekend) {
+    //  return;
+    //}
+    if (typeof dndEventRef === "undefined") {
       return;
     }
 
-    if (dndEvent.mutable?.bubble === 1) {
-      dndEvent.end = date;
-      const isRewind = DateService.DaysFrom(dndEvent.start, date) < 0;
+    if (dndEventRef.mutable?.bubble === 1) {
+      dndEventRef.end = date;
+      const isRewind = DateService.DaysFrom(dndEventRef.start, date) < 0;
       if (isRewind) {
-        dndEvent.start = date;
+        dndEventRef.start = date;
       }
-    } else if (dndEvent.mutable?.bubble === -1) {
-      dndEvent.start = date;
-      const isRewind = DateService.DaysFrom(dndEvent.end, date) > 0;
+    } else if (dndEventRef.mutable?.bubble === -1) {
+      dndEventRef.start = date;
+      const isRewind = DateService.DaysFrom(dndEventRef.end, date) > 0;
       if (isRewind) {
-        dndEvent.end = date;
+        dndEventRef.end = date;
       }
-    } else if (dndEvent.mutable?.bubble === 0) {
-      dndEvent.start = date;
-      dndEvent.end = date;
+    } else if (dndEventRef.mutable?.bubble === 0) {
+      dndEventRef.start = date;
+      dndEventRef.end = date;
     }
     //temporaryEventDispatcher(newEvent);
     //-------------------------------------------------------------------------------------------
 
-    fetchEvent_Day("PUT", dndEvent);
+    console.log("Fetching to", dndEventRef);
+    fetchEvent_Day("PUT", dndEventRef);
     eventDispatcher({
       type: "update",
-      payload: [{ ...dndEvent }],
+      payload: [{ ...dndEventRef }],
       callback: pushDaysDispatcher,
     });
-    setDnDEventRef(dndEvent);
+    setDnDEventRef(dndEventRef);
   };
 };

@@ -1,4 +1,4 @@
-import { Event, EventHolder } from "../../components/Event/main";
+import { MemoEvent, MemoEventHolder } from "../../components/Event/main";
 import { useEventState } from "../../hooks/useEventsState";
 import { bubblingAlgo } from "../../components/EventsThrower/bubblingAlgoUtils";
 import { sendEndReferencesToPlaceholders } from "../../components/EventsThrower/sendReferencesToPlaceholders";
@@ -8,6 +8,8 @@ import { memo } from "react";
 interface EventProps {
   day: string;
   pushedDays: Set<string>;
+  //textArea: number;
+  //setTextArea: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
@@ -31,26 +33,27 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
 
   const sortedEvents = bubblingAlgo(dayEventsFiltered);
 
-  const twStyle =
-    import.meta.env.MODE === "development"
-      ? "outline-1 outline-dashed outline-red-900 bg-red-50"
-      : "";
-
   return (
     <div className="flex flex-col gap-1 my-5">
       {sortedEvents.map((event, position) => {
         const keyValue = `${event.id}-${propTypes.day}`;
         if (isPlaceholder(event)) {
+          //! incharged of spaned spacing
           return (
-            <div key={`d-${keyValue}`} className={twStyle}>
-              <EventHolder key={`p-${keyValue}`} event={event}></EventHolder>
-            </div>
+            <MemoEventHolder
+              key={`p-${keyValue}`}
+              event={event}
+            ></MemoEventHolder>
           );
         }
         //Mutable instruction for global state of events
         sendEndReferencesToPlaceholders(allEvents, event, position);
         return (
-          <Event key={`e-${keyValue}`} event={event} index={position}></Event>
+          <MemoEvent
+            key={`e-${keyValue}`}
+            event={event}
+            index={position}
+          ></MemoEvent>
         );
       })}
     </div>

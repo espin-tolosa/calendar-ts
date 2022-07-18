@@ -6,7 +6,7 @@ flex whitespace-normal break-words overflow-hidden overflow-ellipsis
 
 //I needed to create this component which is a copy of flexContainer just to change z-index and give its corresponding holder behavior
 export const TWflexContainer_Holder = tw.div`
-  flex flex-col justify-start my-1 transition-colors p-1
+  flex flex-col justify-start my-1 transition-colors
 	`;
 export const TWflexContainer = tw.div`
   flex flex-col justify-start my-1 transition-colors
@@ -46,12 +46,10 @@ ${({ $isHover, $isChildren }: { $isHover: boolean; $isChildren: boolean }) =>
 `;
 
 export const TWextend = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event-e min-w-[4.14%] z-ExtendEvent h-16
+	mt-[1px] absolute text-transparent extend-event-e min-w-[4.14%] z-ExtendEvent h-12
 
 	${() =>
-    import.meta.env.MODE === "development-none"
-      ? "border-2 border-green-500"
-      : ""}
+    import.meta.env.MODE === "development" ? "border-2 border-green-500" : ""}
 
 
 	${({ $cells }: { $cells: number }) =>
@@ -67,11 +65,9 @@ export const TWextend = tw.div<{ $cells: number }>`
 `;
 
 export const TWextend_Left = tw.div<{ $cells: number }>`
-	mt-[1px] absolute text-transparent extend-event-w min-w-[4.14%] z-ExtendEvent h-16
+	mt-[1px] absolute text-transparent extend-event-w min-w-[4.14%] z-ExtendEvent h-12
 	${() =>
-    import.meta.env.MODE === "development-none"
-      ? "border-2 border-green-900"
-      : ""}
+    import.meta.env.MODE === "development" ? "border-2 border-green-900" : ""}
 
 	${({ $cells }: { $cells: number }) =>
     ($cells === 1 && "extend-event-l-1") ||
@@ -86,7 +82,7 @@ export const TWextend_Left = tw.div<{ $cells: number }>`
 `;
 
 export const TWplaceholder = tw.div`
-	text-transparent
+	text-transparent border-2 border-red-400
 `;
 
 export const TWStyledSelect = tw.select`

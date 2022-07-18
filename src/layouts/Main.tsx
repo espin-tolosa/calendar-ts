@@ -36,6 +36,7 @@ export const LayoutMain = () => {
     }
 
     onDate.current = date;
+    console.log("Drag enter on day", date);
     onDragEnter(date, dndEvent);
   };
 
