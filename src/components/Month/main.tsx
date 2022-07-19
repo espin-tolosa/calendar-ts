@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useMonthDate } from "../../hooks/useMonthDate";
 import { MemoDay } from "../../components/Day/main";
 import { MemoIDayHolder } from "../../components/DayHolder/main";
@@ -25,6 +25,9 @@ const Month = ({ year, month }: jh.date.monthData) => {
   const [toPrint, hPrint] = usePrint();
 
   const [left, rest] = totalCellsInLastRow(date.start, date.daysList.length);
+
+  const [textArea, setTextArea] = useState(0);
+  const [textEvent, setTextEvent] = useState(0);
 
   return (
     <StyledMonth.TWflexColLayout
@@ -59,6 +62,10 @@ const Month = ({ year, month }: jh.date.monthData) => {
                 daynumber={day}
                 fullDate={DateService.ComposeDate(year, month, day)}
                 pushedDays={pushedDays}
+                textArea={textArea}
+                setTextArea={setTextArea}
+                textEvent={textEvent}
+                setTextEvent={setTextEvent}
               ></MemoDay>
             ))
           )
@@ -84,5 +91,6 @@ const Month = ({ year, month }: jh.date.monthData) => {
   );
 };
 
-export const MemoMonth = memo(Month);
-MemoMonth.displayName = "Memoized Month";
+export const MemoMonth = Month;
+//export const MemoMonth = memo(Month);
+//MemoMonth.displayName = "Memoized Month";

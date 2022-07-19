@@ -8,9 +8,17 @@ import { useToken } from "@/hooks/useToken";
 
 export type TextArea = {
   event: jh.event;
+  setTextArea: React.Dispatch<React.SetStateAction<number>>;
+  setTextEvent: React.Dispatch<React.SetStateAction<number>>;
+  refNode: React.RefObject<HTMLDivElement>;
 };
 
-export const EventTextArea = ({ event }: TextArea) => {
+export const EventTextArea = ({
+  event,
+  setTextArea,
+  setTextEvent,
+  refNode,
+}: TextArea) => {
   const textRef = useRef<HTMLSpanElement>(null);
   const eventDispatcher = useEventDispatch();
   const pushDaysDispatcher = usePushedDaysDispatcher();
@@ -61,6 +69,14 @@ export const EventTextArea = ({ event }: TextArea) => {
             e.currentTarget.blur();
           }
 
+          const result =
+            refNode.current?.clientHeight || textRef.current?.clientHeight || 0;
+
+          //debugger;
+          console.log("Typing", event.id, result);
+          setTextEvent(event.id);
+          setTextArea(result);
+
           if (typeof event.mutable === "object") {
             event.mutable.height = "1500px";
           }
@@ -73,6 +89,9 @@ export const EventTextArea = ({ event }: TextArea) => {
             payload: [{ ...event, job }],
             callback: pushDaysDispatcher,
           });
+
+          setTextArea(0);
+          setTextEvent(0);
         }}
       >
         {event.job}

@@ -49,7 +49,9 @@ export const TWextend = tw.div<{ $cells: number }>`
 	mt-[1px] absolute text-transparent extend-event-e min-w-[4.14%] z-ExtendEvent h-12
 
 	${() =>
-    import.meta.env.MODE === "development" ? "border-2 border-green-500" : ""}
+    import.meta.env.MODE === "development-node"
+      ? "border-2 border-green-500"
+      : ""}
 
 
 	${({ $cells }: { $cells: number }) =>
@@ -67,7 +69,9 @@ export const TWextend = tw.div<{ $cells: number }>`
 export const TWextend_Left = tw.div<{ $cells: number }>`
 	mt-[1px] absolute text-transparent extend-event-w min-w-[4.14%] z-ExtendEvent h-12
 	${() =>
-    import.meta.env.MODE === "development" ? "border-2 border-green-900" : ""}
+    import.meta.env.MODE === "development-none"
+      ? "border-2 border-green-900"
+      : ""}
 
 	${({ $cells }: { $cells: number }) =>
     ($cells === 1 && "extend-event-l-1") ||
@@ -82,7 +86,7 @@ export const TWextend_Left = tw.div<{ $cells: number }>`
 `;
 
 export const TWplaceholder = tw.div`
-	text-transparent border-2 border-red-400
+	text-transparent
 `;
 
 export const TWStyledSelect = tw.select`

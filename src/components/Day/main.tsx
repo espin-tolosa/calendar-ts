@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { styles } from "../../components/Day/tw";
 import { MemoEventsThrower } from "../../components/EventsThrower/main";
 import { DateService } from "../../utils/Date";
@@ -10,6 +10,10 @@ interface Day {
   daynumber: number;
   fullDate: string;
   pushedDays: Set<string>;
+  textArea: number;
+  setTextArea: React.Dispatch<React.SetStateAction<number>>;
+  textEvent: number;
+  setTextEvent: React.Dispatch<React.SetStateAction<number>>;
 }
 
 // Used Context in Day Component:
@@ -22,7 +26,15 @@ interface Day {
 // cControllerState - start,end
 // cControllerState - id,client,job
 
-function Day({ daynumber, fullDate, pushedDays }: Day) {
+function Day({
+  daynumber,
+  fullDate,
+  pushedDays,
+  textArea,
+  setTextArea,
+  textEvent,
+  setTextEvent,
+}: Day) {
   //Callbacks
 
   //Computed:
@@ -66,7 +78,14 @@ function Day({ daynumber, fullDate, pushedDays }: Day) {
         >{`${daynumber}`}</styles.daySpot>
       </styles.header>
 
-      <MemoEventsThrower day={fullDate} pushedDays={pushedDays} />
+      <MemoEventsThrower
+        day={fullDate}
+        pushedDays={pushedDays}
+        textArea={textArea}
+        setTextArea={setTextArea}
+        textEvent={textEvent}
+        setTextEvent={setTextEvent}
+      />
     </styles.contain>
   );
 }
