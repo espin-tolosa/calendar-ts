@@ -4,6 +4,7 @@ import { bubblingAlgo } from "../../components/EventsThrower/bubblingAlgoUtils";
 import { sendEndReferencesToPlaceholders } from "../../components/EventsThrower/sendReferencesToPlaceholders";
 import { isPlaceholder } from "../../utils/ValidateEvent";
 import { memo } from "react";
+import { DateService } from "@/utils/Date";
 
 interface EventProps {
   day: string;
@@ -41,7 +42,8 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
     <div className="flex flex-col gap-1 my-5">
       {sortedEvents.map((event, position) => {
         const keyValue = `${event.id}-${propTypes.day}`;
-        if (isPlaceholder(event)) {
+        if (isPlaceholder(event) && DateService.IsWeekend(event.start)) {
+          return <></>;
           //debugger;
         }
         if (isPlaceholder(event)) {

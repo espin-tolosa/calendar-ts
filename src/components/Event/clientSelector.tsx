@@ -28,7 +28,7 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
 
     controllerStateDispatch({
       type: "setId",
-      payload: { id: Math.abs(props.event.id) },
+      payload: { id: props.event.id },
     });
   };
 

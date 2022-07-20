@@ -10,6 +10,8 @@ export const eventSpreader = (event: jh.event) => {
 
   let nextDt = DateService.GetNextDayOfDate(event.start);
   let nextDay = DateService.FormatDate(nextDt);
+  let isChildren = false;
+  let isChildrenPlaceholder = false;
   const eventLength = DateService.DaysFrom(event.start, event.end);
 
   for (let day = 0; day < eventLength; day++) {
@@ -18,13 +20,15 @@ export const eventSpreader = (event: jh.event) => {
     // 			2. Is day 1: ok
     //TODO: 3. Is day after day off: no
     //TODO: Span event proper size, actually spans-8 (maximun) allways
-    if (
-      !isWeekend(dayWeek) &&
-      (isMonday(dayWeek) || isFirstMonthDay(nextDay))
-    ) {
+    isChildren =
+      !isWeekend(dayWeek) && (isMonday(dayWeek) || isFirstMonthDay(nextDay));
+    if (isChildren) {
       spreadEvent.push(toMonday(event, nextDay));
+      isChildrenPlaceholder = true;
+    } else if (isChildrenPlaceholder) {
+      spreadEvent.push(toChildren(event, nextDay, "tailholder"));
     } else {
-      spreadEvent.push(toPlaceholder(event, nextDay));
+      spreadEvent.push(toChildren(event, nextDay, "rootholder"));
     }
     nextDt = DateService.GetNextDayOfDate(nextDay);
     nextDay = DateService.FormatDate(nextDt);
@@ -33,11 +37,16 @@ export const eventSpreader = (event: jh.event) => {
   return spreadEvent;
 };
 
-const toPlaceholder = (event: jh.event, targetDay: string) => {
-  return { ...event, id: -event.id, start: targetDay, end: targetDay };
+const toMonday = (event: jh.event, targetDay: string): jh.event => {
+  return { ...event, start: targetDay, type: "tailhead" };
 };
-const toMonday = (event: jh.event, targetDay: string) => {
-  return { ...event, start: targetDay, job: "#isChildren" };
+
+const toChildren = (
+  event: jh.event,
+  day: string,
+  type: jh.event.type
+): jh.event => {
+  return { ...event, start: day, end: day, type };
 };
 
 const isMonday = (dayWeek: string) => {

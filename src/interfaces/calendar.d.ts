@@ -16,6 +16,15 @@ declare namespace jh {
     };
   }
 
+  namespace event {
+    export type type =
+      | ""
+      | "roothead"
+      | "rootholder"
+      | "tailhead"
+      | "tailholder";
+  }
+
   export interface event {
     id: number;
     client: string;
@@ -28,6 +37,7 @@ declare namespace jh {
       eventRef: HTMLDivElement;
       index: number;
     };
+    type: event.type;
   }
 }
 

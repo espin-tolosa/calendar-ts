@@ -2,7 +2,12 @@ const filterPlaceholdersByEvent = (
   allEvents: Array<jh.event>,
   event: jh.event
 ) => {
-  return allEvents.filter((placeholder) => placeholder.id === -event.id) || [];
+  return (
+    allEvents.filter(
+      (placeholder) =>
+        event.id === placeholder.id && placeholder.type.includes("holder")
+    ) || []
+  );
 };
 
 export const sendEndReferencesToPlaceholders = (

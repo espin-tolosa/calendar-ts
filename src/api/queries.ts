@@ -26,12 +26,13 @@ const queryEvent = (
   pushDaysDispatcher: Dispatch<Set<jh.date.representation>>
 ) => {
   const MaxId = Number.MAX_SAFE_INTEGER;
-  const newEvent = {
+  const newEvent: jh.event = {
     id: MaxId,
     client: "Select Client",
     job: "description",
     start: date,
     end: date,
+    type: "roothead",
   };
   eventDispatcher({
     type: "update",

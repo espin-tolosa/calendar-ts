@@ -13,6 +13,73 @@ interface PlaceHolder {
   setTextEvent: React.Dispatch<React.SetStateAction<number>>;
 }
 
+export function Placeholder_Debug({
+  index,
+  event,
+  eventRef,
+  textArea,
+  setTextArea,
+  textEvent,
+  setTextEvent,
+}: PlaceHolder) {
+  const [state, setState] = useState<{ height: string }>({ height: "3.5rem" });
+  const week = DateService.GetWeekRangeOf(event.start);
+  const eventsOfWeek = useEventState(week);
+
+  useLayoutEffect(() => {
+    if (
+      eventRef != null &&
+      eventRef.current != null &&
+      typeof eventRef.current !== "undefined"
+    ) {
+      event.mutable = {
+        height: `${eventRef.current.clientHeight}`,
+        eventRef: eventRef.current,
+        index: index, //!Corrected bug: was using event.end wich is zero
+      };
+    }
+  }, [eventRef.current]);
+
+  useEffect(() => {
+    const eventsRefsOfWeek = eventsOfWeek
+      .filter((e) => {
+        if (
+          typeof e.mutable === "object" &&
+          typeof event.mutable === "object"
+        ) {
+          return (
+            e.mutable.index === event.mutable.index && e.type.includes("head")
+          );
+          //return true;
+        } else {
+          return false;
+        }
+      }) //!Bug solved: e.mutable is undefined
+
+      .map((e) => {
+        if (typeof e.mutable === "object") {
+          return e.mutable.eventRef.clientHeight;
+        } else {
+          return 0;
+        }
+      });
+    if (eventsRefsOfWeek.length !== 0) {
+      const maxH = Math.max(...eventsRefsOfWeek);
+      setState({ height: `${maxH}px` });
+      if (typeof event.mutable === "object") {
+        const maxH = Math.max(...eventsRefsOfWeek);
+        event.mutable.height = `${maxH}`;
+      }
+    }
+  }, [eventsOfWeek.length, event.mutable]);
+
+  return (
+    <StyledEvent.TWplaceholder style={state}>
+      {"placeholder"}
+    </StyledEvent.TWplaceholder>
+  );
+}
+
 export function Placeholder({
   index,
   event,
@@ -37,7 +104,9 @@ export function Placeholder({
             typeof e.mutable === "object" &&
             typeof event.mutable === "object"
           ) {
-            return e.mutable.index === event.mutable.index && e.id > 0;
+            return (
+              e.mutable.index === event.mutable.index && e.type.includes("head")
+            );
           } else {
             return false;
           }
@@ -74,7 +143,7 @@ export function Placeholder({
           }
         }) //!Bug solved: e.mutable is undefined
 
-        .filter((e) => e.id > 0);
+        .filter((e) => e.type.includes("head"));
 
       const nonDef = () => {
         console.log("NON DEF");
@@ -87,7 +156,7 @@ export function Placeholder({
           : nonDef(); //!Non used branch
       });
 
-      const textAreaH = textEvent === Math.abs(event.id) ? textArea : 0;
+      const textAreaH = textEvent === event.id ? textArea : 0;
 
       const maxH = Math.max(...allH, textAreaH);
       const newState = { height: `${maxH}px` };
@@ -102,7 +171,7 @@ export function Placeholder({
     }
   }, [eventRef.current, event.mutable?.height, event, textArea, textEvent]);
 
-  const isChildren = event.job.includes("#isChildren");
+  const isChildren = event.type === "tailhead";
   const tailState = { height: "2.95rem" };
 
   const style = isChildren ? tailState : state;
@@ -110,8 +179,10 @@ export function Placeholder({
   //console.log("Style:", style, event);
 
   return (
-    <StyledEvent.TWplaceholder style={style}>
-      {"placeholder"}
-    </StyledEvent.TWplaceholder>
+    <div className="border-4 border-green-500">
+      <StyledEvent.TWplaceholder style={style}>
+        {"placeholder"}
+      </StyledEvent.TWplaceholder>
+    </div>
   );
 }

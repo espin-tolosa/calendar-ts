@@ -7,7 +7,7 @@ import { nullEvent } from "../interfaces";
 // Placeholder: id = -parentId, start =  [parentStart,parentEnd], end = "0" (no used value)
 
 // Children: has all its attributes inherit from its parent with following modification:
-//						job = "#isChildren" (reserved keyword, expected to not be used by end users)
+//						type = "tailhead" (reserved keyword, expected to not be used by end users)
 //						start = some Monday in the range [parentStart, parentEnd]
 
 export class EventClass {
@@ -31,10 +31,6 @@ export class EventClass {
     this.end = end;
   }
 
-  static transformToParentId(event: jh.event) {
-    return Math.abs(event.id);
-  }
-
   static getParentEventFrom(state: Array<jh.event>, id: number) {
     return state.find((e) => e.id === id) || nullEvent();
   }
@@ -42,11 +38,8 @@ export class EventClass {
     const parentId = family.at(0)?.id || 0;
     //return all events that has the same parentId
     return (
-      family.find(
-        (e) =>
-          EventClass.transformToParentId(e) === parentId &&
-          e.job !== "#isChildren"
-      ) || nullEvent()
+      family.find((e) => e.id === parentId && e.type === "roothead") ||
+      nullEvent()
     );
   }
 
@@ -57,11 +50,11 @@ export class EventClass {
   }
 
   static isChildren(event: jh.event): boolean {
-    return event.job === "#isChildren";
+    return event.type === "tailhead";
   }
 
   static isPlaceholder(event: jh.event): boolean {
-    return event.id < 0;
+    return event.type.includes("holder");
   }
 
   static isParent(event: jh.event): boolean {

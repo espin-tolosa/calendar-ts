@@ -28,8 +28,8 @@ function rangeOfDates(start: string, end: string) {
 
 // Return a range of dates affecting the difference between prev and next state of events
 export function diffStates(state: Array<jh.event>, newState: Array<jh.event>) {
-  const prevState = state.filter((event) => event.id > 0);
-  const nextState = newState.filter((event) => event.id > 0);
+  const prevState = state.filter((event) => event.type.includes("head"));
+  const nextState = newState.filter((event) => event.type.includes("head"));
 
   //sort by start day from earlier first
   prevState.sort((prev, next) => -DateService.DaysFrom(prev.start, next.start));
@@ -74,8 +74,7 @@ export function diffStates(state: Array<jh.event>, newState: Array<jh.event>) {
   return DaysToPush;
 }
 
-const sortCriteriaFIFO = (prev: jh.event, next: jh.event) =>
-  Math.abs(prev.id) - Math.abs(next.id);
+const sortCriteriaFIFO = (prev: jh.event, next: jh.event) => prev.id - next.id;
 //TODO: strategy pattern
 export const sortCriteria = sortCriteriaFIFO;
 //const sortCriteriaLonger = (prev: event, next: event) => {
@@ -112,6 +111,7 @@ export function reducerEvents(
         //Treat event from db to remove hours from data
         event.start = event.start.split(" ")[0];
         event.end = event.end.split(" ")[0];
+        event.type = "roothead";
 
         //checks the case of end begins before the start
         //check if start and end day exists, and client is not empty or is default
@@ -147,9 +147,8 @@ export function reducerEvents(
         }
         const spread = eventSpreader(toReplace);
         //in each iteration in filtering some part of the original state and injecting something new
-        newState = newState.filter(
-          (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
-        );
+        newState = newState.filter((event) => event.id !== toReplace.id);
+        toReplace.type = "roothead";
         newState.push(toReplace);
         newState = newState.concat(spread);
       });
@@ -166,9 +165,7 @@ export function reducerEvents(
       let newState = state.slice();
       //Clean state is the state without all the events targeting the id to replace
       action.payload.forEach((toDelete) => {
-        newState = newState.filter(
-          (event) => Math.abs(event.id) !== Math.abs(toDelete.id)
-        );
+        newState = newState.filter((event) => event.id !== toDelete.id);
       });
       diffStates(state, newState);
       const daysToPush = diffStates(state, newState);
@@ -182,9 +179,7 @@ export function reducerEvents(
     //Strict replace by id: update the complete event state only if such event is found
     case "override": {
       const toReplace = action.payload[0];
-      const cleanState = state.filter(
-        (event) => Math.abs(event.id) !== Math.abs(toReplace.id)
-      );
+      const cleanState = state.filter((event) => event.id !== toReplace.id);
 
       //State before and after cleaning is the same, event is not in state so won't add
       const affectedEvents = state.length - cleanState.length;
@@ -208,7 +203,7 @@ export function reducerEvents(
 
       //Deep-cloning the array ref and the objects inside removing the origin
       const newState = state
-        .filter((event) => Math.abs(event.id) !== Math.abs(origin.id))
+        .filter((event) => event.id !== origin.id)
         .map((event) => {
           return { ...event };
         });
@@ -229,7 +224,7 @@ export function reducerEvents(
 
       //Deep-cloning the array ref and the objects inside removing the origin
       const newState = state
-        .filter((event) => Math.abs(event.id) !== Math.abs(origin.id))
+        .filter((event) => event.id !== origin.id)
         .map((event) => {
           return { ...event };
         });
@@ -312,11 +307,8 @@ export function useEventDispatch() {
 //A children custom hook of useEventState
 export function useGetEventFamily(event: jh.event) {
   const events = useEventState();
-  const parentId = EventClass.transformToParentId(event);
   //return all events that has the same parentId
-  const family = events.filter(
-    (e) => EventClass.transformToParentId(e) === parentId
-  );
+  const family = events.filter((e) => e.id === event.id);
 
   const parent = EventClass.getParentEvent(family);
   return [parent, family] as [jh.event, Array<jh.event>];

@@ -93,6 +93,7 @@ export const nullEvent = (): jh.event => ({
   job: "",
   start: "",
   end: "",
+  type: "",
 });
 
 // Create new instances each time a nullToken is required

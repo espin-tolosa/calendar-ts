@@ -16,6 +16,7 @@ export async function fetchEvent_Day(
     start,
     end,
   }))(event);
+
   const dataJSON = JSON.stringify({ action, ...filterEvent });
   data.append("json", dataJSON);
   const response = await fetch(api.routes.events, {

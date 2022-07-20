@@ -13,10 +13,10 @@ export const isWellDefined = (event: jh.event) => {
 };
 
 const isChildren = (event: jh.event) => {
-  return event.job === "#isChildren";
+  return event.type === "tailhead";
 };
 export const isPlaceholder = (event: jh.event) => {
-  return event.id < 0;
+  return event.type.includes("holder");
 };
 export const isValidChildren = (event: jh.event) => {
   return isChildren(event) && isWellDefined(event);

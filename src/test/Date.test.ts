@@ -131,6 +131,7 @@ test("replace by id a single day event", () => {
       job: "testjob2",
       start: "2022-03-04",
       end: "2022-03-04",
+      type: "root",
     },
   ];
   const action = genEventCall(
