@@ -33,11 +33,17 @@ export const CurrentMonthScrollAnchor = ({
 
     //nthRef?.current?.scrollIntoView({ behavior: "smooth" });
     setTimeout(() => {
-      monthRef?.current?.scrollIntoView({ behavior: "smooth" });
+      //monthRef?.current?.scrollIntoView();
     }, 500);
     setTimeout(() => {
-      monthRef?.current?.scrollIntoView({ behavior: "smooth" });
+      //monthRef?.current?.scrollIntoView();
     }, 700);
+    setTimeout(() => {
+      //monthRef?.current?.scrollIntoView();
+    }, 1200);
+    setTimeout(() => {
+      //monthRef?.current?.scrollIntoView();
+    }, 2000);
   }, [topNavHeight]); //TODO: use ref state context as it was created to access TopNav Ref after it is rendered
 
   return (

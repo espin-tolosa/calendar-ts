@@ -135,7 +135,6 @@ export const EventHolder = ({
   //const [state, setState] = useState<{ height: string }>({ height: "0px" });
   //
   useLayoutEffect(() => {
-    console.log("Computing layout");
     if (typeof eventRef.current !== "undefined") {
       const h0 =
         typeof parent.mutable === "object"
@@ -153,7 +152,6 @@ export const EventHolder = ({
 
   useLayoutEffect(() => {
     if (force === 0 && typeof event.mutable === "object") {
-      console.log("FORCE render");
       setTimeout(() => {
         setForce(1);
       }, 100);
@@ -162,8 +160,6 @@ export const EventHolder = ({
 
   const isChildren = event.type === "tailholder";
   const tailState = { height: "1rem" };
-
-  console.log(event);
 
   useLayoutEffect(() => {
     //debugger;

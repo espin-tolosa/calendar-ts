@@ -47,37 +47,35 @@ function Day({
   const [visible, setVisible] = useState(true);
   const height = useRef(0);
   const thisDay = useRef<HTMLDivElement>(null);
+  const [hasShowedUp, setHasShowedUp] = useState(false);
 
-  const onChange = useCallback(
-    (entries: Array<IntersectionObserverEntry>) => {
-      if (entries[0].isIntersecting) {
-        setTimeout(() => {
-          setVisible(true);
-        }, 100);
-        if (thisDay.current !== null) {
-          height.current = thisDay.current.clientHeight;
-        }
-      } else {
-        setVisible(false);
+  const onChange = (entries: Array<IntersectionObserverEntry>) => {
+    if (entries[0].isIntersecting) {
+      setHasShowedUp(true);
+      setTimeout(() => {
+        setVisible(true);
+      }, 100);
+    } else {
+      if (thisDay.current !== null) {
+        height.current = thisDay.current.clientHeight;
       }
-    },
-    [visible]
-  );
 
-  const observer = useRef(
-    new IntersectionObserver(onChange, {
-      rootMargin: "100px",
-      threshold: 0.6,
-    })
-  );
+      hasShowedUp && setVisible(false);
+    }
+  };
+
+  const observer = new IntersectionObserver(onChange, {
+    rootMargin: "0px",
+    threshold: 0,
+  });
 
   useEffect(() => {
-    thisNode.current !== null && observer.current.observe(thisNode.current);
+    thisDay.current !== null && observer.observe(thisDay.current);
 
     return () => {
-      thisNode.current !== null && observer.current.unobserve(thisNode.current);
+      thisDay.current !== null && observer.unobserve(thisDay.current);
     };
-  }, [visible]);
+  }, [visible, hasShowedUp]);
 
   //Computed:
   //TODO: Locked days not impl
