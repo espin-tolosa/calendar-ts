@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { styles } from "../../components/Day/tw";
 import { MemoEventsThrower } from "../../components/EventsThrower/main";
 import { DateService } from "../../utils/Date";
@@ -36,6 +36,24 @@ function Day({
   setTextEvent,
 }: Day) {
   //Callbacks
+  const dayRef = useRef<HTMLDivElement>(null);
+
+  const [visible, setVisible] = useState(true);
+
+  const onChange = useCallback((entries: Array<IntersectionObserverEntry>) => {
+    !entries[0].isIntersecting && setVisible(false);
+    entries[0].isIntersecting && setVisible(true);
+  }, []);
+
+  const observer = useRef(new IntersectionObserver(onChange));
+
+  useEffect(() => {
+    dayRef.current !== null && observer.current.observe(dayRef.current);
+
+    return () => {
+      dayRef.current !== null && observer.current.unobserve(dayRef.current);
+    };
+  }, []);
 
   //Computed:
   //TODO: Locked days not impl
@@ -54,6 +72,7 @@ function Day({
   return (
     <styles.contain
       id={`day:${fullDate}`}
+      ref={dayRef}
       {...styledProps}
       onClick={(e) => {
         const target = e.target as HTMLElement;
@@ -78,20 +97,24 @@ function Day({
         >{`${daynumber}`}</styles.daySpot>
       </styles.header>
 
-      <MemoEventsThrower
-        day={fullDate}
-        pushedDays={pushedDays}
-        textArea={textArea}
-        setTextArea={setTextArea}
-        textEvent={textEvent}
-        setTextEvent={setTextEvent}
-      />
+      {visible ? (
+        <MemoEventsThrower
+          day={fullDate}
+          pushedDays={pushedDays}
+          textArea={textArea}
+          setTextArea={setTextArea}
+          textEvent={textEvent}
+          setTextEvent={setTextEvent}
+        />
+      ) : (
+        <></>
+      )}
     </styles.contain>
   );
 }
 
 //TODO: Profile the difference between memo and not memo, because in practice I don't see any extra renders jet
-export const MemoDay = Day;
+export const MemoDay = memo(Day);
 
 //export const MemoDay = memo(Day, (prev, next) => {
 //  const isDayToPush = next.pushedDays.has(next.fullDate);
