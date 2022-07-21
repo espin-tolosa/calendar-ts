@@ -19,7 +19,7 @@ export namespace styles {
     $isLock: boolean;
     $isWeekend: boolean;
   }>`
-	min-h-[15vh] transition-colors font-light shadow-[0px_0px_1px_rgb(226,232,240)]
+	min-h-[15vh] transition-colors font-light shadow-[0px_0px_1px_rgb(226,232,240)] transition-all
 
 	${({ $isLock }: { $isLock: boolean }) =>
     ($isLock && "bg-orange-400 cursor-not-allowed select-none") ||

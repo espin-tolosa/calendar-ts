@@ -43,34 +43,41 @@ function Day({
   setTextEvent,
 }: Day) {
   //Callbacks
-  const dayRef = useRef<HTMLDivElement>(null);
 
   const [visible, setVisible] = useState(true);
   const height = useRef(0);
+  const thisDay = useRef<HTMLDivElement>(null);
 
   const onChange = useCallback(
     (entries: Array<IntersectionObserverEntry>) => {
       if (entries[0].isIntersecting) {
-        setVisible(true);
+        setTimeout(() => {
+          setVisible(true);
+        }, 100);
+        if (thisDay.current !== null) {
+          height.current = thisDay.current.clientHeight;
+        }
       } else {
         setVisible(false);
-        if (dayRef.current !== null) {
-          height.current = dayRef.current.clientHeight;
-        }
       }
     },
     [visible]
   );
 
-  const observer = useRef(new IntersectionObserver(onChange));
+  const observer = useRef(
+    new IntersectionObserver(onChange, {
+      rootMargin: "0px",
+      threshold: 0.8,
+    })
+  );
 
   useEffect(() => {
-    dayRef.current !== null && observer.current.observe(dayRef.current);
+    thisNode.current !== null && observer.current.observe(thisNode.current);
 
     return () => {
-      dayRef.current !== null && observer.current.unobserve(dayRef.current);
+      thisNode.current !== null && observer.current.unobserve(thisNode.current);
     };
-  }, []);
+  }, [visible]);
 
   //Computed:
   //TODO: Locked days not impl
@@ -89,8 +96,14 @@ function Day({
   return (
     <styles.contain
       id={`day:${fullDate}`}
-      ref={dayRef}
-      style={{ height: `${height.current}px` }}
+      ref={thisDay}
+      style={
+        height.current && !visible
+          ? {
+              height: `${height.current}px`,
+            }
+          : {}
+      }
       {...styledProps}
       onClick={(e) => {
         const target = e.target as HTMLElement;
