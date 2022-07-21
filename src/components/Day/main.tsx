@@ -52,9 +52,7 @@ function Day({
   const onChange = (entries: Array<IntersectionObserverEntry>) => {
     if (entries[0].isIntersecting) {
       setHasShowedUp(true);
-      setTimeout(() => {
-        setVisible(true);
-      }, 100);
+      setVisible(true);
     } else {
       if (thisDay.current !== null) {
         height.current = thisDay.current.clientHeight;

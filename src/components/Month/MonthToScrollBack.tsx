@@ -39,8 +39,8 @@ export const CurrentMonthScrollAnchor = ({
       //monthRef?.current?.scrollIntoView();
     }, 700);
     setTimeout(() => {
-      //monthRef?.current?.scrollIntoView();
-    }, 1200);
+      monthRef?.current?.scrollIntoView({ behavior: "smooth" });
+    }, 500);
     setTimeout(() => {
       //monthRef?.current?.scrollIntoView();
     }, 2000);

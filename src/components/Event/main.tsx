@@ -178,23 +178,19 @@ export const EventHolder = ({
 
   if (isChildren) {
     return (
-      <div className="bg-blue-200">
-        <StyledEvent.TWflexContainer_Holder ref={eventRef}>
-          <StyledEvent.TWplaceholder style={style}>
-            {event.id + " : " + event.mutable?.index}
-          </StyledEvent.TWplaceholder>
-        </StyledEvent.TWflexContainer_Holder>
-      </div>
+      <StyledEvent.TWflexContainer_Holder ref={eventRef}>
+        <StyledEvent.TWplaceholder style={style}>
+          {event.id + " : " + event.mutable?.index}
+        </StyledEvent.TWplaceholder>
+      </StyledEvent.TWflexContainer_Holder>
     );
   } else {
     return (
-      <div className="bg-red-200">
-        <StyledEvent.TWflexContainer_Holder ref={eventRef}>
-          <StyledEvent.TWplaceholder style={style}>
-            {event.id + " : " + event.mutable?.index}
-          </StyledEvent.TWplaceholder>
-        </StyledEvent.TWflexContainer_Holder>
-      </div>
+      <StyledEvent.TWflexContainer_Holder ref={eventRef}>
+        <StyledEvent.TWplaceholder style={style}>
+          {event.id + " : " + event.mutable?.index}
+        </StyledEvent.TWplaceholder>
+      </StyledEvent.TWflexContainer_Holder>
     );
   }
 };
