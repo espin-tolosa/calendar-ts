@@ -1,4 +1,11 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { styles } from "../../components/Day/tw";
 import { MemoEventsThrower } from "../../components/EventsThrower/main";
 import { DateService } from "../../utils/Date";
@@ -39,11 +46,21 @@ function Day({
   const dayRef = useRef<HTMLDivElement>(null);
 
   const [visible, setVisible] = useState(true);
+  const height = useRef(0);
 
-  const onChange = useCallback((entries: Array<IntersectionObserverEntry>) => {
-    !entries[0].isIntersecting && setVisible(false);
-    entries[0].isIntersecting && setVisible(true);
-  }, []);
+  const onChange = useCallback(
+    (entries: Array<IntersectionObserverEntry>) => {
+      if (entries[0].isIntersecting) {
+        setVisible(true);
+      } else {
+        setVisible(false);
+        if (dayRef.current !== null) {
+          height.current = dayRef.current.clientHeight;
+        }
+      }
+    },
+    [visible]
+  );
 
   const observer = useRef(new IntersectionObserver(onChange));
 
@@ -73,6 +90,7 @@ function Day({
     <styles.contain
       id={`day:${fullDate}`}
       ref={dayRef}
+      style={{ height: `${height.current}px` }}
       {...styledProps}
       onClick={(e) => {
         const target = e.target as HTMLElement;
