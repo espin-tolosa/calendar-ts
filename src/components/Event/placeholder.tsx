@@ -33,7 +33,7 @@ export function Placeholder_Debug({ index, event, eventRef }: PlaceHolder) {
     }
   }, [eventRef.current]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const eventsRefsOfWeek = eventsOfWeek
       .filter((e) => {
         if (

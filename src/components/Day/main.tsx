@@ -66,8 +66,8 @@ function Day({
 
   const observer = useRef(
     new IntersectionObserver(onChange, {
-      rootMargin: "0px",
-      threshold: 0.8,
+      rootMargin: "100px",
+      threshold: 0.6,
     })
   );
 
