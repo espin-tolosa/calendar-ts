@@ -1,78 +1,14 @@
 import { composition } from "../interfaces";
-import React, { createContext, Dispatch, useContext, useReducer } from "react";
+import React, { createContext, useContext, useReducer } from "react";
 import { eventSpreader } from "../algorithms/eventSpreader";
 import { isWellDefined } from "../utils/ValidateEvent";
 import { DateService } from "../utils/Date";
 import { EventClass } from "../classes/event";
 
-const DEFERRAL_TIME = 0;
-
 export type Action = {
   type: CustomTypes.DispatchLocalStateEvents;
   payload: CustomTypes.State;
-  callback: Dispatch<Set<string>>;
 };
-
-function rangeOfDates(start: string, end: string) {
-  const numberOfDays = DateService.DaysFrom(start, end);
-  const DaysToPush: Set<string> = new Set([start]);
-
-  for (let i = 1; i < numberOfDays; i++) {
-    DaysToPush.add(DateService.GetDateFrom(start, i));
-  }
-
-  DaysToPush.add(end);
-
-  return DaysToPush;
-}
-
-// Return a range of dates affecting the difference between prev and next state of events
-export function diffStates(state: Array<jh.event>, newState: Array<jh.event>) {
-  const prevState = state.filter((event) => event.type.includes("head"));
-  const nextState = newState.filter((event) => event.type.includes("head"));
-
-  //sort by start day from earlier first
-  prevState.sort((prev, next) => -DateService.DaysFrom(prev.start, next.start));
-  nextState.sort((prev, next) => -DateService.DaysFrom(prev.start, next.start));
-
-  //  return nextState;
-  const DaysToPush: Set<string> = new Set();
-
-  //For each new Event compare if it exists or it is modified respect to prev state and store the range of dates in a Set
-  nextState.forEach((nextEvent) => {
-    let start = nextEvent.start;
-    let end = nextEvent.end;
-
-    const prev = prevState.find((event) => event.id === nextEvent.id);
-
-    //case where an event with new id is found
-    if (!prev) {
-      rangeOfDates(start, end).forEach((date) => DaysToPush.add(date));
-      //case where event exists but differs on one of the key: start, end, client or job
-    } else {
-      if (
-        prev.start !== nextEvent.start ||
-        prev.end !== nextEvent.end ||
-        prev.client !== nextEvent.client ||
-        prev.job !== nextEvent.job
-      ) {
-        //take the earlier start date
-        const startDates = [prev.start, nextEvent.start];
-        startDates.sort((prev, next) => -DateService.DaysFrom(prev, next));
-        start = DateService.GetWeekRangeOf(startDates[0]).from;
-        //take the later end date
-        const endDates = [prev.end, nextEvent.end];
-        endDates.sort((prev, next) => -DateService.DaysFrom(prev, next));
-        end = DateService.GetWeekRangeOf(endDates[0]).to;
-
-        //always return the max value
-        rangeOfDates(start, end).forEach((date) => DaysToPush.add(date));
-      }
-    }
-  });
-
-  return DaysToPush;
-}
 
 const sortCriteriaFIFO = (prev: jh.event, next: jh.event) => prev.id - next.id;
 //TODO: strategy pattern
@@ -109,9 +45,9 @@ export function reducerEvents(
       const newState: Array<jh.event> = [];
       action.payload.forEach((event) => {
         //Treat event from db to remove hours from data
+        event.type = "roothead";
         event.start = event.start.split(" ")[0];
         event.end = event.end.split(" ")[0];
-        event.type = "roothead";
 
         //checks the case of end begins before the start
         //check if start and end day exists, and client is not empty or is default
@@ -123,14 +59,9 @@ export function reducerEvents(
         const spread = eventSpreader(event);
         newState.push(event);
         newState.push(...spread);
-        //newState = newState.concat(spread);
       });
 
       newState.sort((prev, next) => sortCriteria(prev, next));
-      const daysToPush = diffStates(state, newState);
-      setTimeout(() => {
-        action.callback(daysToPush);
-      }, DEFERRAL_TIME);
       return newState;
     }
     //
@@ -147,17 +78,13 @@ export function reducerEvents(
         }
         const spread = eventSpreader(toReplace);
         //in each iteration in filtering some part of the original state and injecting something new
-        newState = newState.filter((event) => event.id !== toReplace.id);
         toReplace.type = "roothead";
+        newState = newState.filter((event) => event.id !== toReplace.id);
         newState.push(toReplace);
         newState = newState.concat(spread);
       });
 
       newState.sort((prev, next) => sortCriteria(prev, next));
-      const daysToPush = diffStates(state, newState);
-      setTimeout(() => {
-        action.callback(daysToPush);
-      }, DEFERRAL_TIME);
       return newState;
     }
     //
@@ -167,11 +94,6 @@ export function reducerEvents(
       action.payload.forEach((toDelete) => {
         newState = newState.filter((event) => event.id !== toDelete.id);
       });
-      diffStates(state, newState);
-      const daysToPush = diffStates(state, newState);
-      setTimeout(() => {
-        action.callback(daysToPush);
-      }, DEFERRAL_TIME);
       return newState;
     }
     //

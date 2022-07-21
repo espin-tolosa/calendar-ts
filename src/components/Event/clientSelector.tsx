@@ -1,6 +1,5 @@
 import * as StyledEvent from "./tw";
 import { fetchEvent } from "../../utils/fetchEvent";
-import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { useEventDispatch } from "../../hooks/useEventsState";
 import { useControllerDispatch } from "../../hooks/useController";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
@@ -15,7 +14,6 @@ export type ClientSelector = {
 export function EventClientSelector(props: ClientSelector): JSX.Element {
   const clientStyles = useClientsStyles();
   const eventDispatcher = useEventDispatch();
-  const pushDaysDispatcher = usePushedDaysDispatcher();
   const controllerStateDispatch = useControllerDispatch();
   const updateClient = (clientIterator: string) => {
     fetchEvent("PUT", { ...props.event, client: clientIterator });
@@ -23,13 +21,21 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
     eventDispatcher({
       type: "update",
       payload: [{ ...props.event, client: clientIterator }],
-      callback: pushDaysDispatcher,
     });
 
     controllerStateDispatch({
       type: "setId",
       payload: { id: props.event.id },
     });
+
+    setTimeout(() => {
+      console.log("Reset id", props.event);
+
+      controllerStateDispatch({
+        type: "setId",
+        payload: { id: 0 },
+      });
+    }, 2000);
   };
 
   const user = useToken();

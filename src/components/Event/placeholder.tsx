@@ -13,15 +13,8 @@ interface PlaceHolder {
   setTextEvent: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export function Placeholder_Debug({
-  index,
-  event,
-  eventRef,
-  textArea,
-  setTextArea,
-  textEvent,
-  setTextEvent,
-}: PlaceHolder) {
+//! TODO: Compare placeholder debug component with non-debug version to get the next version
+export function Placeholder_Debug({ index, event, eventRef }: PlaceHolder) {
   const [state, setState] = useState<{ height: string }>({ height: "3.5rem" });
   const week = DateService.GetWeekRangeOf(event.start);
   const eventsOfWeek = useEventState(week);

@@ -1,20 +1,12 @@
-import {
-  createRef,
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { createRef, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
 import { DateService } from "../../utils/Date";
 import { useHoverEvent, useStyles } from "../../components/Event/logic";
-import { useEventState, useGetEventFamily } from "../../hooks/useEventsState";
+import { useGetEventFamily } from "../../hooks/useEventsState";
 import { EventCard, EventTail } from "../../components/Event/eventCard";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
 import { DragHandlers } from "./dragHandlers";
 import { Placeholder_Debug } from "./placeholder";
-import { debug } from "console";
 
 interface Event {
   event: jh.event;
@@ -127,60 +119,6 @@ interface EventHolder {
   textEvent: number;
   setTextEvent: React.Dispatch<React.SetStateAction<number>>;
 }
-
-export const EventHolder_Debug = ({
-  event,
-  id,
-  textArea,
-  setTextArea,
-  textEvent,
-  setTextEvent,
-}: EventHolder) => {
-  const eventRef = useRef<HTMLDivElement>();
-  const [state, setState] = useState({ height: "10rem" });
-  const week = DateService.GetWeekRangeOf(event.start);
-
-  //useLayoutEffect(() => {
-  //  const eventsRefsOfWeek = eventsOfWeek.filter((e) => {
-  //    if (typeof event.mutable === "object") {
-  //      debugger;
-  //    }
-  //    if (typeof e.mutable === "object" && typeof event.mutable === "object") {
-  //      return e.mutable.index === event.mutable.index;
-  //      //return true;
-  //    } else {
-  //      return false;
-  //    }
-  //  }); //!Bug solved: e.mutable is undefined
-
-  //     .map((e) => {
-  //       if (typeof e.mutable === "object") {
-  //         return e.mutable.eventRef.clientHeight;
-  //       } else {
-  //         return 0;
-  //       }
-  //     });
-  //   if (eventsRefsOfWeek.length !== 0) {
-  //     const maxH = Math.max(...eventsRefsOfWeek);
-  //     setState({ height: `${maxH}px` });
-  //     if (typeof event.mutable === "object") {
-  //       event.mutable.height = `${maxH}`;
-  //     }
-  //   }
-  //}, []);
-
-  return (
-    <div className="bg-red-200">
-      <StyledEvent.TWflexContainer_Holder ref={eventRef}>
-        <StyledEvent.TWplaceholder
-          style={{ height: event.mutable?.height + "px" }}
-        >
-          {event.id + " : " + event.mutable?.index}
-        </StyledEvent.TWplaceholder>
-      </StyledEvent.TWflexContainer_Holder>
-    </div>
-  );
-};
 
 export const EventHolder = ({
   event,

@@ -7,7 +7,6 @@ import {
 import { useControllerDispatch } from "../hooks/useController";
 import { useControllerDispatchDates } from "../hooks/useControllerDate";
 import { useEventDispatch } from "../hooks/useEventsState";
-import { usePushedDaysDispatcher } from "../hooks/usePushDays";
 import { fetchEvent } from "../utils/fetchEvent";
 
 // Custom-hook: useGethCancel
@@ -29,13 +28,11 @@ export function useGethCancel() {
   const dispatchController = useControllerDispatch();
   const eventDispatcher = useEventDispatch();
   const dispatchControllerDates = useControllerDispatchDates();
-  const pushDaysDispatcher = usePushedDaysDispatcher();
   return () => {
     setEventController(null);
     eventDispatcher({
       type: "delete",
       payload: [{ ...eventSelected, id: EventClass.getUnusedId() }], //TODO: delete temporary event state with un-fetched events, like press Esc before Save a new event
-      callback: pushDaysDispatcher,
     });
 
     dispatchController({
@@ -63,7 +60,6 @@ export function useGethCancel() {
 
 export function useGethDeleteEvent(eventSelected: jh.event): () => void {
   const eventDispatcher = useEventDispatch();
-  const pushDaysDispatcher = usePushedDaysDispatcher();
 
   // First time I'm able to catch error Failed to Fetch
   // it needs async function to get caught
@@ -84,7 +80,6 @@ export function useGethDeleteEvent(eventSelected: jh.event): () => void {
     eventDispatcher({
       type: "delete",
       payload: [eventSelected],
-      callback: pushDaysDispatcher,
     });
 
     //This try to fetch 10 times before refresh the web page

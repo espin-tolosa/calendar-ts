@@ -2,13 +2,11 @@ import { nullEvent } from "../interfaces";
 import { fetchEvent } from "../utils/fetchEvent";
 import { zeroPadd } from "../utils/zeroPadd";
 import { useEffect } from "react";
-import { usePushedDaysDispatcher } from "../hooks/usePushDays";
 import { useEventDispatch } from "../hooks/useEventsState";
 import { useCleanSession } from "../hooks/useCleanSession";
 
 export const useGetAllEventsFrom = ({ year, month }: jh.date.monthData) => {
   const start = `${year}-${zeroPadd(month)}-01`;
-  const pushDatesDispatcher = usePushedDaysDispatcher();
   const cleanSession = useCleanSession();
 
   const eventsDispatcher = useEventDispatch();
@@ -25,7 +23,6 @@ export const useGetAllEventsFrom = ({ year, month }: jh.date.monthData) => {
         eventsDispatcher({
           type: "syncDB",
           payload: state,
-          callback: pushDatesDispatcher,
         });
       } catch {
         setTimeout(() => {

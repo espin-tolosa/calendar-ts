@@ -1,6 +1,5 @@
 import { DateService } from "../../utils/Date";
 import { useEventDispatch } from "../../hooks/useEventsState";
-import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { fetchEvent_Day } from "../../utils/fetchEvent";
 import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
 
@@ -13,7 +12,6 @@ export const useOnDragEnter = () => {
   }
   // const temporaryEventDispatcher = useTemporaryEventDispatcher();
   const eventDispatcher = useEventDispatch();
-  const pushDaysDispatcher = usePushedDaysDispatcher();
 
   return (date: jh.date.representation, dndEvent: jh.event) => {
     const dndEventRef = { ...dndEvent };
@@ -50,7 +48,6 @@ export const useOnDragEnter = () => {
     eventDispatcher({
       type: "update",
       payload: [{ ...dndEventRef }],
-      callback: pushDaysDispatcher,
     });
     setDnDEventRef(dndEventRef);
   };

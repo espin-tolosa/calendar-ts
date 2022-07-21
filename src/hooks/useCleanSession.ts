@@ -33,9 +33,6 @@ export const useCleanSession = () => {
     dispatchEvent({
       type: "unmount",
       payload: [nullEvent()],
-      callback: () => {
-        return;
-      },
     });
   }, []);
 

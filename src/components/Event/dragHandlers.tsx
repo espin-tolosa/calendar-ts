@@ -3,7 +3,6 @@ import {
   useEventDispatch,
   useGetEventFamily,
 } from "../../hooks/useEventsState";
-import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
 import { nullEvent } from "../../interfaces";
 import { useGethDeleteEvent } from "../../api/handlers";
@@ -42,7 +41,6 @@ export function DragHandlers({
 
   //edit mode
   const eventDispatcher = useEventDispatch();
-  const pushDaysDispatcher = usePushedDaysDispatcher();
 
   const setDnDEventRef = useSetDnDEventRef();
   const dndEvent = useDnDEventRef();
@@ -66,7 +64,6 @@ export function DragHandlers({
       eventDispatcher({
         type: "tonull",
         payload: [{ ...event }],
-        callback: pushDaysDispatcher,
       });
 
       //setLocalIsDragging(true);
@@ -79,7 +76,6 @@ export function DragHandlers({
     eventDispatcher({
       type: "fromnull",
       payload: [{ ...dndEvent }],
-      callback: pushDaysDispatcher,
     });
   };
   return (

@@ -3,7 +3,6 @@ import * as StyledEvent from "./tw";
 
 import { fetchEvent } from "../../utils/fetchEvent";
 import { useEventDispatch } from "../../hooks/useEventsState";
-import { usePushedDaysDispatcher } from "../../hooks/usePushDays";
 import { useToken } from "@/hooks/useToken";
 
 export type TextArea = {
@@ -21,7 +20,6 @@ export const EventTextArea = ({
 }: TextArea) => {
   const textRef = useRef<HTMLSpanElement>(null);
   const eventDispatcher = useEventDispatch();
-  const pushDaysDispatcher = usePushedDaysDispatcher();
 
   //console.log(event.job);
 
@@ -87,7 +85,6 @@ export const EventTextArea = ({
           eventDispatcher({
             type: "update",
             payload: [{ ...event, job }],
-            callback: pushDaysDispatcher,
           });
 
           setTextArea(0);
@@ -106,7 +103,6 @@ onClick={(e) => {
   eventDispatcher({
     type: "update",
     payload: [{ ...event, job: "" }],
-    callback: pushDaysDispatcher,
   });
 }}
 onKeyDown={(e) => {
@@ -116,7 +112,6 @@ onKeyDown={(e) => {
     eventDispatcher({
       type: "update",
       payload: [{ ...event, job }],
-      callback: pushDaysDispatcher,
     });
     e.preventDefault();
     e.stopPropagation();
