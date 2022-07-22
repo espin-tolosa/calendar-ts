@@ -16,7 +16,6 @@ export const useOnDragEnter = () => {
   return (date: jh.date.representation, dndEvent: jh.event) => {
     const dndEventRef = { ...dndEvent };
     //!const isWeekend = DateService.IsWeekend(date);
-    console.log("Enter dnd event", dndEventRef);
     //if (isWeekend) {
     //  return;
     //}
@@ -43,7 +42,6 @@ export const useOnDragEnter = () => {
     //temporaryEventDispatcher(newEvent);
     //-------------------------------------------------------------------------------------------
 
-    console.log("Fetching to", dndEventRef);
     fetchEvent_Day("PUT", dndEventRef);
     eventDispatcher({
       type: "update",

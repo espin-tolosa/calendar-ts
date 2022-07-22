@@ -6,7 +6,7 @@ import { useGetEventFamily } from "../../hooks/useEventsState";
 import { EventCard, EventTail } from "../../components/Event/eventCard";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
 import { DragHandlers } from "./dragHandlers";
-import { Placeholder_Debug } from "./placeholder";
+import { Placeholder } from "./placeholder";
 
 interface Event {
   event: jh.event;
@@ -92,7 +92,7 @@ export const Event = ({
           {
             //!In charged of root spacing
           }
-          <Placeholder_Debug
+          <Placeholder
             index={index}
             event={event}
             eventRef={eventRef}
@@ -129,7 +129,19 @@ export const EventHolder = ({
   setTextEvent,
 }: EventHolder) => {
   const [force, setForce] = useState(0);
-  const [parent] = useGetEventFamily(event);
+  const [parent, closestTail, family] = useGetEventFamily(event);
+  if (event.type.includes("holder")) {
+    console.log(
+      "Event holder",
+      event.mutable?.eventRef,
+      parent.mutable?.eventRef,
+      closestTail.mutable?.eventRef
+    );
+    //const familyLog = family.map((f) => {
+    //  return { start: f.start, type: f.type, ref: f.mutable?.eventRef };
+    //});
+    //console.log("family", familyLog);
+  }
   const eventRef = useRef<HTMLDivElement>();
   const [style, setStyle] = useState({ height: "2rem" });
   //const [state, setState] = useState<{ height: string }>({ height: "0px" });

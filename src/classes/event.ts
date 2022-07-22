@@ -1,5 +1,6 @@
 // Type of event data
 
+import { DateService } from "@/utils/Date";
 import { nullEvent } from "../interfaces";
 
 // Parent: has all its attributes matched with some database entry
@@ -41,6 +42,21 @@ export class EventClass {
       family.find((e) => e.id === parentId && e.type === "roothead") ||
       nullEvent()
     );
+  }
+  static getClosestTail(family: Array<jh.event>, event: jh.event) {
+    return (
+      family
+        .filter((e) => e.type === "tailhead")
+        .map((tail) => {
+          const distance = DateService.DaysFrom(tail.start, event.start);
+
+          return { distance, tail };
+        })
+        .filter((tail) => tail.distance > 0)
+        .sort((prev, next) => prev.distance - next.distance)
+        .at(0)?.tail || nullEvent()
+    );
+    //return all events that has the same parentId
   }
 
   static isNull(event: jh.event) {

@@ -14,7 +14,7 @@ interface PlaceHolder {
 }
 
 //! TODO: Compare placeholder debug component with non-debug version to get the next version
-export function Placeholder_Debug({ index, event, eventRef }: PlaceHolder) {
+function Placeholder_Deb({ index, event, eventRef }: PlaceHolder) {
   const [state, setState] = useState<{ height: string }>({ height: "3.5rem" });
   const week = DateService.GetWeekRangeOf(event.start);
   const eventsOfWeek = useEventState(week);
@@ -73,7 +73,7 @@ export function Placeholder_Debug({ index, event, eventRef }: PlaceHolder) {
   );
 }
 
-export function Placeholder({
+function Placeholder_Dev({
   index,
   event,
   eventRef,
@@ -172,10 +172,12 @@ export function Placeholder({
   //console.log("Style:", style, event);
 
   return (
-    <div className="border-4 border-green-500">
+    <div className="outline outline-4 outline-green-800">
       <StyledEvent.TWplaceholder style={style}>
         {"placeholder"}
       </StyledEvent.TWplaceholder>
     </div>
   );
 }
+
+export const Placeholder = Placeholder_Dev;

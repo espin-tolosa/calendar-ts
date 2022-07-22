@@ -42,10 +42,6 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
     <div className="flex flex-col gap-1 my-5">
       {sortedEvents.map((event, position) => {
         const keyValue = `${event.id}-${event.type}`;
-        if (isPlaceholder(event) && DateService.IsWeekend(event.start)) {
-          return <div key={`e-${keyValue}`} />;
-          //debugger;
-        }
         if (isPlaceholder(event)) {
           //! incharged of spaned spacing
           return (

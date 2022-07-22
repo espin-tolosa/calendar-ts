@@ -29,7 +29,7 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
     });
 
     setTimeout(() => {
-      console.log("Reset id", props.event);
+      //console.log("Reset id", props.event);
 
       controllerStateDispatch({
         type: "setId",

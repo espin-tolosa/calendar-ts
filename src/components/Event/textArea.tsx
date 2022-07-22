@@ -71,7 +71,7 @@ export const EventTextArea = ({
             refNode.current?.clientHeight || textRef.current?.clientHeight || 0;
 
           //debugger;
-          console.log("Typing", event.id, result);
+          //console.log("Typing", event.id, result);
           setTextEvent(event.id);
           setTextArea(result);
 

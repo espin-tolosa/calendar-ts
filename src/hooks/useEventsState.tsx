@@ -56,7 +56,9 @@ export function reducerEvents(
         }
 
         //Recompute the new representation of that event
-        const spread = eventSpreader(event);
+        const spread = eventSpreader(event).filter(
+          (e) => !DateService.IsWeekend(e.start)
+        );
         newState.push(event);
         newState.push(...spread);
       });
@@ -76,7 +78,9 @@ export function reducerEvents(
           //skip by not doing nothing for that event
           return;
         }
-        const spread = eventSpreader(toReplace);
+        const spread = eventSpreader(toReplace).filter(
+          (e) => !DateService.IsWeekend(e.start)
+        );
         //in each iteration in filtering some part of the original state and injecting something new
         toReplace.type = "roothead";
         newState = newState.filter((event) => event.id !== toReplace.id);
@@ -233,7 +237,8 @@ export function useGetEventFamily(event: jh.event) {
   const family = events.filter((e) => e.id === event.id);
 
   const parent = EventClass.getParentEvent(family);
-  return [parent, family] as [jh.event, Array<jh.event>];
+  const closestTail = EventClass.getClosestTail(family, event);
+  return [parent, closestTail, family] as [jh.event, jh.event, Array<jh.event>];
 }
 
 // Context Dispatcher of Event Reducer
