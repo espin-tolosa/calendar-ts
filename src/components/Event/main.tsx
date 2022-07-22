@@ -130,18 +130,6 @@ export const EventHolder = ({
 }: EventHolder) => {
   const [force, setForce] = useState(0);
   const [parent, closestTail, family] = useGetEventFamily(event);
-  if (event.type.includes("holder")) {
-    console.log(
-      "Event holder",
-      event.mutable?.eventRef,
-      parent.mutable?.eventRef,
-      closestTail.mutable?.eventRef
-    );
-    //const familyLog = family.map((f) => {
-    //  return { start: f.start, type: f.type, ref: f.mutable?.eventRef };
-    //});
-    //console.log("family", familyLog);
-  }
   const eventRef = useRef<HTMLDivElement>();
   const [style, setStyle] = useState({ height: "2rem" });
   //const [state, setState] = useState<{ height: string }>({ height: "0px" });
@@ -190,19 +178,23 @@ export const EventHolder = ({
 
   if (isChildren) {
     return (
-      <StyledEvent.TWflexContainer_Holder ref={eventRef}>
-        <StyledEvent.TWplaceholder style={style}>
-          {event.id + " : " + event.mutable?.index}
-        </StyledEvent.TWplaceholder>
-      </StyledEvent.TWflexContainer_Holder>
+      <div className="outline outline-2 outline-green-400">
+        <StyledEvent.TWflexContainer_Holder ref={eventRef}>
+          <StyledEvent.TWplaceholder style={style}>
+            {event.id + " : " + event.mutable?.index}
+          </StyledEvent.TWplaceholder>
+        </StyledEvent.TWflexContainer_Holder>
+      </div>
     );
   } else {
     return (
-      <StyledEvent.TWflexContainer_Holder ref={eventRef}>
-        <StyledEvent.TWplaceholder style={style}>
-          {event.id + " : " + event.mutable?.index}
-        </StyledEvent.TWplaceholder>
-      </StyledEvent.TWflexContainer_Holder>
+      <div className="outline outline-2 outline-green-400">
+        <StyledEvent.TWflexContainer_Holder ref={eventRef}>
+          <StyledEvent.TWplaceholder style={style}>
+            {event.id + " : " + event.mutable?.index}
+          </StyledEvent.TWplaceholder>
+        </StyledEvent.TWflexContainer_Holder>
+      </div>
     );
   }
 };
