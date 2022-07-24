@@ -49,6 +49,7 @@ export async function fetchEvent_Day(
 
   return await response.json();
 }
+//TODO: add a callback to reset the state of a failed optimistic fetch operation
 export async function fetchEvent(
   action: CustomTypes.OptionsEventsAPI,
   event: jh.event = nullEvent()
