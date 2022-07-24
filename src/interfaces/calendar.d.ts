@@ -54,8 +54,6 @@ declare namespace CustomTypes {
     | "syncDB"
     | "delete"
     | "update"
-    | "override"
-    | "changeId"
     | "unmount"
     | "tonull"
     | "fromnull";

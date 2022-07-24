@@ -66,7 +66,7 @@ export function reducerEvents(
       newState.sort((prev, next) => sortCriteria(prev, next));
       return newState;
     }
-    //
+
     //I start with the complete state, to then filter by id and add changes
     case "update": {
       let newState = state.slice();
@@ -91,57 +91,13 @@ export function reducerEvents(
       newState.sort((prev, next) => sortCriteria(prev, next));
       return newState;
     }
-    //
+
     case "delete": {
       let newState = state.slice();
       //Clean state is the state without all the events targeting the id to replace
       action.payload.forEach((toDelete) => {
         newState = newState.filter((event) => event.id !== toDelete.id);
       });
-      return newState;
-    }
-    //
-
-    //Strict replace by id: update the complete event state only if such event is found
-    case "override": {
-      const toReplace = action.payload[0];
-      const cleanState = state.filter((event) => event.id !== toReplace.id);
-
-      //State before and after cleaning is the same, event is not in state so won't add
-      const affectedEvents = state.length - cleanState.length;
-      if (affectedEvents === 0) {
-        return [...state];
-      }
-
-      //Recompute the new representation of that event
-      const spread = eventSpreader(toReplace);
-
-      //Append to previous cleaned state
-      const result = [...cleanState, toReplace, ...spread];
-
-      //Sort again
-      result.sort((prev, next) => sortCriteria(prev, next));
-      return result;
-    }
-
-    case "changeId": {
-      const origin = action.payload[0];
-
-      //Deep-cloning the array ref and the objects inside removing the origin
-      const newState = state
-        .filter((event) => event.id !== origin.id)
-        .map((event) => {
-          return { ...event };
-        });
-
-      //Scape if there is no temp event
-      const target = newState.find((event) => event.id === 123456789);
-      if (!target) {
-        return state;
-      }
-
-      target.id = action.payload[0].id;
-
       return newState;
     }
 
