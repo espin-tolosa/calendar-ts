@@ -61,16 +61,13 @@ export const EventTextArea = ({
           if (e.code === "Enter" || e.code === "Escape") {
             e.currentTarget.blur();
           }
-
+        }}
+        onKeyUp={() => {
           const result =
             refNode.current?.clientHeight || textRef.current?.clientHeight || 0;
 
           setTextEvent(event.id);
           setTextArea(result);
-
-          if (typeof event.mutable === "object") {
-            event.mutable.height = "1500px";
-          }
         }}
         onBlur={(e) => {
           const job = (e.currentTarget.textContent || "").trim();
