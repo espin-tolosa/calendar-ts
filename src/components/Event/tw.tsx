@@ -45,6 +45,8 @@ ${({ $isHover, $isChildren }: { $isHover: boolean; $isChildren: boolean }) =>
   ""}
 `;
 
+export const TWtextArea = tw.span`rounded-[5px] w-full p-1 caret-black focus:bg-green-200 print:text-xs text-sm`;
+
 export const TWextend = tw.div<{ $cells: number }>`
 	mt-[1px] absolute text-transparent extend-event-e min-w-[4.14%] z-ExtendEvent h-12
 

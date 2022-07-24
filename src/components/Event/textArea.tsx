@@ -2,8 +2,8 @@ import { useRef } from "react";
 import * as StyledEvent from "./tw";
 
 import { fetchEvent } from "../../utils/fetchEvent";
-import { useEventDispatch } from "../../hooks/useEventsState";
-import { useToken } from "@/hooks/useToken";
+import { useEventDispatch, useEventState } from "../../hooks/useEventsState";
+import { useToken } from "../../hooks/useToken";
 
 export type TextArea = {
   event: jh.event;
@@ -21,8 +21,6 @@ export const EventTextArea = ({
   const textRef = useRef<HTMLSpanElement>(null);
   const eventDispatcher = useEventDispatch();
 
-  //console.log(event.job);
-
   const user = useToken();
   if (event.job === "") {
     return <></>;
@@ -31,18 +29,15 @@ export const EventTextArea = ({
     //TODO: unify span component into StyledEvent.TWjobDesciption
     return (
       <StyledEvent.TWjobContent>
-        <span className="textarea rounded-[5px] w-full p-1 caret-black focus:bg-green-200 print:text-xs text-sm">
-          {event.job}
-        </span>
+        <StyledEvent.TWtextArea>{event.job}</StyledEvent.TWtextArea>
       </StyledEvent.TWjobContent>
     );
   }
 
   return (
     <StyledEvent.TWjobContent>
-      <span
+      <StyledEvent.TWtextArea
         ref={textRef}
-        className="textarea rounded-[5px] w-full p-1 caret-black focus:bg-green-200 print:text-xs text-sm"
         role="textbox"
         contentEditable={true}
         //TODO: read this to gain control over the component: https://goshacmd.com/controlled-vs-uncontrolled-inputs-react/
@@ -70,8 +65,6 @@ export const EventTextArea = ({
           const result =
             refNode.current?.clientHeight || textRef.current?.clientHeight || 0;
 
-          //debugger;
-          //console.log("Typing", event.id, result);
           setTextEvent(event.id);
           setTextArea(result);
 
@@ -80,7 +73,8 @@ export const EventTextArea = ({
           }
         }}
         onBlur={(e) => {
-          const job = e.currentTarget.textContent || "";
+          const job = (e.currentTarget.textContent || "").trim();
+
           fetchEvent("PUT", { ...event, job });
           eventDispatcher({
             type: "update",
@@ -92,7 +86,7 @@ export const EventTextArea = ({
         }}
       >
         {event.job}
-      </span>
+      </StyledEvent.TWtextArea>
     </StyledEvent.TWjobContent>
   );
 };
