@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { styles } from "../../components/Day/tw";
 import { MemoEventsThrower } from "../../components/EventsThrower/main";
 import { DateService } from "../../utils/Date";

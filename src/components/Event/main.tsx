@@ -82,6 +82,7 @@ export const Event = ({
                 event={event}
                 refNode={createRef()}
                 style={style?.static || {}}
+                textArea={textArea}
                 setTextArea={setTextArea}
                 setTextEvent={setTextEvent}
               />
@@ -120,7 +121,7 @@ interface EventHolder {
   setTextEvent: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const EventHolder = ({
+export const SpanHolders = ({
   event,
   id,
   textArea,
@@ -131,73 +132,73 @@ export const EventHolder = ({
   const [force, setForce] = useState(0);
   const [parent, closestTail, family] = useGetEventFamily(event);
   const eventRef = useRef<HTMLDivElement>();
-  const [style, setStyle] = useState({ height: "2rem" });
+  const [style, setStyle] = useState({ height: "0px" });
   //const [state, setState] = useState<{ height: string }>({ height: "0px" });
   //
-  useLayoutEffect(() => {
-    if (typeof eventRef.current !== "undefined") {
-      const h0 =
-        typeof parent.mutable === "object"
-          ? parseInt(parent.mutable.height.split("px")[0])
-          : eventRef.current.clientHeight;
-      const newState = { height: `${h0}` };
-      //const newState = { height: `${h0}px` };
-      event.mutable = {
-        height: newState.height,
-        eventRef: eventRef.current,
-        index: typeof parent.mutable === "object" ? parent.mutable.index : 0, //!Corrected bug: was using event.end wich is zero
-      };
-    }
-  }, [eventRef.current, event, event.mutable, force]);
+  // useLayoutEffect(() => {
+  //   if (typeof eventRef.current !== "undefined") {
+  //     const h0 =
+  //       typeof parent.mutable === "object"
+  //         ? parseInt(parent.mutable.height.split("px")[0])
+  //         : eventRef.current.clientHeight;
+  //     const newState = { height: `${h0}` };
+  //     //const newState = { height: `${h0}px` };
+  //     event.mutable = {
+  //       height: newState.height,
+  //       eventRef: eventRef.current,
+  //       index: typeof parent.mutable === "object" ? parent.mutable.index : 0, //!Corrected bug: was using event.end wich is zero
+  //     };
+  //   }
+  // }, [eventRef.current, event, event.mutable, force]);
 
-  useLayoutEffect(() => {
-    if (force === 0 && typeof event.mutable === "object") {
-      setTimeout(() => {
-        setForce(1);
-      }, 100);
-    }
-  }, [event.mutable]);
+  // useLayoutEffect(() => {
+  //   if (force === 0 && typeof event.mutable === "object") {
+  //     setTimeout(() => {
+  //       setForce(1);
+  //     }, 100);
+  //   }
+  // }, [event.mutable]);
 
-  const isChildren = event.type === "tailholder";
-  const tailState = { height: "1rem" };
+  // const isChildren = event.type === "tailholder";
+  // const tailState = { height: "1rem" };
 
-  useLayoutEffect(() => {
-    //debugger;
-    if (textEvent === event.id) {
-      setStyle({ height: `${textArea}px` });
-    } else {
-      const result = isChildren
-        ? tailState.height
-        : event.mutable?.height || "9rem";
-      if (event.client === "BDM") {
-        // debugger;
-      }
-      setStyle({ height: `${result}px` });
-    }
-  }, [force, textArea, textEvent, event.job]);
+  // useLayoutEffect(() => {
+  //   //debugger;
+  //   if (textEvent === event.id) {
+  //     setStyle({ height: `${textArea}px` });
+  //   } else {
+  //     const result = isChildren
+  //       ? tailState.height
+  //       : event.mutable?.height || "9rem";
+  //     if (event.client === "BDM") {
+  //       // debugger;
+  //     }
+  //     setStyle({ height: `${result}px` });
+  //   }
+  // }, [force, textArea, textEvent, event.job]);
 
-  if (isChildren) {
-    return (
-      <div className="outline outline-2 outline-green-400">
-        <StyledEvent.TWflexContainer_Holder ref={eventRef}>
-          <StyledEvent.TWplaceholder style={style}>
-            {event.id + " : " + event.mutable?.index}
-          </StyledEvent.TWplaceholder>
-        </StyledEvent.TWflexContainer_Holder>
-      </div>
-    );
-  } else {
-    return (
-      <div className="outline outline-2 outline-green-400">
-        <StyledEvent.TWflexContainer_Holder ref={eventRef}>
-          <StyledEvent.TWplaceholder style={style}>
-            {event.id + " : " + event.mutable?.index}
-          </StyledEvent.TWplaceholder>
-        </StyledEvent.TWflexContainer_Holder>
-      </div>
-    );
-  }
+  // if (isChildren) {
+  return (
+    <StyledEvent.TWplaceholder
+      style={style}
+      ref={eventRef}
+      className="outline-green-800"
+    >
+      {event.id + " : " + event.mutable?.index}
+    </StyledEvent.TWplaceholder>
+  );
+  //  } else {
+  //    return (
+  //      <div className="outline outline-2 outline-green-400">
+  //        <StyledEvent.TWflexContainer_Holder ref={eventRef}>
+  //          <StyledEvent.TWplaceholder style={style}>
+  //            {event.id + " : " + event.mutable?.index}
+  //          </StyledEvent.TWplaceholder>
+  //        </StyledEvent.TWflexContainer_Holder>
+  //      </div>
+  //    );
+  //  }
 };
 
 //export const MemoEventHolder = memo(EventHolder);
-export const MemoEventHolder = EventHolder;
+export const MemoEventHolder = SpanHolders;

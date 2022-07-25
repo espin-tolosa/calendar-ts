@@ -1,12 +1,13 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import * as StyledEvent from "./tw";
 
 import { fetchEvent } from "../../utils/fetchEvent";
-import { useEventDispatch, useEventState } from "../../hooks/useEventsState";
+import { useEventDispatch } from "../../hooks/useEventsState";
 import { useToken } from "../../hooks/useToken";
 
 export type TextArea = {
   event: jh.event;
+  textArea: number;
   setTextArea: React.Dispatch<React.SetStateAction<number>>;
   setTextEvent: React.Dispatch<React.SetStateAction<number>>;
   refNode: React.RefObject<HTMLDivElement>;
@@ -14,6 +15,7 @@ export type TextArea = {
 
 export const EventTextArea = ({
   event,
+  textArea,
   setTextArea,
   setTextEvent,
   refNode,
@@ -85,8 +87,10 @@ export const EventTextArea = ({
         }}
         onKeyUp={() => {
           const result = refNode.current?.clientHeight ?? 0;
-          setTextEvent(event.id);
-          setTextArea(result);
+          if (result !== textArea) {
+            setTextEvent(event.id);
+            setTextArea(result);
+          }
         }}
         onBlur={(e) => {
           const job = (e.currentTarget.textContent ?? "").trim();

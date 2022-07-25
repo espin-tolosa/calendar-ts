@@ -73,7 +73,7 @@ function Placeholder_Deb({ index, event, eventRef }: PlaceHolder) {
   );
 }
 
-function Placeholder_Dev({
+function RootHolder({
   index,
   event,
   eventRef,
@@ -82,9 +82,10 @@ function Placeholder_Dev({
   textEvent,
   setTextEvent,
 }: PlaceHolder) {
-  const [state, setState] = useState<{ height: string }>({ height: "3.5rem" });
+  const [style, setStyle] = useState<{ height: string }>({ height: "0px" });
   const week = DateService.GetWeekRangeOf(event.start);
   const eventsOfWeek = useEventState(week);
+
   useLayoutEffect(() => {
     if (
       eventRef != null &&
@@ -93,16 +94,15 @@ function Placeholder_Dev({
     ) {
       const allH = eventsOfWeek
         .filter((e) => {
-          if (
-            typeof e.mutable === "object" &&
-            typeof event.mutable === "object"
-          ) {
-            return (
-              e.mutable.index === event.mutable.index && e.type.includes("head")
-            );
-          } else {
-            return false;
-          }
+          return (
+            hasMutable(e) &&
+            hasMutable(event) &&
+            e.mutable.index === event.mutable.index &&
+            e.type.includes("head")
+          );
+          //return (
+          //  e.mutable.index === event.mutable.index && e.type.includes("head")
+          //);
         }) //!Bug solved: e.mutable is undefined
 
         .map((e) => {
@@ -112,9 +112,6 @@ function Placeholder_Dev({
             return 0;
           }
         });
-      if (event.client === "BDM") {
-        //debugger;
-      }
       event.mutable = {
         height: `${Math.max(...allH)}px`,
         eventRef: eventRef.current,
@@ -128,12 +125,9 @@ function Placeholder_Dev({
       const sameRow = eventsOfWeek
 
         .filter((e) => {
-          if (
-            typeof e.mutable === "object" &&
-            typeof event.mutable === "object"
-          ) {
-            return e.mutable.index === event.mutable.index;
-          }
+          return hasMutable(e) && hasMutable(event)
+            ? e.mutable.index === event.mutable.index
+            : false;
         }) //!Bug solved: e.mutable is undefined
 
         .filter((e) => e.type.includes("head"));
@@ -158,26 +152,28 @@ function Placeholder_Dev({
         //event.mutable.height = newState.height;
       }
 
-      if (!isChildren) {
-        setState(newState);
-      }
+      //if (!isChildren) {
+      setStyle(newState);
+      //}
     }
   }, [eventRef.current, event.mutable?.height, event, textArea, textEvent]);
 
   const isChildren = event.type === "tailhead";
   const tailState = { height: "2.95rem" };
 
-  const style = isChildren ? tailState : state;
-
   //console.log("Style:", style, event);
 
   return (
-    <div className="outline outline-4 outline-green-800">
-      <StyledEvent.TWplaceholder style={style}>
-        {"placeholder"}
-      </StyledEvent.TWplaceholder>
-    </div>
+    <StyledEvent.TWplaceholder style={style} className="outline-red-900">
+      {"placeholder"}
+    </StyledEvent.TWplaceholder>
   );
 }
 
-export const Placeholder = Placeholder_Dev;
+export const Placeholder = RootHolder;
+const isNullReactRef = (ref: React.MutableRefObject<unknown>) => {
+  return ref === null || ref.current === null;
+};
+
+const hasMutable = (e: jh.event): e is Required<jh.event> =>
+  typeof e.mutable === "object";

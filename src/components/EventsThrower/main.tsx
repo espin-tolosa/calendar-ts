@@ -3,8 +3,6 @@ import { useEventState } from "../../hooks/useEventsState";
 import { bubblingAlgo } from "../../components/EventsThrower/bubblingAlgoUtils";
 import { sendEndReferencesToPlaceholders } from "../../components/EventsThrower/sendReferencesToPlaceholders";
 import { isPlaceholder } from "../../utils/ValidateEvent";
-import { memo } from "react";
-import { DateService } from "@/utils/Date";
 
 interface EventProps {
   day: string;
@@ -39,7 +37,7 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
   const sortedEvents = bubblingAlgo(dayEventsFiltered);
 
   return (
-    <div className="flex flex-col gap-1 my-5">
+    <div className="flex flex-col my-10">
       {sortedEvents.map((event, position) => {
         const keyValue = `${event.id}-${event.type}`;
         if (isPlaceholder(event)) {

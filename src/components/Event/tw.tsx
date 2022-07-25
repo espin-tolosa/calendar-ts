@@ -6,10 +6,10 @@ flex whitespace-normal break-words overflow-hidden overflow-ellipsis
 
 //I needed to create this component which is a copy of flexContainer just to change z-index and give its corresponding holder behavior
 export const TWflexContainer_Holder = tw.div`
-  flex flex-col justify-start my-1 transition-colors
+  flex flex-col justify-start transition-colors
 	`;
 export const TWflexContainer = tw.div`
-  flex flex-col justify-start my-1 transition-colors
+  flex flex-col justify-start transition-colors
 	`;
 
 export const TWtextContent = tw.div<{
@@ -18,8 +18,6 @@ export const TWtextContent = tw.div<{
   $isChildren: boolean;
   $client: string;
 }>`
-
-
 flex flex-row gap-1 items-center absolute
 whitespace-nowrap overflow-hidden overflow-ellipsis
 active:text-black ml-[0.1rem] transition-colors
@@ -88,7 +86,8 @@ export const TWextend_Left = tw.div<{ $cells: number }>`
 `;
 
 export const TWplaceholder = tw.div`
-	text-transparent
+	${() =>
+    import.meta.env.MODE === "development" ? "outline outline-2 mx-1 " : ""}
 `;
 
 export const TWStyledSelect = tw.select`
