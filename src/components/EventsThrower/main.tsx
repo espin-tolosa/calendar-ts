@@ -37,7 +37,7 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
   const sortedEvents = bubblingAlgo(dayEventsFiltered);
 
   return (
-    <div className="flex flex-col my-10">
+    <div className="flex flex-col my-10 gap-4">
       {sortedEvents.map((event, position) => {
         const keyValue = `${event.id}-${event.type}`;
         if (isPlaceholder(event)) {

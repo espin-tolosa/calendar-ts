@@ -131,7 +131,7 @@ export const SpanHolders = ({
 }: EventHolder) => {
   const [parent, closestTail, family] = useGetEventFamily(event);
   const eventRef = useRef<HTMLDivElement>(null);
-  const [style, setStyle] = useState<{ height: string }>({ height: "200px" });
+  const [style, setStyle] = useState<{ height: string }>({ height: "0px" });
 
   useLayoutEffect(() => {
     if (eventRef.current != null) {
@@ -149,32 +149,24 @@ export const SpanHolders = ({
 
   const week = DateService.GetWeekRangeOf(event.start);
   const eventsOfWeek = useEventState(week);
+
   useEffect(() => {
-    if (typeof event.mutable === "object") {
-      const sameRow = eventsOfWeek
-
-        .filter((e) => {
-          return hasMutable(e) && hasMutable(event)
-            ? e.mutable.index === event.mutable.index
-            : false;
-        }) //!Bug solved: e.mutable is undefined
-
-        .filter((e) => e.type.includes("head"));
-
-      const allH = sameRow.map((r): number => {
-        return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
-      });
-
-      const textAreaH = textEvent === event.id ? textArea : 0;
-
-      const maxH = Math.max(...allH);
-      const newState = { height: `${maxH}px` };
-      if (event.start === "2022-07-12") {
-        console.log("Here");
-      }
-
-      setStyle(newState);
+    if (!hasMutable(event)) {
+      return;
     }
+
+    const sameRow = eventsOfWeek
+      .filter((e): e is Required<jh.event> => hasMutable(e))
+      .filter((e) => parseInt(event.end) === e.mutable.index);
+
+    const allH = sameRow.map((r): number => {
+      return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
+    });
+
+    const maxH = Math.max(...allH);
+    const newState = { height: `${maxH}px` };
+
+    setStyle(newState);
   }, [eventRef.current, event, textArea, textEvent]);
 
   if (isChildren) {

@@ -46,21 +46,20 @@ function RootHolder({
           return hasMutable(e) && hasMutable(event)
             ? e.mutable.index === event.mutable.index
             : false;
-        }) //!Bug solved: e.mutable is undefined
+        })
 
         .filter((e) => e.type.includes("head"));
 
       if (event.type === "roothead") {
-        const allH = sameRow.map((r): number => {
-          return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
-        });
-        const textAreaH = textEvent === event.id ? textArea : 0;
-        const maxH = Math.max(...allH, textAreaH);
+        const allH = sameRow
+          .filter((e) => e.type !== "tailhead") //!Bug solved: tailhead has its refs pointing to roothead, so it they have to be removed from Height computation, also they do not contribute to this size as they just compsume it
+          .map((r): number => {
+            return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
+          });
+        const maxH = Math.max(...allH);
         const newState = { height: `${maxH}px` };
         setStyle(newState);
       } else {
-        console.log(event.id);
-        console.log(sameRow.filter((e) => e.id !== event.id));
         const allH = sameRow
           .filter((e) => e.id !== event.id)
           .map((r): number => {
