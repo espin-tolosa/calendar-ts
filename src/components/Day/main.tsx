@@ -1,10 +1,17 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { styles } from "../../components/Day/tw";
 import { MemoEventsThrower } from "../../components/EventsThrower/main";
 import { DateService } from "../../utils/Date";
 import { usePostQuery } from "../../api/queries";
 import { useDoubleClick } from "../../hooks/useDoubleClick";
 import { useToken } from "@/hooks/useToken";
+import { useEventDispatch } from "@/hooks/useEventsState";
 
 interface Day {
   daynumber: number;
@@ -44,8 +51,8 @@ function Day({
 
   const onChange = (entries: Array<IntersectionObserverEntry>) => {
     if (entries[0].isIntersecting) {
-      setHasShowedUp(true);
       setVisible(true);
+      setHasShowedUp(true);
     } else {
       if (thisDay.current !== null) {
         height.current = thisDay.current.clientHeight;
@@ -60,7 +67,7 @@ function Day({
     threshold: 0,
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     thisDay.current !== null && observer.observe(thisDay.current);
 
     return () => {

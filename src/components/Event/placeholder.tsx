@@ -38,7 +38,7 @@ function RootHolder({
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof event.mutable === "object") {
       const sameRow = eventsOfWeek
 

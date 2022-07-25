@@ -36,11 +36,8 @@ export const EventTextArea = ({
         type: "update",
         payload: [{ ...event, job }],
       });
-
-      //   setTextArea(0);
-      //   setTextEvent(0);
     };
-  }, []);
+  }, [event]);
 
   const user = useToken();
   if (event.job === "") {
@@ -113,27 +110,3 @@ export const EventTextArea = ({
     </StyledEvent.TWjobContent>
   );
 };
-
-/*
-onClick={(e) => {
-  e.currentTarget.focus();
-  eventDispatcher({
-    type: "update",
-    payload: [{ ...event, job: "" }],
-  });
-}}
-onKeyDown={(e) => {
-  if (e.code === "Enter") {
-    const job = e.currentTarget.textContent || "";
-    fetchEvent("PUT", { ...event, job });
-    eventDispatcher({
-      type: "update",
-      payload: [{ ...event, job }],
-    });
-    e.preventDefault();
-    e.stopPropagation();
-    e.currentTarget.blur();
-  }
-}}
-
-*/

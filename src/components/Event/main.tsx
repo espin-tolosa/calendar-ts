@@ -2,7 +2,11 @@ import { createRef, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
 import { DateService } from "../../utils/Date";
 import { useHoverEvent, useStyles } from "../../components/Event/logic";
-import { useEventState, useGetEventFamily } from "../../hooks/useEventsState";
+import {
+  useEventDispatch,
+  useEventState,
+  useGetEventFamily,
+} from "../../hooks/useEventsState";
 import { EventCard, EventTail } from "../../components/Event/eventCard";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
 import { DragHandlers } from "./dragHandlers";
@@ -150,7 +154,7 @@ export const SpanHolders = ({
   const week = DateService.GetWeekRangeOf(event.start);
   const eventsOfWeek = useEventState(week);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!hasMutable(event)) {
       return;
     }
@@ -171,23 +175,17 @@ export const SpanHolders = ({
 
   if (isChildren) {
     return (
-      <StyledEvent.TWplaceholder
-        style={style}
-        ref={eventRef}
-        className="outline-green-800"
-      >
+      <StyledEvent.TWplaceholder style={style} ref={eventRef}>
         {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
     );
   } else {
     return (
-      <div className="outline outline-2 outline-green-400">
-        <StyledEvent.TWflexContainer_Holder ref={eventRef}>
-          <StyledEvent.TWplaceholder style={style}>
-            {event.id + " : " + event.mutable?.index}
-          </StyledEvent.TWplaceholder>
-        </StyledEvent.TWflexContainer_Holder>
-      </div>
+      <StyledEvent.TWflexContainer_Holder ref={eventRef}>
+        <StyledEvent.TWplaceholder style={style}>
+          {event.id + " : " + event.mutable?.index}
+        </StyledEvent.TWplaceholder>
+      </StyledEvent.TWflexContainer_Holder>
     );
   }
 };
