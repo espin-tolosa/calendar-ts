@@ -93,7 +93,12 @@ export const EventTextArea = ({
           }
         }}
         onBlur={(e) => {
-          const job = (e.currentTarget.textContent ?? "").trim();
+          const job = (e.currentTarget.textContent ?? "")
+            .trim()
+            .replaceAll("\n", " ");
+          if (job.includes("\n")) {
+            console.warn("Unaccepted");
+          }
           fetchEvent("PUT", { ...event, job });
           eventDispatcher({
             type: "update",

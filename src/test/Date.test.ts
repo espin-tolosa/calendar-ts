@@ -123,57 +123,6 @@ test("no append if end is before start", () => {
   expect(newState.length).toBe(0);
 });
 
-test("replace by id a single day event", () => {
-  const state: Array<jh.event> = [
-    {
-      id: 1,
-      client: "client2",
-      job: "testjob2",
-      start: "2022-03-04",
-      end: "2022-03-04",
-      type: "roothead",
-    },
-  ];
-  const action = genEventCall(
-    "override",
-    1,
-    "client2",
-    "testjob2",
-    "2022-03-04",
-    "2022-03-04"
-  );
-  const newState = reducerEvents(state, action);
-  expect(newState.length).toBe(1);
-  expectToBe(newState[0], action.payload[0]);
-});
-test("replace by id a multiple day event", () => {
-  const action = genEventCall(
-    "override",
-    1,
-    "client2",
-    "testjob2",
-    "2022-03-01",
-    "2022-03-01"
-  );
-
-  const newState = reducerEvents(state1Event, action);
-  expect(newState.length).toBe(state1Event.length - 9); //reduced the event in 9 days
-  expectToBe(newState[0], action.payload[0]);
-});
-
-test("replace by id not found the id, the state wont change", () => {
-  const action = genEventCall(
-    "override", //<-testing this
-    2,
-    "client2",
-    "testjob2",
-    "2022-03-01",
-    "2022-03-03"
-  );
-  const newState = reducerEvents(emptyState, action);
-  expect(newState.length).toBe(0);
-});
-
 test("update event state from empty state", () => {
   const action = genEventCall(
     "update",

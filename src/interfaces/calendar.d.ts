@@ -33,7 +33,6 @@ declare namespace jh {
     end: string;
     mutable?: {
       bubble?: number;
-      height: string;
       eventRef: HTMLDivElement;
       index: number;
     };

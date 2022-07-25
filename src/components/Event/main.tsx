@@ -1,8 +1,8 @@
-import { createRef, useLayoutEffect, useRef, useState } from "react";
+import { createRef, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
 import { DateService } from "../../utils/Date";
 import { useHoverEvent, useStyles } from "../../components/Event/logic";
-import { useGetEventFamily } from "../../hooks/useEventsState";
+import { useEventState, useGetEventFamily } from "../../hooks/useEventsState";
 import { EventCard, EventTail } from "../../components/Event/eventCard";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
 import { DragHandlers } from "./dragHandlers";
@@ -129,76 +129,79 @@ export const SpanHolders = ({
   textEvent,
   setTextEvent,
 }: EventHolder) => {
-  const [force, setForce] = useState(0);
   const [parent, closestTail, family] = useGetEventFamily(event);
-  const eventRef = useRef<HTMLDivElement>();
-  const [style, setStyle] = useState({ height: "0px" });
-  //const [state, setState] = useState<{ height: string }>({ height: "0px" });
-  //
-  // useLayoutEffect(() => {
-  //   if (typeof eventRef.current !== "undefined") {
-  //     const h0 =
-  //       typeof parent.mutable === "object"
-  //         ? parseInt(parent.mutable.height.split("px")[0])
-  //         : eventRef.current.clientHeight;
-  //     const newState = { height: `${h0}` };
-  //     //const newState = { height: `${h0}px` };
-  //     event.mutable = {
-  //       height: newState.height,
-  //       eventRef: eventRef.current,
-  //       index: typeof parent.mutable === "object" ? parent.mutable.index : 0, //!Corrected bug: was using event.end wich is zero
-  //     };
-  //   }
-  // }, [eventRef.current, event, event.mutable, force]);
+  const eventRef = useRef<HTMLDivElement>(null);
+  const [style, setStyle] = useState<{ height: string }>({ height: "200px" });
 
-  // useLayoutEffect(() => {
-  //   if (force === 0 && typeof event.mutable === "object") {
-  //     setTimeout(() => {
-  //       setForce(1);
-  //     }, 100);
-  //   }
-  // }, [event.mutable]);
+  useLayoutEffect(() => {
+    if (eventRef.current != null) {
+      event.mutable = {
+        eventRef: eventRef.current,
+        index:
+          typeof closestTail.mutable === "object"
+            ? closestTail.mutable.index
+            : 0, //!Corrected bug: was using event.end wich is zero
+      };
+    }
+  }, []);
 
-  // const isChildren = event.type === "tailholder";
-  // const tailState = { height: "1rem" };
+  const isChildren = event.type === "tailholder";
 
-  // useLayoutEffect(() => {
-  //   //debugger;
-  //   if (textEvent === event.id) {
-  //     setStyle({ height: `${textArea}px` });
-  //   } else {
-  //     const result = isChildren
-  //       ? tailState.height
-  //       : event.mutable?.height || "9rem";
-  //     if (event.client === "BDM") {
-  //       // debugger;
-  //     }
-  //     setStyle({ height: `${result}px` });
-  //   }
-  // }, [force, textArea, textEvent, event.job]);
+  const week = DateService.GetWeekRangeOf(event.start);
+  const eventsOfWeek = useEventState(week);
+  useEffect(() => {
+    if (typeof event.mutable === "object") {
+      const sameRow = eventsOfWeek
 
-  // if (isChildren) {
-  return (
-    <StyledEvent.TWplaceholder
-      style={style}
-      ref={eventRef}
-      className="outline-green-800"
-    >
-      {event.id + " : " + event.mutable?.index}
-    </StyledEvent.TWplaceholder>
-  );
-  //  } else {
-  //    return (
-  //      <div className="outline outline-2 outline-green-400">
-  //        <StyledEvent.TWflexContainer_Holder ref={eventRef}>
-  //          <StyledEvent.TWplaceholder style={style}>
-  //            {event.id + " : " + event.mutable?.index}
-  //          </StyledEvent.TWplaceholder>
-  //        </StyledEvent.TWflexContainer_Holder>
-  //      </div>
-  //    );
-  //  }
+        .filter((e) => {
+          return hasMutable(e) && hasMutable(event)
+            ? e.mutable.index === event.mutable.index
+            : false;
+        }) //!Bug solved: e.mutable is undefined
+
+        .filter((e) => e.type.includes("head"));
+
+      const allH = sameRow.map((r): number => {
+        return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
+      });
+
+      const textAreaH = textEvent === event.id ? textArea : 0;
+
+      const maxH = Math.max(...allH);
+      const newState = { height: `${maxH}px` };
+      if (event.start === "2022-07-12") {
+        console.log("Here");
+      }
+
+      setStyle(newState);
+    }
+  }, [eventRef.current, event, textArea, textEvent]);
+
+  if (isChildren) {
+    return (
+      <StyledEvent.TWplaceholder
+        style={style}
+        ref={eventRef}
+        className="outline-green-800"
+      >
+        {event.id + " : " + event.mutable?.index}
+      </StyledEvent.TWplaceholder>
+    );
+  } else {
+    return (
+      <div className="outline outline-2 outline-green-400">
+        <StyledEvent.TWflexContainer_Holder ref={eventRef}>
+          <StyledEvent.TWplaceholder style={style}>
+            {event.id + " : " + event.mutable?.index}
+          </StyledEvent.TWplaceholder>
+        </StyledEvent.TWflexContainer_Holder>
+      </div>
+    );
+  }
 };
 
 //export const MemoEventHolder = memo(EventHolder);
 export const MemoEventHolder = SpanHolders;
+
+const hasMutable = (e: jh.event): e is Required<jh.event> =>
+  typeof e.mutable === "object";
