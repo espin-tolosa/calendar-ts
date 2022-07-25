@@ -50,18 +50,24 @@ function RootHolder({
 
         .filter((e) => e.type.includes("head"));
 
-      const allH = sameRow.map((r): number => {
-        return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
-      });
-
-      const textAreaH = textEvent === event.id ? textArea : 0;
-
-      const maxH = Math.max(...allH, textAreaH);
-      const newState = { height: `${maxH}px` };
-
       if (event.type === "roothead") {
+        const allH = sameRow.map((r): number => {
+          return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
+        });
+        const textAreaH = textEvent === event.id ? textArea : 0;
+        const maxH = Math.max(...allH, textAreaH);
+        const newState = { height: `${maxH}px` };
         setStyle(newState);
       } else {
+        console.log(event.id);
+        console.log(sameRow.filter((e) => e.id !== event.id));
+        const allH = sameRow
+          .filter((e) => e.id !== event.id)
+          .map((r): number => {
+            return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
+          });
+        const maxH = Math.max(...allH);
+        const newState = { height: `${maxH}px` };
         setStyle(newState);
       }
     }
