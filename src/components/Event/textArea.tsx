@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import * as StyledEvent from "./tw";
 
 import { fetchEvent } from "../../utils/fetchEvent";
@@ -20,6 +20,25 @@ export const EventTextArea = ({
 }: TextArea) => {
   const textRef = useRef<HTMLSpanElement>(null);
   const eventDispatcher = useEventDispatch();
+
+  // Fetch job  changes before unmount the component
+  useLayoutEffect(() => {
+    return () => {
+      const job = (textRef.current?.textContent ?? "").trim();
+      if (job === event.job) {
+        return;
+      }
+
+      fetchEvent("PUT", { ...event, job });
+      eventDispatcher({
+        type: "update",
+        payload: [{ ...event, job }],
+      });
+
+      //   setTextArea(0);
+      //   setTextEvent(0);
+    };
+  }, []);
 
   const user = useToken();
   if (event.job === "") {
@@ -43,7 +62,14 @@ export const EventTextArea = ({
         //TODO: read this to gain control over the component: https://goshacmd.com/controlled-vs-uncontrolled-inputs-react/
         suppressContentEditableWarning={true}
         onClick={(e) => {
+          e.currentTarget.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "center",
+          });
           e.currentTarget.focus();
+        }}
+        onFocus={() => {
           if (textRef.current) {
             const range = window.document.createRange();
             range.selectNodeContents(textRef.current);
@@ -53,31 +79,22 @@ export const EventTextArea = ({
           }
         }}
         onKeyDown={(e) => {
-          e.currentTarget.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-            inline: "center",
-          });
           if (e.code === "Enter" || e.code === "Escape") {
             e.currentTarget.blur();
           }
         }}
         onKeyUp={() => {
-          const result =
-            refNode.current?.clientHeight || textRef.current?.clientHeight || 0;
-
+          const result = refNode.current?.clientHeight ?? 0;
           setTextEvent(event.id);
           setTextArea(result);
         }}
         onBlur={(e) => {
-          const job = (e.currentTarget.textContent || "").trim();
-
+          const job = (e.currentTarget.textContent ?? "").trim();
           fetchEvent("PUT", { ...event, job });
           eventDispatcher({
             type: "update",
             payload: [{ ...event, job }],
           });
-
           setTextArea(0);
           setTextEvent(0);
         }}
