@@ -1,12 +1,8 @@
-import { createRef, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createRef, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
 import { DateService } from "../../utils/Date";
 import { useHoverEvent, useStyles } from "../../components/Event/logic";
-import {
-  useEventDispatch,
-  useEventState,
-  useGetEventFamily,
-} from "../../hooks/useEventsState";
+import { useEventState, useGetEventFamily } from "../../hooks/useEventsState";
 import { EventCard, EventTail } from "../../components/Event/eventCard";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
 import { DragHandlers } from "./dragHandlers";
@@ -148,9 +144,7 @@ export const SpanHolders = ({
             : 0, //!Corrected bug: was using event.end wich is zero
       };
     }
-  }, []);
-
-  const isChildren = event.type === "tailholder";
+  }, [event]);
 
   const week = DateService.GetWeekRangeOf(event.start);
   const eventsOfWeek = useEventState(week);
@@ -162,24 +156,26 @@ export const SpanHolders = ({
 
     const sameRow = eventsOfWeek
       .filter((e): e is Required<jh.event> => hasMutable(e))
-      .filter((e) => parseInt(event.end) === e.mutable.index);
+      .filter((e) => parseInt(event.end) === e.mutable.index)
+      .filter((e) => e.type === "roothead");
 
     const allH = sameRow.map((r): number => {
       return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
     });
 
-    const maxH = Math.max(...allH);
+    const maxH = Math.max(
+      ...allH,
+      closestTail.mutable?.eventRef.clientHeight ?? 0
+    );
     const newState = { height: `${maxH}px` };
 
     setStyle(newState);
   }, [eventRef.current, event, textArea, textEvent]);
 
   return (
-    <div className="outline outline-2 outline-red-900">
-      <StyledEvent.TWplaceholder style={style} ref={eventRef}>
-        {event.id + " : " + event.mutable?.index}
-      </StyledEvent.TWplaceholder>
-    </div>
+    <StyledEvent.TWplaceholder style={style} ref={eventRef}>
+      {event.id + " : " + event.mutable?.index}
+    </StyledEvent.TWplaceholder>
   );
 };
 

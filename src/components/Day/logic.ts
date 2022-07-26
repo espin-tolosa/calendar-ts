@@ -39,6 +39,8 @@ export const useOnDragEnter = () => {
       dndEventRef.start = date;
       dndEventRef.end = date;
     }
+
+    //dndEventRef.mutable = undefined;
     //temporaryEventDispatcher(newEvent);
     //-------------------------------------------------------------------------------------------
 

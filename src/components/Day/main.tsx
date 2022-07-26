@@ -1,17 +1,10 @@
-import React, {
-  memo,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { memo, useLayoutEffect, useRef, useState } from "react";
 import { styles } from "../../components/Day/tw";
 import { MemoEventsThrower } from "../../components/EventsThrower/main";
 import { DateService } from "../../utils/Date";
 import { usePostQuery } from "../../api/queries";
 import { useDoubleClick } from "../../hooks/useDoubleClick";
-import { useToken } from "@/hooks/useToken";
-import { useEventDispatch } from "@/hooks/useEventsState";
+import { useToken } from "../../hooks/useToken";
 
 interface Day {
   daynumber: number;
