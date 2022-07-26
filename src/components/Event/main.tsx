@@ -173,21 +173,13 @@ export const SpanHolders = ({
     setStyle(newState);
   }, [eventRef.current, event, textArea, textEvent]);
 
-  if (isChildren) {
-    return (
+  return (
+    <div className="outline outline-2 outline-red-900">
       <StyledEvent.TWplaceholder style={style} ref={eventRef}>
         {event.id + " : " + event.mutable?.index}
       </StyledEvent.TWplaceholder>
-    );
-  } else {
-    return (
-      <StyledEvent.TWflexContainer_Holder ref={eventRef}>
-        <StyledEvent.TWplaceholder style={style}>
-          {event.id + " : " + event.mutable?.index}
-        </StyledEvent.TWplaceholder>
-      </StyledEvent.TWflexContainer_Holder>
-    );
-  }
+    </div>
+  );
 };
 
 //export const MemoEventHolder = memo(EventHolder);

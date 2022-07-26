@@ -39,37 +39,27 @@ function RootHolder({
   }, []);
 
   useLayoutEffect(() => {
-    if (typeof event.mutable === "object") {
-      const sameRow = eventsOfWeek
-
-        .filter((e) => {
-          return hasMutable(e) && hasMutable(event)
-            ? e.mutable.index === event.mutable.index
-            : false;
-        })
-
-        .filter((e) => e.type.includes("head"));
-
-      if (event.type === "roothead") {
-        const allH = sameRow
-          .filter((e) => e.type !== "tailhead") //!Bug solved: tailhead has its refs pointing to roothead, so it they have to be removed from Height computation, also they do not contribute to this size as they just compsume it
-          .map((r): number => {
-            return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
-          });
-        const maxH = Math.max(...allH);
-        const newState = { height: `${maxH}px` };
-        setStyle(newState);
-      } else {
-        const allH = sameRow
-          .filter((e) => e.id !== event.id)
-          .map((r): number => {
-            return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
-          });
-        const maxH = Math.max(...allH);
-        const newState = { height: `${maxH}px` };
-        setStyle(newState);
-      }
+    if (!hasMutable(event)) {
+      return;
     }
+    const sameRow = eventsOfWeek
+
+      .filter((e) => {
+        return (
+          hasMutable(e) &&
+          hasMutable(event) &&
+          e.mutable.index === event.mutable.index
+        );
+      })
+
+      .filter((e) => e.type.includes("head"));
+
+    const allH = sameRow.map((r): number => {
+      return hasMutable(r) ? r.mutable.eventRef?.clientHeight : 0;
+    });
+    const maxH = Math.max(...allH);
+    const newState = { height: `${maxH}px` };
+    setStyle(newState);
   }, [eventRef.current, event, textArea, textEvent]);
 
   return (

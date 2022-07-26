@@ -88,7 +88,7 @@ export const TWextend_Left = tw.div<{ $cells: number }>`
 export const TWplaceholder = tw.div`
 text-xs text-transparent
 	${() =>
-    import.meta.env.MODE === "development-none" ? "outline outline-2 mx-1" : ""}
+    import.meta.env.MODE === "development" ? "outline outline-2 mx-1" : ""}
 `;
 
 export const TWStyledSelect = tw.select`
