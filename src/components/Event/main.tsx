@@ -140,6 +140,7 @@ export const SpanHolders = ({
   useLayoutEffect(() => {
     if (eventRef.current != null) {
       event.mutable = {
+        dragDirection: "none",
         eventRef: eventRef.current,
         index:
           typeof closestTail.mutable === "object"

@@ -33,6 +33,7 @@ function RootHolder({
     }
 
     event.mutable = {
+      dragDirection: "none",
       eventRef: eventRef.current,
       index: index,
     };

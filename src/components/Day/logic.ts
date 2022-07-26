@@ -23,19 +23,19 @@ export const useOnDragEnter = () => {
       return;
     }
 
-    if (dndEventRef.mutable?.bubble === 1) {
+    if (dndEventRef.mutable?.dragDirection === "forward") {
       dndEventRef.end = date;
       const isRewind = DateService.DaysFrom(dndEventRef.start, date) < 0;
       if (isRewind) {
         dndEventRef.start = date;
       }
-    } else if (dndEventRef.mutable?.bubble === -1) {
+    } else if (dndEventRef.mutable?.dragDirection === "backward") {
       dndEventRef.start = date;
       const isRewind = DateService.DaysFrom(dndEventRef.end, date) > 0;
       if (isRewind) {
         dndEventRef.end = date;
       }
-    } else if (dndEventRef.mutable?.bubble === 0) {
+    } else if (dndEventRef.mutable?.dragDirection === "none") {
       dndEventRef.start = date;
       dndEventRef.end = date;
     }
@@ -43,6 +43,7 @@ export const useOnDragEnter = () => {
     //-------------------------------------------------------------------------------------------
 
     fetchEvent_Day("PUT", dndEventRef);
+    //TODO: Disable this on mobile, to avoid update state while dragging
     eventDispatcher({
       type: "update",
       payload: [{ ...dndEventRef }],

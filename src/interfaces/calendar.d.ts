@@ -25,6 +25,8 @@ declare namespace jh {
       | "tailholder";
   }
 
+  type dragDirection = "backward" | "forward" | "none";
+
   export interface event {
     id: number;
     client: string;
@@ -32,7 +34,7 @@ declare namespace jh {
     start: string;
     end: string;
     mutable?: {
-      bubble?: number;
+      dragDirection: dragDirection;
       eventRef: HTMLDivElement;
       index: number;
     };

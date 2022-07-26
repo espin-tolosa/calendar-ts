@@ -47,14 +47,14 @@ export function DragHandlers({
 
   const hOnDragStart = (
     e: React.DragEvent<HTMLDivElement>,
-    direction: number
+    direction: jh.dragDirection
   ) => {
     e.stopPropagation();
     const parentCopy: jh.event = { ...parentEvent };
     if (typeof parentEvent.mutable === "object") {
       parentCopy.mutable = { ...parentEvent.mutable };
       if (typeof parentCopy.mutable === "object") {
-        parentCopy.mutable.bubble = direction;
+        parentCopy.mutable.dragDirection = direction;
       }
     }
     //!ISSUE: parentEvent isn't available in other context consumers (e.g: useOnDragEnter) after firing this dispatch order:
@@ -77,6 +77,11 @@ export function DragHandlers({
       type: "fromnull",
       payload: [{ ...dndEvent }],
     });
+    //TODO: Able this on mobile, to avoid update event while dragging
+    //eventDispatcher({
+    //  type: "update",
+    //  payload: [{ ...dndEvent }],
+    //});
   };
   return (
     <StyledEvent.TWflexContainer
@@ -89,7 +94,7 @@ export function DragHandlers({
       }}
       {...mouseHover}
       onDragStart={(e) => {
-        hOnDragStart(e, 0);
+        hOnDragStart(e, "none");
       }}
       onDragEnd={hOnDragEnd}
     >
@@ -99,7 +104,7 @@ export function DragHandlers({
         title={`Drag here to extend ${event.client}'s job`}
         draggable={"true"}
         onDragStart={(e) => {
-          hOnDragStart(e, -1);
+          hOnDragStart(e, "backward");
         }}
         onDragEnd={hOnDragEnd}
       >
@@ -110,7 +115,7 @@ export function DragHandlers({
         title={`Drag here to extend ${event.client}'s job`}
         draggable={"true"}
         onDragStart={(e) => {
-          hOnDragStart(e, 1);
+          hOnDragStart(e, "forward");
         }}
         onDragEnd={hOnDragEnd}
       >
