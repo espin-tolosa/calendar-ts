@@ -1,17 +1,20 @@
 import { eventID } from "./main";
 import { TextArea, EventTextArea } from "./textArea";
 import { ClientSelector, EventClientSelector } from "./clientSelector";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 type EventCard = TextArea & ClientSelector;
 
 export const EventCard: React.FC<EventCard> = (propTypes): JSX.Element => {
   const nodeRef = useRef<HTMLDivElement>(null);
+  const [isHover, setIsHover] = useState(false);
   return (
     <div
       id={eventID(propTypes.event.id, "master", "ContentContainer")}
       className="flex flex-col w-full"
       ref={nodeRef}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setTimeout(() => setIsHover(false), 1000)}
     >
       <EventClientSelector style={propTypes.style} event={propTypes.event} />
 
@@ -21,6 +24,8 @@ export const EventCard: React.FC<EventCard> = (propTypes): JSX.Element => {
         setTextArea={propTypes.setTextArea}
         setTextEvent={propTypes.setTextEvent}
         refNode={nodeRef}
+        isHover={isHover}
+        setIsHover={setIsHover}
       />
     </div>
   );

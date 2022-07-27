@@ -7,6 +7,7 @@ import { EventCard, EventTail } from "../../components/Event/eventCard";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
 import { DragHandlers } from "./dragHandlers";
 import { Placeholder } from "./placeholder";
+import { useToken } from "@/hooks/useToken";
 
 interface Event {
   event: jh.event;
@@ -62,6 +63,23 @@ export const Event = ({
     1 + DateService.DaysFrom(event.start, event.end),
     DateService.DaysFrom(event.start, maxDayAvailable)
   );
+
+  const user = useToken();
+
+  if (user.isValid() && !user.isAuth()) {
+    if (style?.dinamic) {
+      style.dinamic =
+        user.user() === event.client
+          ? style.dinamic
+          : { background: "lightgray", color: "transparent" };
+    }
+    if (style?.static) {
+      style.static =
+        user.user() === event.client
+          ? style.static
+          : { background: "lightgray" };
+    }
+  }
 
   return (
     <>
