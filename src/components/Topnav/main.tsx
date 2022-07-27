@@ -1,8 +1,9 @@
+import { Link, Route, useLocation } from "wouter";
 import { DateService } from "../../utils/Date";
 import * as StyledTopnav from "./tw";
 import { useCtxCurrentMonthRef } from "../../context/currentMonthReference";
 import { useCtxTopNavRef } from "../../context/topNavSize";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DOMRefs } from "../../context/DOMRefs";
 import { useCleanSession } from "../../hooks/useCleanSession";
 import { useUserSession } from "../../hooks/useUserSession";
@@ -39,24 +40,49 @@ export const Topnav = () => {
       >
         {DateService.GetTodayDateFormat()}
       </StyledTopnav.TWtitle>
-      {/*right-header*/}
-      <StyledTopnav.TWlogout
-        title={"Cleans up your session token | Ctrl+Alt+q"}
-        onClick={(e) => {
-          e.stopPropagation();
-          //cleanSession();
-          //!Developing
-          const development = () => {
-            window.document.documentElement.requestFullscreen();
-          };
+      <div>
+        {/*right-header*/}
 
-          import.meta.env.MODE === "development"
-            ? development()
-            : cleanSession();
-        }}
-      >
-        {token.isValid() ? "Logout" : "Sign in"}
-      </StyledTopnav.TWlogout>
+        {token.isAuth() && <BackofficeButton />}
+        <StyledTopnav.TWlogout
+          title={"Cleans up your session token | Ctrl+Alt+q"}
+          onClick={(e) => {
+            e.stopPropagation();
+            //cleanSession();
+            //!Developing
+            const development = () => {
+              window.document.documentElement.requestFullscreen();
+            };
+
+            import.meta.env.MODE === "development"
+              ? development()
+              : cleanSession();
+          }}
+        >
+          {token.isValid() ? "Logout" : "Sign in"}
+        </StyledTopnav.TWlogout>
+      </div>
     </StyledTopnav.TWcontainer>
   );
 };
+
+function BackofficeButton() {
+  return (
+    <>
+      <Route path="/">
+        <Link href="/settings">
+          <StyledTopnav.TWlogout title={"Control panel to edit clients data"}>
+            Settings
+          </StyledTopnav.TWlogout>
+        </Link>
+      </Route>
+      <Route path="/settings">
+        <Link href="/">
+          <StyledTopnav.TWlogout title={"Go back to calendar board"}>
+            Calendar
+          </StyledTopnav.TWlogout>
+        </Link>
+      </Route>
+    </>
+  );
+}

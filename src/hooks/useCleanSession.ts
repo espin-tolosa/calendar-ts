@@ -5,6 +5,7 @@ import { useControllerDispatch } from "../hooks/useController";
 import { useControllerDispatchDates } from "../hooks/useControllerDate";
 import { useEventDispatch } from "./useEventsState";
 import { nullEvent } from "../interfaces";
+import { useLocation } from "wouter";
 
 // This is the reference hook to clean te entire memory,
 // any component should consume this to clear temporary states
@@ -15,6 +16,7 @@ export const useCleanSession = () => {
   const dispatchController = useControllerDispatch();
   const dispatchControllerDates = useControllerDispatchDates();
   const dispatchEvent = useEventDispatch();
+  const setLocation = useLocation()[1]; //I only need setter
 
   const cleanContextState = useCallback(() => {
     clearLogin();
@@ -34,6 +36,8 @@ export const useCleanSession = () => {
       type: "unmount",
       payload: [nullEvent()],
     });
+
+    setLocation("/");
   }, []);
 
   return cleanContextState;

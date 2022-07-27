@@ -34,23 +34,23 @@ export const EventTextArea = ({
   const [isHoverActive, setIsHoverActive] = useState(false);
 
   // Fetch job  changes before unmount the component
-  //  useLayoutEffect(() => {
-  //    return () => {
-  //      if (textRef.current === null) {
-  //        return;
-  //      }
-  //      const job = (textRef.current?.textContent ?? "").trim();
-  //      if (job === event.job) {
-  //        return;
-  //      }
-  //
-  //      fetchEvent("PUT", { ...event, job });
-  //      eventDispatcher({
-  //        type: "update",
-  //        payload: [{ ...event, job }],
-  //      });
-  //    };
-  //  }, [event]);
+  useLayoutEffect(() => {
+    return () => {
+      if (textRef.current === null) {
+        return;
+      }
+      const job = (textRef.current?.textContent ?? "").trim();
+      if (job === event.job || job === "") {
+        return;
+      }
+
+      fetchEvent("PUT", { ...event, job });
+      eventDispatcher({
+        type: "update",
+        payload: [{ ...event, job }],
+      });
+    };
+  }, [event]);
 
   useEffect(() => {
     const result = refNode.current?.clientHeight ?? 0;

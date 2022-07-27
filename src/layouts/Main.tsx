@@ -1,3 +1,4 @@
+import { Route, Switch } from "wouter";
 import { LayoutMaster } from "../layouts/Master";
 import { LayoutHeader } from "../layouts/Header";
 import * as tw_Layouts from "../layouts/tw";
@@ -5,6 +6,7 @@ import { useKeyboardShortcuts } from "../hooks/useKeyListeners";
 import { useLayoutEffect, useRef } from "react";
 import { useOnDragEnter } from "../components/Day/logic";
 import { useDnDEventRef } from "../context/dndEventRef";
+import { Settings } from "./Settings";
 
 export const LayoutMain = () => {
   const onDragEnter = useOnDragEnter();
@@ -53,11 +55,10 @@ export const LayoutMain = () => {
   return (
     <tw_Layouts.TWapp id={"app"}>
       {/*header-layout*/}
-
       <LayoutHeader />
-
       {/*main-layout: layout-grid*/}
-      <LayoutMaster />
+      <Route path="/" component={LayoutMaster} />
+      <Route path="/settings" component={Settings} />
     </tw_Layouts.TWapp>
   );
 };
