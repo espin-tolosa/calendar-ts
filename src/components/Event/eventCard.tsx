@@ -1,5 +1,6 @@
 import { eventID } from "./main";
-import { TextArea, EventTextArea } from "./textArea";
+import * as StyledEvent from "./tw";
+import { TextArea, EventTextArea, EventTextAreaDemo } from "./textArea";
 import { ClientSelector, EventClientSelector } from "./clientSelector";
 import { useRef, useState } from "react";
 
@@ -34,3 +35,19 @@ export const EventCard: React.FC<EventCard> = (propTypes): JSX.Element => {
 export const EventTail = ({ event }: { event: jh.event }) => {
   return <div className="h-4">{event.client}</div>;
 };
+
+export const EventCardDemo: React.FC<EventCard> = (propTypes): JSX.Element => {
+  return (
+    <div
+      id={eventID(propTypes.event.id, "master", "ContentContainer")}
+      className="flex flex-col w-full"
+    >
+      <StyledEvent.TWStyledNonSelect style={propTypes.style}>
+        {propTypes.event.client}
+      </StyledEvent.TWStyledNonSelect>
+
+      <EventTextAreaDemo event={propTypes.event} />
+    </div>
+  );
+};
+//<EventClientSelector style={propTypes.style} event={propTypes.event} />

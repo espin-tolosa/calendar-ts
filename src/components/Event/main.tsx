@@ -71,7 +71,7 @@ export const Event = ({
       style.dinamic =
         user.user() === event.client
           ? style.dinamic
-          : { background: "lightgray", color: "transparent" };
+          : { background: "lightgray" };
     }
     if (style?.static) {
       style.static =

@@ -76,7 +76,7 @@ export const useStyles = (
     }
 
     return {
-      dinamic: result,
+      dinamic: result as { background: string },
       static: { background: cHeader },
     };
   }, [justThrown, hover, clientColor]);

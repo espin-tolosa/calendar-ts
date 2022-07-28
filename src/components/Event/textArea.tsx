@@ -147,3 +147,21 @@ export const EventTextArea = ({
 
   return <></>;
 };
+
+export interface TextAreaDemo {
+  event: jh.event;
+}
+
+export const EventTextAreaDemo = ({ event }: TextAreaDemo) => {
+  return (
+    <StyledEvent.TWjobContent>
+      <StyledEvent.TWtextArea
+        role="textbox"
+        //TODO: read this to gain control over the component: https://goshacmd.com/controlled-vs-uncontrolled-inputs-react/
+        suppressContentEditableWarning={true}
+      >
+        {event.job}
+      </StyledEvent.TWtextArea>
+    </StyledEvent.TWjobContent>
+  );
+};
