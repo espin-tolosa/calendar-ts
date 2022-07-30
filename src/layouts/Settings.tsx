@@ -2,6 +2,7 @@ import { EventCardDemo } from "@/components/Event/eventCard";
 import { useHoverEvent, useStyles } from "@/components/Event/logic";
 import { useClientsStyles } from "@/context/useFetchClientStyle";
 import { nullEvent } from "@/interfaces";
+import { api } from "@/static/apiRoutes";
 import { createRef, useState } from "react";
 import { Color, SliderPicker } from "react-color";
 
@@ -44,7 +45,7 @@ const EventDemo = ({ event }: { event: jh.event }) => {
     <>
       <div className="flex justify-around text-xs ">
         <div className="flex flex-col gap-4">
-          <div className="rounded-xl" style={style?.dinamic}>
+          <div className="rounded-md" style={style?.dinamic}>
             <EventCardDemo
               event={event}
               refNode={createRef()}
@@ -60,6 +61,9 @@ const EventDemo = ({ event }: { event: jh.event }) => {
               color={colorPicker}
               onChangeComplete={(color) => {
                 setColorPicker(color.hex);
+                fetch(api.routes.backoffice)
+                  .then((response) => response.text())
+                  .then((text) => console.log(text));
               }}
             />
           </div>

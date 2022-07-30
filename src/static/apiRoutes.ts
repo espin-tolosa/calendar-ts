@@ -11,5 +11,6 @@ export const api = {
     events: pathGenerator("events"),
     clients: pathGenerator("client_styles"),
     styles: pathGenerator("client_styles_css"),
+    backoffice: pathGenerator("users_backoffice"),
   },
 };

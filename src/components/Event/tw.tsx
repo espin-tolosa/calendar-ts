@@ -96,5 +96,5 @@ export const TWStyledSelect = tw.select`
 	`;
 
 export const TWStyledNonSelect = tw.div`
-  border-none py-px padding-x-clamp button-shadow text-effect rounded-md outline-none text-white print:text-xs text-sm
+  border-none py-px padding-x-clamp button-shadow text-effect rounded-sm outline-none text-white print:text-xs text-sm
 	`;
