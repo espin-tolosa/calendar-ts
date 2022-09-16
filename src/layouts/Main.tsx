@@ -57,7 +57,7 @@ export const LayoutMain = () => {
       {/*header-layout*/}
       <LayoutHeader />
       {/*main-layout: layout-grid*/}
-      <Route path="/" component={LayoutMaster} />
+      <Route path="/board/samuel" component={LayoutMaster} />
       <Route path="/settings" component={Settings} />
     </tw_Layouts.TWapp>
   );

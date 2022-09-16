@@ -7,7 +7,7 @@ export const LayoutBoard = () => {
   const [monthsOfBoard, last] = useInfiniteScroll();
 
   //Query All Events
-  const hFetchAll = useGetAllEventsFrom(monthsOfBoard[0]);
+  const hFetchAll = useGetAllEventsFrom();
 
   //Fetch event after login
 
