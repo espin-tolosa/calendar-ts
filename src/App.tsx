@@ -32,7 +32,7 @@ export function App() {
     };
   }, [events]);
 
-  const isValid =
-    import.meta.env.MODE === "development" ? true : token.isValid();
+  const isValid = true;
+    //import.meta.env.MODE === "development" ? true : token.isValid();
   return isValid ? <LayoutMain /> : <Login />;
 }

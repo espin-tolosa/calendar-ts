@@ -9,7 +9,8 @@ if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
 
 $lf = "./connections.log";
 $dt = gmdate("Y-m-d\TH:i:s\Z");
-$mg = "$ip $dt\n";
+$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+$mg = "$ip $actual_link $dt\n";
 
 error_log($mg, 3, $lf);
 

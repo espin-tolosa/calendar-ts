@@ -20,7 +20,7 @@ function ClientsStyles(propTypes: { children: JSX.Element }) {
 
   const ctx: jh.response.maybe<jh.response.styles> = {
     success,
-    response: { clients, colors: styles },
+    response: { clients, colors: styles, update: clientsData.setStyles },
   };
 
   return (
@@ -90,5 +90,5 @@ function useAddStylesClientCSSlasses() {
     };
   }, []);
 
-  return { clients, styles, success };
+  return { clients, styles, success, setStyles };
 }

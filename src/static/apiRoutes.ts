@@ -5,12 +5,17 @@ const routes = "backend/routes";
 const pathGenerator = (point: string, ext = "api.php") =>
   `${domain}/${routes}/${point}.${ext}`;
 
-export const api = {
+const pathGenerator_v2 = (point: string, prefix = "/api") =>
+  `${prefix}/${point}`;
+
+  export const api = {
   routes: {
     login: pathGenerator("login"),
     events: pathGenerator("events"),
-    clients: pathGenerator("client_styles"),
-    styles: pathGenerator("client_styles_css"),
-    backoffice: pathGenerator("users_backoffice"),
+    clients: pathGenerator_v2("styles"), //TODO: [moved] client_styles -> styles
+    backoffice: {
+      styles: pathGenerator("backoffice/styles"),
+      addUser: pathGenerator("backoffice/addUser"),
+    },
   },
 };

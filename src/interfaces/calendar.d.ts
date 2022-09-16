@@ -13,6 +13,7 @@ declare namespace jh {
     type styles = {
       clients: clients;
       colors: colors;
+      update: React.Dispatch<React.SetStateAction<jh.response.colors>>;
     };
   }
 
