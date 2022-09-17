@@ -3,6 +3,7 @@ import { fetchEvent_Day } from "../utils/fetchEvent";
 import React from "react";
 import { useEventDispatch } from "../hooks/useEventsState";
 import { DateService } from "../utils/Date";
+import { FetchEvent } from "@/classes/fetchEvent";
 
 export const usePostQuery = (fullDate: jh.date.representation) => {
   const eventDispatcher = useEventDispatch();
@@ -18,10 +19,8 @@ export const usePostQuery = (fullDate: jh.date.representation) => {
   };
 };
 
-const queryEvent = (
-  date: jh.date.representation,
-  eventDispatcher: React.Dispatch<Action>
-) => {
+const queryEvent = (date: jh.date.representation, eventDispatcher: React.Dispatch<Action>) =>
+{
   const MaxId = Number.MAX_SAFE_INTEGER;
   const newEvent: jh.event = {
     id: MaxId,
@@ -41,7 +40,8 @@ const queryEvent = (
 
     const callFetch = async () => {
       try {
-        const data = await fetchEvent_Day("POST", newEvent);
+        const request = new FetchEvent();
+        const data = await request.create(newEvent);
         return { status: true, data };
       } catch {
         return { status: false, data: [] };
@@ -65,7 +65,7 @@ const queryEvent = (
         result.status &&
           eventDispatcher({
             type: "update",
-            payload: result.data,
+            payload: result.data as jh.event[], //! I had to cast this, but I should check it out
           });
 
         return;

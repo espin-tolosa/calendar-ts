@@ -2,6 +2,7 @@ import tw from "tailwind-styled-components";
 
 // This integrates the header and the board of a month
 export const TWflexColLayout = tw.div<{ $toPrint: boolean }>`
+relative
 flex flex-col justify-start
 bg-white
 shadow-[5px_5px_5px_rgb(148,163,184)]
@@ -9,8 +10,6 @@ rounded-md
 z-Dayoff
 print:mt-10
 print:shadow-none
-
-
 ${({ $toPrint }: { $toPrint: boolean }) => (!$toPrint && "print:hidden") || ""}
 `;
 
@@ -22,7 +21,7 @@ print:static
 print:align-middle
 font-normal
 text-black
-px-[2ch] border-b-2 border-slate-400 
+px-[2ch] border-b-2 border-slate-400
 bg-gradient-to-r from-slate-200 via-slate-50 to-slate-200
 rounded-t-md
 `;
@@ -35,13 +34,11 @@ rounded-t-md
 // [mon + 28, sun + 31 ] = [28,30] cell days
 // this means that N can take values of [4,5]
 export const TWdaysBoard = tw.div`
-	grid grid-cols-7 overflow-hidden relative bg-slate-50 gap-[1px] border-b-[1px] border-slate-300
-	print:bg-white
+grid grid-cols-7 overflow-hidden relative bg-slate-50 gap-[1px] border-b-[1px] border-slate-300 print:bg-white
 `;
 
 // Shifts the day where a month starts
 export const TWdayShift = tw.div<{ $weekday: string }>`
-
 ${({ $weekday }: { $weekday: string }) =>
   ($weekday === "mon" && "month-start-mon") ||
   ($weekday === "tue" && "month-start-tue") ||

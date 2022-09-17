@@ -1,38 +1,28 @@
-import { LayoutMain } from "./layouts/Main";
-import Login from "./components/Login/main";
-import { useUserSession } from "./hooks/useUserSession";
-import { DragAndDropTouch } from "./window/touch";
-import { useEffect } from "react";
-import { useEventState } from "./hooks/useEventsState";
+import { Route } from "wouter";
+import * as tw_Layouts from "./layouts/tw";
+import { Settings } from "./layouts/Settings";
+import { Board } from "./layouts/Board";
+import { TopBar } from "./components/TopBar/main";
 
-DragAndDropTouch();
-declare global {
-  interface Window {
-    Debug: Record<string, unknown | undefined> | undefined;
-  }
+
+export function App()
+{
+    return (
+        <tw_Layouts.TWapp id={"app"}>
+      
+      
+            <Route path="/board/:name">
+            {(params) => {
+                return (
+                    <>
+                        <TopBar user={params.name} />
+                        <Board/>
+                    </>
+                )
+                }}
+            </Route>
+      <Route path="/settings" component={Settings} />
+    </tw_Layouts.TWapp>
+  );
 }
 
-export function App() {
-  const token = useUserSession();
-
-  const events = useEventState();
-  useEffect(() => {
-    window.Debug = {};
-    window.Debug.EventState = function () {
-      events.forEach((e) => {
-        console.log(e.mutable);
-      });
-    };
-    return () => {
-      if (window.Debug === undefined) {
-        return;
-      }
-      window.Debug.EventState = undefined;
-      window.Debug = undefined;
-    };
-  }, [events]);
-
-  const isValid = true;
-    //import.meta.env.MODE === "development" ? true : token.isValid();
-  return isValid ? <LayoutMain /> : <Login />;
-}

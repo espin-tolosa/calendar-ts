@@ -1,4 +1,13 @@
-export const DragAndDropTouch = () => {
+import { useEffect } from "react";
+
+export function useDragAndDropTouch ()
+{
+    useEffect(()=>{
+        DragAndDropTouch()
+    },[])
+}
+
+const DragAndDropTouch = () => {
   var DragDropTouch;
   (function (DragDropTouch_1) {
     /**

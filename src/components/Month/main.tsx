@@ -1,93 +1,42 @@
-import { memo, useState } from "react";
 import { useMonthDate } from "../../hooks/useMonthDate";
-import { MemoDay } from "../../components/Day/main";
-import { MemoIDayHolder } from "../../components/DayHolder/main";
-import * as StyledMonth from "./tw";
-import { DateService } from "../../utils/Date";
+import {TWdaysBoard} from "./tw";
 
-import { zeroPadd } from "../../utils/zeroPadd";
 //import { useLocalUserPreferencesContext } from "../../hooks/useLocalUserPreferences";
-import { usePrint } from "../../hooks/usePrint";
-import { usePushedDays } from "../../hooks/usePushDays";
 import { CurrentMonthScrollAnchor } from "./MonthToScrollBack";
 import { totalCellsInLastRow } from "./totalCellsInLastRow";
+import { MonthHeader, MonthLayout } from "./components";
+import { usePrintPDF } from "./usePrintPDF";
+import { PaddedDays } from "./PaddedDays";
+import { CurrentDays } from "./CurrentDays";
 
 const Month = ({ year, month }: jh.date.monthData) => {
-  const pushedDays = usePushedDays(); //!days affected by event dispatcher
-  const date = useMonthDate(year, month); //memoized date stats needed to render a month grid
 
-  //2. locked days
+    const date = useMonthDate(year, month); //memoized date stats needed to render a month grid
+  
+    const [prevMonth, nextMonth] = totalCellsInLastRow(date.start, date.daysList.length);
 
-  //3. user preferences
-  //const { showWeekends } = useLocalUserPreferencesContext().localState;
+  //-----------------------------------------------------------------------------------------------
+    const printer = usePrintPDF();
+ 
+    return (
+    
+        <MonthLayout print={printer.isVisible}>
+        
+            <MonthHeader year={date.year} month={date.month} date={date.dateFormat} onDoubleClick={printer.hsend}  />
 
-  //4. print config
-  const [toPrint, hPrint] = usePrint();
+            <TWdaysBoard>
 
-  const [left, rest] = totalCellsInLastRow(date.start, date.daysList.length);
+                <PaddedDays days={prevMonth} year={date.year} month={date.month} paddPosition={"prev"} />
 
-  const [textArea, setTextArea] = useState(0);
-  const [textEvent, setTextEvent] = useState(0);
+                <CurrentDays days={date.daysList} year={date.year} month={date.month} />
 
-  return (
-    <StyledMonth.TWflexColLayout
-      className="relative"
-      $toPrint={toPrint}
-      title="Double click here to print this month"
-    >
-      <div className="text-transparent h-0"></div>
-      {/*month-header*/}
-      <StyledMonth.TWheader
-        id={`month-${date.year}-${zeroPadd(date.month)}`}
-        onDoubleClick={hPrint}
-      >
-        {date.dateFormat}
-      </StyledMonth.TWheader>
+                <PaddedDays days={nextMonth} year={date.year} month={date.month} paddPosition={"next"} />
 
-      {/*board container*/}
-      <StyledMonth.TWdaysBoard>
-        <StyledMonth.TWdayShift $weekday={"mon"} />
+            </TWdaysBoard>
+        
+            <CurrentMonthScrollAnchor {...{ year, month }} />
 
-        {left //previous days
-          .map((day, index) => (
-            <MemoIDayHolder
-              key={"l" + day}
-              fullDate={`${DateService.ComposeDate(year, month, 1)}:l${index}`}
-            ></MemoIDayHolder>
-          ))
-          .concat(
-            date.daysList.map((day) => (
-              <MemoDay
-                key={DateService.ComposeDate(year, month, day)}
-                daynumber={day}
-                fullDate={DateService.ComposeDate(year, month, day)}
-                pushedDays={pushedDays}
-                textArea={textArea}
-                setTextArea={setTextArea}
-                textEvent={textEvent}
-                setTextEvent={setTextEvent}
-              ></MemoDay>
-            ))
-          )
-          .concat(
-            //rest days
-            rest.map((day, index) => {
-              const lastDay = date.daysList[date.daysList.length - 1];
-              return (
-                <MemoIDayHolder
-                  key={"r" + day}
-                  fullDate={`${DateService.ComposeDate(
-                    year,
-                    month,
-                    lastDay
-                  )}:r${index}`}
-                ></MemoIDayHolder>
-              );
-            })
-          )}
-      </StyledMonth.TWdaysBoard>
-      <CurrentMonthScrollAnchor {...{ year, month }} />
-    </StyledMonth.TWflexColLayout>
+        </MonthLayout>
   );
 };
 
