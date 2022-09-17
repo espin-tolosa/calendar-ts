@@ -4,8 +4,6 @@ import * as tw_Layouts from "../../layouts/tw"
 import * as StyledTopnav from "./tw";
 import { useCtxCurrentMonthRef } from "../../context/currentMonthReference";
 import { useCtxTopNavRef } from "../../context/topNavSize";
-import { useEffect } from "react";
-import { DOMRefs } from "../../context/DOMRefs";
 import { useCleanSession } from "../../hooks/useCleanSession";
 
 export const TOPNAV_ID = "Topnav";
@@ -13,16 +11,12 @@ export const TOPNAV_ID = "Topnav";
 export function TopBar({user}:{user:string})
 {
   const topNavRef = useCtxTopNavRef();
-  const dispatchDOMRef = DOMRefs.useDispatch();
 
   //Custom hook to clean session, gives a handler to set to true when session is to clean
   const cleanSession = useCleanSession();
 
   const monthRef = useCtxCurrentMonthRef();
 
-  useEffect(() => {
-    dispatchDOMRef({ type: "update", payload: topNavRef });
-  }, []);
 
   return (
   <tw_Layouts.TWheader>
@@ -34,10 +28,10 @@ export function TopBar({user}:{user:string})
       {/*center-header*/}{" "}
       <StyledTopnav.TWtitle
         onClick={() => {
-          if (monthRef?.current == undefined) {
-            return;
-          }
-          monthRef?.current?.scrollIntoView({ behavior: "smooth" });
+
+            if (monthRef?.current == undefined) {return;}
+
+            monthRef?.current?.scrollIntoView({ behavior: "smooth" });
         }}
       >
         {DateService.GetTodayDateFormat()}

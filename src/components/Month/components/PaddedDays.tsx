@@ -1,5 +1,5 @@
-import { zeroPadd } from "@/utils/zeroPadd";
-import { MemoIDayHolder } from "../DayHolder/main";
+import { MemoIDayHolder } from "../../DayHolder/main";
+import { zeroPadd } from "../../../utils/zeroPadd";
 
 export function PaddedDays({days, year, month, paddPosition}:{days:number[], year:number, month:number, paddPosition:string})
 {

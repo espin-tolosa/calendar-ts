@@ -7,7 +7,6 @@ import { App } from "./App";
 const root = window.document.getElementById("root") as HTMLDivElement;
 
 createRoot(root).render(
-    <StrictMode>
+
         <App/>
-    </StrictMode>
 );

@@ -2,12 +2,14 @@ import { useMonthDate } from "../../hooks/useMonthDate";
 import {TWdaysBoard} from "./tw";
 
 //import { useLocalUserPreferencesContext } from "../../hooks/useLocalUserPreferences";
-import { CurrentMonthScrollAnchor } from "./MonthToScrollBack";
+import { CurrentMonthScrollAnchor } from "./components/MonthToScrollBack";
 import { totalCellsInLastRow } from "./totalCellsInLastRow";
-import { MonthHeader, MonthLayout } from "./components";
+
+import { MonthLayout} from "./components/MonthLayout";
 import { usePrintPDF } from "./usePrintPDF";
-import { PaddedDays } from "./PaddedDays";
-import { CurrentDays } from "./CurrentDays";
+import { CurrentDays } from "./components/CurrentDays";
+import { PaddedDays } from "./components/PaddedDays";
+import { MonthHeader } from "./components/MonthHeader";
 
 const Month = ({ year, month }: jh.date.monthData) => {
 
@@ -19,10 +21,12 @@ const Month = ({ year, month }: jh.date.monthData) => {
     const printer = usePrintPDF();
  
     return (
+        <>
     
         <MonthLayout print={printer.isVisible}>
         
             <MonthHeader year={date.year} month={date.month} date={date.dateFormat} onDoubleClick={printer.hsend}  />
+            <CurrentMonthScrollAnchor {...{ year, month }} />
 
             <TWdaysBoard>
 
@@ -34,9 +38,9 @@ const Month = ({ year, month }: jh.date.monthData) => {
 
             </TWdaysBoard>
         
-            <CurrentMonthScrollAnchor {...{ year, month }} />
 
         </MonthLayout>
+        </>
   );
 };
 
