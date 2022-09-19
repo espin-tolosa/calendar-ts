@@ -67,10 +67,6 @@ function Day({daynumber, fullDate, pushedDays, textArea, setTextArea, textEvent,
   const styledProps = { $isWeekend, $isLock };
   const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
 
-  const addEvent = usePostQuery(fullDate);
-
-  const action = useDoubleClick(addEvent);
-
   const thisNode = useRef<HTMLDivElement>(null);
 
   return (
@@ -79,7 +75,6 @@ function Day({daynumber, fullDate, pushedDays, textArea, setTextArea, textEvent,
       ref={thisDay}
       style={height.current && !visible? {height: `${height.current}px`,}: {}}
       {...styledProps}
-      onClick={action}
     >
       <DayStyles.header
         id={`day-header:${fullDate}`}

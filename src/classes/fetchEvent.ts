@@ -25,7 +25,6 @@ export class FetchEvent
     {
         const myHeaders = new Headers();
         myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", "Bearer 7|AqGQZPjyX6qe62NtWgkFgKi44OP7vBeimCsWU406");
         
         const formdata = new FormData();
         formdata.append("client", event.client );

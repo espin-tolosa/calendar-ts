@@ -45,7 +45,7 @@ function useAddStylesClientCSSlasses() {
   }
 
   const handleFetch = () => {
-    fetch(api.routes.clients)
+    fetch("http://localhost:8000/api/styles")
       .then((res) => res.json())
       .then((json: jh.response.colors) => {
         if (!isMount.current) {
