@@ -14,8 +14,8 @@ export const EventCard: React.FC<EventCard> = (propTypes): JSX.Element => {
       id={eventID(propTypes.event.id, "master", "ContentContainer")}
       className="flex flex-col w-full"
       ref={nodeRef}
-      onMouseEnter={() => setIsHover(true)}
-      onMouseLeave={() => setTimeout(() => setIsHover(false), 1000)}
+     // onMouseEnter={() => setIsHover(true)}
+     // onMouseLeave={() => setTimeout(() => setIsHover(false), 1000)}
     >
       <EventClientSelector style={propTypes.style} event={propTypes.event} />
 

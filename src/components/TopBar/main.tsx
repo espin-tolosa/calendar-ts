@@ -24,7 +24,7 @@ export function TopBar({user}:{user:string})
 
     <StyledTopnav.TWcontainer id={TOPNAV_ID} ref={topNavRef}>
       {/*left-header*/}
-      <StyledTopnav.TWlogo>{`JH Diary | user: ${user}`}</StyledTopnav.TWlogo>
+      <StyledTopnav.TWlogo>{`JH Diary | user: ${user.toUpperCase()}`}</StyledTopnav.TWlogo>
       {/*center-header*/}{" "}
       <StyledTopnav.TWtitle
         onClick={() => {
@@ -44,15 +44,7 @@ export function TopBar({user}:{user:string})
           title={"Cleans up your session token | Ctrl+Alt+q"}
           onClick={(e) => {
             e.stopPropagation();
-            //cleanSession();
-            //!Developing
-            const development = () => {
-              window.document.documentElement.requestFullscreen();
-            };
-
-            import.meta.env.MODE === "development"
-              ? development()
-              : cleanSession();
+            window.location.href ="http://localhost:8000/logout";
           }}
         >
           Logout

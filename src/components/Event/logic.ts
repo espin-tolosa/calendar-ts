@@ -5,12 +5,8 @@ import {
 import { HEXtoHSL, HSLController } from "../../utils/giveMeColor";
 import { useEffect, useMemo, useState } from "react";
 
-export const useStyles = (
-  isChildren: boolean,
-  hover: boolean,
-  event: jh.event,
-  clientColor: string
-) => {
+export function useStyles(isChildren: boolean, hover: boolean, event: jh.event, clientColor: string)
+{
   const mapClientToColor = HEXtoHSL(clientColor);
   if (mapClientToColor === undefined) {
     return;

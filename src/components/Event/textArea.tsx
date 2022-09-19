@@ -88,7 +88,7 @@ export const EventTextArea = ({
         <StyledEvent.TWtextArea
           ref={textRef}
           role="textbox"
-          contentEditable={true}
+          //contentEditable={true}
           //TODO: read this to gain control over the component: https://goshacmd.com/controlled-vs-uncontrolled-inputs-react/
           suppressContentEditableWarning={true}
           onClick={(e) => {

@@ -16,7 +16,8 @@ export class FetchEvent
 
     public async all() : Promise<jh.event[]>
     {
-        const response = await window.fetch(this.routes.create(this.ENV_API_ENDPOINT_NAME)); 
+        const url = new String(window.location);
+        const response = await window.fetch(this.routes.create(this.ENV_API_ENDPOINT_NAME + "/" + url.split("/").at(-1)?.toUpperCase() )); 
         const list = await response.json();
         return list.data;
     }

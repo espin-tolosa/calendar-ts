@@ -51,8 +51,8 @@ export const Event = ({
 
   //TODO: make this a function
   const color = clientsStyles.response?.colors[event.client] || {
-    primary: "#abcabc",
-    secondary: "#aaaaaa",
+    primary: "#b3b4b6",
+    secondary: "#b3b4b6",
   };
 
   const style = useStyles(isChildren, hover, event, color.primary);
@@ -64,23 +64,6 @@ export const Event = ({
     DateService.DaysFrom(event.start, maxDayAvailable)
   );
 
-  const user = useToken();
-
-  if (user.isValid() && !user.isAuth()) {
-    if (style?.dinamic) {
-      style.dinamic =
-        user.user() === event.client
-          ? style.dinamic
-          : { background: "lightgray" };
-    }
-    if (style?.static) {
-      style.static =
-        user.user() === event.client
-          ? style.static
-          : { background: "lightgray" };
-    }
-  }
-
   return (
     <>
       <DragHandlers event={event} spread={spreadCells}>
@@ -90,7 +73,7 @@ export const Event = ({
             ref={eventRef}
             $isChildren={isChildren}
             $isHover={hover}
-            style={style?.dinamic}
+            style={event.client !== "MISC" ? (style?.dinamic || {}) : {background: "gray"}}
             $cells={spreadCells}
             title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
             $client={event.client.toLowerCase()}
@@ -99,7 +82,7 @@ export const Event = ({
               <EventCard
                 event={event}
                 refNode={createRef()}
-                style={style?.static || {}}
+                style={event.client !== "MISC" ? (style?.static || {}) : {background: "gray"}}
                 textArea={textArea}
                 setTextArea={setTextArea}
                 setTextEvent={setTextEvent}

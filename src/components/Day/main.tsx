@@ -5,6 +5,7 @@ import { DateService } from "../../utils/Date";
 import { usePostQuery } from "../../api/queries";
 import { useDoubleClick } from "../../hooks/useDoubleClick";
 import { useToken } from "../../hooks/useToken";
+import { DayContainer } from "./components/Container";
 
 interface Day {
   daynumber: number;
@@ -70,23 +71,7 @@ function Day({daynumber, fullDate, pushedDays, textArea, setTextArea, textEvent,
   const thisNode = useRef<HTMLDivElement>(null);
 
   return (
-    <DayStyles.GlobalStyle
-      id={`day:${fullDate}`}
-      ref={thisDay}
-      style={height.current && !visible? {height: `${height.current}px`,}: {}}
-      {...styledProps}
-    >
-      <DayStyles.header
-        id={`day-header:${fullDate}`}
-        {...styledProps}
-        ref={thisNode}
-      >
-        <DayStyles.daySpot
-          id={`day-spot:${fullDate}`}
-          $isToday={isToday}
-        >{`${daynumber}`}</DayStyles.daySpot>
-      </DayStyles.header>
-
+    <DayContainer fullDate={fullDate} height={height} visible={visible} thisDay={thisDay} styledProps={styledProps} thisNode={thisNode} isToday={isToday}  daynumber={daynumber}>
       {visible ? (
         <MemoEventsThrower
           day={fullDate}
@@ -99,7 +84,7 @@ function Day({daynumber, fullDate, pushedDays, textArea, setTextArea, textEvent,
       ) : (
         <></>
       )}
-    </DayStyles.GlobalStyle>
+    </DayContainer>
   );
 }
 

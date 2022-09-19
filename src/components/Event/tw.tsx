@@ -91,7 +91,7 @@ text-xs text-transparent
     import.meta.env.MODE === "development-none" ? "outline outline-2 mx-1" : ""}
 `;
 
-export const TWStyledSelect = tw.select`
+export const TWStyledSelect = tw.div`
   border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer outline-none text-white print:text-xs text-sm
 	`;
 
