@@ -1,5 +1,5 @@
 import React, { memo, useLayoutEffect, useRef, useState } from "react";
-import { styles } from "../../components/Day/tw";
+import * as DayStyles from "../../components/Day/tw";
 import { MemoEventsThrower } from "../../components/EventsThrower/main";
 import { DateService } from "../../utils/Date";
 import { usePostQuery } from "../../api/queries";
@@ -26,15 +26,7 @@ interface Day {
 // cControllerState - start,end
 // cControllerState - id,client,job
 
-function Day({
-  daynumber,
-  fullDate,
-  pushedDays,
-  textArea,
-  setTextArea,
-  textEvent,
-  setTextEvent,
-}: Day) {
+function Day({daynumber, fullDate, pushedDays, textArea, setTextArea, textEvent, setTextEvent}: Day) {
   //Callbacks
 
   const [visible, setVisible] = useState(true);
@@ -75,47 +67,30 @@ function Day({
   const styledProps = { $isWeekend, $isLock };
   const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
 
-  const token = useToken();
   const addEvent = usePostQuery(fullDate);
 
-  const onClick = useDoubleClick(addEvent);
+  const action = useDoubleClick(addEvent);
 
   const thisNode = useRef<HTMLDivElement>(null);
 
   return (
-    <styles.contain
+    <DayStyles.GlobalStyle
       id={`day:${fullDate}`}
       ref={thisDay}
-      style={
-        height.current && !visible
-          ? {
-              height: `${height.current}px`,
-            }
-          : {}
-      }
+      style={height.current && !visible? {height: `${height.current}px`,}: {}}
       {...styledProps}
-      onClick={(e) => {
-        const target = e.target as HTMLElement;
-        if (thisNode.current !== null && target !== null) {
-          const thisId = thisNode.current.id.split(":")[1];
-          const pointerId = target.id.split(":")[1];
-          if (thisId !== pointerId) {
-            return;
-          }
-        }
-        token.isAuth() && onClick();
-      }}
+      onClick={action}
     >
-      <styles.header
+      <DayStyles.header
         id={`day-header:${fullDate}`}
         {...styledProps}
         ref={thisNode}
       >
-        <styles.daySpot
+        <DayStyles.daySpot
           id={`day-spot:${fullDate}`}
           $isToday={isToday}
-        >{`${daynumber}`}</styles.daySpot>
-      </styles.header>
+        >{`${daynumber}`}</DayStyles.daySpot>
+      </DayStyles.header>
 
       {visible ? (
         <MemoEventsThrower
@@ -129,7 +104,7 @@ function Day({
       ) : (
         <></>
       )}
-    </styles.contain>
+    </DayStyles.GlobalStyle>
   );
 }
 

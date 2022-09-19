@@ -5,7 +5,7 @@ export function MonthHeader({year, month, date, onDoubleClick}:{year:number, mon
 {
     return (
 
-        <TWheader id={`month-${year}-${zeroPadd(month)}`} onDoubleClick={onDoubleClick} > {date}
+        <TWheader id={`month-${year}-${zeroPadd(month)}`} onDoubleClick={onDoubleClick}>{date}
         </TWheader>
 
     )

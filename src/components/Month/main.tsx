@@ -22,24 +22,23 @@ const Month = ({ year, month }: jh.date.monthData) => {
  
     return (
         <>
-    
-        <MonthLayout print={printer.isVisible}>
+            <MonthLayout print={printer.isVisible}>
         
-            <MonthHeader year={date.year} month={date.month} date={date.dateFormat} onDoubleClick={printer.hsend}  />
-            <CurrentMonthScrollAnchor {...{ year, month }} />
+                <MonthHeader year={date.year} month={date.month} date={date.dateFormat} onDoubleClick={printer.hsend}  />
 
-            <TWdaysBoard>
+                <TWdaysBoard>
 
-                <PaddedDays days={prevMonth} year={date.year} month={date.month} paddPosition={"prev"} />
+                    <PaddedDays days={prevMonth} year={date.year} month={date.month} paddPosition={"prev"} />
 
-                <CurrentDays days={date.daysList} year={date.year} month={date.month} />
+                    <CurrentDays days={date.daysList} year={date.year} month={date.month} />
 
-                <PaddedDays days={nextMonth} year={date.year} month={date.month} paddPosition={"next"} />
+                    <PaddedDays days={nextMonth} year={date.year} month={date.month} paddPosition={"next"} />
 
-            </TWdaysBoard>
+                </TWdaysBoard>
         
+                <CurrentMonthScrollAnchor {...{ year, month }} />
 
-        </MonthLayout>
+            </MonthLayout>
         </>
   );
 };

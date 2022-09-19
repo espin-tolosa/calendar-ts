@@ -13,13 +13,15 @@ const useClickState = () => {
 };
 
 export const useDoubleClick = (callback: DoubleClickCallback): (() => void) => {
-  const state = useClickState();
-  const id = useRef<NodeJS.Timeout | null>(null);
-  const stableCallback = useCallback(() => {
-    callback();
-    state.reset();
-  }, [callback]);
-  useEffect(() => {
+
+    const state = useClickState();
+    const id = useRef<NodeJS.Timeout | null>(null);
+    const stableCallback = useCallback(() => {
+        callback();
+        state.reset();
+    }, [callback]);
+
+    useEffect(() => {
     //State 1: create a time to reset the state and the timer itself after the relaxation time
     if (state.isOnState(1)) {
       id.current = setTimeout(() => {

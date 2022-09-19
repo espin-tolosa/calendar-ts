@@ -14,8 +14,7 @@ this requires JS, hasta ahora solamente el CSS ha sido incorporado.
 // Max num of possible columns in a month is 6
 // choosen min height = (100-3-2) / 6 ~= 15vh
 
-export namespace styles {
-  export const contain = tw.div<{
+  export const GlobalStyle = tw.div<{
     $isLock: boolean;
     $isWeekend: boolean;
   }>`
@@ -60,4 +59,4 @@ ${() => toPrint}
     ($isToday && "bg-blue-400 text-white") || ""}
 	${() => toPrint}
 `;
-}
+

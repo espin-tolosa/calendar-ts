@@ -23,13 +23,25 @@ export class FetchEvent
 
     public async create(event: jh.event) : Promise<jh.event>
     {
-        const filterEvent = (({id,client,job,start,end }) => ({id,client,job,start,end}))(event);
-        const data = new FormData();
-        data.append("json",JSON.stringify(filterEvent));
+        const myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", "Bearer 7|AqGQZPjyX6qe62NtWgkFgKi44OP7vBeimCsWU406");
+        
+        const formdata = new FormData();
+        formdata.append("client", event.client );
+        formdata.append("job", event.job);
+        formdata.append("start", event.start);
+        formdata.append("end", event.end);
+        
+        const requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: formdata,
+        };
 
         try
         {
-           const response = await window.fetch(this.routes.create(this.ENV_API_ENDPOINT_NAME), {method: "POST", body: data} );
+           const response = await window.fetch(this.routes.create(this.ENV_API_ENDPOINT_NAME), requestOptions);
            return await response.json();
         }
 
@@ -38,7 +50,6 @@ export class FetchEvent
             return new Promise <jh.event> (resolve => resolve(nullEvent()))
         }
     }
-
 }
 
 class Routes
