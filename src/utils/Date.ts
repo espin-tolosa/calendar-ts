@@ -222,6 +222,35 @@ export function ListPrevDates(
   return result.reverse();
 }
 
+export function GetNextDate(startDate: { year: number; month: number }) {
+  const state = { ...startDate };
+  const addOneYear = () => {
+    state.year += 1;
+    state.month = 1;
+  };
+  const addOneMonth = () => {
+    state.month += 1;
+  };
+
+  return () => {
+    state.month === 12 ? addOneYear() : addOneMonth();
+    return { ...state };
+  };
+}
+
+export function ListNextDates(
+  start: jh.date.monthData,
+  length: number
+): Array<jh.date.monthData> {
+  const prevState = GetNextDate(start);
+  const result: Array<jh.date.monthData> = [];
+  for (let i = 0; i != length; i++) {
+    result.push(prevState());
+  }
+
+  return result;
+}
+
 function GetDateFrom(fullDate: string, offset: number) {
   //  const today = new Date(fullDate);
   //  const previous = new Date(today.getTime() + offset);

@@ -26,39 +26,39 @@ import { ClientsStyles } from "./context/useFetchClientStyle";
 const root = window.document.getElementById("root") as HTMLDivElement;
 
 createRoot(root).render(
-    <StrictMode>
-  <ClientsStyles>
-      <CurrentMonthRef>
-        <EventInDnD>
-          <EventInController>
-            <KeyBuffer>
-              <TemporaryEvent>
-                <TopNavRef>
-                  <PushedDays>
-                    <IsFetchingEvents>
-                      <IsDraggingEvent>
-                        <ControllerProvider>
-                          <ControllerProviderDates>
-                            <UserPreferences>
-                              <EventsDispatcher>
-                                <EventsStatus>
-                                  <UserSession>
-                                    <App />
-                                  </UserSession>
-                                </EventsStatus>
-                              </EventsDispatcher>
-                            </UserPreferences>
-                          </ControllerProviderDates>
-                        </ControllerProvider>
-                      </IsDraggingEvent>
-                    </IsFetchingEvents>
-                  </PushedDays>
-                </TopNavRef>
-              </TemporaryEvent>
-            </KeyBuffer>
-          </EventInController>
-        </EventInDnD>
-      </CurrentMonthRef>
-  </ClientsStyles>
-    </StrictMode>
+<StrictMode>
+    <ClientsStyles>
+    <CurrentMonthRef>
+    <EventInDnD>
+    <EventInController>
+    <KeyBuffer>
+    <TemporaryEvent>
+    <TopNavRef>
+    <PushedDays>
+    <IsFetchingEvents>
+    <IsDraggingEvent>
+    <ControllerProvider>
+    <ControllerProviderDates>
+    <UserPreferences>
+    <EventsDispatcher>
+    <EventsStatus>
+    <UserSession>
+        <App />
+    </UserSession>
+    </EventsStatus>
+    </EventsDispatcher>
+    </UserPreferences>
+    </ControllerProviderDates>
+    </ControllerProvider>
+    </IsDraggingEvent>
+    </IsFetchingEvents>
+    </PushedDays>
+    </TopNavRef>
+    </TemporaryEvent>
+    </KeyBuffer>
+    </EventInController>
+    </EventInDnD>
+    </CurrentMonthRef>
+    </ClientsStyles>
+</StrictMode>
 );

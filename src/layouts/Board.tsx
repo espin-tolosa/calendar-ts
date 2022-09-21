@@ -3,6 +3,24 @@ import { MemoMonth } from "../components/Month/main";
 import { useGetMonths, useInfiniteScroll } from "../hooks/useInfiniteScroll";
 import { dispatchAllFetchEvents } from "../api/useGetAllEventsFrom";
 
+//TODO: Move to class
+const genKey = (value:jh.date.monthData)=>`${value.year}-${value.month}`;
+const genMonth = (value: jh.date.monthData) => <MemoMonth key={genKey(value)} {...value} />
+
+function MonthList({months, eol}:{months:jh.date.monthData[], eol: ()=>JSX.Element})
+{
+    return(
+        <>
+            {
+                months.map(genMonth)
+            }
+            {
+                eol()
+            }
+        </>
+    );
+}
+
 export function Board()
 {
     const {monthKeys, hMonthKeys} = useGetMonths();
@@ -15,13 +33,7 @@ export function Board()
         <TWmain>
         
             <TWboard id={"Board"}>
-        
-            {monthKeys.map((value) => { return (
-                <MemoMonth key={`${value.year}-${value.month}`} {...value} />
-            )})}
-
-            {EndOfList()}
-
+                <MonthList months={monthKeys} eol={EndOfList} />
             </TWboard>
 
         </TWmain>

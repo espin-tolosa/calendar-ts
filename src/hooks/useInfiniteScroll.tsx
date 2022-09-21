@@ -12,23 +12,21 @@ export function useInfiniteScroll(action: ()=>void )
         entries[0].isIntersecting && action();
     }, []);
 
-  const observer = useRef(
-    new IntersectionObserver(onChange, {
-      rootMargin: "500px",
-    })
-  );
+    const observer = useRef(
+        new IntersectionObserver(onChange,{rootMargin: "500px"} )
+    );
 
-  useEffect(() => {
-    endOfList.current !== null && observer.current.observe(endOfList.current);
+    useEffect(() => {
+        endOfList.current !== null && observer.current.observe(endOfList.current);
 
     return () => {
-      endOfList.current !== null && observer.current.unobserve(endOfList.current);
+        endOfList.current !== null && observer.current.unobserve(endOfList.current);
     };
   }, []);
 
-  const EndOfList = ()=> (<div ref={endOfList}></div>)
+  const EndOfList = ()=><div ref={endOfList}></div>
 
-  return EndOfList
+  return EndOfList;
 }
 
 
