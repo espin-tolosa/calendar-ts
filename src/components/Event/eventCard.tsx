@@ -21,9 +21,6 @@ export const EventCard: React.FC<EventCard> = (propTypes): JSX.Element => {
 
       <EventTextArea
         event={propTypes.event}
-        textArea={propTypes.textArea}
-        setTextArea={propTypes.setTextArea}
-        setTextEvent={propTypes.setTextEvent}
         refNode={nodeRef}
         isHover={isHover}
         setIsHover={setIsHover}

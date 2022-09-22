@@ -1,5 +1,5 @@
 import React from "react";
-import * as DayStyles from "../../../components/Day/tw";
+import * as DayStyles from "../tw";
 
 interface DayContainer {
     fullDate: string,
@@ -12,12 +12,11 @@ interface DayContainer {
         $isWeekend: boolean,
         $isLock: boolean,
     }
-    thisNode: React.RefObject<HTMLDivElement>,
     isToday: boolean,
     daynumber: number
 }
 
-export function DayContainer ( props : DayContainer  )
+export function DayLayout ( props : DayContainer  )
 {
     return (
 
@@ -30,7 +29,6 @@ export function DayContainer ( props : DayContainer  )
       <DayStyles.header
         id={`day-header:${props.fullDate}`}
         {...props.styledProps}
-        ref={props.thisNode}
       >
         <DayStyles.daySpot
           id={`day-spot:${props.fullDate}`}

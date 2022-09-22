@@ -41,6 +41,14 @@ declare namespace jh {
     };
     type: event.type;
   }
+
+    interface textArea
+    {
+        textArea: number,
+        setTextArea: React.Dispatch<React.SetStateAction<number>>,
+        textEvent: number,
+        setTextEvent: React.Dispatch<React.SetStateAction<number>>
+    }
 }
 
 declare namespace CustomTypes {

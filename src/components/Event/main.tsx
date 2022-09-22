@@ -1,4 +1,4 @@
-import { createRef, useLayoutEffect, useRef, useState } from "react";
+import { createRef, useContext, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
 import { DateService } from "../../utils/Date";
 import { useHoverEvent, useStyles } from "../../components/Event/logic";
@@ -7,16 +7,11 @@ import { EventCard, EventTail } from "../../components/Event/eventCard";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
 import { DragHandlers } from "./dragHandlers";
 import { Placeholder } from "./placeholder";
-import { useToken } from "@/hooks/useToken";
+import { textAreaCtx } from "../Month/components/CurrentDays";
 
 interface Event {
   event: jh.event;
   index: number;
-
-  textArea: number;
-  setTextArea: React.Dispatch<React.SetStateAction<number>>;
-  textEvent: number;
-  setTextEvent: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export function eventID(id: number, role: string, subcomponent: string) {
@@ -29,10 +24,6 @@ export function eventID(id: number, role: string, subcomponent: string) {
 export const Event = ({
   event,
   index,
-  textArea,
-  setTextArea,
-  textEvent,
-  setTextEvent,
 }: Event) => {
   const eventRef = useRef<HTMLDivElement>();
 
@@ -83,9 +74,6 @@ export const Event = ({
                 event={event}
                 refNode={createRef()}
                 style={event.client !== "MISC" ? (style?.static || {}) : {background: "gray"}}
-                textArea={textArea}
-                setTextArea={setTextArea}
-                setTextEvent={setTextEvent}
               />
             ) : (
               <EventTail event={event} />
@@ -98,10 +86,6 @@ export const Event = ({
             index={index}
             event={event}
             eventRef={eventRef}
-            textArea={textArea}
-            setTextArea={setTextArea}
-            textEvent={textEvent}
-            setTextEvent={setTextEvent}
           />
         </>
       </DragHandlers>
@@ -115,21 +99,9 @@ export const MemoEvent = Event;
 interface EventHolder {
   event: jh.event;
   id: string;
-
-  textArea: number;
-  setTextArea: React.Dispatch<React.SetStateAction<number>>;
-  textEvent: number;
-  setTextEvent: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export const SpanHolders = ({
-  event,
-  id,
-  textArea,
-  setTextArea,
-  textEvent,
-  setTextEvent,
-}: EventHolder) => {
+export const SpanHolders = ({event, id}: EventHolder) => {
   const [parent, closestTail, family] = useGetEventFamily(event);
   const eventRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<{ height: string }>({ height: "0px" });
@@ -149,6 +121,9 @@ export const SpanHolders = ({
 
   const week = DateService.GetWeekRangeOf(event.start);
   const eventsOfWeek = useEventState(week);
+
+  const {textArea, textEvent} = useContext(textAreaCtx) as jh.textArea;
+  
 
   useLayoutEffect(() => {
     if (!hasMutable(event)) {

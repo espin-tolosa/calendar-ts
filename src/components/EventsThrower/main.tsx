@@ -6,13 +6,6 @@ import { isPlaceholder } from "../../utils/ValidateEvent";
 
 interface EventProps {
   day: string;
-  pushedDays: Set<string>;
-  textArea: number;
-  setTextArea: React.Dispatch<React.SetStateAction<number>>;
-  textEvent: number;
-  setTextEvent: React.Dispatch<React.SetStateAction<number>>;
-  //textArea: number;
-  //setTextArea: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
@@ -47,10 +40,6 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
               key={`p-${keyValue}`}
               id={`p-${keyValue}`}
               event={event}
-              textArea={propTypes.textArea}
-              setTextArea={propTypes.setTextArea}
-              textEvent={propTypes.textEvent}
-              setTextEvent={propTypes.setTextEvent}
             ></MemoEventHolder>
           );
         }
@@ -61,10 +50,6 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
             key={`e-${keyValue}`}
             event={event}
             index={position}
-            textArea={propTypes.textArea}
-            setTextArea={propTypes.setTextArea}
-            textEvent={propTypes.textEvent}
-            setTextEvent={propTypes.setTextEvent}
           ></MemoEvent>
         );
       })}
@@ -72,7 +57,16 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
   );
 };
 
-export const MemoEventsThrower = EventsThrower;
+//export const MemoEventsThrower = EventsThrower;
+export const MemoEventsThrower = ({day}:{day:string})=>{
+    const event : jh.event = {type:"roothead", id:1, client:"Joe", job:"Mock long ext descriptn to check layout shift", start:"2022-09-12", end:"2022-09-12"};
+    return (
+        <div className="flex flex-col my-10 gap-4">
+
+            <MemoEvent event={event} index={0}/>
+        </div>
+    )
+}
 
 //export const MemoEventsThrower = memo(EventsThrower, (prev, next) => {
 //  //const datesSelectionEqual = prevSelection === nextSelection;

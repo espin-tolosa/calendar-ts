@@ -1,16 +1,14 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
 
 import { fetchEvent } from "../../utils/fetchEvent";
 import { useEventDispatch } from "../../hooks/useEventsState";
 import { useToken } from "../../hooks/useToken";
+import { textAreaCtx } from "../Month/components/CurrentDays";
 
 //Export to be composed in Event Card exposing props
 export interface TextArea {
   event: jh.event;
-  textArea: number;
-  setTextArea: React.Dispatch<React.SetStateAction<number>>;
-  setTextEvent: React.Dispatch<React.SetStateAction<number>>;
   refNode: React.RefObject<HTMLDivElement>;
 }
 
@@ -22,9 +20,6 @@ interface TextAreaLocal extends TextArea {
 
 export const EventTextArea = ({
   event,
-  textArea,
-  setTextArea,
-  setTextEvent,
   refNode,
   isHover,
   setIsHover,
@@ -32,6 +27,7 @@ export const EventTextArea = ({
   const textRef = useRef<HTMLSpanElement>(null);
   const eventDispatcher = useEventDispatch();
   const [isHoverActive, setIsHoverActive] = useState(false);
+  const {textArea, setTextArea, setTextEvent} = useContext(textAreaCtx) as jh.textArea;
 
   // Fetch job  changes before unmount the component
   useLayoutEffect(() => {

@@ -1,30 +1,24 @@
 import { useEventState } from "@/hooks/useEventsState";
 import { DateService } from "@/utils/Date";
-import { useLayoutEffect, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
+import { textAreaCtx } from "../Month/components/CurrentDays";
 import * as StyledEvent from "./tw";
 
 interface PlaceHolder {
   index: number;
   event: jh.event;
   eventRef: React.RefObject<HTMLDivElement | undefined>;
-  textArea: number;
-  setTextArea: React.Dispatch<React.SetStateAction<number>>;
-  textEvent: number;
-  setTextEvent: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function RootHolder({
   index,
   event,
   eventRef,
-  textArea,
-  setTextArea,
-  textEvent,
-  setTextEvent,
 }: PlaceHolder) {
   const [style, setStyle] = useState<{ height: string }>({ height: "0px" });
   const week = DateService.GetWeekRangeOf(event.start);
   const eventsOfWeek = useEventState(week);
+  const {textArea, textEvent} = useContext(textAreaCtx) as jh.textArea;
 
   //setup the mutable object by first time
   useLayoutEffect(() => {
