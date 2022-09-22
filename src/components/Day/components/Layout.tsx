@@ -1,41 +1,34 @@
-import React from "react";
+import { DateService } from "@/utils/Date";
 import * as DayStyles from "../tw";
 
 interface DayContainer {
     fullDate: string,
-    height: React.MutableRefObject<number>,
+    height: number,
     visible: boolean,
     thisDay: React.RefObject<HTMLDivElement>,
     children: JSX.Element,
-    styledProps:
-    {
-        $isWeekend: boolean,
-        $isLock: boolean,
-    }
     isToday: boolean,
     daynumber: number
 }
 
-export function DayLayout ( props : DayContainer  )
+export function DayLayout ( {fullDate, height, visible, thisDay, children, isToday, daynumber} : DayContainer  )
 {
+    const $isLock = false;
+    const $isWeekend = DateService.IsWeekend(fullDate);
+    const styledProps = { $isWeekend, $isLock };
+    
+    const style = !!height && !visible ? {height: `${height}px`,} : {}
+
     return (
 
-    <DayStyles.GlobalStyle
-      id={`day:${props.fullDate}`}
-      ref={props.thisDay}
-      style={props.height.current && !props.visible? {height: `${props.height.current}px`,}: {}}
-      {...props.styledProps}
-    >
-      <DayStyles.header
-        id={`day-header:${props.fullDate}`}
-        {...props.styledProps}
-      >
-        <DayStyles.daySpot
-          id={`day-spot:${props.fullDate}`}
-          $isToday={props.isToday}
-        >{`${props.daynumber}`}</DayStyles.daySpot>
-      </DayStyles.header>
-        {props.children}
-    </DayStyles.GlobalStyle>
+        <DayStyles.GlobalStyle ref={thisDay} style={style} {...styledProps}>
+
+            <DayStyles.header {...styledProps}>
+                <DayStyles.daySpot $isToday={isToday}> {daynumber} </DayStyles.daySpot>
+            </DayStyles.header>
+
+            {children}
+
+        </DayStyles.GlobalStyle>
     )
 }

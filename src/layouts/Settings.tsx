@@ -249,9 +249,6 @@ const EventDemo = ({ event }: { event: jh.event }) => {
               event={event}
               refNode={createRef()}
               style={style?.static || {}}
-              textArea={0}
-              setTextArea={() => 0}
-              setTextEvent={() => 0}
             />
           </div>
           <div className="flex w-40 flex-col">

@@ -4,25 +4,22 @@ export function useVirtualList()
 {
     const [visible, setVisible] = useState(false);
     const [hasShowedUp, setHasShowedUp] = useState(false);
-    const height = useRef(0);
+    const observedHeight = useRef(0);
     const observed = useRef<HTMLDivElement>(null);
     const onChange = (entries: Array<IntersectionObserverEntry>) =>
     {
         if (entries[0].isIntersecting)
         {
-            setTimeout(()=>{
-
-                setVisible(true);
-                setHasShowedUp(true);
-            },0)
+            setVisible(true);
+            setHasShowedUp(true);
             return;
         }
 
-        height.current = observed.current?.clientHeight ?? 0;
+        observedHeight.current = observed.current?.clientHeight ?? observedHeight.current;
         hasShowedUp && setVisible(false);        
     };
   
-    const observer = new IntersectionObserver(onChange, {rootMargin: "0px", threshold: 0});
+    const observer = new IntersectionObserver(onChange, {rootMargin: "300px", threshold: 0});
   
     useEffect(() =>
     {
@@ -35,5 +32,5 @@ export function useVirtualList()
     
     }, [visible, hasShowedUp]);
 
-    return {observed, height, visible}
+    return {observed, height: observedHeight.current, visible}
 }

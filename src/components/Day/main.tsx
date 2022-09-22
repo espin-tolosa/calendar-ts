@@ -12,9 +12,6 @@ function Day({day: daynumber, fullDate}: Day)
 {
     const {observed, height, visible} = useVirtualList();
 
-    const $isLock = false;
-    const $isWeekend = DateService.IsWeekend(fullDate);
-    const styledProps = { $isWeekend, $isLock };
     const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
 
     return (
@@ -23,7 +20,6 @@ function Day({day: daynumber, fullDate}: Day)
                     height={height}
                     visible={visible}
                     thisDay={observed}
-                    styledProps={styledProps}
                     isToday={isToday}
                     daynumber={daynumber}
                 >
