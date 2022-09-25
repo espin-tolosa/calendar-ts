@@ -11,74 +11,97 @@ import { nullEvent } from "../interfaces";
 //						type = "tailhead" (reserved keyword, expected to not be used by end users)
 //						start = some Monday in the range [parentStart, parentEnd]
 
-export class EventClass {
-  id: number;
-  client: string;
-  job: string;
-  start: string;
-  end: string;
+export class EventClass
+{
+    id: number;
+    client: string;
+    job: string;
+    start: string;
+    end: string;
 
-  constructor(
-    id: number,
-    client: string,
-    job: string,
-    start: string,
-    end: string
-  ) {
-    this.id = id;
-    this.client = client;
-    this.job = job;
-    this.start = start;
-    this.end = end;
-  }
+    constructor(id: number, client: string, job: string, start: string, end: string)
+    {
+      this.id = id;
+      this.client = client;
+      this.job = job;
+      this.start = start;
+      this.end = end;
+    }
 
-  static getParentEventFrom(state: Array<jh.event>, id: number) {
-    return state.find((e) => e.id === id) || nullEvent();
-  }
-  static getParentEvent(family: Array<jh.event>) {
-    const parentId = family.at(0)?.id || 0;
-    //return all events that has the same parentId
-    return (
-      family.find((e) => e.id === parentId && e.type === "roothead") ||
-      nullEvent()
-    );
-  }
-  static getClosestTail(family: Array<jh.event>, event: jh.event) {
-    return (
-      family
-        .filter((e) => e.type === "tailhead")
-        .map((tail) => {
-          const distance = DateService.DaysFrom(tail.start, event.start);
+    static getParentEventFrom(state: Array<jh.event>, id: number)
+    {
+      return state.find((e) => e.id === id) || nullEvent();
+    }
 
-          return { distance, tail };
-        })
-        .filter((tail) => tail.distance > 0)
-        .sort((prev, next) => prev.distance - next.distance)
-        .at(0)?.tail || nullEvent()
-    );
-    //return all events that has the same parentId
-  }
+    static getParentEvent(family: Array<jh.event>)
+    {
+      const parentId = family.at(0)?.id || 0;
+      //return all events that has the same parentId
+      return (
+        family.find((e) => e.id === parentId && e.type === "roothead") ||
+        nullEvent()
+      );
+    }
 
-  static isNull(event: jh.event) {
-    return (
-      !event.id && !event.client && !event.job && !event.start && !event.end
-    );
-  }
+    static getClosestTail(family: Array<jh.event>, event: jh.event)
+    {
+      return (
+        family
+          .filter((e) => e.type === "tailhead")
+          .map((tail) => {
+            const distance = DateService.DaysFrom(tail.start, event.start);
 
-  static isChildren(event: jh.event): boolean {
-    return event.type === "tailhead";
-  }
+            return { distance, tail };
+          })
+          .filter((tail) => tail.distance > 0)
+          .sort((prev, next) => prev.distance - next.distance)
+          .at(0)?.tail || nullEvent()
+      );
+      //return all events that has the same parentId
+    }
 
-  static isPlaceholder(event: jh.event): boolean {
-    return event.type.includes("holder");
-  }
+    static isNull(event: jh.event)
+    {
+      return (
+        !event.id && !event.client && !event.job && !event.start && !event.end
+      );
+    }
 
-  static isParent(event: jh.event): boolean {
-    return !this.isChildren(event) && !this.isPlaceholder(event);
-  }
+    static isChildren(event: jh.event): boolean
+    {
+      return event.type === "tailhead";
+    }
 
-  static getUnusedId() {
-    const lastId = 100000;
-    return lastId;
-  }
+    static isPlaceholder(event: jh.event): boolean
+    {
+      return event.type.includes("holder");
+    }
+
+    static isParent(event: jh.event): boolean
+    {
+      return !this.isChildren(event) && !this.isPlaceholder(event);
+    }
+
+    static getUnusedId()
+    {
+      const lastId = 100000;
+      return lastId;
+    }
+
+    public static eventID(id: number, role: string, subcomponent = "")
+    {
+        return `event:${role}:${id}:${subcomponent}`;
+    }
+
+    static getIdParams(serializedId:string)
+    {
+        const tokens = serializedId.split(":")
+        return {role: tokens[1], id: parseInt(tokens[2]), subcomponent: tokens[3]}
+
+    }
+
+    static hasMutable(e: jh.event): e is Required<jh.event>
+    {
+        return typeof e.mutable === "object";
+    }
 }

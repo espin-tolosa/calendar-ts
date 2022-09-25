@@ -3,31 +3,26 @@ import * as StyledEvent from "./tw";
 import { DateService } from "../../utils/Date";
 import { useHoverEvent, useStyles } from "../../components/Event/logic";
 import { useEventState, useGetEventFamily } from "../../hooks/useEventsState";
-import { EventCard, EventTail } from "../../components/Event/eventCard";
+import { EventCard } from "../../components/Event/eventCard";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
 import { DragHandlers } from "./dragHandlers";
 import { Placeholder } from "./placeholder";
 import { textAreaCtx } from "../Month/components/CurrentDays";
+import { isPlaceholder } from "@/utils/ValidateEvent";
+import { sendEndReferencesToPlaceholders } from "../EventsThrower/sendReferencesToPlaceholders";
+import { EventClass } from "@/classes/event";
 
-interface Event {
+export interface Event {
   event: jh.event;
   index: number;
-}
-
-export function eventID(id: number, role: string, subcomponent: string) {
-  return `event:${role}:${id}:${subcomponent}`;
 }
 
 /**
  * Event interactive component, expected functions
  */
-export const Event = ({
-  event,
-  index,
-}: Event) => {
-  const eventRef = useRef<HTMLDivElement>();
-
-  //week.from = event.start;
+export const Event = ({event, index}: Event) =>
+{
+    const eventRef = useRef<HTMLDivElement>();
 
   //--------------------------------------------
 
@@ -42,8 +37,8 @@ export const Event = ({
 
   //TODO: make this a function
   const color = clientsStyles.response?.colors[event.client] || {
-    primary: "#b3b4b6",
-    secondary: "#b3b4b6",
+    primary: "#a9a29d",
+    secondary: "#a9a29d",
   };
 
   const style = useStyles(isChildren, hover, event, color.primary);
@@ -55,108 +50,96 @@ export const Event = ({
     DateService.DaysFrom(event.start, maxDayAvailable)
   );
 
-  return (
+  const allEvents = useEventState();
+
+  if(isPlaceholder(event))
+  {
+    return (<MemoEventHolder event={event}/>)
+  }
+
+  sendEndReferencesToPlaceholders(allEvents, event, index);
+
+    const cssStyle= {
+        dinamic: event.client !== "MISC" ? (style?.dinamic || {}) : {background: "lightgray"},
+        static: event.client !== "MISC" ? (style?.static || {}) : {background: "lightgray"}
+    }
+
+    const id=EventClass.eventID(event.id, event.type)
+
+    return (
+
+    <DragHandlers event={event} spread={spreadCells}>
     <>
-      <DragHandlers event={event} spread={spreadCells}>
-        <>
-          <StyledEvent.TWtextContent
-            id={eventID(event.id, "master", "sizeAndPosition")}
-            ref={eventRef}
-            $isChildren={isChildren}
-            $isHover={hover}
-            style={event.client !== "MISC" ? (style?.dinamic || {}) : {background: "gray"}}
-            $cells={spreadCells}
-            title={`${event.client}: ${event.job} from: ${event.start} to ${event.start}`}
-            $client={event.client.toLowerCase()}
-          >
-            {!isChildren ? (
-              <EventCard
-                event={event}
-                refNode={createRef()}
-                style={event.client !== "MISC" ? (style?.static || {}) : {background: "gray"}}
-              />
-            ) : (
-              <EventTail event={event} />
-            )}
-          </StyledEvent.TWtextContent>
-          {
-            //!In charged of root spacing
-          }
-          <Placeholder
-            index={index}
-            event={event}
-            eventRef={eventRef}
-          />
-        </>
-      </DragHandlers>
+        <StyledEvent.TWtextContent id={id} style={cssStyle.dinamic} ref={eventRef}
+            $isChildren={isChildren} $isHover={hover} $cells={spreadCells} $client={event.client.toLowerCase()}>
+
+        {!isChildren ?
+            <EventCard event={event} refNode={createRef()} style={cssStyle.static}/>
+            :
+            <EventTail/>
+        }
+        </StyledEvent.TWtextContent>
+
+        <Placeholder index={index} event={event} eventRef={eventRef}/>
     </>
+    </DragHandlers>
   );
 };
 
+const EventTail = () =>
+{
+    return <div title="event tail" className="h-5"/>;
+};
 //export const MemoEvent = memo(Event);
 export const MemoEvent = Event;
 
 interface EventHolder {
   event: jh.event;
-  id: string;
 }
 
-export const SpanHolders = ({event, id}: EventHolder) => {
-  const [parent, closestTail, family] = useGetEventFamily(event);
-  const eventRef = useRef<HTMLDivElement>(null);
-  const [style, setStyle] = useState<{ height: string }>({ height: "0px" });
+const EventHolder = ({event}: EventHolder) =>
+{
+    const [parent, closestTail] = useGetEventFamily(event);
+    const eventRef = useRef<HTMLDivElement>(null);
+    const [style, setStyle] = useState<{ height: string }>({ height: "0px" });
+    const {textArea, textEvent} = useContext(textAreaCtx) as jh.textArea;
+    //!Corrected bug: was using event.end wich is zero
+    
+    useLayoutEffect(() =>
+    {
+        if (eventRef.current != null)
+        {
+            const closestIndex = typeof closestTail.mutable === "object" ? closestTail.mutable.index : 0;
+            event.mutable = {dragDirection: "none", eventRef: eventRef.current, index: closestIndex};
+        }
 
-  useLayoutEffect(() => {
-    if (eventRef.current != null) {
-      event.mutable = {
-        dragDirection: "none",
-        eventRef: eventRef.current,
-        index:
-          typeof closestTail.mutable === "object"
-            ? closestTail.mutable.index
-            : 0, //!Corrected bug: was using event.end wich is zero
-      };
-    }
-  }, [event]);
+    }, [eventRef, eventRef.current, event, textArea, textEvent]);
 
-  const week = DateService.GetWeekRangeOf(event.start);
-  const eventsOfWeek = useEventState(week);
+    const week = DateService.GetWeekRangeOf(event.start);
+    const eventsOfWeek = useEventState(week);
 
-  const {textArea, textEvent} = useContext(textAreaCtx) as jh.textArea;
-  
+    useLayoutEffect(() =>
+    {
+        if (!EventClass.hasMutable(event))
+        {
+            return;
+        }
 
-  useLayoutEffect(() => {
-    if (!hasMutable(event)) {
-      return;
-    }
+        const sameRow = eventsOfWeek
+            .filter((e) => e.type === "roothead")
+            .filter((e): e is Required<jh.event> => EventClass.hasMutable(e))
+            .filter((e) => EventClass.hasMutable(parent) && parent.mutable.index === e.mutable.index)
+            .map((r): number => EventClass.hasMutable(r) ? r.mutable.eventRef.clientHeight : 0);
 
-    const sameRow = eventsOfWeek
-      .filter((e): e is Required<jh.event> => hasMutable(e))
-      .filter((e) => parseInt(event.end) === e.mutable.index)
-      .filter((e) => e.type === "roothead");
+        const maxH = Math.max(...sameRow);
+        const newState = { height: `${maxH}px` };
 
-    const allH = sameRow.map((r): number => {
-      return hasMutable(r) ? r.mutable.eventRef.clientHeight : 0;
-    });
+        setStyle(newState);
 
-    const maxH = Math.max(
-      ...allH,
-      closestTail.mutable?.eventRef.clientHeight ?? 0
-    );
-    const newState = { height: `${maxH}px` };
+    }, [eventRef, eventRef.current, event, textArea, textEvent]);
 
-    setStyle(newState);
-  }, [eventRef.current, event, textArea, textEvent]);
-
-  return (
-    <StyledEvent.TWplaceholder style={style} ref={eventRef}>
-      {event.id + " : " + event.mutable?.index}
-    </StyledEvent.TWplaceholder>
-  );
+  return (<StyledEvent.TWplaceholder className="" style={style} ref={eventRef}/>);
 };
 
-//export const MemoEventHolder = memo(EventHolder);
-export const MemoEventHolder = SpanHolders;
-
-const hasMutable = (e: jh.event): e is Required<jh.event> =>
-  typeof e.mutable === "object";
+//const MemoEventHolder = memo(EventHolder);
+const MemoEventHolder = EventHolder;

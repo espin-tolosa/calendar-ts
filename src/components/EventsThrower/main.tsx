@@ -1,81 +1,40 @@
-import { MemoEvent, MemoEventHolder } from "../../components/Event/main";
+import { MemoEvent } from "../../components/Event/main";
 import { useEventState } from "../../hooks/useEventsState";
 import { bubblingAlgo } from "../../components/EventsThrower/bubblingAlgoUtils";
-import { sendEndReferencesToPlaceholders } from "../../components/EventsThrower/sendReferencesToPlaceholders";
-import { isPlaceholder } from "../../utils/ValidateEvent";
 
 interface EventProps {
   day: string;
 }
 
-export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element => {
-  const dayEvents = useEventState(propTypes.day);
-  const allEvents = useEventState();
+export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element =>
+{
+    const dayEvents = useEventState(propTypes.day);
 
-  //TODO: style height has be passed from eventRef
+    //const allEvents = useEventState();
 
-  //Day off
+    const dayOff = dayEvents.find((event) => event.client === "Unavailable");
 
-  const dayOff = dayEvents.find((event) => event.client === "Unavailable");
-  //dayOff!.mutable!.index = 0;
-  const isLocked =
-    typeof dayOff !== "undefined" && dayOff.client.includes("Unavailable");
+    const isLocked = typeof dayOff !== "undefined" && dayOff.client.includes("Unavailable");
 
-  const dayEventsFiltered = isLocked ? [dayOff] : dayEvents;
+    const dayEventsFiltered = isLocked ? [dayOff] : dayEvents;
 
-  if (dayEventsFiltered.length === 0) {
-    return <></>;
-  }
+    if (dayEventsFiltered.length === 0)
+    {
+        return <></>;
+     }
 
-  const sortedEvents = bubblingAlgo(dayEventsFiltered);
+    const sortedEvents = bubblingAlgo(dayEventsFiltered);
+    const genKey = (index:number, event:jh.event) => `${index}-${event.id}-${event.type}`;
 
-  return (
-    <div className="flex flex-col my-10 gap-4">
-      {sortedEvents.map((event, position) => {
-        const keyValue = `${event.id}-${event.type}`;
-        if (isPlaceholder(event)) {
-          //! incharged of spaned spacing
-          return (
-            <MemoEventHolder
-              key={`p-${keyValue}`}
-              id={`p-${keyValue}`}
-              event={event}
-            ></MemoEventHolder>
-          );
+    return (
+        <div className="flex flex-col my-10 gap-4">
+        {
+            sortedEvents
+            .map((event, position) => <MemoEvent key={genKey(position, event)} event={event} index={position}/>)    
         }
-        //Mutable instruction for global state of events
-        sendEndReferencesToPlaceholders(allEvents, event, position);
-        return (
-          <MemoEvent
-            key={`e-${keyValue}`}
-            event={event}
-            index={position}
-          ></MemoEvent>
-        );
-      })}
-    </div>
+
+        </div>
   );
 };
 
-//export const MemoEventsThrower = EventsThrower;
-export const MemoEventsThrower = ({day}:{day:string})=>{
-    const event : jh.event = {type:"roothead", id:1, client:"Joe", job:"Mock long ext descriptn to check layout shift", start:"2022-09-12", end:"2022-09-12"};
-    return (
-        <div className="flex flex-col my-10 gap-4">
-
-            <MemoEvent event={event} index={0}/>
-        </div>
-    )
-}
-
-//export const MemoEventsThrower = memo(EventsThrower, (prev, next) => {
-//  //const datesSelectionEqual = prevSelection === nextSelection;
-//
-//  //const isLockedEqual = prev.isLocked === next.isLocked;
-//
-//  //const showWeekendEqual = prev.isWeekend === next.isWeekend;
-//  const isDayToPush = next.pushedDays.has(next.day);
-//
-//  return !isDayToPush || prev.textArea !== prev.textArea || prev.textEvent !== next.textEvent
-//  //return datesSelectionEqual /* && isLockedEqual*/ /*&& showWeekendEqual*/;
-//});
+export const MemoEventsThrower = EventsThrower;

@@ -10,7 +10,7 @@ export function usePrintPDF()
         
         if(!print) {return;}
         if (!isSupported) {window.alert("Print to PDF isn't supported in this device jet"); return;}
-        
+       
         window.print();
         setPrint(false)
  

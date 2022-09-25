@@ -21,44 +21,54 @@ import { EventsDispatcher } from "./hooks/useEventsState";
 import { EventsStatus } from "./hooks/useEventsStatus";
 import { UserSession } from "./hooks/useUserSession";
 import { ClientsStyles } from "./context/useFetchClientStyle";
+import { DOMRefsContext } from "./context/DOMRefs";
+import { EventResizeObserver } from "./context/observeEventSize";
+import { CurrentDays } from "./components/Month/components/CurrentDays";
 
 
 const root = window.document.getElementById("root") as HTMLDivElement;
 
 createRoot(root).render(
-<StrictMode>
-    <ClientsStyles>
-    <CurrentMonthRef>
-    <EventInDnD>
-    <EventInController>
-    <KeyBuffer>
-    <TemporaryEvent>
-    <TopNavRef>
-    <PushedDays>
-    <IsFetchingEvents>
-    <IsDraggingEvent>
-    <ControllerProvider>
-    <ControllerProviderDates>
-    <UserPreferences>
-    <EventsDispatcher>
-    <EventsStatus>
-    <UserSession>
-        <App />
-    </UserSession>
-    </EventsStatus>
-    </EventsDispatcher>
-    </UserPreferences>
-    </ControllerProviderDates>
-    </ControllerProvider>
-    </IsDraggingEvent>
-    </IsFetchingEvents>
-    </PushedDays>
-    </TopNavRef>
-    </TemporaryEvent>
-    </KeyBuffer>
-    </EventInController>
-    </EventInDnD>
-    </CurrentMonthRef>
-    </ClientsStyles>
-</StrictMode>
+    <StrictMode>
+        <CurrentDays>
+        <ClientsStyles>
+        <DOMRefsContext>
+        <CurrentMonthRef>
+        <EventInDnD>
+        <EventInController>
+        <KeyBuffer>
+        <TemporaryEvent>
+        <TopNavRef>
+        <PushedDays>
+        <IsFetchingEvents>
+        <IsDraggingEvent>
+        <ControllerProvider>
+        <ControllerProviderDates>
+        <UserPreferences>
+        <EventsDispatcher>
+        <EventsStatus>
+        <UserSession>
+        <EventResizeObserver>
+            <App />
+        </EventResizeObserver>
+        </UserSession>
+        </EventsStatus>
+        </EventsDispatcher>
+        </UserPreferences>
+        </ControllerProviderDates>
+        </ControllerProvider>
+        </IsDraggingEvent>
+        </IsFetchingEvents>
+        </PushedDays>
+        </TopNavRef>
+        </TemporaryEvent>
+        </KeyBuffer>
+        </EventInController>
+        </EventInDnD>
+        </CurrentMonthRef>
+        </DOMRefsContext>
+        </ClientsStyles>
+        </CurrentDays>
+    </StrictMode>
 );
+

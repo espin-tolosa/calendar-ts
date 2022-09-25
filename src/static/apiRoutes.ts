@@ -1,5 +1,5 @@
 const domain =
-  import.meta.env.MODE === "development" ? "http://localhost:8000" : "";
+  import.meta.env.MODE === "localhost" ? "http://localhost:8000" : "";
 
 const routes = "backend/routes";
 const pathGenerator = (point: string, ext = "api.php") =>

@@ -2,6 +2,7 @@ import { TWboard, TWmain } from "./tw";
 import { MemoMonth } from "../components/Month/main";
 import { useGetMonths, useInfiniteScroll } from "../hooks/useInfiniteScroll";
 import { dispatchAllFetchEvents } from "../api/useGetAllEventsFrom";
+import { useObserverController } from "@/context/observeEventSize";
 
 //TODO: Move to class
 const genKey = (value:jh.date.monthData)=>`${value.year}-${value.month}`;
@@ -25,6 +26,7 @@ export function Board()
 {
     const {monthKeys, hMonthKeys} = useGetMonths();
     const EndOfList = useInfiniteScroll(hMonthKeys);
+    useObserverController()
 
     dispatchAllFetchEvents();
 

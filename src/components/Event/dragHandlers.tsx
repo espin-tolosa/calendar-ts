@@ -7,10 +7,7 @@ import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
 import { nullEvent } from "../../interfaces";
 import { useGethDeleteEvent } from "../../api/handlers";
 import { useHoverEvent } from "../../components/Event/logic";
-
-export function eventID(id: number, role: string, subcomponent: string) {
-  return `event:${role}:${id}:${subcomponent}`;
-}
+import { EventClass } from "@/classes/event";
 
 export function DragHandlers({
   event,
@@ -85,7 +82,7 @@ export function DragHandlers({
   };
   return (
     <StyledEvent.TWflexContainer
-      id={eventID(event.id, "master", "eventListener")}
+      id={EventClass.eventID(event.id, "master", "eventListener")}
       onKeyDown={(e) => {
         e.stopPropagation();
         if (e.ctrlKey && e.code === "Delete") {

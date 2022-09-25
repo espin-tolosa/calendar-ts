@@ -16,12 +16,12 @@ ${({ $toPrint }: { $toPrint: boolean }) => (!$toPrint && "print:hidden") || ""}
 // The header displays a text as: month year, like February 2022
 export const TWheader = tw.div`
 flex justify-center
-sticky sm:top-9 customtp:top-6 custombp:top-6 z-TopLayer
+sticky top-8 z-TopLayer
 print:static
 print:align-middle
 font-normal
 text-black
-px-[2ch] border-b-2 border-slate-400
+px-[2ch] border-b-2 border-t-4 border-slate-400
 bg-gradient-to-r from-slate-200 via-slate-50 to-slate-200
 rounded-t-md
 `;

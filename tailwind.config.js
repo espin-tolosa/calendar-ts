@@ -15,8 +15,8 @@ module.exports = {
         extra: 900,
       },
       screens: {
-        custombp: { raw: "(max-height: 481px)" },
-        customtp: { raw: "(max-width: 641px)" },
+        small_screen_h: { raw: "(max-height: 481px)" },
+        small_screen_w: { raw: "(max-width: 641px)" },
       },
       colors: {
         palette: {

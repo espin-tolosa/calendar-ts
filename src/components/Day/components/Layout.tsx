@@ -7,16 +7,17 @@ interface DayContainer {
     visible: boolean,
     thisDay: React.RefObject<HTMLDivElement>,
     children: JSX.Element,
-    isToday: boolean,
-    daynumber: number
 }
 
-export function DayLayout ( {fullDate, height, visible, thisDay, children, isToday, daynumber} : DayContainer  )
+export function DayLayout ( {fullDate, height, visible, thisDay, children} : DayContainer  )
 {
     const $isLock = false;
     const $isWeekend = DateService.IsWeekend(fullDate);
     const styledProps = { $isWeekend, $isLock };
     
+    const isToday = fullDate === DateService.FormatDate(DateService.GetDate());
+    const daynumber = fullDate.split("-")[2];
+
     const style = !!height && !visible ? {height: `${height}px`,} : {}
 
     return (

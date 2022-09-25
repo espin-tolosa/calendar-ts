@@ -30,13 +30,13 @@ this requires JS, hasta ahora solamente el CSS ha sido incorporado.
       "bg-slate-300 z-Dayoff outline outline-[1px] outline-slate-100 select-none") ||
     (!$isWeekend && "outline outline-[1px] outline-slate-300") ||
     ""}	
-
-
+    small_screen_w:text-xs
+    small_screen_h:text-xs
 	${() => toPrint}
 
 `;
 
-  export const header = tw.div<{
+export const header = tw.div<{
     $isLock: boolean;
     $isWeekend: boolean;
   }>`
@@ -54,7 +54,7 @@ ${() => toPrint}
 `;
 
   export const daySpot = tw.div<{ $isToday: boolean }>`
-	flex justify-center items-center rounded-full bg-white w-7 h-7 custombp:w-5 custombp:h-5 customtp:w-5 customtp:h-5 sm:my-1 ml-1 mx-1 print:text-xs text-sm
+	flex justify-center items-center rounded-full bg-white w-5 h-5 mr-1 my-1
 	${({ $isToday }: { $isToday: boolean }) =>
     ($isToday && "bg-blue-400 text-white") || ""}
 	${() => toPrint}

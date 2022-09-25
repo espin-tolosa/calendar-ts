@@ -18,8 +18,21 @@ export class FetchEvent
     {
         const url = new String(window.location);
         const response = await window.fetch(this.routes.create(this.ENV_API_ENDPOINT_NAME + "/" + url.split("/").at(-1)?.toUpperCase() )); 
-        const list = await response.json();
-        return list.data;
+        let result: {data: jh.event[]} = {data: []}
+        try
+        {
+            result = await response.json();
+            return result.data ?? [];
+        }
+
+        catch(error)
+        {
+            const response = await window.fetch(this.routes.create(this.ENV_API_ENDPOINT_NAME + "/" + url.split("/").at(-1)?.toUpperCase() )); 
+            const result = await response.text();
+
+            console.log("error on fetch all", result)
+            return [];
+        }
     }
 
     public async create(event: jh.event) : Promise<jh.event>
@@ -51,10 +64,11 @@ export class FetchEvent
         }
     }
 }
-
+//TODO: substitute api.routes
 class Routes
 {
-    private readonly domain = import.meta.env.MODE === "development" ? "http://localhost:8000" : "";
+    private readonly domain = import.meta.env.MODE === "localhost" ? "http://localhost:8000" : "";
+
     private prefix = 'api';
 
     public create(resource: string)

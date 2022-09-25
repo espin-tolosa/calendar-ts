@@ -22,21 +22,20 @@ function BoardRoute ({user}:{user:string})
 
 export function App()
 {
-    
-   
     return (
 
         <tw_Layouts.TWapp id={"app"}>
-      
+
             <Route path="/board/:name">
             {
                 ({name}) => BoardRoute({user:name})
             }
             </Route>
-    
+
             <Route path="/settings" component={Settings} />
-    
+
         </tw_Layouts.TWapp>
-    );
+
+      );
 }
 

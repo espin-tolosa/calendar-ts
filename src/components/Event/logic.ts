@@ -76,7 +76,7 @@ export function useStyles(isChildren: boolean, hover: boolean, event: jh.event, 
       static: { background: cHeader },
     };
   }, [justThrown, hover, clientColor]);
-};
+}
 
 const composeStyle = (
   background: string,

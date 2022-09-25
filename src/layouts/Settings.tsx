@@ -242,7 +242,7 @@ const EventDemo = ({ event }: { event: jh.event }) => {
 
   return (
     <>
-      <div className="flex justify-around text-xs ">
+      <div className="flex justify-around  ">
         <div className="flex flex-col gap-4">
           <div className="rounded-md" style={style?.dinamic}>
             <EventCardDemo

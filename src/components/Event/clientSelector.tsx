@@ -1,6 +1,6 @@
 import * as StyledEvent from "./tw";
-import { eventID } from "./main";
 import { useToken } from "@/hooks/useToken";
+import { EventClass } from "@/classes/event";
 
 export type ClientSelector = {
   style: object;
@@ -21,10 +21,11 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
             color: "transparent",
             height: "1rem",
           }; //1rem = h-4 (tw)
+
     return (
       <StyledEvent.TWStyledNonSelect
         style={props.style}
-        id={eventID(props.event.id, "master", "clientSelector")}
+        id={EventClass.eventID(props.event.id, "master", "clientSelector")}
       >
         {toRender}
       </StyledEvent.TWStyledNonSelect>
@@ -34,12 +35,11 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
   return (
     <StyledEvent.TWStyledSelect
       style={props.style}
-      id={eventID(props.event.id, "master", "clientSelector")}
+      id={EventClass.eventID(props.event.id, "master", "clientSelector")}
     >
         {
             props.event.client
         }
-
     </StyledEvent.TWStyledSelect>
   );
 }

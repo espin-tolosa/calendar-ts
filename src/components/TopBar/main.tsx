@@ -10,48 +10,38 @@ export const TOPNAV_ID = "Topnav";
 
 export function TopBar({user}:{user:string})
 {
-  const topNavRef = useCtxTopNavRef();
+    const topNavRef = useCtxTopNavRef();
 
-  //Custom hook to clean session, gives a handler to set to true when session is to clean
-  const cleanSession = useCleanSession();
+    //Custom hook to clean session, gives a handler to set to true when session is to clean
+    //const cleanSession = useCleanSession();
 
-  const monthRef = useCtxCurrentMonthRef();
+    const monthRef = useCtxCurrentMonthRef();
 
+    return (
 
-  return (
-  <tw_Layouts.TWheader>
-
-
-    <StyledTopnav.TWcontainer id={TOPNAV_ID} ref={topNavRef}>
-      {/*left-header*/}
-      <StyledTopnav.TWlogo>{`JH Diary | user: ${user.toUpperCase()}`}</StyledTopnav.TWlogo>
-      {/*center-header*/}{" "}
-      <StyledTopnav.TWtitle
-        onClick={() => {
-
-            if (monthRef?.current == undefined) {return;}
-
-            monthRef?.current?.scrollIntoView({ behavior: "smooth" });
-        }}
-      >
-        {DateService.GetTodayDateFormat()}
-      </StyledTopnav.TWtitle>
-      <div>
-        {/*right-header*/}
-
-        <BackofficeButton />
-        <StyledTopnav.TWlogout
-          title={"Cleans up your session token | Ctrl+Alt+q"}
-          onClick={(e) => {
-            e.stopPropagation();
-            window.location.href ="http://localhost:8000/logout";
-          }}
-        >
-          Logout
-        </StyledTopnav.TWlogout>
-      </div>
-    </StyledTopnav.TWcontainer>
-  </tw_Layouts.TWheader>
+        <tw_Layouts.TWheader>
+            <StyledTopnav.TWcontainer id={TOPNAV_ID} ref={topNavRef}>
+                {/*left-header*/}
+                <StyledTopnav.TWlogo>{`JH Diary | ${user.toUpperCase()}`}</StyledTopnav.TWlogo>
+                {/*center-header*/}{" "}
+                <StyledTopnav.TWtitle onClick={() => {
+                    if (monthRef?.current == undefined) {return;}
+                        monthRef?.current?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                >
+                    {DateService.GetTodayDateFormat()}
+                </StyledTopnav.TWtitle>
+                <div>
+                {/*right-header*/}
+                    <BackofficeButton />
+                    <StyledTopnav.TWlogout title={"Cleans up your session token | Ctrl+Alt+q"}
+                        onClick={(e) => {e.stopPropagation(); window.location.href ="http://localhost:8000/logout";}}
+                    >
+                        Logout
+                    </StyledTopnav.TWlogout>
+                </div>
+            </StyledTopnav.TWcontainer>
+        </tw_Layouts.TWheader>
   );
 }
 

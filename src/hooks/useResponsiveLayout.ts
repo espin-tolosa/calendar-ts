@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-const LARGE_WINDOW_SIZE = 640; /*px*/
 
 export const useListenWindowSize = () => {
   const width = window.innerWidth;
@@ -20,7 +19,5 @@ export const useListenWindowSize = () => {
     };
   }, []);
 
-  const isLargeWindow = windowSize.width > LARGE_WINDOW_SIZE;
-
-  return isLargeWindow;
+  return windowSize;
 };

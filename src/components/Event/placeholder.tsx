@@ -1,7 +1,9 @@
+import { EventClass } from "@/classes/event";
 import { useEventState } from "@/hooks/useEventsState";
 import { DateService } from "@/utils/Date";
 import { useContext, useLayoutEffect, useState } from "react";
 import { textAreaCtx } from "../Month/components/CurrentDays";
+import { usePrintPDF } from "../Month/usePrintPDF";
 import * as StyledEvent from "./tw";
 
 interface PlaceHolder {
@@ -10,62 +12,59 @@ interface PlaceHolder {
   eventRef: React.RefObject<HTMLDivElement | undefined>;
 }
 
-function RootHolder({
-  index,
-  event,
-  eventRef,
-}: PlaceHolder) {
-  const [style, setStyle] = useState<{ height: string }>({ height: "0px" });
-  const week = DateService.GetWeekRangeOf(event.start);
-  const eventsOfWeek = useEventState(week);
-  const {textArea, textEvent} = useContext(textAreaCtx) as jh.textArea;
+function RootHolder({index, event, eventRef,}: PlaceHolder)
+{
+    const [style, setStyle] = useState<{ height: string }>({ height: "0px" });
+    const week = DateService.GetWeekRangeOf(event.start);
+    const eventsOfWeek = useEventState(week);
+    const textArea = useContext(textAreaCtx) as jh.textArea;
+    const {isVisible} = usePrintPDF();
 
-  //setup the mutable object by first time
-  useLayoutEffect(() => {
-    if (eventRef.current == null) {
+    useLayoutEffect(() =>
+    {
+        if (eventRef.current == null)
+        {
+            return;
+        }
+
+        event.mutable =
+        {
+            dragDirection: "none",
+            eventRef: eventRef.current,
+            index: index,
+        };
+
+    }, [eventRef, eventRef.current, event, textArea, isVisible]);
+
+  useLayoutEffect(() =>
+  {
+    if (!EventClass.hasMutable(event))
+    {
       return;
     }
 
-    event.mutable = {
-      dragDirection: "none",
-      eventRef: eventRef.current,
-      index: index,
-    };
-  }, [event]);
-
-  useLayoutEffect(() => {
-    if (!hasMutable(event)) {
-      return;
-    }
-    const sameRow = eventsOfWeek
-
-      .filter((e) => {
+    const sameRow = eventsOfWeek.filter((e) =>
+    {
         return (
-          hasMutable(e) &&
-          hasMutable(event) &&
-          DateService.DaysFrom(event.start, e.start) >= 0 &&
-          e.mutable.index === event.mutable.index
+            e.type === "roothead" &&
+            EventClass.hasMutable(e) &&
+            EventClass.hasMutable(event) &&
+            //DateService.DaysFrom(event.start, e.start) >= 0 &&
+            e.mutable.index === event.mutable.index
         );
-      })
-
-      .filter((e) => e.type === "roothead");
+    })
 
     const allH = sameRow.map((r): number => {
-      return hasMutable(r) ? r.mutable.eventRef?.clientHeight : 0;
+      return EventClass.hasMutable(r) ? r.mutable.eventRef?.clientHeight : 0;
     });
     const maxH = Math.max(...allH, event.mutable.eventRef.clientHeight);
     const newState = { height: `${maxH}px` };
     setStyle(newState);
-  }, [eventRef.current, event, textArea, textEvent]);
+  }, [eventRef, eventRef.current, event, textArea, isVisible]);
 
   return (
-    <StyledEvent.TWplaceholder style={style}>
-      {"placeholder"}
-    </StyledEvent.TWplaceholder>
+    <StyledEvent.TWplaceholder style={style}/>
   );
 }
 
 export const Placeholder = RootHolder;
-
-const hasMutable = (e: jh.event): e is Required<jh.event> =>
-  typeof e.mutable === "object";
