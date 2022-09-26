@@ -22,11 +22,13 @@ const Month = ({ year, month }: jh.date.monthData) => {
     const printer = usePrintPDF();
     const dayList = useMemo(()=> date.daysList.map(day=>ComposeDate(year, month, day)), [year, month, date.daysList]);
  
+    //! Uncomment for master view
     return (
         <>
             <MonthLayout print={printer.isVisible}>
         
-                <MonthHeader year={date.year} month={date.month} date={date.dateFormat} onDoubleClick={printer.hsend}  />
+                <MonthHeader year={date.year} month={date.month} date={date.dateFormat} //!onDoubleClick={printer.hsend}
+                />
 
                 <TWdaysBoard>
 

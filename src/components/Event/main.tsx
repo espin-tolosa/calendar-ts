@@ -51,7 +51,7 @@ export const Event = ({event, index}: Event) =>
 
     return (
 
-    <DragHandlers event={event} spread={eventLong}>
+    <DragHandlers event={event} /*spread={eventLong}*/>
     <>
         <StyledEvent.TWtextContent id={id} style={cssStyle.dinamic} ref={eventRef}
             $isChildren={isChildren} $isHover={hover} $cells={eventLong} $client={event.client.toLowerCase()}>
@@ -73,7 +73,7 @@ const EventTail = () =>
 {
     return <div title="event tail" className="h-5"/>;
 };
-//export const MemoEvent = memo(Event);
+
 export const MemoEvent = Event;
 
 interface EventHolder {
@@ -86,8 +86,7 @@ const EventHolder = ({event}: EventHolder) =>
     const eventRef = useRef<HTMLDivElement>(null);
     const [style, setStyle] = useState<{ height: string }>({ height: "0px" });
     const {textArea, textEvent} = useContext(textAreaCtx) as jh.textArea;
-    //!Corrected bug: was using event.end wich is zero
-    
+ 
     useLayoutEffect(() =>
     {
         if (eventRef.current != null)
@@ -124,5 +123,4 @@ const EventHolder = ({event}: EventHolder) =>
   return (<StyledEvent.TWplaceholder style={style} title={`${event.id}`} ref={eventRef} />);
 };
 
-//const MemoEventHolder = memo(EventHolder);
 const MemoEventHolder = EventHolder;

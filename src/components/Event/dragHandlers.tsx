@@ -1,123 +1,100 @@
 import * as StyledEvent from "./tw";
-import {
-  useEventDispatch,
-  useGetEventFamily,
-} from "../../hooks/useEventsState";
-import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
-import { nullEvent } from "../../interfaces";
-import { useGethDeleteEvent } from "../../api/handlers";
+//!import { useEventDispatch, useGetEventFamily } from "../../hooks/useEventsState";
+//!import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
+//!import { nullEvent } from "../../interfaces";
+//!import { useGethDeleteEvent } from "../../api/handlers";
 import { useHoverEvent } from "../../components/Event/logic";
 import { EventClass } from "@/classes/event";
 
-export function DragHandlers({
-  event,
-  spread,
-  children,
-}: {
-  event: jh.event;
-  spread: number;
-  children: React.ReactElement;
-}): JSX.Element {
-  const [parentEvent] = useGetEventFamily(event);
-  //week.from = event.start;
+interface DragHandlers {
+    event: jh.event;
+    //!spread: number;
+    children: JSX.Element;
+}
 
-  //--------------------------------------------
-  const hDelete = useGethDeleteEvent(event);
-  //week.from = event.start;
+//!Uncoment for master view
 
-  //--------------------------------------------
+export function DragHandlers({event, /*spread,*/ children}: DragHandlers): JSX.Element
+{
+    const mouseEventHover = useHoverEvent(event);
+//!    const [parentEvent] = useGetEventFamily(event);
+//!    const hDelete = useGethDeleteEvent(event);
+//!    const eventDispatcher = useEventDispatch();
+//!    const setDnDEventRef = useSetDnDEventRef();
+//!    const dndEvent = useDnDEventRef();
 
-  //edit mode
+//!    const hOnDragEnd = (e: React.DragEvent<HTMLDivElement>) =>
+//!    {
+//!        e.stopPropagation();
+//!        setDnDEventRef(nullEvent());
+//!        eventDispatcher({type: "fromnull", payload: [ dndEvent ]});
+//!    };
 
-  const mouseHover = (({ onMouseEnter, onMouseLeave }) => {
-    return {
-      onMouseEnter,
-      onMouseLeave,
-    };
-  })(useHoverEvent(event));
+//!   const hOnDragStart = (e: React.DragEvent<HTMLDivElement>, direction: jh.dragDirection) =>
+//!   {
+//!       e.stopPropagation();
+//!       const parentCopy: jh.event = { ...parentEvent };
 
-  //edit mode
-  const eventDispatcher = useEventDispatch();
+//!       if (typeof parentEvent.mutable === "object")
+//!       {
+//!           parentCopy.mutable = { ...parentEvent.mutable };
+//!           if (typeof parentCopy.mutable === "object")
+//!           {
+//!               parentCopy.mutable.dragDirection = direction;
+//!           }
+//!       }
+//!   
+//!       setDnDEventRef(parentCopy);
 
-  const setDnDEventRef = useSetDnDEventRef();
-  const dndEvent = useDnDEventRef();
+//!       setTimeout(() => {eventDispatcher({type: "tonull", payload: [event]});}, 1000);
+//!   };
+    
+//!    const hDeleteEventOnCtrlSupr = (e: React.KeyboardEvent<HTMLDivElement>) =>
+//!    {
+//!        e.stopPropagation();
+//!        if (e.ctrlKey && e.code === "Delete")
+//!        {
+//!            hDelete();
+//!        }
+//!    }
 
-  const hOnDragStart = (
-    e: React.DragEvent<HTMLDivElement>,
-    direction: jh.dragDirection
-  ) => {
-    e.stopPropagation();
-    const parentCopy: jh.event = { ...parentEvent };
-    if (typeof parentEvent.mutable === "object") {
-      parentCopy.mutable = { ...parentEvent.mutable };
-      if (typeof parentCopy.mutable === "object") {
-        parentCopy.mutable.dragDirection = direction;
-      }
-    }
-    //!ISSUE: parentEvent isn't available in other context consumers (e.g: useOnDragEnter) after firing this dispatch order:
-    //temporaryEventDispatcher(parentEvent);
-    setDnDEventRef(parentCopy);
-    setTimeout(() => {
-      eventDispatcher({
-        type: "tonull",
-        payload: [{ ...event }],
-      });
+    return (
+    
+        <StyledEvent.TWflexContainer id={EventClass.eventID(event.id, "master", "eventListener")}
 
-      //setLocalIsDragging(true);
-    }, 1000);
-  };
-  const hOnDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    setDnDEventRef(nullEvent());
-    //setLocalIsDragging(false);
-    eventDispatcher({
-      type: "fromnull",
-      payload: [{ ...dndEvent }],
-    });
-    //TODO: Able this on mobile, to avoid update event while dragging
-    //eventDispatcher({
-    //  type: "update",
-    //  payload: [{ ...dndEvent }],
-    //});
-  };
-  return (
-    <StyledEvent.TWflexContainer
-      id={EventClass.eventID(event.id, "master", "eventListener")}
-      onKeyDown={(e) => {
-        e.stopPropagation();
-        if (e.ctrlKey && e.code === "Delete") {
-          hDelete();
+            //!onKeyDown={hDeleteEventOnCtrlSupr}
+            onMouseEnter={mouseEventHover.onMouseEnter}
+            onMouseLeave={mouseEventHover.onMouseLeave}
+            //!onDragStart={(e) => {hOnDragStart(e, "none");}}
+            //!onDragEnd={hOnDragEnd}
+        >
+
+            {children}
+
+        {//!<StyledEvent.TWextend_Left $cells={spread} title={`Drag here to extend ${event.client}'s job`}
+
+         //!   draggable={"true"}
+         //!   onDragStart={(e) => {hOnDragStart(e, "backward");}}
+         //!   onDragEnd={hOnDragEnd}
+        //!>
+
+         //! {"+"}
+
+        //! </StyledEvent.TWextend_Left>
         }
-      }}
-      {...mouseHover}
-      onDragStart={(e) => {
-        hOnDragStart(e, "none");
-      }}
-      onDragEnd={hOnDragEnd}
-    >
-      {children}
-      <StyledEvent.TWextend_Left
-        $cells={spread}
-        title={`Drag here to extend ${event.client}'s job`}
-        draggable={"true"}
-        onDragStart={(e) => {
-          hOnDragStart(e, "backward");
-        }}
-        onDragEnd={hOnDragEnd}
-      >
-        {"+"}
-      </StyledEvent.TWextend_Left>
-      <StyledEvent.TWextend
-        $cells={spread}
-        title={`Drag here to extend ${event.client}'s job`}
-        draggable={"true"}
-        onDragStart={(e) => {
-          hOnDragStart(e, "forward");
-        }}
-        onDragEnd={hOnDragEnd}
-      >
-        {"+"}
-      </StyledEvent.TWextend>
-    </StyledEvent.TWflexContainer>
+
+        {
+        //!<StyledEvent.TWextend $cells={spread} title={`Drag here to extend ${event.client}'s job`}
+
+        //!    draggable={"true"}
+        //!    onDragStart={(e) => {hOnDragStart(e, "forward");}}
+        //!    onDragEnd={hOnDragEnd}
+        //!>
+        //!    {"+"}
+
+        //!</StyledEvent.TWextend>
+        }
+    
+</StyledEvent.TWflexContainer>
   );
 }

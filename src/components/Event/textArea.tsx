@@ -24,9 +24,7 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
     const eventDispatcher = useEventDispatch();
     const [isHoverActive, setIsHoverActive] = useState(false);
     const textArea = useContext(textAreaCtx) as jh.textArea;
-    //debug what is triggering this automatic resize
 
-    // Fetch job  changes before unmount the component
     useLayoutEffect(() =>
     {
         return () =>
@@ -128,43 +126,44 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
         return (
 
             <StyledEvent.TWjobContent>
-                <StyledEvent.TWtextArea ref={textRef} role="textbox" contentEditable={true} suppressContentEditableWarning={true}
-                //!gain control over the component: https://goshacmd.com/controlled-vs-uncontrolled-inputs-react/
-                    onClick={(e) =>
-                    {
-                        e.currentTarget.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
-                        e.currentTarget.focus();
-                        setIsHoverActive(true);
-                    }}
+                <StyledEvent.TWtextArea ref={textRef} role="textbox" contentEditable={false} suppressContentEditableWarning={true}
 
-                    onFocus={() =>
-                    {
-                        if (textRef.current)
-                        {
-                            const range = window.document.createRange();
-                            range.selectNodeContents(textRef.current);
-                            range.collapse(false);
-                            window.getSelection()?.removeAllRanges();
-                            window.getSelection()?.addRange(range);
-                        }
-                    }}
+                //! Uncomment for master view
+                    //!onClick={(e) =>
+                    //!{
+                    //!    e.currentTarget.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
+                    //!    e.currentTarget.focus();
+                    //!    setIsHoverActive(true);
+                    //!}}
 
-                    onKeyDown={(e) =>
-                    {
-                        if (e.code === "Enter" || e.code === "Escape")
-                        {
-                            e.currentTarget.blur();
-                        }
-                    }}
+                    //!onFocus={() =>
+                    //!{
+                    //!    if (textRef.current)
+                    //!    {
+                    //!        const range = window.document.createRange();
+                    //!        range.selectNodeContents(textRef.current);
+                    //!        range.collapse(false);
+                    //!        window.getSelection()?.removeAllRanges();
+                    //!        window.getSelection()?.addRange(range);
+                    //!    }
+                    //!}}
 
-                    onBlur={(e) =>
-                    {
-                        const job = (e.currentTarget.textContent ?? "")//.trim().replaceAll("\n", " ");
-                        fetchEvent("PUT", { ...event, job });
-                        eventDispatcher({type: "update", payload: [{ ...event, job }]});
-                        setIsHover(false);
-                        setIsHoverActive(false);
-                    }}
+                    //!onKeyDown={(e) =>
+                    //!{
+                    //!  if (e.code === "Enter" || e.code === "Escape")
+                    //!{
+                    //!    e.currentTarget.blur();
+                    //!}
+                    //!}}
+
+                    //!onBlur={(e) =>
+                    //!{
+                    //!     const job = (e.currentTarget.textContent ?? "")//.trim().replaceAll("\n", " ");
+                    //!     fetchEvent("PUT", { ...event, job });
+                    //!     eventDispatcher({type: "update", payload: [{ ...event, job }]});
+                    //!     setIsHover(false);
+                    //!     setIsHoverActive(false);
+                    //!}}
                 >
                     {event.job}
                 </StyledEvent.TWtextArea>

@@ -10,8 +10,6 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element =>
 {
     const dayEvents = useEventState(propTypes.day);
 
-    //const allEvents = useEventState();
-
     const dayOff = dayEvents.find((event) => event.client === "Unavailable");
 
     const isLocked = typeof dayOff !== "undefined" && dayOff.client.includes("Unavailable");
