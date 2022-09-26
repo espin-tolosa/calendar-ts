@@ -46,10 +46,9 @@ function RootHolder({index, event, eventRef,}: PlaceHolder)
     const sameRow = eventsOfWeek.filter((e) =>
     {
         return (
-            e.type === "roothead" &&
+            e.type.includes("head") &&
             EventClass.hasMutable(e) &&
             EventClass.hasMutable(event) &&
-            //DateService.DaysFrom(event.start, e.start) >= 0 &&
             e.mutable.index === event.mutable.index
         );
     })

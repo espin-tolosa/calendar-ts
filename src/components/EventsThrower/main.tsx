@@ -30,9 +30,8 @@ export const EventsThrower: React.FC<EventProps> = (propTypes): JSX.Element =>
         <div className="flex flex-col my-10 gap-4">
         {
             sortedEvents
-            .map((event, position) => <MemoEvent key={genKey(position, event)} event={event} index={position}/>)    
+            .map((event, position) => <MemoEvent key={genKey(position, event)} event={event} index={position}/>)
         }
-
         </div>
   );
 };

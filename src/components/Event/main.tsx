@@ -109,7 +109,7 @@ const EventHolder = ({event}: EventHolder) =>
         }
 
         const sameRow = eventsOfWeek
-            .filter((e) => e.type === "roothead")
+            .filter((e) => e.type.includes("head"))
             .filter((e): e is Required<jh.event> => EventClass.hasMutable(e))
             .filter((e) => EventClass.hasMutable(parent) && parent.mutable.index === e.mutable.index)
             .map((r): number => EventClass.hasMutable(r) ? r.mutable.eventRef.clientHeight : 0);
@@ -121,7 +121,7 @@ const EventHolder = ({event}: EventHolder) =>
 
     }, [eventRef, eventRef.current, event, textArea, textEvent]);
 
-  return (<StyledEvent.TWplaceholder className="" style={style} ref={eventRef}/>);
+  return (<StyledEvent.TWplaceholder style={style} title={`${event.id}`} ref={eventRef} />);
 };
 
 //const MemoEventHolder = memo(EventHolder);

@@ -6,7 +6,6 @@ import { totalCellsInLastRow } from "./totalCellsInLastRow";
 
 import { MonthLayout} from "./components/MonthLayout";
 import { usePrintPDF } from "./usePrintPDF";
-import { CurrentDays } from "./components/CurrentDays";
 import { PaddedDays } from "./components/PaddedDays";
 import { MonthHeader } from "./components/MonthHeader";
 import { useMemo } from "react";
