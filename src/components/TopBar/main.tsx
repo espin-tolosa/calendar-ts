@@ -35,7 +35,7 @@ export function TopBar({user}:{user:string})
                 {/*right-header*/}
                     <BackofficeButton />
                     <StyledTopnav.TWlogout title={"Cleans up your session token | Ctrl+Alt+q"}
-                        onClick={(e) => {e.stopPropagation(); window.location.href ="http://localhost:8000/logout";}}
+                        onClick={(e) => {e.stopPropagation(); window.location.href ="/logout";}}
                     >
                         Logout
                     </StyledTopnav.TWlogout>

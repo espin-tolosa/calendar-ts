@@ -27,7 +27,6 @@ export function Board()
     const {monthKeys, hMonthKeys} = useGetMonths();
     const EndOfList = useInfiniteScroll(hMonthKeys);
     useObserverController()
-
     dispatchAllFetchEvents();
 
     return (
