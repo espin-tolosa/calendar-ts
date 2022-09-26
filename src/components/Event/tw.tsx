@@ -80,6 +80,6 @@ export const TWextend_Left = tw.div<{ $cells: number }>`
 
 export const TWplaceholder = tw.div``;
 
-export const TWStyledSelect = tw.div`border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer outline-none text-white `;
+export const TWStyledSelect = tw.div`border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer outline-none text-white`;
 
 export const TWStyledNonSelect = tw.div`border-none py-px padding-x-clamp button-shadow text-effect rounded-sm outline-none text-white `;

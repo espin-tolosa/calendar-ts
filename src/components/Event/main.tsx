@@ -24,40 +24,22 @@ export const Event = ({event, index}: Event) =>
 {
     const eventRef = useRef<HTMLDivElement>();
 
-  //--------------------------------------------
+    const { hover } = useHoverEvent(event);
+    const clientsStyles = useClientsStyles();
+    const color = clientsStyles.response?.colors[event.client];
+    const style = useStyles(hover, event, color?.primary ?? "#ffffff" );
 
-  const isChildren = event.type === "tailhead";
-  //edit mode
+    //TODO: move event dto which eventually will be a class object of the model
+    const eventLong = EventClass.maxSpread(event);
 
-  // Hover consumes the controller state to decide if the on going render will be styled as a hover envet
-  const { hover } = useHoverEvent(event);
+    const allEvents = useEventState();
 
-  // Style hook for state transitions
-  const clientsStyles = useClientsStyles();
+    if(isPlaceholder(event))
+    {
+        return (<MemoEventHolder event={event}/>)
+    }
 
-  //TODO: make this a function
-  const color = clientsStyles.response?.colors[event.client] || {
-    primary: "#a9a29d",
-    secondary: "#a9a29d",
-  };
-
-  const style = useStyles(isChildren, hover, event, color.primary);
-
-  //TODO: avoid magic numbers
-  const maxDayAvailable = DateService.GetDateNextDay(event.start, 5);
-  const spreadCells = Math.min(
-    1 + DateService.DaysFrom(event.start, event.end),
-    DateService.DaysFrom(event.start, maxDayAvailable)
-  );
-
-  const allEvents = useEventState();
-
-  if(isPlaceholder(event))
-  {
-    return (<MemoEventHolder event={event}/>)
-  }
-
-  sendEndReferencesToPlaceholders(allEvents, event, index);
+    sendEndReferencesToPlaceholders(allEvents, event, index);
 
     const cssStyle= {
         dinamic: event.client !== "MISC" ? (style?.dinamic || {}) : {background: "lightgray"},
@@ -65,13 +47,14 @@ export const Event = ({event, index}: Event) =>
     }
 
     const id=EventClass.eventID(event.id, event.type)
+    const isChildren = event.type === "tailhead";
 
     return (
 
-    <DragHandlers event={event} spread={spreadCells}>
+    <DragHandlers event={event} spread={eventLong}>
     <>
         <StyledEvent.TWtextContent id={id} style={cssStyle.dinamic} ref={eventRef}
-            $isChildren={isChildren} $isHover={hover} $cells={spreadCells} $client={event.client.toLowerCase()}>
+            $isChildren={isChildren} $isHover={hover} $cells={eventLong} $client={event.client.toLowerCase()}>
 
         {!isChildren ?
             <EventCard event={event} refNode={createRef()} style={cssStyle.static}/>

@@ -1,12 +1,12 @@
-import {
-  useControllerDispatch,
-  useControllerState,
-} from "../../hooks/useController";
+import {useControllerDispatch, useControllerState} from "../../hooks/useController";
 import { HEXtoHSL, HSLController } from "../../utils/giveMeColor";
 import { useEffect, useMemo, useState } from "react";
 
-export function useStyles(isChildren: boolean, hover: boolean, event: jh.event, clientColor: string)
+//! This is leagacy code to me. It's a gift from me to me. I mostly don't know how it works but it works
+
+export function useStyles(hover: boolean, event: jh.event, clientColor: string)
 {
+  const isChildren = event.type === "tailhead";
   const mapClientToColor = HEXtoHSL(clientColor);
   if (mapClientToColor === undefined) {
     return;

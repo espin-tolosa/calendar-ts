@@ -1,6 +1,6 @@
 // Type of event data
 
-import { DateService } from "@/utils/Date";
+import { DateService, DayWeek } from "@/utils/Date";
 import { nullEvent } from "../interfaces";
 
 // Parent: has all its attributes matched with some database entry
@@ -103,5 +103,17 @@ export class EventClass
     static hasMutable(e: jh.event): e is Required<jh.event>
     {
         return typeof e.mutable === "object";
+    }
+
+    /**
+     * Computes the ocupation of an event from start to end or if the duration is longer than week from start to saturday
+     * @param event jh.event
+     * @param dayOff The limit day to schedule a job, saturday is the default, because we don't work on weekends
+     * @returns The range of spread of an event until some target
+     */
+    static maxSpread(event: jh.event, dayOff?: DayWeek ): number
+    {
+        const maxDayAvailable = DateService.GetDateNextDay(event.start, dayOff ?? DayWeek.Saturday);
+        return Math.min(1 + DateService.DaysFrom(event.start, event.end), DateService.DaysFrom(event.start, maxDayAvailable));
     }
 }

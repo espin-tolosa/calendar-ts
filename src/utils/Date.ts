@@ -287,7 +287,18 @@ function IsWeekend(today: string) {
   );
 }
 
-function GetDateNextDay(today: string, target: 1 | 2 | 3 | 4 | 5 | 6 | 7) {
+//enum 
+export enum DayWeek {
+    Monday = 0,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+    Sunday
+  }
+
+function GetDateNextDay(today: string, target: DayWeek) {
   target %= 7; //convert to: 0 (sunday), 1 (monday), ..., 6 (saturday)
   let nextDay = GetDateFrom(today, 1);
   let day = GetDayWeekIndex(nextDay);

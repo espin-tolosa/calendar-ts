@@ -8,65 +8,74 @@ export { useClientsStyles, ClientsStyles };
 const ClientsStyle = createContext<jh.response.maybe<jh.response.styles>>({
   success: false,
 });
+
 ClientsStyle.displayName = "Clients Style";
 const useClientsStyles = () => useContext(ClientsStyle);
 
-function ClientsStyles(propTypes: { children: JSX.Element }) {
-  const clientsData = useAddStylesClientCSSlasses();
+function ClientsStyles(propTypes: { children: JSX.Element })
+{
+    const clientsData = useAddStylesClientCSSlasses();
 
-  const success = clientsData.success;
-  const clients = clientsData.clients;
-  const styles = clientsData.styles;
+    const success = clientsData.success;
+    const clients = clientsData.clients;
+    const styles = clientsData.styles;
 
-  const ctx: jh.response.maybe<jh.response.styles> = {
-    success,
-    response: { clients, colors: styles, update: clientsData.setStyles },
-  };
+    const ctx: jh.response.maybe<jh.response.styles> = {
+        success,
+        response: { clients, colors: styles, update: clientsData.setStyles },
+    };
 
-  return (
-    <ClientsStyle.Provider value={ctx}>
-      {propTypes.children}
-    </ClientsStyle.Provider>
-  );
+    return (
+        <ClientsStyle.Provider value={ctx}>
+            {propTypes.children}
+        </ClientsStyle.Provider>
+    );
 }
 
-function useAddStylesClientCSSlasses() {
-  const isMount = useRef(true);
-  const id = useRef<NodeJS.Timer | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [clients, setClients] = useState<Array<string>>([]);
-  const [styles, setStyles] = useState<jh.response.colors>({
-    default: { primary: "", secondary: "" },
-  });
+function useAddStylesClientCSSlasses()
+{
+    const isMount = useRef(true);
+    const id = useRef<NodeJS.Timer | null>(null);
+    const [success, setSuccess] = useState(false);
+    const [clients, setClients] = useState<Array<string>>([]);
+    const [styles, setStyles] = useState<jh.response.colors>({
+        default: { primary: "", secondary: "" },
+    });
 
-  const css = useRef(false);
-  if (!css.current) {
-    css.current = true;
-  }
+    const css = useRef(false);
 
-  const handleFetch = () => {
-    fetch(api.routes.clients)
-      .then((res) => res.json())
-      .then((json: jh.response.colors) => {
-        if (!isMount.current) {
-          return;
-        }
+    if (!css.current)
+    {
+        css.current = true;
+    }
 
-        setClients(Object.keys(json));
-        setStyles(json);
-        setSuccess(true);
-        id.current != null && clearInterval(id.current);
-      })
-      .catch((error) => {
-        report("local", error);
-      });
-  };
+    const handleFetch = () =>
+    {
+        fetch(api.routes.clients)
+        .then((res) => res.json())
+        .then((json: jh.response.colors) =>
+        {
+            if (!isMount.current)
+            {
+                return;
+            }
+
+            setClients(Object.keys(json));
+            setStyles(json);
+            setSuccess(true);
+            id.current != null && clearInterval(id.current);
+        })
+        .catch((error) =>
+        {
+            report("local", error);
+        });
+    };
 
   //TODO: Change Refetch interval by a refetch if fails
   // There is a bug in the code that causes multiple request to the same resource until one of them each succeed.
   // It happens because there is an unkonwn delay between server and client communication.
   // As I wanted is to refetch multiple times if connection fails, this is what I have to implement, instead of set an interval
-  const REFETCH_INTERVAL = 300; // ms
+  const REFETCH_INTERVAL = 500; // ms
 
   useEffect(() => {
     isMount.current = true;

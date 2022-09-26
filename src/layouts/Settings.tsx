@@ -238,7 +238,7 @@ const EventDemo = ({ event }: { event: jh.event }) => {
 
   const [colorPicker, setColorPicker] = useState<Color>(color.primary);
 
-  const style = useStyles(false, hover, event, colorPicker as string);
+  const style = useStyles(hover, event, colorPicker as string);
 
   return (
     <>
