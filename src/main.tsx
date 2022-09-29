@@ -27,8 +27,6 @@ import { CurrentDays } from "./components/Month/components/CurrentDays";
 
 const root = window.document.getElementById("root") as HTMLDivElement;
 
-console.log(import.meta)
-
 createRoot(root).render(
     <StrictMode>
         <CurrentDays>
