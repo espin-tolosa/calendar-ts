@@ -3,6 +3,7 @@ import * as tw_Layouts from "./layouts/tw";
 import { Settings } from "./layouts/Settings";
 import { Board } from "./layouts/Board";
 import { TopBar } from "./components/TopBar/main";
+import { useDebugEvent } from "./hooks/useDebugEvents";
 
 function BoardRoute ({user}:{user:string})
 {
@@ -23,6 +24,8 @@ function BoardRoute ({user}:{user:string})
 
 export function App()
 {
+    useDebugEvent();
+
     return (
 
         <tw_Layouts.TWapp id={"app"}>
