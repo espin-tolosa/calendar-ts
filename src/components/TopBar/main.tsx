@@ -22,7 +22,7 @@ export function TopBar({user}:{user:string})
         <tw_Layouts.TWheader>
             <StyledTopnav.TWcontainer id={TOPNAV_ID} ref={topNavRef}>
                 {/*left-header*/}
-                <StyledTopnav.TWlogo>{`JH Diary | ${user.toUpperCase()}`}</StyledTopnav.TWlogo>
+                <StyledTopnav.TWlogo>{`JH Diary | ${user.toLocaleUpperCase()}`}</StyledTopnav.TWlogo>
                 {/*center-header*/}{" "}
                 <StyledTopnav.TWtitle onClick={() => {
                     if (monthRef?.current == undefined) {return;}

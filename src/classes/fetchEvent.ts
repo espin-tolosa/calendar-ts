@@ -1,4 +1,6 @@
 import { nullEvent } from "@/interfaces";
+import { apiRoutes } from "@/static/apiRoutes";
+import { ProcessEnv } from "./ProcessEnv";
 
 export class FetchEvent
 {    
@@ -16,8 +18,8 @@ export class FetchEvent
 
     public async all() : Promise<jh.event[]>
     {
-        const url = new String(window.location);
-        const response = await window.fetch(this.routes.create(this.ENV_API_ENDPOINT_NAME + "/" + url.split("/").at(-1)?.toUpperCase() ));
+        const response = await window.fetch( apiRoutes.event );
+
         let result: {data: jh.event[]} = {data: []}
         try
         {
@@ -27,7 +29,7 @@ export class FetchEvent
 
         catch(error)
         {
-            const response = await window.fetch(this.routes.create(this.ENV_API_ENDPOINT_NAME + "/" + url.split("/").at(-1)?.toUpperCase() )); 
+            const response = await window.fetch( apiRoutes.event ); 
             const result = await response.text();
 
             console.log("error on fetch all", result)
@@ -54,6 +56,7 @@ export class FetchEvent
 
         try
         {
+            //TODO fetch: check what does this and change by proper apiRoutes endpoint
            const response = await window.fetch(this.routes.create(this.ENV_API_ENDPOINT_NAME), requestOptions);
            return await response.json();
         }

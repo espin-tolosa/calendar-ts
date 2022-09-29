@@ -1,5 +1,5 @@
+import { apiRoutes } from "@/static/apiRoutes";
 import { nullEvent } from "../interfaces";
-import { api } from "../static/apiRoutes";
 
 /**
  * Fetch events to API
@@ -19,7 +19,7 @@ export async function fetchEvent_Day(
 
   const dataJSON = JSON.stringify({ action, ...filterEvent });
   data.append("json", dataJSON);
-  const response = await fetch(api.routes.events, {
+  const response = await fetch(apiRoutes.event, {
     method: "POST",
     body: data,
   });
@@ -66,7 +66,7 @@ export async function fetchEvent(
 
   data.append("json", dataJSON);
 
-  const response = await fetch(api.routes.events, {
+  const response = await fetch(apiRoutes.event, {
     method: "POST",
     body: data,
   });

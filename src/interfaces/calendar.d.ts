@@ -1,46 +1,68 @@
-declare namespace jh {
-  namespace date {
-    type representation = string;
-    type monthData = { year: number; month: number };
-  }
+declare namespace jh
+{
+    interface EnvDefault {
+        VITE_HTML_PROTOCOL: string;
+        VITE_TARGET_HOST: string;
+        VITE_TARGET_PORT: string;
+        VITE_TARGET_USER: string;
+        VITE_API_PREFIX: string;
+        VITE_EVENT_RESOURCE: string;
+        VITE_USER_RESOURCE: string;
+        VITE_STYLE_RESOURCE: string;
+    }
+    interface Routes
+    {
+        user : string;
+        event: string;
+        style: string;
+    }
+    
+    namespace date
+    {
+      type representation = string;
+      type monthData = { year: number; month: number };
+    }
 
-  namespace response {
-    type maybe<T> =
-      | { success: true; response: T }
-      | { success: false; response?: T };
-    type clients = Array<string>;
-    type colors = Record<string, { primary: string; secondary: string }>;
-    type styles = {
-      clients: clients;
-      colors: colors;
-      update: React.Dispatch<React.SetStateAction<jh.response.colors>>;
-    };
-  }
+    namespace response
+    {
+      type maybe<T> =
+        | { success: true; response: T }
+        | { success: false; response?: T };
+      type clients = Array<string>;
+      type colors = Record<string, { primary: string; secondary: string }>;
+      type styles = {
+        clients: clients;
+        colors: colors;
+        update: React.Dispatch<React.SetStateAction<jh.response.colors>>;
+      };
+    }
 
-  namespace event {
-    export type type =
-      | ""
-      | "roothead"
-      | "rootholder"
-      | "tailhead"
-      | "tailholder";
-  }
+    namespace event
+    {
+      export type type =
+        | ""
+        | "roothead"
+        | "rootholder"
+        | "tailhead"
+        | "tailholder";
+    }
 
-  type dragDirection = "backward" | "forward" | "none";
+    type dragDirection = "backward" | "forward" | "none";
 
-  export interface event {
-    id: number;
-    client: string;
-    job: string;
-    start: string;
-    end: string;
-    mutable?: {
-      dragDirection: dragDirection;
-      eventRef: HTMLDivElement;
-      index: number;
-    };
-    type: event.type;
-  }
+    export interface event
+    {
+      id: number;
+      client: string;
+      job: string;
+      start: string;
+      end: string;
+      mutable?: {
+        dragDirection: dragDirection;
+        eventRef: HTMLDivElement;
+        index: number;
+      };
+      type: event.type;
+    }
 
     interface textArea
     {

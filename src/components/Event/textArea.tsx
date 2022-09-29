@@ -1,4 +1,4 @@
-import React, { useContext, useLayoutEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as StyledEvent from "./tw";
 
 import { fetchEvent } from "../../utils/fetchEvent";
@@ -21,31 +21,33 @@ interface TextAreaLocal extends TextArea {
 export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaLocal)
 {
     const textRef = useRef<HTMLSpanElement>(null);
-    const eventDispatcher = useEventDispatch();
     const [isHoverActive, setIsHoverActive] = useState(false);
     const textArea = useContext(textAreaCtx) as jh.textArea;
 
-    useLayoutEffect(() =>
-    {
-        return () =>
-        {
-            if (textRef.current === null)
-            {
-                return;
-            }
+    /**
+     * Ensure put event if component unmounts while editing it, case: unwanted scrolling during editing
+     */
 
-            const job = (textRef.current?.textContent ?? "").trim();
-
-            if (job === event.job || job === "")
-            {
-                return;
-            }
-
-            fetchEvent("PUT", { ...event, job });
-            eventDispatcher({type: "update", payload: [{ ...event, job }]});
-        };
-
-    }, [event]);
+    //! START COMMENT
+//    const eventDispatcher = useEventDispatch();
+//
+//    useEffect(() =>
+//    {
+//        return () =>
+//        {
+//            const job = (textRef.current?.textContent ?? "").trim();
+//
+//            if (!isHoverActive || job === "" || job === event.job)
+//            {
+//                return;
+//            }
+//
+//            fetchEvent("PUT", { ...event, job });
+//            eventDispatcher({type: "update", payload: [{ ...event, job }]});
+//        };
+//
+//    }, [isHoverActive]);
+    //! END COMMENT
 
     useLayoutEffect(() =>
     {
@@ -128,42 +130,43 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
             <StyledEvent.TWjobContent>
                 <StyledEvent.TWtextArea ref={textRef} role="textbox" contentEditable={false} suppressContentEditableWarning={true}
 
-                //! Uncomment for master view
-                    //!onClick={(e) =>
-                    //!{
-                    //!    e.currentTarget.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
-                    //!    e.currentTarget.focus();
-                    //!    setIsHoverActive(true);
-                    //!}}
-
-                    //!onFocus={() =>
-                    //!{
-                    //!    if (textRef.current)
-                    //!    {
-                    //!        const range = window.document.createRange();
-                    //!        range.selectNodeContents(textRef.current);
-                    //!        range.collapse(false);
-                    //!        window.getSelection()?.removeAllRanges();
-                    //!        window.getSelection()?.addRange(range);
-                    //!    }
-                    //!}}
-
-                    //!onKeyDown={(e) =>
-                    //!{
-                    //!  if (e.code === "Enter" || e.code === "Escape")
-                    //!{
-                    //!    e.currentTarget.blur();
-                    //!}
-                    //!}}
-
-                    //!onBlur={(e) =>
-                    //!{
-                    //!     const job = (e.currentTarget.textContent ?? "")//.trim().replaceAll("\n", " ");
-                    //!     fetchEvent("PUT", { ...event, job });
-                    //!     eventDispatcher({type: "update", payload: [{ ...event, job }]});
-                    //!     setIsHover(false);
-                    //!     setIsHoverActive(false);
-                    //!}}
+                    //! START COMMENT
+//                    onClick={(e) =>
+//                    {
+//                        e.currentTarget.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
+//                        e.currentTarget.focus();
+//                        setIsHoverActive(true);
+//                    }}
+//
+//                    onFocus={() =>
+//                    {
+//                        if (textRef.current)
+//                        {
+//                            const range = window.document.createRange();
+//                            range.selectNodeContents(textRef.current);
+//                            range.collapse(false);
+//                            window.getSelection()?.removeAllRanges();
+//                            window.getSelection()?.addRange(range);
+//                        }
+//                    }}
+//
+//                    onKeyDown={(e) =>
+//                    {
+//                      if (e.code === "Enter" || e.code === "Escape")
+//                    {
+//                        e.currentTarget.blur();
+//                    }
+//                    }}
+//
+//                    onBlur={(e) =>
+//                    {
+//                         const job = (e.currentTarget.textContent ?? "").trim().replaceAll("\n", " ");
+//                         fetchEvent("PUT", { ...event, job });
+//                         eventDispatcher({type: "update", payload: [{ ...event, job }]});
+//                         setIsHover(false);
+//                         setIsHoverActive(false);
+//                    }}
+                    //! END COMMENT
                 >
                     {event.job}
                 </StyledEvent.TWtextArea>

@@ -2,10 +2,10 @@ import { EventCardDemo } from "@/components/Event/eventCard";
 import { useHoverEvent, useStyles } from "@/components/Event/logic";
 import { useClientsStyles } from "@/context/useFetchClientStyle";
 import { nullEvent } from "@/interfaces";
-import { api } from "@/static/apiRoutes";
 import { createRef, useRef, useState } from "react";
 import { Color, SliderPicker } from "react-color";
 import tw from "tailwind-styled-components/dist/tailwind";
+import { apiRoutes } from "@/static/apiRoutes";
 
 const PasswordInput = tw.input<{ $error: boolean; $passmatch: boolean }>`
 outline outline-2
@@ -283,7 +283,7 @@ const EventDemo = ({ event }: { event: jh.event }) => {
 async function queryChangeClientColor(client: string, color: string) {
   const data = new FormData();
   data.append("change-color", JSON.stringify({ client, color }));
-  fetch(api.routes.backoffice.styles, {
+  fetch(new Request(apiRoutes.style), {
     method: "POST",
     body: data,
   });
@@ -298,7 +298,8 @@ async function queryAddClient(
 
   data.append("add-client", JSON.stringify({ name, password, repeatPassword }));
 
-  return fetch(api.routes.backoffice.addUser, {
+  //TODO fetch: comform this match the prev endpoint [api.routes.backoffice.addUser]
+  return fetch(new Request(apiRoutes.user), {
     method: "POST",
     body: data,
   });

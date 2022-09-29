@@ -1,21 +1,8 @@
-const domain =
-  import.meta.env.MODE === "localhost" ? "http://localhost:8000" : "";
+import { ProcessEnv } from "../classes/ProcessEnv";
+import { Routes } from "../classes/Routes";
 
-const routes = "backend/routes";
-const pathGenerator = (point: string, ext = "api.php") =>
-  `${domain}/${routes}/${point}.${ext}`;
+const myEnv = new ProcessEnv(import.meta.env);
+const myLoc = window.location;
+const myPath = new URL(myLoc.toString());
 
-const pathGenerator_v2 = (point: string, prefix = "api") =>
-  `${domain}/${prefix}/${point}`;
-
-  export const api = {
-  routes: {
-    login: pathGenerator("login"),
-    events: pathGenerator_v2("event"),
-    clients: pathGenerator_v2("styles"), //TODO: [moved] client_styles -> styles
-    backoffice: {
-      styles: pathGenerator("backoffice/styles"),
-      addUser: pathGenerator("backoffice/addUser"),
-    },
-  },
-};
+export const apiRoutes = new Routes(myEnv, myPath);

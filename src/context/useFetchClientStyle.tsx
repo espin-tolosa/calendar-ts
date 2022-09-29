@@ -1,5 +1,5 @@
+import { apiRoutes } from "@/static/apiRoutes";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { api } from "../static/apiRoutes";
 import { report } from "../logger/report";
 
 // This file exports one context that brings styles from API
@@ -51,7 +51,8 @@ function useAddStylesClientCSSlasses()
 
     const handleFetch = () =>
     {
-        fetch(api.routes.clients)
+        //TODO fetch: check old end point api.routes.clients and change by proper apiRoutes
+        fetch(apiRoutes.style.toString())
         .then((res) => res.json())
         .then((json: jh.response.colors) =>
         {

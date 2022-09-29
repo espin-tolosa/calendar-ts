@@ -9,7 +9,7 @@ interface Day {
 function Day({fullDate}: Day)
 {
     const {observed, height, visible} = useVirtualList();
-
+    
     return (
 
         <DayLayout fullDate={fullDate} height={height} visible={visible} thisDay={observed}>

@@ -1,6 +1,7 @@
+import { apiRoutes } from "@/static/apiRoutes";
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const FormData = require("form-data");
-import { api } from "@/static/apiRoutes";
 
 //const hostinger = "https://samuelengineer.com";
 
@@ -30,7 +31,9 @@ export async function fetchEvent_v2(
   } else {
     data.append("json", JSON.stringify({ action, ...event }));
   }
-  return fetch(api.routes.events, {
+
+  //TODO fetch: check this to match old endpoint [api.routes.events]
+  return fetch(apiRoutes.event, {
     method: "POST",
     body: data,
   });
@@ -40,7 +43,8 @@ export async function apifetch(query: { action: string; debug: string }) {
   const data = new FormData();
   data.append("json", JSON.stringify(query));
 
-  return fetch(api.routes.events, {
+  //TODO fetch: check this to match old endpoint [api.routes.events]
+  return fetch(apiRoutes.event, {
     method: "POST",
     body: data,
   })

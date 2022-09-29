@@ -25,8 +25,9 @@ import { DOMRefsContext } from "./context/DOMRefs";
 import { EventResizeObserver } from "./context/observeEventSize";
 import { CurrentDays } from "./components/Month/components/CurrentDays";
 
-
 const root = window.document.getElementById("root") as HTMLDivElement;
+
+console.log(import.meta)
 
 createRoot(root).render(
     <StrictMode>
@@ -71,4 +72,3 @@ createRoot(root).render(
         </CurrentDays>
     </StrictMode>
 );
-

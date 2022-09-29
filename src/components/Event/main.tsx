@@ -51,7 +51,11 @@ export const Event = ({event, index}: Event) =>
 
     return (
 
-    <DragHandlers event={event} /*spread={eventLong}*/>
+    <DragHandlers event={event}
+    //! START COMMENT
+//    spread={eventLong}
+    //! END COMMENT
+    >
     <>
         <StyledEvent.TWtextContent id={id} style={cssStyle.dinamic} ref={eventRef}
             $isChildren={isChildren} $isHover={hover} $cells={eventLong} $client={event.client.toLowerCase()}>

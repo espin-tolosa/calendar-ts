@@ -1,0 +1,94 @@
+#!/bin/bash
+
+if git status | grep -q "nothing to commit, working tree clean"; then
+    # BETA MESSAGE
+    YELLOW='\033[1;33m'; NC='\033[0m';
+    printf "\n${YELLOW} INFO: This feature is a BETA version, check if the result is expected for all produced files${NC}\n\n"
+else
+    RED='\033[1;31m'; NC='\033[0m';
+    printf "\n${RED}[ERROR]: Your Git working tree is not clean, please commit all changes before run this feature${NC}\n\n"
+    exit;
+fi
+
+if (($# != 1)); then
+    echo "Expecting one argument action:"
+    echo " 1. write_simple_comment"
+    echo " 2. erase_simple_comment"
+    exit;
+fi
+
+if [[ "$1" != "write_simple_comment" && "$1" != "erase_simple_comment" ]]; then
+    echo "Expecting one argument action:"
+    echo " 1. write_simple_comment"
+    echo " 2. erase_simple_comment"
+    exit;
+fi
+
+process_start_end_marked_files()
+{
+    FILE_NAME=$1
+    REPLACE_CALLBACK=$2
+
+    START="false"
+
+    while IFS='' read -r line || [[ -n "${line}" ]]; do
+
+        result=$(echo "$line" | grep "$START_MARK")
+        #INSIDE A COMMENT START
+        if [ "$result" != "" ] ; then
+          START="true"
+          echo "$line";
+          continue;
+        fi
+
+        result=$(echo "$line" | grep "$END_MARK")
+        if [ "$result" != "" ] ; then
+          START="false"
+          echo "$line";
+          continue;
+        fi
+
+        if [ "$START" == "true" ]; then
+            "${REPLACE_CALLBACK}" "${line}"
+        else
+          echo "$line";
+        fi
+
+    done < "$FILE_NAME"
+}
+
+erase_simple_comment()
+{
+    INPUT_LINE=$1
+    echo "$INPUT_LINE" | sed 's/\/\///'
+}
+
+write_simple_comment()
+{
+    INPUT_LINE=$1
+    echo "//$INPUT_LINE"
+}
+
+for_all_start_end_marked_files()
+{
+    mark_processor=$1
+    action=$2
+
+    FILES=($(grep -rn -H -m 1 "$START_MARK" . \
+    --exclude-dir=/node_modules \
+    --exclude-dir=/modules \
+    --include=*.tsx \
+    --include=*.ts \
+    | cut -d: -f1))
+
+    for file in "${FILES[@]}"
+    do
+        ("${mark_processor}" "$file" "${action}")  > "$file.temp"
+        mv -v "$file.temp" "$file"
+    done
+}
+
+ACTION=$1
+START_MARK="START COMMENT"
+END_MARK="END COMMENT"
+for_all_start_end_marked_files process_start_end_marked_files "${ACTION}"

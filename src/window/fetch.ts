@@ -1,12 +1,12 @@
 import { loginForm } from "@/interfaces";
-import { api } from "@/static/apiRoutes";
 import { DocumentIO } from "@/window/cookie";
 
 export function fetchLogin(payload: { user: string; password: string }) {
   const data = new FormData();
   data.append("json", JSON.stringify(payload));
 
-  fetch(api.routes.login, {
+  //TODO: Remove fetchLogin
+  fetch("", {
     method: "POST",
     body: data,
   })

@@ -13,6 +13,7 @@ function BoardRoute ({user}:{user:string})
         ]
 
     )
+
     return (
         <>
             {Layout()}
