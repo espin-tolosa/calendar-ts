@@ -4,6 +4,9 @@ import { Settings } from "./layouts/Settings";
 import { Board } from "./layouts/Board";
 import { TopBar } from "./components/TopBar/main";
 import { useDebugEvent } from "./hooks/useDebugEvents";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { textAreaCtx } from "./components/Month/components/CurrentDays";
+import { useEventDispatch } from "./hooks/useEventsState";
 
 function BoardRoute ({user}:{user:string})
 {
@@ -24,8 +27,6 @@ function BoardRoute ({user}:{user:string})
 
 export function App()
 {
-    useDebugEvent();
-
     return (
 
         <tw_Layouts.TWapp id={"app"}>

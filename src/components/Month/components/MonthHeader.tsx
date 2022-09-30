@@ -3,11 +3,11 @@ import { zeroPadd } from "../../../utils/zeroPadd";
 
 export function MonthHeader({year, month, date,
     //! START COMMENT
-//    onDoubleClick,
+    onDoubleClick,
     //! END COMMENT
 }:{year:number, month:number, date: string,
     //! START COMMENT
-//    onDoubleClick: ()=>void,
+    onDoubleClick: ()=>void,
     //! END COMMENT
     })
 {
@@ -16,7 +16,7 @@ export function MonthHeader({year, month, date,
 
         <TWheader id={`month-${year}-${zeroPadd(month)}`}
         //! START COMMENT
-//            onDoubleClick={onDoubleClick}
+            onDoubleClick={onDoubleClick}
         //! END COMMENT
         >{date}
         </TWheader>

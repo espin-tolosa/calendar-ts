@@ -53,7 +53,7 @@ export const Event = ({event, index}: Event) =>
 
     <DragHandlers event={event}
     //! START COMMENT
-//    spread={eventLong}
+    spread={eventLong}
     //! END COMMENT
     >
     <>

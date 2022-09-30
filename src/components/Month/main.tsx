@@ -28,7 +28,7 @@ const Month = ({ year, month }: jh.date.monthData) => {
         
                 <MonthHeader year={date.year} month={date.month} date={date.dateFormat}
                 //! START COMMENT
-//                onDoubleClick={printer.hsend}
+                onDoubleClick={printer.hsend}
                 //! END COMMENT
                 />
 
