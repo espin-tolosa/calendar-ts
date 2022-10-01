@@ -16,7 +16,7 @@ export function useObserverController()
     const events = useEventState();
     const textArea = useContext(textAreaCtx) as jh.textArea;
 
-    useEffect(()=>
+    useEffect(() =>
     {
         if(observerRef == null)
         {
@@ -29,15 +29,19 @@ export function useObserverController()
             {
                 const {id,role} = EventClass.getIdParams(entry.target.id);
                 const event = events.find(e=> role.includes("root") && e.id === id )
-                if(!!event && EventClass.hasMutable(event))
+
+                if(!event || !EventClass.hasMutable(event))
                 {
-                    textArea.setTextArea(event.mutable.eventRef.clientHeight)
-                    textArea.setTextEvent(id)
+                    return;
                 }
+
+                textArea.setTextArea(event.mutable.eventRef.clientHeight)
+                textArea.setTextEvent(id)
             })
         })
 
-        return ()=>{
+        return () =>
+        {
             observerRef.current.disconnect();
         }
 
