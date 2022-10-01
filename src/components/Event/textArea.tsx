@@ -7,6 +7,7 @@ import { useEventDispatch } from "../../hooks/useEventsState";
 import { textAreaCtx } from "../Month/components/CurrentDays";
 import { useResizeEventLayoutObservingWindowSize } from "./hooks/useResizeEventLayoutObservingWindowSize";
 import { useDispatchOnBlur } from "./hooks/useDispatchOnBlur";
+import { DateService } from "@/utils/Date";
 
 //Export to be composed in Event Card exposing props
 export interface TextArea {
@@ -36,6 +37,8 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
 
     const SingleLineEvent = (event.job === "" || event.job == null) && !isHoverActive && !isHover;
 
+    const eventLong = DateService.DaysFrom(event.start, event.end);
+
     return (
         <StyledEvent.TWjobContent $isHover={isHoverActive}>
         {
@@ -46,9 +49,9 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
                 //! START COMMENT
                 onClick={(e) =>
                 {
+                    setIsHoverActive(true);
                     e.currentTarget.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
                     e.currentTarget.focus();
-                    setIsHoverActive(true);
                 }}
 
                 onFocus={() =>
@@ -87,7 +90,7 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
                 }}
                 //! END COMMENT
             >
-                {event.job}
+                {isHoverActive ? event.job : event.job.substring(0,15*(1+eventLong))}
             </StyledEvent.TWtextArea>
         }
         </StyledEvent.TWjobContent>

@@ -2,7 +2,7 @@ import tw from "tailwind-styled-components";
 
 export const TWjobContent = tw.div<{$isHover: boolean;}>
 `
-${({ $isHover }: { $isHover: boolean }) => ($isHover && '') || ''}
+${({ $isHover }: { $isHover: boolean }) => ($isHover && 'z-Dayoff') || ''}
 flex whitespace-normal break-words overflow-hidden overflow-ellipsis`;
 
 //I needed to create this component which is a copy of flexContainer just to change z-index and give its corresponding holder behavior
