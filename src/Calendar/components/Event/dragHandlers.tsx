@@ -9,6 +9,7 @@ import { useGethDeleteEvent } from "../../api/handlers";
 
 import { useHoverEvent } from "../../components/Event/logic";
 import { EventClass } from "../../classes/event";
+import { useAuthLevel } from "@/Spa/context/authLevel";
 
 interface DragHandlers {
     event: jh.event;
@@ -27,20 +28,21 @@ export function DragHandlers({event,
 {
     const mouseEventHover = useHoverEvent(event);
 //! START COMMENT
+    const auth = useAuthLevel();
     const [parentEvent] = useGetEventFamily(event);
     const hDelete = useGethDeleteEvent(event);
     const eventDispatcher = useEventDispatch();
     const setDnDEventRef = useSetDnDEventRef();
     const dndEvent = useDnDEventRef();
 
-    const hOnDragEnd = (e: React.DragEvent<HTMLDivElement>) =>
+    const hOnDragEnd = auth !== "client" ? (e: React.DragEvent<HTMLDivElement>) =>
     {
         e.stopPropagation();
         setDnDEventRef(nullEvent());
         eventDispatcher({type: "fromnull", payload: [ dndEvent ]});
-    };
+    } : ()=>{}
 
-   const hOnDragStart = (e: React.DragEvent<HTMLDivElement>, direction: jh.dragDirection) =>
+   const hOnDragStart = auth !== "client" ? (e: React.DragEvent<HTMLDivElement>, direction: jh.dragDirection) =>
    {
        e.stopPropagation();
        const parentCopy: jh.event = { ...parentEvent };
@@ -57,16 +59,16 @@ export function DragHandlers({event,
        setDnDEventRef(parentCopy);
 
        setTimeout(() => {eventDispatcher({type: "tonull", payload: [event]});}, 1000);
-   };
+   } : ()=>{}
 
-    const hDeleteEventOnCtrlSupr = (e: React.KeyboardEvent<HTMLDivElement>) =>
+    const hDeleteEventOnCtrlSupr = auth !== "client" ? (e: React.KeyboardEvent<HTMLDivElement>) =>
     {
         e.stopPropagation();
         if (e.ctrlKey && e.code === "Delete")
         {
             hDelete();
         }
-    }
+    } : ()=>{}
 //! END COMMENT
 
     return (
@@ -88,7 +90,7 @@ export function DragHandlers({event,
         //! START COMMENT
         <StyledEvent.TWextend_Left $cells={spread} title={`Drag here to extend ${event.client}'s job`}
 
-            draggable={"true"}
+            draggable={auth === "master"}
             onDragStart={(e) => {hOnDragStart(e, "backward");}}
             onDragEnd={hOnDragEnd}
         >
@@ -102,7 +104,7 @@ export function DragHandlers({event,
         //! START COMMENT
         <StyledEvent.TWextend $cells={spread} title={`Drag here to extend ${event.client}'s job`}
 
-            draggable={"true"}
+            draggable={auth === "master"}
             onDragStart={(e) => {hOnDragStart(e, "forward");}}
             onDragEnd={hOnDragEnd}
         >

@@ -5,6 +5,7 @@ import * as StyledTopnav from "./tw";
 import { useCtxCurrentMonthRef } from "../../context/currentMonthReference";
 import { useCtxTopNavRef } from "../../context/topNavSize";
 import { useCleanSession } from "../../hooks/useCleanSession";
+import { useAuthLevel } from "@/Spa/context/authLevel";
 
 export const TOPNAV_ID = "Topnav";
 
@@ -16,13 +17,14 @@ export function TopBar({user}:{user:string})
     //const cleanSession = useCleanSession();
 
     const monthRef = useCtxCurrentMonthRef();
+    const auth = useAuthLevel();
 
     return (
 
         <tw_Layouts.TWheader>
             <StyledTopnav.TWcontainer id={TOPNAV_ID} ref={topNavRef}>
                 {/*left-header*/}
-                <StyledTopnav.TWlogo>{`JH Diary | ${user.toLocaleUpperCase()}`}</StyledTopnav.TWlogo>
+                <StyledTopnav.TWlogo>{`JH Diary | ${user.toLocaleUpperCase()} | ${auth}`}</StyledTopnav.TWlogo>
                 {/*center-header*/}{" "}
                 <StyledTopnav.TWtitle onClick={() => {
                     if (monthRef?.current == undefined) {return;}

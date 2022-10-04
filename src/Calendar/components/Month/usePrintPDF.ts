@@ -5,7 +5,6 @@ export function usePrintPDF()
 {
     const [print, setPrint] = useState(false);
     const auth = useAuthLevel();
-    console.log("AUTH", auth)
  
     useEffect(()=>{
 

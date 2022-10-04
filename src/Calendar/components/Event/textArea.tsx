@@ -8,6 +8,7 @@ import { textAreaCtx } from "../Month/components/CurrentDays";
 import { useResizeEventLayoutObservingWindowSize } from "./hooks/useResizeEventLayoutObservingWindowSize";
 import { useDispatchOnBlur } from "./hooks/useDispatchOnBlur";
 import { DateService } from "../../utils/Date";
+import { useAuthLevel } from "@/Spa/context/authLevel";
 
 //Export to be composed in Event Card exposing props
 export interface TextArea {
@@ -27,10 +28,11 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
     const textRef = useRef<HTMLSpanElement>(null);
     const [isHoverActive, setIsHoverActive] = useState(false);
     const textArea = useContext(textAreaCtx) as jh.textArea;
+    const auth = useAuthLevel();
     
     //! START COMMENT
     const eventDispatcher = useEventDispatch();
-    useDispatchOnBlur(textRef, event, isHoverActive);
+    auth === "master" && useDispatchOnBlur(textRef, event, isHoverActive);
     //! END COMMENT
 
     useResizeEventLayoutObservingWindowSize(refNode, event);
@@ -44,11 +46,15 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
         {
             SingleLineEvent ?
             <></> :
-            <StyledEvent.TWtextArea ref={textRef} role="textbox" contentEditable={true} suppressContentEditableWarning={true}
+            <StyledEvent.TWtextArea ref={textRef} role="textbox" contentEditable={auth === "master"} suppressContentEditableWarning={true}
 
                 //! START COMMENT
                 onClick={(e) =>
                 {
+                    if(auth !== "master")
+                    {
+                        return;
+                    }
                     setIsHoverActive(true);
                     e.currentTarget.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
                     e.currentTarget.focus();
@@ -56,6 +62,10 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
 
                 onFocus={() =>
                 {
+                    if(auth !== "master")
+                    {
+                        return;
+                    }
                     if (textRef.current)
                     {
                         const range = window.document.createRange();
@@ -68,6 +78,10 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
 
                 onKeyDown={(e) =>
                 {
+                    if(auth !== "master")
+                    {
+                        return;
+                    }
                     if (e.code === "Enter" || e.code === "Escape")
                     {
                         e.currentTarget.blur();
@@ -75,6 +89,10 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
                 }}
 
                 onKeyUp={()=>{
+                    if(auth !== "master")
+                    {
+                        return;
+                    }
 
                     textArea.setTextEvent(event.id);
                     textArea.setTextArea(refNode.current?.clientHeight ?? 0);
@@ -82,6 +100,10 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
 
                 onBlur={(e) =>
                 {
+                    if(auth !== "master")
+                    {
+                        return;
+                    }
                      const job = (e.currentTarget.textContent ?? "").trim().replaceAll("\n", " ");
                      fetchEvent("PUT", { ...event, job });
                      eventDispatcher({type: "update", payload: [{ ...event, job }]});
