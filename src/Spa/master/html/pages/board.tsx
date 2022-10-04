@@ -1,4 +1,4 @@
-import { Header } from "@/Shared/Components/Header/main";
+import { Header } from "../../../../Shared/Components/Header/main";
 
 export default function ( {user} : jh.RouteParams ) {
 
