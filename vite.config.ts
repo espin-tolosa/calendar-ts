@@ -14,9 +14,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
         input: {
-            master: resolve(__dirname, 'master.blade.html'),
-            partner: resolve(__dirname, 'partner.blade.html'),
-            client: resolve(__dirname, 'client.blade.html'),
+            master: resolve(__dirname, './views/master.blade.html'),
+            partner: resolve(__dirname, './views/partner.blade.html'),
+            client: resolve(__dirname, './views/client.blade.html'),
         }
     }
   }

@@ -1,0 +1,3 @@
+yarn dev --mode "master" --host &&
+yarn dev --mode "partner" --host &&
+yarn dev --mode "client" --host

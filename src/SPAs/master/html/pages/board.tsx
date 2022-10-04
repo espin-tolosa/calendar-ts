@@ -1,8 +1,6 @@
 import { useLocation } from "wouter";
-import { RouteParams } from "../domain";
 
-
-export default function ({user}:RouteParams ) {
+export default function ( {user} : jh.RouteParams ) {
 
     const [location, setLocation] = useLocation();
     console.log("BOARD", location)

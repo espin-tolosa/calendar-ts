@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
+    "dev-mode": "vite --host --mode $1",
     "test": "jest",
     "build": "isFree 1500 && tsc && vite build",
     "toBlade": "./scripts/toBlade",

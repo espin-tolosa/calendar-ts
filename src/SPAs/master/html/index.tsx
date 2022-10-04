@@ -1,6 +1,6 @@
 import { Route, Switch } from "wouter";
-import Board from "./board";
-import Backoffice from "./backoffice"
+import Board from "./pages/board";
+import Backoffice from "./pages/backoffice"
 
 export default function ()
 {

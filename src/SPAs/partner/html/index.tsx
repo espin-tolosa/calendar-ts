@@ -1,5 +1,5 @@
 import { Route } from "wouter";
-import Board from "./board";
+import Board from "./pages/board";
 
 export default function ()
 {
