@@ -1,0 +1,322 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /*just a remember: --header_height: 2rem;*/
+  --calendar_width: auto;
+  --calendar_columns: 1;
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-display: swap;
+  src: url(../Roboto-Regular.ttf);
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}
+
+@layer utilities {
+  @media print {
+    .printable {
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+  }
+}
+
+@layer base {
+  .hue-horizontal {
+    background: linear-gradient(
+      to right,
+      #f00 0%,
+      #ff0 17%,
+      #0f0 33%,
+      #0ff 50%,
+      #00f 67%,
+      #f0f 83%,
+      #f00 100%
+    );
+    background: -webkit-linear-gradient(
+      to right,
+      #f00 0%,
+      #ff0 17%,
+      #0f0 33%,
+      #0ff 50%,
+      #00f 67%,
+      #f0f 83%,
+      #f00 100%
+    );
+  }
+
+  .hue-vertical {
+    background: linear-gradient(
+      to top,
+      #f00 0%,
+      #ff0 17%,
+      #0f0 33%,
+      #0ff 50%,
+      #00f 67%,
+      #f0f 83%,
+      #f00 100%
+    );
+    background: -webkit-linear-gradient(
+      to top,
+      #f00 0%,
+      #ff0 17%,
+      #0f0 33%,
+      #0ff 50%,
+      #00f 67%,
+      #f0f 83%,
+      #f00 100%
+    );
+  }
+}
+
+@layer utilities {
+  .sticky-footer {
+    position: sticky;
+    top: calc(100vh - 50px);
+  }
+}
+
+@layer base {
+  input {
+    border: none;
+  }
+  input:focus {
+    outline: 1px solid gray;
+  }
+
+  .text-event {
+    cursor: grab !important; /* the way I find to */
+  }
+  .extend-event-e {
+    cursor: e-resize !important; /* the way I find to */
+  }
+  .extend-event-w {
+    cursor: w-resize !important; /* the way I find to */
+  }
+}
+
+@layer utilities {
+  /*
+    margin-left: 7.14%;
+    margin-left: 21.43%;
+    margin-left: 35.71%;
+    margin-left: 50%;
+    margin-left: 64.29%;
+    margin-left: 78.57%;
+    margin-left: 92.86%;
+*/
+
+  .month-start-mon {
+    display: none;
+  }
+  .month-start-tue {
+    grid-column-start: min(1, 7);
+  }
+  .month-start-wed {
+    grid-column-start: min(2, 7);
+  }
+  .month-start-thu {
+    grid-column-start: min(3, 7);
+  }
+  .month-start-fri {
+    grid-column-start: min(4, 7);
+  }
+  .month-start-sat {
+    grid-column-start: min(5, 7);
+  }
+  .month-start-sun {
+    grid-column-start: min(6, 7);
+  }
+  .extend-event-1 {
+    margin-left: calc(1 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-2 {
+    margin-left: calc(2 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-3 {
+    margin-left: calc(3 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-4 {
+    margin-left: calc(4 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-5 {
+    margin-left: calc(5 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-6 {
+    margin-left: calc(6 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-7 {
+    margin-left: calc(7 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-8 {
+    margin-left: calc(8 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-l-1 {
+    margin-right: calc(1 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-l-2 {
+    margin-right: calc(2 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-l-3 {
+    margin-right: calc(3 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-l-4 {
+    margin-right: calc(4 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-l-5 {
+    margin-right: calc(5 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-l-6 {
+    margin-right: calc(6 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-l-7 {
+    margin-right: calc(7 * 100% / 7 - 30% / 7);
+  }
+  .extend-event-l-8 {
+    margin-right: calc(8 * 100% / 7 - 30% / 7);
+  }
+
+  .event-span-1 {
+    width: calc(1 * 100% / 7 - 0.3rem);
+  }
+  .event-span-2 {
+    width: calc(2 * 100% / 7 - 0.3rem);
+  }
+  .event-span-3 {
+    width: calc(3 * 100% / 7 - 0.3rem);
+  }
+  .event-span-4 {
+    width: calc(4 * 100% / 7 - 0.3rem);
+  }
+  .event-span-5 {
+    width: calc(5 * 100% / 7 - 0.3rem);
+  }
+  .event-span-6 {
+    width: calc(6 * 100% / 7 - 0.3rem);
+  }
+  .event-span-7 {
+    width: calc(7 * 100% / 7 - 0.3rem);
+  }
+  .event-span-8 {
+    width: calc(8 * 100% / 7 - 0.3rem);
+  }
+
+  .extend-span-1 {
+    min-width: calc(1 * 100% / 7 - 1 * 50% / 7);
+  }
+  .extend-span-2 {
+    min-width: calc(2 * 100% / 7 - 2 * 50% / 7);
+  }
+  .extend-span-3 {
+    min-width: calc(3 * 100% / 7 - 3 * 50% / 7);
+  }
+  .extend-span-4 {
+    min-width: calc(4 * 100% / 7 - 4 * 50% / 7);
+  }
+  .extend-span-5 {
+    min-width: calc(5 * 100% / 7 - 5 * 50% / 7);
+  }
+  .extend-span-6 {
+    min-width: calc(6 * 100% / 7 - 6 * 50% / 7);
+  }
+  .extend-span-7 {
+    min-width: calc(7 * 100% / 7 - 7 * 50% / 7);
+  }
+  .extend-span-8 {
+    min-width: calc(8 * 100% / 7 - 8 * 50% / 7);
+  }
+}
+
+@layer components {
+  .components-controller-on {
+    grid-template-columns: repeat(2, minmax(var(200px), 1fr));
+    grid-template-columns: minmax(12ch, 30ch) 1fr;
+  }
+  .components-controller-off {
+    grid-template-columns: 0fr 1fr;
+  }
+
+  .components-calendar {
+    grid-template-columns: repeat(
+      var(--calendar_columns),
+      minmax(var(--calendar_width), 1fr)
+    );
+  }
+}
+/* catch day hover from day-header */
+@layer components {
+  .day:hover .day-header,
+  .day.hover .day-header {
+    background: rgb(241, 245, 249); /*slate-100*/
+    transition: background-color 0.3s ease;
+  }
+  .dayDivHight {
+    @apply min-h-[9vh];
+  }
+}
+
+@layer utilities {
+  .textAnimation {
+    animation: color-change 2s infinite;
+  }
+
+  @keyframes color-change {
+    0% {
+      color: white;
+    }
+    40% {
+      color: white;
+    }
+    50% {
+      color: black;
+    }
+    90% {
+      color: black;
+    }
+    100% {
+      color: white;
+    }
+  }
+}
+
+/*input*/
+@layer utilities {
+  .text-effect {
+    background: rgb(241, 241, 241);
+  }
+  .text-effect[value]:not([value=""]) {
+    background: white;
+    color: black;
+  }
+  .text-effect:focus {
+    background: white;
+    color: black;
+    box-shadow: rgba(0, 0, 0, 0.8) 0 0 5px;
+  }
+  .width-clamp {
+    width: clamp(9ch, 12ch, 15ch);
+  }
+  .padding-x-clamp {
+    padding-inline: clamp(2px, 1ch, 5ch);
+  }
+}
+
+@layer utilities {
+  .headers-gradient {
+    background: rgb(2, 0, 36);
+    background: linear-gradient(
+      90deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgba(255, 255, 255, 1) 40%,
+      rgba(255, 255, 255, 1) 60%,
+      rgba(2, 0, 36, 1) 100%
+    );
+  }
+  .header-bg {
+    background: red;
+  }
+}
