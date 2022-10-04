@@ -35,13 +35,22 @@ const queryEvent = (date: jh.date.representation, eventDispatcher: React.Dispatc
     payload: [newEvent],
   });
 
+  type callFetch = Promise<{
+    status: true;
+    data: jh.event;
+} | {
+    status: false;
+    data: never[];
+}>
+
   const FetchClosure = () => {
     const Max_Attempts = 10;
 
-    const callFetch = async () => {
+    const callFetch = async () : callFetch => {
       try {
         const request = new FetchEvent();
         const data = await request.create(newEvent);
+        //const data = [{client: "Test",job:"demo2",start:"2022-09-01",end:"2022-09-01"}];
         return { status: true, data };
       } catch {
         return { status: false, data: [] };
@@ -65,7 +74,7 @@ const queryEvent = (date: jh.date.representation, eventDispatcher: React.Dispatc
         result.status &&
           eventDispatcher({
             type: "update",
-            payload: result.data as jh.event[], //! I had to cast this, but I should check it out
+            payload: [result.data],
           });
 
         return;

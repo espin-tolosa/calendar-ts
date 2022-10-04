@@ -70,7 +70,8 @@ export class FetchEvent
 //TODO: substitute api.routes
 class Routes
 {
-    private readonly domain = import.meta.env.MODE === "localhost" ? "http://localhost:8000" : "";
+    //private readonly domain = import.meta.env.MODE === "localhost" ? "http://localhost:8000" : "";
+    private readonly domain = "http://localhost:8000"
 
     private prefix = 'api';
 

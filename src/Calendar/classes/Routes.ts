@@ -16,8 +16,7 @@ export class Routes implements jh.Routes {
 
     private build_USER_URL(location:string):string
     {
-        const options = {master: "", client: `/${this.read_USER(location)}`.toUpperCase() };
-        return options[this.m_env.user];
+        return `/${this.read_USER(location)}`.toUpperCase();
     }
 
     private read_USER(location:string)

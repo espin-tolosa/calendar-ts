@@ -1,3 +1,7 @@
+import { usePostQuery } from "@/Calendar/api/queries";
+import { useDoubleClick } from "@/Calendar/hooks/useDoubleClick";
+import { useAuthLevel } from "@/Spa/context/authLevel";
+import { useRef } from "react";
 import { DateService } from "../../../utils/Date";
 import * as DayStyles from "../tw";
 
@@ -19,12 +23,34 @@ export function DayLayout ( {fullDate, height, visible, thisDay, children} : Day
     const daynumber = fullDate.split("-")[2];
 
     const style = !!height && !visible ? {height: `${height}px`,} : {}
+    
+    const addEvent = usePostQuery(fullDate);
+    const onClick = useDoubleClick(addEvent);
+    const thisNode = useRef<HTMLDivElement>(null);
+    const auth = useAuthLevel();
 
     return (
 
-        <DayStyles.GlobalStyle ref={thisDay} style={style} {...styledProps}>
+        <DayStyles.GlobalStyle ref={thisDay} style={style} {...styledProps}
+        
+        onClick={(e) => {
+            if(auth !== "master")
+            {
+                return;
+            }
+            const target = e.target as HTMLElement;
+            if (thisNode.current !== null && target !== null) {
+              const thisId = thisNode.current.id.split(":")[1];
+              const pointerId = target.id.split(":")[1];
+              if (thisId !== pointerId) {
+                return;
+              }
+            }
+            onClick();
+        }}
+        >
 
-            <DayStyles.header {...styledProps}>
+            <DayStyles.header {...styledProps} ref={thisNode}>
                 <DayStyles.daySpot $isToday={isToday}> {daynumber} </DayStyles.daySpot>
             </DayStyles.header>
 

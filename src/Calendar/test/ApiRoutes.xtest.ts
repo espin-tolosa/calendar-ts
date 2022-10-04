@@ -23,7 +23,7 @@ describe("Testing API Routes Path Generator", ()=> {
     })
    
     test("Path Generator Event for CLIENT",()=>{
-        const myEnv = new ProcessEnv({...test_env, VITE_TARGET_USER: 'master'});
+        const myEnv = new ProcessEnv(test_env);
         const myLoc = new URL("http://localhost:8000/board/samuel");
         const API = new Routes(myEnv, myLoc);
 

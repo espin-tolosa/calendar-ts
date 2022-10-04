@@ -4,7 +4,6 @@ declare namespace jh
         VITE_HTML_PROTOCOL: string;
         VITE_TARGET_HOST: string;
         VITE_TARGET_PORT: string;
-        VITE_TARGET_USER: string;
         VITE_API_PREFIX: string;
         VITE_EVENT_RESOURCE: string;
         VITE_USER_RESOURCE: string;

@@ -12,7 +12,6 @@ export class ProcessEnv {
         'VITE_HTML_PROTOCOL' : 'http',
         'VITE_TARGET_HOST' : 'localhost',
         'VITE_TARGET_PORT' : '8000',
-        'VITE_TARGET_USER' : 'client',
         'VITE_API_PREFIX' : 'api',
         'VITE_EVENT_RESOURCE' : 'event',
         'VITE_USER_RESOURCE' : 'user',
@@ -39,15 +38,7 @@ export class ProcessEnv {
     {
         this.m_env = env;
 
-        const user = this.get('VITE_TARGET_USER', 'client');
-        if(user === 'client' || user === 'master')
-        {
-            this.user = user
-        }
-        else
-        {
-            this.user = 'client';
-        }
+        this.user = 'client';
 
         this.host = this.build_ROOT_URL('VITE_HTML_PROTOCOL', 'VITE_TARGET_HOST', 'VITE_TARGET_PORT');
         
