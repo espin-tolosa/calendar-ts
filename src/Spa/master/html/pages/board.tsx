@@ -1,9 +1,10 @@
-import { useLocation } from "wouter";
+import { Header } from "@/Shared/Components/Header/main";
 
 export default function ( {user} : jh.RouteParams ) {
 
-    const [location, setLocation] = useLocation();
-    console.log("BOARD", location)
+    return (
+        <Header user={user}/>
+    )
 
-    return <a onClick={() => setLocation(`/backoffice/${user}`)}>Click to update</a>
+
 }

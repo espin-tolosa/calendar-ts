@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Route, useLocation } from "wouter";
 import { ContextualClientApp } from "../client/context";
 import { ContextualMasterApp } from "../master/context";
 import { ContextualPartnerApp } from "../partner/context";
@@ -27,5 +28,22 @@ const root = window.document.getElementById("root") as HTMLDivElement;
 createRoot(root).render(
     <StrictMode>
         <App/>
+        <Route path="/">
+            <Index/>
+        </Route>
     </StrictMode>
 );
+
+function Index()
+{
+    const [location, setLocation] = useLocation();
+
+    return (
+        <ul>
+            <li onClick={() => setLocation("/board/samuel")}>Go to board/samuel</li>
+            <li onClick={() => setLocation("/backoffice/samuel")}>Go to backoffice/samuel</li>
+        </ul>
+
+    )
+
+}
