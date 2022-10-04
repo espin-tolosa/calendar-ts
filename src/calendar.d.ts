@@ -23,6 +23,7 @@ declare namespace jh
     }
 
     type SpaUserType = "master" | "partner" | "client";
+    type SpaPages = "board" | "settings" | "logout";
     
     namespace date
     {

@@ -1,14 +1,12 @@
-import { useLocation } from "wouter";
+import { Link } from "wouter";
 
 export default function ( {user} : jh.RouteParams ) {
-  const [location, setLocation] = useLocation();
+  //const [location, setLocation] = useLocation();
 
   return (
-    <div>
-      {`The current page is: ${user}`}
-      {
-        <a onClick={() => setLocation(`/board/${user}`)}>Click to update</a>
-      }
-    </div>
+    <Link href={`/board/${user}`}>
+        <a className="link">Go to Board</a>
+    </Link>
+
   );
 };

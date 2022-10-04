@@ -3,7 +3,7 @@ import {describe, expect, test} from '@jest/globals';
 
 describe('sum module', () =>
 {
-    test('adds 1 + 2 to equal 3', () => { 
+    test.skip('adds 1 + 2 to equal 3', () => { 
         expect(DateService.GetDateNextDay("2022-09-01", DayWeek.Monday)).toBe("2022-09-05");
         expect(DateService.GetDateNextDay("2022-09-01", DayWeek.Tuesday)).toBe("2022-09-06");
         expect(DateService.GetDateNextDay("2022-09-01", DayWeek.Wednesday)).toBe("2022-09-07");

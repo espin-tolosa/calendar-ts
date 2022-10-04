@@ -33,7 +33,6 @@ export function TopBar({user}:{user:string})
                 </StyledTopnav.TWtitle>
                 <div>
                 {/*right-header*/}
-                    <BackofficeButton />
                     <StyledTopnav.TWlogout title={"Cleans up your session token | Ctrl+Alt+q"}
                         onClick={(e) => {e.stopPropagation(); window.location.href ="/logout";}}
                     >
@@ -42,26 +41,5 @@ export function TopBar({user}:{user:string})
                 </div>
             </StyledTopnav.TWcontainer>
         </tw_Layouts.TWheader>
-  );
-}
-
-function BackofficeButton() {
-  return (
-    <>
-      <Route path="/">
-        <Link href="/settings">
-          <StyledTopnav.TWlogout title={"Control panel to edit clients data"}>
-            Settings
-          </StyledTopnav.TWlogout>
-        </Link>
-      </Route>
-      <Route path="/settings">
-        <Link href="/">
-          <StyledTopnav.TWlogout title={"Go back to calendar board"}>
-            Calendar
-          </StyledTopnav.TWlogout>
-        </Link>
-      </Route>
-    </>
   );
 }

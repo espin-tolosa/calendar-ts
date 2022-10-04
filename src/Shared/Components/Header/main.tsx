@@ -1,9 +1,9 @@
 import { GetTodayDateFormat } from "@/Shared/Utilities/DateService";
+import { RightButtonsMaster } from "./RightButtons";
 import * as Tailwind from "./tw";
 
 export function Header({user} : jh.RouteParams)
 {
-
     return (
 
         <Tailwind.header>
@@ -17,15 +17,7 @@ export function Header({user} : jh.RouteParams)
                 >
                     {GetTodayDateFormat()}
                 </Tailwind.title>
-                <div>
-                {/*right-header*/}
-                    {/*<BackofficeButton />*/}
-                    <Tailwind.logout title={"Cleans up your session token | Ctrl+Alt+q"}
-                    //    onClick={(e) => {e.stopPropagation(); window.location.href ="/logout";}}
-                    >
-                        Logout
-                    </Tailwind.logout>
-                </div>
+                <RightButtonsMaster user={user}/>
             </Tailwind.container>
         </Tailwind.header>
     )

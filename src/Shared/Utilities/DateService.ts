@@ -14,51 +14,46 @@ const monthNames = [
   "December",
 ];
 
-export function GetDate(y?: number, m?: number, d?: number) {
-  if (
-    typeof y !== "undefined" &&
-    typeof m !== "undefined" &&
-    typeof d !== "undefined"
-  ) {
-    return new Date(y, m - 1, d);
-  } else if (
-    typeof y !== "undefined" &&
-    typeof m !== "undefined" &&
-    typeof d === "undefined"
-  ) {
-    return new Date(y, m - 1, 1);
-  } else {
-    return new Date();
-  }
-}
-
-export function GetMonthDayKey(dt: Idt) {
-  /*return a string in en-GB format | output example: "Monday, 21 June 2021" */
-  //const options = { weekday: "long" };
-  //return dt.toLocaleDateString("en-GB", options);
+/**
+ * Tested in GetTodayDateFormat
+ */
+function GetMonthDayKey(dt: Idt) {
   return Intl.DateTimeFormat("en-GB", {
     weekday: "long",
   }).format(dt);
 }
 
-export function GetMonth(dt: Idt) {
+function GetMonth(dt: Idt) {
   return 1 + dt.getMonth();
 }
 
-export function GetMonthKeyName(dt: Idt) {
+/**
+ * Tested in GetTodayDateFormat
+ */
+function GetMonthKeyName(dt: Idt) {
   return monthNames[GetMonth(dt) - 1]; //index of array starts at 0
 }
 
-export function GetYear(dt: Idt) {
+/**
+ * Tested in GetTodayDateFormat
+ */
+function GetYear(dt: Idt) {
   return dt.getFullYear();
 }
-
-export function GetDay(dt: Idt) {
+/**
+ * Tested in GetTodayDateFormat
+ */
+function GetDay(dt: Idt) {
   return dt.getDate();
 }
 
-export function GetTodayDateFormat() {
-  const today = GetDate();
+/**
+ * It is a function used by the header to display the date of today
+ * with a style proper of GB language
+ * @param today 
+ * @returns a date formatted as: Thursday 29 February 2024
+ */
+export function GetTodayDateFormat(today = new Date()) {
   const day = GetMonthDayKey(today);
   const month = GetMonthKeyName(today);
   const year = GetYear(today);
