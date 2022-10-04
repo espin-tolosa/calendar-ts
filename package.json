@@ -6,6 +6,7 @@
     "dev": "vite",
     "test": "jest",
     "build": "isFree 1500 && tsc && vite build",
+    "toBlade": "./scripts/toBlade",
     "build_php": "vite build && ./scripts/include_php_index.sh && rsync -ar ./ ../.deployed/app-1.0/webapp --exclude node_modules --exclude .git --exclude scripts --exclude dist --exclude .eslintcache",
     "bbuild": "./scripts/build_fullstack.sh",
     "backend": "./scripts/backend_fullstack.sh",

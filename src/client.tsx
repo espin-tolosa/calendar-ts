@@ -1,12 +1,12 @@
 import "./index.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { App } from "./apps/App";
+import { ContextualClientApp } from "./apps/App";
 
-const root = window.document.getElementById("root") as HTMLDivElement;
+const root = window.document.getElementById("client") as HTMLDivElement;
 
 createRoot(root).render(
     <StrictMode>
-        <App/>
+        <ContextualClientApp/>
     </StrictMode>
 );

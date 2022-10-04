@@ -1,0 +1,3 @@
+#!/bin/bash
+cd dist
+find . -iname '*.html' -exec bash -c 'mv -- "$1" "${1%.html}.php"' bash {} \;

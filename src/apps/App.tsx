@@ -18,8 +18,14 @@ target === "partner" ? ContextualPartnerApp :
 target === "client" ? ContextualClientApp :
 ContextualDefaultApp;
 
+export const AppPage = ({target}:{target:"master"|"partner"|"client"}) =>
+target === "master" ? ContextualMasterApp() :
+target === "partner" ? ContextualPartnerApp() :
+target === "client" ? ContextualClientApp() :
+ContextualDefaultApp();
+
 // App Master provides contexts
-function ContextualMasterApp() {
+export function ContextualMasterApp() {
     return (
         <>
             <IsolatedMasterApp/>
@@ -27,7 +33,7 @@ function ContextualMasterApp() {
     );
 }
 
-function ContextualPartnerApp() {
+export function ContextualPartnerApp() {
     return (
         <>
             <IsolatedPartnerApp/>
@@ -35,7 +41,7 @@ function ContextualPartnerApp() {
     );
 }
 
-function ContextualClientApp() {
+export function ContextualClientApp() {
     return (
         <>
             <IsolatedClientApp/>
