@@ -17,7 +17,7 @@ declare namespace jh
         style: string;
     }
 
-    interface RouteParams // apps/[user-type]/pages/*.tsx
+    interface RouteParams
     {
         user: string;
     }
