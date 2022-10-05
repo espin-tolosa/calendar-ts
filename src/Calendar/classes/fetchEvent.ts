@@ -1,6 +1,5 @@
 import { nullEvent } from "../interfaces";
 import { apiRoutes } from "../static/apiRoutes";
-import { ProcessEnv } from "./ProcessEnv";
 
 export class FetchEvent
 {    
@@ -39,26 +38,35 @@ export class FetchEvent
 
     public async create(event: jh.event) : Promise<jh.event>
     {
-        const myHeaders = new Headers();
-        myHeaders.append("Accept", "application/json");
-        
-        const formdata = new FormData();
-        formdata.append("client", event.client );
-        formdata.append("job", event.job);
-        formdata.append("start", event.start);
-        formdata.append("end", event.end);
-        
-        const requestOptions = {
-          method: 'POST',
-          headers: myHeaders,
-          body: formdata,
-        };
+        return this.pushEventRequest(event,"POST");
+    }
+
+    public async update(event: jh.event)
+    {
+        return this.pushEventRequest(event, "PUT");
+    }
+
+    private async pushEventRequest(event: jh.event, method: "POST" | "PUT") : Promise<jh.event>
+    {
+        const payload = {client: event.client, job: event.job, start: event.start, end: event.end};
+
+        const headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
+        const body = new URLSearchParams(payload);
+
+        const requestOptions = {method, headers, body};
 
         try
         {
             //TODO fetch: check what does this and change by proper apiRoutes endpoint
-           const response = await window.fetch(this.routes.create(this.ENV_API_ENDPOINT_NAME), requestOptions);
-           return await response.json();
+            const putURI = `/${event.id}`
+            const postURI = "";
+            const url = this.routes.create(this.ENV_API_ENDPOINT_NAME) + (method === "PUT" ? putURI : postURI);
+            const response = await window.fetch(url, requestOptions);
+            return await response.json();
         }
 
         catch (error)

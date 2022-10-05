@@ -87,6 +87,16 @@
   input:focus {
     outline: 1px solid gray;
   }
+
+  .text-event {
+    cursor: grab !important; /* the way I find to */
+  }
+  .extend-event-e {
+    cursor: e-resize !important; /* the way I find to */
+  }
+  .extend-event-w {
+    cursor: w-resize !important; /* the way I find to */
+  }
 }
 
 @layer utilities {
