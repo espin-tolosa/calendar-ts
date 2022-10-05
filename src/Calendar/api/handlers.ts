@@ -8,6 +8,7 @@ import { useControllerDispatch } from "../hooks/useController";
 import { useControllerDispatchDates } from "../hooks/useControllerDate";
 import { useEventDispatch } from "../hooks/useEventsState";
 import { fetchEvent } from "../utils/fetchEvent";
+import { FetchEvent } from "../classes/fetchEvent";
 
 // Custom-hook: useGethCancel
 //
@@ -69,18 +70,17 @@ export function useGethDeleteEvent(eventSelected: jh.event): () => void {
       return;
     }
     const deleteResourceInAPI = async () => {
-      const result = await fetchEvent("DELETE", eventSelected);
 
-      return result.status;
+        const Event = new FetchEvent();
+        await Event.destroy(eventSelected);
+        return 204; //jajaja
+        //ireturn result.status;
     };
 
     const MAX_ATTEMPTS = 10;
     const success = (code: number) => code === 204;
 
-    eventDispatcher({
-      type: "delete",
-      payload: [eventSelected],
-    });
+    eventDispatcher({type: "delete", payload: [eventSelected]});
 
     //This try to fetch 10 times before refresh the web page
     /*eslint no-empty: "error"*/

@@ -1,15 +1,11 @@
 import { FetchEvent } from "@/Calendar/classes/fetchEvent";
-import { useContext, useEffect, useLayoutEffect } from "react";
-import { textAreaCtx } from "../../../components/Month/components/CurrentDays";
+import { useLayoutEffect } from "react";
 import { useEventDispatch } from "../../../hooks/useEventsState";
-//import { fetchEvent } from "../../../utils/fetchEvent";
 
 export function useDispatchOnBlur(textRef: React.RefObject<HTMLSpanElement>, event: jh.event)
 {
     const eventDispatcher = useEventDispatch();
-    console.log("Dispatch on blur")
-    //const textArea = useContext(textAreaCtx) as jh.textArea;
-    
+
     /**
      * useLayoutEffect is required to have access synchronously to textRef before disapears.
      * useEffect is async, so it won't work here

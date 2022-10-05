@@ -31,7 +31,7 @@ export function DayLayout ( {fullDate, height, visible, thisDay, children} : Day
 
     return (
 
-        <DayStyles.GlobalStyle ref={thisDay} style={style} {...styledProps}
+        <DayStyles.GlobalStyle id={`day:${fullDate}`} ref={thisDay} style={style} {...styledProps}
         
         onClick={(e) => {
             if(auth !== "master")

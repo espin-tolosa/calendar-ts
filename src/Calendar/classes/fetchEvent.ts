@@ -1,18 +1,18 @@
 import { nullEvent } from "../interfaces";
 import { apiRoutes } from "../static/apiRoutes";
+import { ProcessEnv } from "./ProcessEnv";
 
 export class FetchEvent
 {    
-    private readonly ENV_API_ENDPOINT_NAME = 'event';
-    private readonly routes;
+    private readonly m_routes;
     public static instance()
     {
         return new FetchEvent();
     }
 
-    public constructor(routes: Routes = Routes.instance())
+    public constructor(routes = Routes.event())
     {
-        this.routes = routes;
+        this.m_routes = routes;
     }
 
     public async all() : Promise<jh.event[]>
@@ -46,7 +46,12 @@ export class FetchEvent
         return this.pushEventRequest(event, "PUT");
     }
 
-    private async pushEventRequest(event: jh.event, method: "POST" | "PUT") : Promise<jh.event>
+    public async destroy(event: jh.event)
+    {
+        return this.pushEventRequest(event, "DELETE");
+    }
+
+    private async pushEventRequest(event: jh.event, method: "POST" | "PUT" | "DELETE") : Promise<jh.event>
     {
         const payload = {client: event.client, job: event.job, start: event.start, end: event.end};
 
@@ -64,7 +69,7 @@ export class FetchEvent
             //TODO fetch: check what does this and change by proper apiRoutes endpoint
             const putURI = `/${event.id}`
             const postURI = "";
-            const url = this.routes.create(this.ENV_API_ENDPOINT_NAME) + (method === "PUT" ? putURI : postURI);
+            const url = this.m_routes + (method === "PUT" || method === "DELETE" ? putURI : postURI);
             const response = await window.fetch(url, requestOptions);
             return await response.json();
         }
@@ -78,18 +83,19 @@ export class FetchEvent
 //TODO: substitute api.routes
 class Routes
 {
-    //private readonly domain = import.meta.env.MODE === "localhost" ? "http://localhost:8000" : "";
-    private readonly domain = "http://localhost:8000"
-
-    private prefix = 'api';
-
-    public create(resource: string)
+    public static event()
     {
-        return `${this.domain}/${this.prefix}/${resource}`;
+        const myEnv =  new ProcessEnv(import.meta.env);
+        return myEnv.api.event;
     }
-    
-    public static instance()
+    public static user()
     {
-        return new Routes();
+        const myEnv =  new ProcessEnv(import.meta.env);
+        return myEnv.api.user;
+    }
+    public static style()
+    {
+        const myEnv =  new ProcessEnv(import.meta.env);
+        return myEnv.api.style;
     }
 }

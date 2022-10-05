@@ -3,16 +3,17 @@ import * as tw_Layouts from "./layouts/tw";
 import { Settings } from "./layouts/Settings";
 import { Board } from "./layouts/Board";
 import { TopBar } from "./components/TopBar/main";
-import { useDebugEvent } from "./hooks/useDebugEvents";
-import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { textAreaCtx } from "./components/Month/components/CurrentDays";
-import { useEventDispatch } from "./hooks/useEventsState";
+import { useLayoutEffect, useRef } from "react";
 import { useOnDragEnter } from "./components/Day/logic";
 import { useDnDEventRef } from "./context/dndEventRef";
 import { useKeyboardShortcuts } from "./hooks/useKeyListeners";
+import { useDragAndDropTouch } from "./window/touch";
+
 
 function BoardRoute ({user}:{user:string})
 {
+    useDragAndDropTouch();
+
     const Layout = () => (
         [
             <TopBar key="topbar" user={user} />,

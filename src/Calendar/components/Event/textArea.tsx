@@ -42,12 +42,15 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
 
     const eventLong = DateService.DaysFrom(event.start, event.end);
 
+    const isEscaped = useRef(false);
+
     return (
         <StyledEvent.TWjobContent $isHover={isHoverActive}>
         {
             SingleLineEvent ?
             <></> :
             <StyledEvent.TWtextArea ref={textRef} role="textbox" contentEditable={auth === "master"} suppressContentEditableWarning={true}
+            defaultValue={event.job}
 
                 //! START COMMENT
                 onClick={(e) =>
@@ -75,6 +78,7 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
                         window.getSelection()?.removeAllRanges();
                         window.getSelection()?.addRange(range);
                     }
+                    isEscaped.current = false; //init a new cicle
                 }}
 
                 onKeyDown={(e) =>
@@ -83,8 +87,13 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
                     {
                         return;
                     }
-                    if (e.code === "Enter" || e.code === "Escape")
+                    if (e.code === "Enter")
                     {
+                        e.currentTarget.blur();
+                    }
+                    if (e.code === "Escape")
+                    {
+                        isEscaped.current = true;
                         e.currentTarget.blur();
                     }
                 }}
@@ -105,13 +114,29 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
                     {
                         return;
                     }
-                     const job = (e.currentTarget.textContent ?? "").trim().replaceAll("\n", " ");
-                     const putEvent = {...event, job};
-                     const Event = new FetchEvent();
-                     Event.update(putEvent)
-                     eventDispatcher({type: "update", payload: [putEvent]});
-                     setIsHover(false);
-                     setIsHoverActive(false);
+
+                    /**
+                     * Is Escape was pressed: recover the value and push it to text box using innterText prop,
+                     * and don't do nothing more, such as push a new state or fetch a put query
+                     */
+                    if(isEscaped.current)
+                    {
+                        if(textRef.current !== null)
+                        {
+                            textRef.current.innerText = event.job;
+                            isEscaped.current = false;
+                            return;
+                        }
+
+                    }
+                    
+                    const job = (e.currentTarget.textContent ?? "").trim().replaceAll("\n", " ");
+                    const putEvent = {...event, job};
+                    eventDispatcher({type: "update", payload: [putEvent]});
+                    setIsHover(false);
+                    setIsHoverActive(false); 
+                    const Event = new FetchEvent();
+                    Event.update(putEvent)
                 }}
                 //! END COMMENT
             >

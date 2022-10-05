@@ -1,7 +1,7 @@
 import { DateService } from "../../utils/Date";
 import { useEventDispatch } from "../../hooks/useEventsState";
-import { fetchEvent_Day } from "../../utils/fetchEvent";
 import { useDnDEventRef, useSetDnDEventRef } from "../../context/dndEventRef";
+import { FetchEvent } from "@/Calendar/classes/fetchEvent";
 
 export const useOnDragEnter = () => {
   // const events = useEventState();
@@ -43,13 +43,10 @@ export const useOnDragEnter = () => {
     //dndEventRef.mutable = undefined;
     //temporaryEventDispatcher(newEvent);
     //-------------------------------------------------------------------------------------------
+    const Event = new FetchEvent();
+    Event.update(dndEventRef)
+    eventDispatcher({type: "update", payload: [dndEventRef]});
 
-    fetchEvent_Day("PUT", dndEventRef);
-    //TODO: Disable this on mobile, to avoid update state while dragging
-    eventDispatcher({
-      type: "update",
-      payload: [{ ...dndEventRef }],
-    });
     setDnDEventRef(dndEventRef);
   };
 };
