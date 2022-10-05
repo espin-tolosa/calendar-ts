@@ -9,6 +9,7 @@ import { useResizeEventLayoutObservingWindowSize } from "./hooks/useResizeEventL
 import { useDispatchOnBlur } from "./hooks/useDispatchOnBlur";
 import { DateService } from "../../utils/Date";
 import { useAuthLevel } from "@/Spa/context/authLevel";
+import { FetchEvent } from "@/Calendar/classes/fetchEvent";
 
 //Export to be composed in Event Card exposing props
 export interface TextArea {
@@ -32,7 +33,7 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
     
     //! START COMMENT
     const eventDispatcher = useEventDispatch();
-    auth === "master" && useDispatchOnBlur(textRef, event, isHoverActive);
+    auth === "master" && useDispatchOnBlur(textRef, event);
     //! END COMMENT
 
     useResizeEventLayoutObservingWindowSize(refNode, event);
@@ -105,14 +106,17 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
                         return;
                     }
                      const job = (e.currentTarget.textContent ?? "").trim().replaceAll("\n", " ");
-                     fetchEvent("PUT", { ...event, job });
-                     eventDispatcher({type: "update", payload: [{ ...event, job }]});
+                     const putEvent = {...event, job};
+                     const Event = new FetchEvent();
+                     Event.update(putEvent)
+                     eventDispatcher({type: "update", payload: [putEvent]});
                      setIsHover(false);
                      setIsHoverActive(false);
                 }}
                 //! END COMMENT
             >
-                {isHoverActive ? event.job : event.job.substring(0,15*(1+eventLong))}
+                {isHoverActive ? event.job : event.job.substring(0,50*(1+eventLong)) + (event.job.length > 50 ? "..." : "") }
+                {/*isHoverActive ? event.job : event.job.substring(0,4*(1+eventLong)) + (event.job.length > 5 ? "..." : "") */}
             </StyledEvent.TWtextArea>
         }
         </StyledEvent.TWjobContent>

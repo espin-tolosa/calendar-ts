@@ -11,6 +11,7 @@ import { textAreaCtx } from "../Month/components/CurrentDays";
 import { isPlaceholder } from "../../utils/ValidateEvent";
 import { sendEndReferencesToPlaceholders } from "../EventsThrower/sendReferencesToPlaceholders";
 import { EventClass } from "../../classes/event";
+import { useAuthLevel } from "@/Spa/context/authLevel";
 
 export interface Event {
   event: jh.event;
@@ -22,6 +23,8 @@ export interface Event {
  */
 export const Event = ({event, index}: Event) =>
 {
+    const auth = useAuthLevel();
+
     const eventRef = useRef<HTMLDivElement>();
 
     const { hover } = useHoverEvent(event);
@@ -49,27 +52,42 @@ export const Event = ({event, index}: Event) =>
     const id=EventClass.eventID(event.id, event.type)
     const isChildren = event.type === "tailhead";
 
+    if(auth !== "master")
+    {
+        return ( 
+        <>
+            <StyledEvent.TWtextContent id={id} style={cssStyle.dinamic} ref={eventRef}
+                $isChildren={isChildren} $isHover={hover} $cells={eventLong} $client={event.client.toLowerCase()}>
+                    
+            {!isChildren ?
+                <EventCard event={event} refNode={createRef()} style={cssStyle.static}/>
+                :
+                <EventTail/>
+            }
+            </StyledEvent.TWtextContent>
+
+            <Placeholder index={index} event={event} eventRef={eventRef}/>
+        </>
+        )
+    }
+
     return (
+        <DragHandlers event={event} spread={eventLong}>
+            <>
+                <StyledEvent.TWtextContent id={id} style={cssStyle.dinamic} ref={eventRef}
+                    $isChildren={isChildren} $isHover={hover} $cells={eventLong} $client={event.client.toLowerCase()}>
 
-    <DragHandlers event={event}
-    //! START COMMENT
-    spread={eventLong}
-    //! END COMMENT
-    >
-    <>
-        <StyledEvent.TWtextContent id={id} style={cssStyle.dinamic} ref={eventRef}
-            $isChildren={isChildren} $isHover={hover} $cells={eventLong} $client={event.client.toLowerCase()}>
+                {!isChildren ?
+                    <EventCard event={event} refNode={createRef()} style={cssStyle.static}/>
+                    :
+                    <EventTail/>
+                }
+                </StyledEvent.TWtextContent>
 
-        {!isChildren ?
-            <EventCard event={event} refNode={createRef()} style={cssStyle.static}/>
-            :
-            <EventTail/>
-        }
-        </StyledEvent.TWtextContent>
+                <Placeholder index={index} event={event} eventRef={eventRef}/>
+            </>
+        </DragHandlers>
 
-        <Placeholder index={index} event={event} eventRef={eventRef}/>
-    </>
-    </DragHandlers>
   );
 };
 
