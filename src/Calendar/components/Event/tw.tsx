@@ -81,3 +81,5 @@ export const TWplaceholder = tw.div``;
 export const TWStyledSelect = tw.select`border-none py-px padding-x-clamp button-shadow text-effect rounded-sm cursor-pointer outline-none text-white`;
 
 export const TWStyledNonSelect = tw.div`border-none py-px padding-x-clamp button-shadow text-effect rounded-sm outline-none text-white `;
+
+export const TWStyledCheckboxSelect = tw.div`border-none py-px padding-x-clamp button-shadow text-effect rounded-sm outline-none text-white flex flex-row justify-between`;

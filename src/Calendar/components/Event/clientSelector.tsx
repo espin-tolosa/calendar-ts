@@ -4,6 +4,7 @@ import { useControllerDispatch } from "../../hooks/useController";
 import { useClientsStyles } from "../../context/useFetchClientStyle";
 import { EventClass } from "@/Calendar/classes/event";
 import { FetchEvent } from "@/Calendar/classes/fetchEvent";
+import { useAuthLevel } from "@/Spa/context/authLevel";
 
 export type ClientSelector = {
   style: object;
@@ -11,10 +12,11 @@ export type ClientSelector = {
 };
 
 export function EventClientSelector(props: ClientSelector): JSX.Element {
-  const clientStyles = useClientsStyles();
-  const eventDispatcher = useEventDispatch();
-  const controllerStateDispatch = useControllerDispatch();
-  const updateClient = (client: string) => {
+    const auth = useAuthLevel();
+    const clientStyles = useClientsStyles();
+    const eventDispatcher = useEventDispatch();
+    const controllerStateDispatch = useControllerDispatch();
+    const updateClient = (client: string) => {
     const request = new FetchEvent();
     const updateEvent = {...props.event, client};
     request.update(updateEvent)
@@ -34,6 +36,31 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
       });
     }, 2000);
   };
+
+  /**
+   * Client
+   */
+  if(auth === "client")
+  {
+    return (
+        <StyledEvent.TWStyledNonSelect style={props.style}>
+            {props.event.client}
+        </StyledEvent.TWStyledNonSelect>
+    )
+  }
+
+  /**
+   * Partner //TODO: add checkbox
+   */
+  if(auth === "partner")
+  {
+    return (
+        <StyledEvent.TWStyledCheckboxSelect style={props.style}>
+                <div>{props.event.client}</div>
+                <input type={"checkbox"}></input>
+        </StyledEvent.TWStyledCheckboxSelect>
+    )
+  }
 
 
     return (
