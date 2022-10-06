@@ -49,7 +49,7 @@ export function reducerEvents(
         event.type = "roothead";
         event.start = event.start.split(" ")[0];
         event.end = event.end.split(" ")[0];
-        event.done = Math.random() < 0.5 ;
+        event.done = event.done;
 
         //checks the case of end begins before the start
         //check if start and end day exists, and client is not empty or is default

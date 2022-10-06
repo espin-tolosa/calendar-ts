@@ -53,7 +53,8 @@ export class FetchEvent
 
     private async pushEventRequest(event: jh.event, method: "POST" | "PUT" | "DELETE") : Promise<jh.event>
     {
-        const payload = {client: event.client, job: event.job, start: event.start, end: event.end};
+        //TODO: payload must be typed, with values expected in Laravel
+        const payload = {client: event.client, job: event.job, start: event.start, end: event.end, done: String(event.done)};
 
         const headers = {
             'Accept': 'application/json',

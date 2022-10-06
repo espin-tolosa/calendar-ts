@@ -94,7 +94,7 @@ export const nullEvent = (): jh.event => ({
   start: "",
   end: "",
   type: "",
-  done: false,
+  done: "false",
 });
 
 // Create new instances each time a nullToken is required

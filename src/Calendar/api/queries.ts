@@ -29,7 +29,7 @@ const queryEvent = (date: jh.date.representation, eventDispatcher: React.Dispatc
     start: date,
     end: date,
     type: "roothead",
-    done: false,
+    done: "false",
   };
   eventDispatcher({
     type: "update",

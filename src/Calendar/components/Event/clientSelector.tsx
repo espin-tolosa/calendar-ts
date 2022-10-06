@@ -59,7 +59,11 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
     return (
         <StyledEvent.TWStyledCheckboxSelect style={styleFilterBorder}
         title={"Mark this event as done"}
-        onClick={(e)=>{eventDispatcher({type: "update", payload: [{...props.event, done: !props.event.done}]});}}
+        onClick={(e)=>{
+            eventDispatcher({type: "update", payload: [{...props.event, done: String(!EventClass.isDone(props.event))}]});
+            const Event = new FetchEvent();
+            Event.update({...props.event, done: String(!EventClass.isDone(props.event))})
+        }}
         >
             <div>{props.event.client}</div>
         </StyledEvent.TWStyledCheckboxSelect>

@@ -105,6 +105,20 @@ export class EventClass
         return typeof e.mutable === "object";
     }
 
+    static isDone(e: jh.event): boolean
+    {
+        if(e.done.toLowerCase() === "true")
+        {
+            return true;
+        }
+        if(e.done.toLowerCase() === "false")
+        {
+            return false;
+        }
+        
+        return false;
+    }
+
     /**
      * Computes the ocupation of an event from start to end or if the duration is longer than week from start to saturday
      * @param event jh.event

@@ -53,7 +53,7 @@ export const Event = ({event, index}: Event) =>
         dinamic: event.client !== "MISC" ? (fixStyle.dinamic ) : grayStyle,
         static: event.client !== "MISC" ? (fixStyle.static) : grayStyle,
         //TODO fix this type casting from composeStyle
-        done: event.client !== "MISC" ? ( event.done ? fixStyle.dinamic : fixStyle.static) : grayStyle
+        done: event.client !== "MISC" ? ( EventClass.isDone(event) ? fixStyle.dinamic : fixStyle.static) : grayStyle
     }
 
     const id=EventClass.eventID(event.id, event.type)

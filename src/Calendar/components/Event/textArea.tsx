@@ -10,6 +10,7 @@ import { useDispatchOnBlur } from "./hooks/useDispatchOnBlur";
 import { DateService } from "../../utils/Date";
 import { useAuthLevel } from "@/Spa/context/authLevel";
 import { FetchEvent } from "@/Calendar/classes/fetchEvent";
+import { EventClass } from "@/Calendar/classes/event";
 
 //Export to be composed in Event Card exposing props
 export interface TextArea {
@@ -50,7 +51,7 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
             SingleLineEvent ?
             <></> :
             <StyledEvent.TWtextArea ref={textRef} role="textbox" contentEditable={auth === "master"} suppressContentEditableWarning={true}
-            $done={auth !== "client" && event.done}
+            $done={auth !== "client" && EventClass.isDone(event)}
             defaultValue={event.job}
 
                 //! START COMMENT
