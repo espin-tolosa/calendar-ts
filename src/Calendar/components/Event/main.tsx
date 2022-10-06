@@ -71,7 +71,7 @@ export const Event = ({event, index}: Event) =>
                 $isChildren={isChildren} $isHover={hover} $cells={eventLong} $client={event.client.toLowerCase()}>
                     
             {!isChildren ?
-                <EventCard event={event} refNode={createRef()} style={auth === "client" ? fixStyle.static : cssStyle.done }/>
+                <EventCard event={event} refNode={createRef()} style={auth === "client" ? cssStyle.static : cssStyle.done }/>
                 :
                 <EventTail/>
             }
