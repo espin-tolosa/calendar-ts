@@ -50,6 +50,7 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
             SingleLineEvent ?
             <></> :
             <StyledEvent.TWtextArea ref={textRef} role="textbox" contentEditable={auth === "master"} suppressContentEditableWarning={true}
+            $done={auth !== "client" && event.done}
             defaultValue={event.job}
 
                 //! START COMMENT
@@ -157,7 +158,7 @@ export const EventTextAreaDemo = ({ event }: TextAreaDemo) =>
 {
     return (
         <StyledEvent.TWjobContent $isHover={false}>
-            <StyledEvent.TWtextArea role="textbox"> {event.job} </StyledEvent.TWtextArea>
+            <StyledEvent.TWtextArea $done={false} role="textbox"> {event.job} </StyledEvent.TWtextArea>
         </StyledEvent.TWjobContent>
     );
 };

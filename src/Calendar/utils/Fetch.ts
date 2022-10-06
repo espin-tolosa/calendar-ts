@@ -23,6 +23,7 @@ export async function fetchEvent_v2(
     start: "",
     end: "",
     type: "",
+    done: false,
   }
 ) {
   const data = new FormData();

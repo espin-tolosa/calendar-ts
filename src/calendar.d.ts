@@ -63,6 +63,7 @@ declare namespace jh
       job: string;
       start: string;
       end: string;
+      done: boolean;
       mutable?: {
         dragDirection: dragDirection;
         eventRef: HTMLDivElement;

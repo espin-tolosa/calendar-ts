@@ -37,8 +37,9 @@ ${({ $isHover, $isChildren }: { $isHover: boolean; $isChildren: boolean }) =>
   ""}
 `;
 
-export const TWtextArea = tw.span`
-rounded-[5px] w-full p-1 caret-black focus:bg-green-50`;
+export const TWtextArea = tw.span<{$done:boolean}>`
+${({$done}:{$done:boolean}) => ($done && "text-white") || "text-black" }
+rounded-[5px] w-full p-1 caret-black focus:bg-green-50` ;
 
 export const TWextend = tw.div<
 { $cells: number }
@@ -82,4 +83,8 @@ export const TWStyledSelect = tw.select`border-none py-px padding-x-clamp button
 
 export const TWStyledNonSelect = tw.div`border-none py-px padding-x-clamp button-shadow text-effect rounded-sm outline-none text-white `;
 
-export const TWStyledCheckboxSelect = tw.div`border-none py-px padding-x-clamp button-shadow text-effect rounded-sm outline-none text-white flex flex-row justify-between`;
+export const TWStyledCheckboxSelect = tw.div`border-none py-px padding-x-clamp button-shadow text-effect rounded-sm outline-none text-white flex flex-row justify-between content-center`;
+
+export const TwStyledCheckboxInput = tw.input<{ $done: boolean }>`
+w-4 h-4 accent-slate-200
+`;

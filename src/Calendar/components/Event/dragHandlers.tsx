@@ -75,8 +75,8 @@ export function DragHandlers({event,
     
         <StyledEvent.TWflexContainer id={EventClass.eventID(event.id, "master", "eventListener")}
 
-            onMouseEnter={mouseEventHover.onMouseEnter}
-            onMouseLeave={mouseEventHover.onMouseLeave}
+            //onMouseEnter={mouseEventHover.onMouseEnter}
+            //onMouseLeave={mouseEventHover.onMouseLeave}
             //! START COMMENT
             onKeyDown={hDeleteEventOnCtrlSupr}
             onDragStart={(e) => {hOnDragStart(e, "none");}}

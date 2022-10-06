@@ -4,12 +4,20 @@ import { useEffect, useMemo, useState } from "react";
 
 //! This is leagacy code to me. It's a gift from me to me. I mostly don't know how it works but it works
 
-export function useStyles(hover: boolean, event: jh.event, clientColor: string)
+interface Styles
+{
+    static: {background: string; borderTop: string; borderBottom: string};
+    dinamic: {background: string; borderTop: string; borderBottom: string};
+}
+
+export function useStyles(hover: boolean, event: jh.event, clientColor: string) : Styles
 {
   const isChildren = event.type === "tailhead";
   const mapClientToColor = HEXtoHSL(clientColor);
   if (mapClientToColor === undefined) {
-    return;
+    return (
+        {static: {background: "lightgray", borderBottom: "2px solid transparent", borderTop: "2px solid transparent"}, dinamic: {background: "darkgray", borderBottom: "2px solid transparent", borderTop: "2px solid transparent"}}
+    )
   }
   const cTransition = HSLController(mapClientToColor.h, 0.8, 0.8);
   const cHover = HSLController(mapClientToColor.h, 0.6, 0.9); //controls the text
@@ -72,8 +80,9 @@ export function useStyles(hover: boolean, event: jh.event, clientColor: string)
     }
 
     return {
-      dinamic: result as { background: string },
-      static: { background: cHeader },
+      dinamic: result as { background: string, borderTop: string, borderBottom: string },
+      //TODO fix this type casting from composeStyle
+      static: { background: cHeader, borderTop: "2px solid transparent", borderBottom: "2px solid transparent" },
     };
   }, [justThrown, hover, clientColor]);
 }

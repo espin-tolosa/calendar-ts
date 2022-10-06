@@ -31,11 +31,14 @@ export const Event = ({event, index}: Event) =>
     const clientsStyles = useClientsStyles();
     const color = clientsStyles.response?.colors[event.client];
     const style = useStyles(hover, event, color?.primary ?? "#ffffff" );
+    //TODO fix this type casting from composeStyle
+    const fixStyle = {static: style.static, dinamic: style.dinamic};
 
     //TODO: move event dto which eventually will be a class object of the model
     const eventLong = EventClass.maxSpread(event);
 
     const allEvents = useEventState();
+    const mouseEventHover = useHoverEvent(event);
 
     if(isPlaceholder(event))
     {
@@ -44,9 +47,13 @@ export const Event = ({event, index}: Event) =>
 
     sendEndReferencesToPlaceholders(allEvents, event, index);
 
+    const grayStyle = {background: "lightgray", borderTop: "2px solid transparent", borderBottom: "2px solid transparent"}
+
     const cssStyle= {
-        dinamic: event.client !== "MISC" ? (style?.dinamic || {}) : {background: "lightgray"},
-        static: event.client !== "MISC" ? (style?.static || {}) : {background: "lightgray"}
+        dinamic: event.client !== "MISC" ? (fixStyle.dinamic ) : grayStyle,
+        static: event.client !== "MISC" ? (fixStyle.static) : grayStyle,
+        //TODO fix this type casting from composeStyle
+        done: event.client !== "MISC" ? ( event.done ? fixStyle.dinamic : fixStyle.static) : grayStyle
     }
 
     const id=EventClass.eventID(event.id, event.type)
@@ -55,30 +62,39 @@ export const Event = ({event, index}: Event) =>
     if(auth !== "master")
     {
         return ( 
-        <>
+        <div
+            onMouseEnter={mouseEventHover.onMouseEnter}
+            onMouseLeave={mouseEventHover.onMouseLeave}
+        >
+
             <StyledEvent.TWtextContent id={id} style={cssStyle.dinamic} ref={eventRef}
                 $isChildren={isChildren} $isHover={hover} $cells={eventLong} $client={event.client.toLowerCase()}>
                     
             {!isChildren ?
-                <EventCard event={event} refNode={createRef()} style={cssStyle.static}/>
+                <EventCard event={event} refNode={createRef()} style={auth === "client" ? fixStyle.static : cssStyle.done }/>
                 :
                 <EventTail/>
             }
             </StyledEvent.TWtextContent>
 
             <Placeholder index={index} event={event} eventRef={eventRef}/>
-        </>
+        </div>
         )
     }
 
     return (
+        <div
+            onMouseEnter={mouseEventHover.onMouseEnter}
+            onMouseLeave={mouseEventHover.onMouseLeave}
+        >
+
         <DragHandlers event={event} spread={eventLong}>
             <>
                 <StyledEvent.TWtextContent id={id} style={cssStyle.dinamic} ref={eventRef}
                     $isChildren={isChildren} $isHover={hover} $cells={eventLong} $client={event.client.toLowerCase()}>
 
                 {!isChildren ?
-                    <EventCard event={event} refNode={createRef()} style={cssStyle.static}/>
+                    <EventCard event={event} refNode={createRef()} style={cssStyle.done}/>
                     :
                     <EventTail/>
                 }
@@ -87,6 +103,7 @@ export const Event = ({event, index}: Event) =>
                 <Placeholder index={index} event={event} eventRef={eventRef}/>
             </>
         </DragHandlers>
+                </div>
 
   );
 };

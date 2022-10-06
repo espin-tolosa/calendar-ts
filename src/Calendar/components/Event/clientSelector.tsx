@@ -7,7 +7,7 @@ import { FetchEvent } from "@/Calendar/classes/fetchEvent";
 import { useAuthLevel } from "@/Spa/context/authLevel";
 
 export type ClientSelector = {
-  style: object;
+  style: {background: string, borderTop?: string, borderBottom?: string}
   event: jh.event;
 };
 
@@ -37,13 +37,15 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
     }, 2000);
   };
 
+  const styleFilterBorder = !props.event.done ? props.style : {background: props.style.background, borderTop: "2px solid transparent", borderBottom: "2px solid transparent"  }
+
   /**
    * Client
    */
   if(auth === "client")
   {
     return (
-        <StyledEvent.TWStyledNonSelect style={props.style}>
+        <StyledEvent.TWStyledNonSelect style={styleFilterBorder}>
             {props.event.client}
         </StyledEvent.TWStyledNonSelect>
     )
@@ -55,9 +57,11 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
   if(auth === "partner")
   {
     return (
-        <StyledEvent.TWStyledCheckboxSelect style={props.style}>
-                <div>{props.event.client}</div>
-                <input type={"checkbox"}></input>
+        <StyledEvent.TWStyledCheckboxSelect style={styleFilterBorder}
+        title={"Mark this event as done"}
+        onClick={(e)=>{eventDispatcher({type: "update", payload: [{...props.event, done: !props.event.done}]});}}
+        >
+            <div>{props.event.client}</div>
         </StyledEvent.TWStyledCheckboxSelect>
     )
   }
@@ -66,7 +70,7 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
     return (
         <StyledEvent.TWStyledSelect
         value={props.event.client}
-        style={props.style}
+        style={styleFilterBorder}
         id={EventClass.eventID(props.event.id, "master", "clientSelector")}
         onChange={(e) => {
             if (e.currentTarget.value === "Unavailable")
