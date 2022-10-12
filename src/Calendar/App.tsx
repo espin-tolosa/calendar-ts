@@ -42,7 +42,7 @@ export function App()
             }
             </Route>
 
-            <Route path="/settings" component={Settings} />
+            <Route path="/settings/:name" component={Settings} />
 
         </tw_Layouts.TWapp>
 

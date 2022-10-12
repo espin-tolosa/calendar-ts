@@ -1,4 +1,4 @@
-import { Link, Route } from "wouter";
+import { Link, Route, useLocation } from "wouter";
 import { DateService } from "../../utils/Date";
 import * as tw_Layouts from "../../layouts/tw"
 import * as StyledTopnav from "./tw";
@@ -11,6 +11,7 @@ export const TOPNAV_ID = "Topnav";
 
 export function TopBar({user}:{user:string})
 {
+    const [location, setLocation] = useLocation();
     const topNavRef = useCtxTopNavRef();
 
     //Custom hook to clean session, gives a handler to set to true when session is to clean
@@ -35,6 +36,13 @@ export function TopBar({user}:{user:string})
                 </StyledTopnav.TWtitle>
                 <div>
                 {/*right-header*/}
+                {
+                   auth === "master" ? <StyledTopnav.TWlogout title={"Cleans up your session token | Ctrl+Alt+q"}
+                        onClick={(e) => {e.stopPropagation(); window.location.href = "/settings/james" ;}}
+                    >
+                        Settings
+                    </StyledTopnav.TWlogout> : <></>
+                }
                     <StyledTopnav.TWlogout title={"Cleans up your session token | Ctrl+Alt+q"}
                         onClick={(e) => {e.stopPropagation(); window.location.href ="/logout";}}
                     >

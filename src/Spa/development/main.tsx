@@ -41,7 +41,7 @@ function Index()
     return (
         <ul>
             <li onClick={() => setLocation("/board/samuel")}>Go to board/samuel</li>
-            <li onClick={() => setLocation("/backoffice/samuel")}>Go to backoffice/samuel</li>
+            <li onClick={() => setLocation("/settings/james")}>Go to settings/samuel</li>
         </ul>
 
     )

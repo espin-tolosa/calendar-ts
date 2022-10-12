@@ -116,9 +116,6 @@ const ClientOptionList = ({list}: {list: jh.response.maybe<jh.response.styles>})
     const styleGroups = types.map(type => {
         return styleList.filter(style => style.type === type)
     })
-    console.log(styleGroups)
- //console.log(Object.values(list.response.colors));
-
 
     return (
     <>
