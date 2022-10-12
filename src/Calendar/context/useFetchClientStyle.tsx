@@ -1,6 +1,7 @@
 import { apiRoutes } from "../static/apiRoutes";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { report } from "../logger/report";
+import { ProcessEnv } from "../classes/ProcessEnv";
 
 // This file exports one context that brings styles from API
 export { useClientsStyles, ClientsStyles };
@@ -38,9 +39,7 @@ function useAddStylesClientCSSlasses()
     const id = useRef<NodeJS.Timer | null>(null);
     const [success, setSuccess] = useState(false);
     const [clients, setClients] = useState<Array<string>>([]);
-    const [styles, setStyles] = useState<jh.response.colors>({
-        default: { primary: "", secondary: "" },
-    });
+    const [styles, setStyles] = useState<Record<string,jh.response.colors_v2>>({});
 
     const css = useRef(false);
 
@@ -52,16 +51,54 @@ function useAddStylesClientCSSlasses()
     const handleFetch = () =>
     {
         //TODO fetch: check old end point api.routes.clients and change by proper apiRoutes
-        fetch(apiRoutes.style.toString())
-        .then((res) => res.json())
-        .then((json: jh.response.colors) =>
-        {
+        const myEnv = new ProcessEnv(import.meta.env);
+        //const result : {[key: string]: {primary:string; type:"client"|"team"|"private"}} = {};
+        const result: Record<string, jh.response.colors_v2  > = {};
+        fetch(myEnv.api.style)
+        .then(res=>res.json())
+        .then( (stylesData: jh.response.style_resource) => {
+        
+            stylesData.data.forEach(entry => {result[entry.name] = entry})
+            
             if (!isMount.current)
             {
                 return;
             }
 
-            setClients(Object.keys(json));
+            setClients(Object.keys(result));
+            setStyles(result);
+            setSuccess(true);
+            id.current != null && clearInterval(id.current);
+
+        })
+        .catch((error) =>
+        {
+            report("local", error);
+        });
+
+
+
+
+
+
+
+
+
+        
+        //fetch(apiRoutes.style.toString())
+        //.then((res) => res.json())
+        //.then((json: jh.response.colors) =>
+        ///{
+        ///*  console.log("OLD", json);
+            //i  setClients(Object.keys(json));
+        //})
+        //return;
+        /*
+            if (!isMount.current)
+            {
+                return;
+            }
+
             setStyles(json);
             setSuccess(true);
             id.current != null && clearInterval(id.current);
@@ -70,6 +107,7 @@ function useAddStylesClientCSSlasses()
         {
             report("local", error);
         });
+        */
     };
 
   //TODO: Change Refetch interval by a refetch if fails

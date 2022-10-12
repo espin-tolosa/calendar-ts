@@ -231,12 +231,9 @@ const EventDemo = ({ event }: { event: jh.event }) => {
   const { hover } = useHoverEvent(event);
   //TODO: make this a function
   const clientsStyles = useClientsStyles();
-  const color = clientsStyles.response?.colors[event.client] || {
-    primary: "#abcabc",
-    secondary: "#aaaaaa",
-  };
+  const color = clientsStyles.response?.colors[event.client].style || "#abcabc";
 
-  const [colorPicker, setColorPicker] = useState<Color>(color.primary);
+  const [colorPicker, setColorPicker] = useState<Color>(color);
 
   const style = useStyles(hover, event, colorPicker as string);
 
@@ -266,7 +263,7 @@ const EventDemo = ({ event }: { event: jh.event }) => {
                 clients.response.update((prev) => {
                   prev[event.client] = {
                     ...prev[event.client],
-                    primary: color.hex,
+                    style: color.hex,
                   };
 
                   return { ...prev };

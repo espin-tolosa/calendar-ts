@@ -46,7 +46,9 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
   {
     return (
         <StyledEvent.TWStyledNonSelect style={styleFilterBorder}>
-            {props.event.client}
+            {
+                props.event.client.charAt(0).toUpperCase() + props.event.client.slice(1)
+            }
         </StyledEvent.TWStyledNonSelect>
     )
   }
@@ -65,7 +67,9 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
             Event.update({...props.event, done: String(!EventClass.isDone(props.event))})
         }}
         >
-            <div>{props.event.client}</div>
+            <div>{
+                props.event.client.charAt(0).toUpperCase() + props.event.client.slice(1)
+            }</div>
         </StyledEvent.TWStyledCheckboxSelect>
     )
   }
@@ -100,23 +104,53 @@ const DefaultOption = (props: { client: string }) => (
   </option>
 );
 
-const ClientOptionList = ({
-  list,
-}: {
-  list: jh.response.maybe<jh.response.styles>;
-}): JSX.Element => {
-  if (!list.success) {
-    return <option>{"loading client list..."}</option>;
-  }
-  return (
+const ClientOptionList = ({list}: {list: jh.response.maybe<jh.response.styles>}): JSX.Element =>
+{
+    if (!list.success)
+    {
+        return <option>{"loading client list..."}</option>;
+    }
+
+    const styleList = Object.values(list.response.colors);
+    const types = ["client","team","private"];
+    const styleGroups = types.map(type => {
+        return styleList.filter(style => style.type === type)
+    })
+    console.log(styleGroups)
+ //console.log(Object.values(list.response.colors));
+
+
+    return (
     <>
-      {list.response.clients.map((clientIterator, index) => {
-        return (
-          <option key={index} value={clientIterator}>
-            {clientIterator}
-          </option>
-        );
-      })}
+    {
+        styleGroups.map((collection,index) => {
+            return (<optgroup key={`optgroup-${types[index]}`} label={types[index]}>
+                {
+                    collection.map(entry => {
+                        return (
+                            <option key={entry.name} value={entry.name}>
+                            {
+                                //entry.name
+                                entry.name.charAt(0).toUpperCase() + entry.name.slice(1)
+                            }
+                            </option>
+                        )
+                    })
+                }
+
+            </optgroup>)
+        })
+    //    list.response.clients.map((clientIterator, index) =>
+    //    {
+    //        return (
+    //            <option key={index} value={clientIterator}>
+    //            {
+    //                clientIterator
+    //            }
+    //            </option>
+    //        );
+    //    })
+    }
     </>
   );
 };

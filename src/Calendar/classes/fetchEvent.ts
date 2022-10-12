@@ -56,10 +56,18 @@ export class FetchEvent
         //TODO: payload must be typed, with values expected in Laravel
         const payload = {client: event.client, job: event.job, start: event.start, end: event.end, done: String(event.done)};
 
+        interface csrf extends Element {
+            content: string;
+        }
+
+        const nodeList = window.document.querySelectorAll<csrf> ( 'meta[name=csrf-token]');
+        const csrf = Array.from(nodeList)[0];
+
         const headers = {
             'Accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-TOKEN': csrf.content
+        };
 
         const body = new URLSearchParams(payload);
 

@@ -30,7 +30,7 @@ export const Event = ({event, index}: Event) =>
     const { hover } = useHoverEvent(event);
     const clientsStyles = useClientsStyles();
     const color = clientsStyles.response?.colors[event.client];
-    const style = useStyles(hover, event, color?.primary ?? "#ffffff" );
+    const style = useStyles(hover, event, color?.style ?? "#ffffff" );
     //TODO fix this type casting from composeStyle
     const fixStyle = {static: style.static, dinamic: style.dinamic};
 
@@ -50,10 +50,10 @@ export const Event = ({event, index}: Event) =>
     const grayStyle = {background: "lightgray", borderTop: "2px solid transparent", borderBottom: "2px solid transparent"}
 
     const cssStyle= {
-        dinamic: event.client !== "MISC" ? (fixStyle.dinamic ) : grayStyle,
-        static: event.client !== "MISC" ? (fixStyle.static) : grayStyle,
+        dinamic: event.client !== "Unavailable" ? (fixStyle.dinamic ) : grayStyle,
+        static: event.client !== "Unavailable" ? (fixStyle.static) : grayStyle,
         //TODO fix this type casting from composeStyle
-        done: event.client !== "MISC" ? ( EventClass.isDone(event) ? fixStyle.dinamic : fixStyle.static) : grayStyle
+        done: event.client !== "Unavailable" ? ( EventClass.isDone(event) ? fixStyle.dinamic : fixStyle.static) : grayStyle
     }
 
     const id=EventClass.eventID(event.id, event.type)
