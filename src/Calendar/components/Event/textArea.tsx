@@ -39,7 +39,7 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
 
     useResizeEventLayoutObservingWindowSize(refNode, event);
 
-    const SingleLineEvent = (event.job === "" || event.job == null) && !isHoverActive && !isHover;
+    const SingleLineEvent = (event.client === "unavailable" || event.job === "" || event.job == null) && !isHoverActive && !isHover;
 
     const eventLong = DateService.DaysFrom(event.start, event.end);
 
@@ -64,6 +64,7 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
                     setIsHoverActive(true);
                     e.currentTarget.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
                     e.currentTarget.focus();
+                    e.stopPropagation();
                 }}
 
                 onFocus={() =>
@@ -142,7 +143,8 @@ export function EventTextArea ({event, refNode, isHover, setIsHover} : TextAreaL
                 }}
                 //! END COMMENT
             >
-                {isHoverActive ? event.job : event.job.substring(0,50*(1+eventLong)) + (event.job.length > 50 ? "..." : "") }
+                {event.job}
+                {/*isHoverActive ? event.job : event.job.substring(0,50*(1+eventLong)) + (event.job.length > 50 ? "..." : "") */}
                 {/*isHoverActive ? event.job : event.job.substring(0,4*(1+eventLong)) + (event.job.length > 5 ? "..." : "") */}
             </StyledEvent.TWtextArea>
         }

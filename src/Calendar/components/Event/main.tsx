@@ -47,17 +47,19 @@ export const Event = ({event, index}: Event) =>
 
     sendEndReferencesToPlaceholders(allEvents, event, index);
 
-    const grayStyle = {background: "lightgray", borderTop: "2px solid transparent", borderBottom: "2px solid transparent"}
+    const grayStyle = {height: "1.45rem", background: "gray", borderTop: "2px solid transparent", borderBottom: "2px solid transparent"}
 
     const cssStyle= {
-        dinamic: event.client !== "Unavailable" ? (fixStyle.dinamic ) : grayStyle,
-        static: event.client !== "Unavailable" ? (fixStyle.static) : grayStyle,
+        dinamic: event.client !== "unavailable" ? (fixStyle.dinamic ) : grayStyle,
+        static: event.client !== "unavailable" ? (fixStyle.static) : grayStyle,
         //TODO fix this type casting from composeStyle
-        done: event.client !== "Unavailable" ? ( EventClass.isDone(event) ? fixStyle.dinamic : fixStyle.static) : grayStyle
+        done: event.client !== "unavailable" ? ( EventClass.isDone(event) ? fixStyle.dinamic : fixStyle.static) : grayStyle
     }
 
     const id=EventClass.eventID(event.id, event.type)
     const isChildren = event.type === "tailhead";
+
+    console.log(event.client )
 
     if(auth !== "master")
     {

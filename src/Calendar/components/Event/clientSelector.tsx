@@ -37,7 +37,14 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
     }, 2000);
   };
 
-  const styleFilterBorder = !props.event.done ? props.style : {background: props.style.background, borderTop: "2px solid transparent", borderBottom: "2px solid transparent"  }
+  const styleFilterBorder =
+    !props.event.done ?
+        props.style :
+    props.event.client !== "unavailable" ?
+        {background: props.style.background, borderTop: "2px solid transparent", borderBottom: "2px solid transparent"  } :
+    props.event.client === "unavailable" ?
+        {background: "gray", color: "gray", borderTop: "2px solid transparent", borderBottom: "2px solid transparent"} :
+        {color: props.style.background, background: props.style.background, borderTop: "2px solid transparent", borderBottom: "2px solid transparent"};
 
   /**
    * Client
@@ -47,7 +54,7 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
     return (
         <StyledEvent.TWStyledNonSelect style={styleFilterBorder}>
             {
-                props.event.client.charAt(0).toUpperCase() + props.event.client.slice(1)
+                props.event.client
             }
         </StyledEvent.TWStyledNonSelect>
     )
@@ -81,7 +88,7 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
         style={styleFilterBorder}
         id={EventClass.eventID(props.event.id, "master", "clientSelector")}
         onChange={(e) => {
-            if (e.currentTarget.value === "Unavailable")
+            if (e.currentTarget.value === "")
             {
                 window.alert("delete");
             }
@@ -112,7 +119,7 @@ const ClientOptionList = ({list}: {list: jh.response.maybe<jh.response.styles>})
     }
 
     const styleList = Object.values(list.response.colors);
-    const types = ["client","team","private"];
+    const types = ["client","team","public","private"];
     const styleGroups = types.map(type => {
         return styleList.filter(style => style.type === type)
     })

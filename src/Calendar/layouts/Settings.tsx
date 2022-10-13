@@ -231,6 +231,7 @@ const EventDemo = ({ event }: { event: jh.event }) => {
   const { hover } = useHoverEvent(event);
   //TODO: make this a function
   const clientsStyles = useClientsStyles();
+  console.log("Client Styles", clientsStyles.response?.colors["am"].id)
   const color = clientsStyles.response?.colors[event.client].style || "#abcabc";
 
   const [colorPicker, setColorPicker] = useState<Color>(color);
@@ -254,7 +255,9 @@ const EventDemo = ({ event }: { event: jh.event }) => {
               color={colorPicker}
               onChangeComplete={(color) => {
                 setColorPicker(color.hex);
-                queryChangeClientColor(event.client, color.hex);
+                //queryChangeClientColor(event.client, color.hex);
+                const id = clientsStyles.response?.colors[event.client].id ?? 0;
+                queryChangeClientStyle(id, event.client, color.hex)
                 //	clients.response.update(prev=>{
                 //	})
                 if (!clients.response) {
@@ -276,6 +279,11 @@ const EventDemo = ({ event }: { event: jh.event }) => {
     </>
   );
 };
+
+async function queryChangeClientStyle(id: number, client: string, color: string)
+{
+    console.log(`PUT: ${id}, ${client}, ${color}`);
+}
 
 async function queryChangeClientColor(client: string, color: string) {
   const data = new FormData();

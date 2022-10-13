@@ -37,7 +37,7 @@ declare namespace jh
         | { success: false; response?: T };
       type clients = Array<string>;
       type colors = Record<string, { primary: string; secondary: string }>;
-      type colors_v2 = {name:string; type: "client"|"team"|"private"; style: string};
+      type colors_v2 = {id: number, name:string; type: "client"|"team"|"private"|"public"; style: string};
       type style_resource = {data: colors_v2[]};
       type styles = {
         clients: clients;

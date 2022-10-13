@@ -17,7 +17,7 @@ export class FetchEvent
 
     public async all() : Promise<jh.event[]>
     {
-        const response = await window.fetch( apiRoutes.event );
+        const response = await window.fetch( apiRoutes.event.toLowerCase() );
 
         let result: {data: jh.event[]} = {data: []}
         try
@@ -79,7 +79,7 @@ export class FetchEvent
             const putURI = `/${event.id}`
             const postURI = "";
             const url = this.m_routes + (method === "PUT" || method === "DELETE" ? putURI : postURI);
-            const response = await window.fetch(url, requestOptions);
+            const response = await window.fetch(url.toLowerCase(), requestOptions);
             return await response.json();
         }
 
