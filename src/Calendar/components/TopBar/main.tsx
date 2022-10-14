@@ -9,10 +9,24 @@ import { useAuthLevel } from "@/Spa/context/authLevel";
 
 export const TOPNAV_ID = "Topnav";
 
+function RouteNavigator(location:string)
+{
+    const [_empty, route, name] = location.split("/");
+
+    const routerMap : {[key:string]: [string, string, string]} = {
+        "settings": ["Settings", "Board", `/board/${name}`],
+        "board": ["Board", "Settings", `/settings/${name}`]
+    }
+
+    return routerMap[route];
+}
+
+
 export function TopBar({user}:{user:string})
 {
     const [location, setLocation] = useLocation();
     const topNavRef = useCtxTopNavRef();
+    const [CurrentLocation, NextLocation, RouteURI] = RouteNavigator(location);
 
     //Custom hook to clean session, gives a handler to set to true when session is to clean
     //const cleanSession = useCleanSession();
@@ -34,13 +48,15 @@ export function TopBar({user}:{user:string})
                 >
                     {DateService.GetTodayDateFormat()}
                 </StyledTopnav.TWtitle>
-                <div>
+                <div className="flex flex-row gap-1" >
                 {/*right-header*/}
                 {
-                   auth === "master" ? <StyledTopnav.TWlogout title={"Cleans up your session token | Ctrl+Alt+q"}
-                        onClick={(e) => {e.stopPropagation(); window.location.href = "/settings/james" ;}}
+                   auth === "master" ? <StyledTopnav.TWlogout title={`You are currently in ${CurrentLocation}, click to navigate to ${NextLocation}`}
+                        onClick={(e) => {e.stopPropagation(); window.location.href = RouteURI;}}
                     >
-                        Settings
+                        {
+                            NextLocation
+                        }
                     </StyledTopnav.TWlogout> : <></>
                 }
                     <StyledTopnav.TWlogout title={"Cleans up your session token | Ctrl+Alt+q"}

@@ -6,6 +6,7 @@ import { createRef, useRef, useState } from "react";
 import { Color, SliderPicker } from "react-color";
 import tw from "tailwind-styled-components/dist/tailwind";
 import { apiRoutes } from "../static/apiRoutes";
+import { TopBar } from "../components/TopBar/main";
 
 const PasswordInput = tw.input<{ $error: boolean; $passmatch: boolean }>`
 outline outline-2
@@ -41,13 +42,15 @@ export function Settings() {
 
   return (
     <>
+    <TopBar user={"james"} />
       <ul className="my-30 py-16 grid grid grid-cols-3 gap-16 ">
         {clients.success &&
           clients.response.clients.map((name) => {
             return <Line key={name} name={name} />;
           })}
       </ul>
-      <form className="flex gap-2" autoComplete="off" autoSave="off">
+      <h6>Create a new Client or Collaborator</h6>
+      <form className="flex gap-2 mx-4" autoComplete="off" autoSave="off">
         <PasswordInput
           ref={input_ClientRef}
           $error={input_ClientError}
@@ -240,7 +243,7 @@ const EventDemo = ({ event }: { event: jh.event }) => {
 
   return (
     <>
-      <div className="flex justify-around  ">
+      <div className="flex justify-around px-8 ">
         <div className="flex flex-col gap-4">
           <div className="rounded-md" style={style?.dinamic}>
             <EventCardDemo
@@ -249,8 +252,8 @@ const EventDemo = ({ event }: { event: jh.event }) => {
               style={style?.static || {}}
             />
           </div>
-          <div className="flex w-40 flex-col">
-            <div className="hue-horizontal h-4 hidden"></div>
+          <div className="flex flex-col">
+            <div className="hue-horizontal hidden"></div>
             <SliderPicker
               color={colorPicker}
               onChangeComplete={(color) => {
@@ -285,27 +288,23 @@ async function queryChangeClientStyle(id: number, client: string, color: string)
     console.log(`PUT: ${id}, ${client}, ${color}`);
 }
 
-async function queryChangeClientColor(client: string, color: string) {
-  const data = new FormData();
-  data.append("change-color", JSON.stringify({ client, color }));
-  fetch(new Request(apiRoutes.style), {
-    method: "POST",
-    body: data,
-  });
-}
+async function queryAddClient(name: string, password: string, repeatPassword: string)
+{
+    //console.log(`${name} ${password} ${repeatPassword}`)
 
-async function queryAddClient(
-  name: string,
-  password: string,
-  repeatPassword: string
-) {
-  const data = new FormData();
+    const myHeaders = new Headers();
+    myHeaders.append("Accept", "application/vnd.api+json");
 
-  data.append("add-client", JSON.stringify({ name, password, repeatPassword }));
+    const formdata = new FormData();
+    formdata.append("name", name);
+    formdata.append("role", "client");
+    formdata.append("password", password);
+    formdata.append("style", "#aabbcc");
+    formdata.append("password_confirmation", repeatPassword);
 
-  //TODO fetch: comform this match the prev endpoint [api.routes.backoffice.addUser]
-  return fetch(new Request(apiRoutes.user), {
-    method: "POST",
-    body: data,
-  });
+    const requestOptions : RequestInit = {method: 'POST', headers: myHeaders, body: formdata, redirect: 'follow'};
+
+    return fetch("https://jhdiary.com/api/register", requestOptions);
+    //TODO fetch: comform this match the prev endpoint [api.routes.backoffice.addUser]
+    //return fetch(new Request(apiRoutes.user), {method: "POST", body: data});
 }
