@@ -234,7 +234,6 @@ const EventDemo = ({ event }: { event: jh.event }) => {
   const { hover } = useHoverEvent(event);
   //TODO: make this a function
   const clientsStyles = useClientsStyles();
-  console.log("Client Styles", clientsStyles.response?.colors["am"].id)
   const color = clientsStyles.response?.colors[event.client].style || "#abcabc";
 
   const [colorPicker, setColorPicker] = useState<Color>(color);
@@ -258,11 +257,8 @@ const EventDemo = ({ event }: { event: jh.event }) => {
               color={colorPicker}
               onChangeComplete={(color) => {
                 setColorPicker(color.hex);
-                //queryChangeClientColor(event.client, color.hex);
                 const id = clientsStyles.response?.colors[event.client].id ?? 0;
-                queryChangeClientStyle(id, event.client, color.hex)
-                //	clients.response.update(prev=>{
-                //	})
+                queryChangeClientStyle(id, color.hex);
                 if (!clients.response) {
                   return;
                 }
@@ -283,9 +279,41 @@ const EventDemo = ({ event }: { event: jh.event }) => {
   );
 };
 
-async function queryChangeClientStyle(id: number, client: string, color: string)
+async function queryChangeClientStyle(id: number, color: string )
 {
-    console.log(`PUT: ${id}, ${client}, ${color}`);
+    if(id === 0)
+    {
+        console.error('[Error]: Settings layout did not found style id to pass to queryChangeClientStyle');
+        return;
+    }
+    const PUT_URI = `https://jhdiary.com/api/style/${id}?style=${encodeURIComponent(color)}`;
+    console.log(PUT_URI)
+
+    interface csrf extends Element {
+        content: string;
+    }
+
+    const nodeList = window.document.querySelectorAll<csrf> ( 'meta[name=csrf-token]');
+    const csrf = Array.from(nodeList)[0];
+
+    const myHeaders = new Headers();
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append("X-CSRF-TOKEN", csrf.content);
+
+    const formdata = new FormData();
+
+    const requestOptions : RequestInit = {
+      method: 'PUT',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow'
+    };
+
+
+    fetch(PUT_URI, requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
 }
 
 async function queryAddClient(name: string, password: string, repeatPassword: string)
