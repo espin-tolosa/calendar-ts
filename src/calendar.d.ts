@@ -1,5 +1,7 @@
 declare namespace jh
 {
+    interface csrf extends Element {content: string;}
+
     interface EnvDefault {
         VITE_HTML_PROTOCOL: string;
         VITE_TARGET_HOST: string;

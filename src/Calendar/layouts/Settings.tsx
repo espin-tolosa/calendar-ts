@@ -174,11 +174,9 @@ export function Settings() {
 
             //TODO: instead of passing all setters to the function, make the function return a status an a message from the API and use .then to set this up from here
             setFormWaiting("Waiting request from server...");
-            queryAddClient(
-              input_ClientName,
-              input_Password,
-              input_RepeatPassword
-            )
+            //</form>queryAddClient(input_ClientName, input_Password, input_RepeatPassword)
+            queryAddClientStyle(input_ClientName, "client", "#aabbcc");
+            queryAddUser(input_ClientName, "client", input_Password, input_RepeatPassword)
               .then((response) => {
                 if (response.status === 201) {
                   setFormError(false);
@@ -287,13 +285,8 @@ async function queryChangeClientStyle(id: number, color: string )
         return;
     }
     const PUT_URI = `https://jhdiary.com/api/style/${id}?style=${encodeURIComponent(color)}`;
-    console.log(PUT_URI)
 
-    interface csrf extends Element {
-        content: string;
-    }
-
-    const nodeList = window.document.querySelectorAll<csrf> ( 'meta[name=csrf-token]');
+    const nodeList = window.document.querySelectorAll<jh.csrf> ( 'meta[name=csrf-token]');
     const csrf = Array.from(nodeList)[0];
 
     const myHeaders = new Headers();
@@ -311,6 +304,37 @@ async function queryChangeClientStyle(id: number, color: string )
 
 
     fetch(PUT_URI, requestOptions)
+      .then(response => response.text())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+}
+
+async function queryAddClientStyle(name:string, type:"partner"|"client", color: string )
+{
+    const POST_URI = "https://jhdiary.com/api/style";
+
+    const nodeList = window.document.querySelectorAll<jh.csrf> ( 'meta[name=csrf-token]');
+    const csrf = Array.from(nodeList)[0];
+
+    const myHeaders = new Headers();
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append("Authorization", "Bearer 7|AqGQZPjyX6qe62NtWgkFgKi44OP7vBeimCsWU406");
+    myHeaders.append("X-CSRF-TOKEN", csrf.content);
+
+    const formdata = new FormData();
+    formdata.append("name", name);
+    formdata.append("type", type);
+    formdata.append("style", color);
+
+    const requestOptions : RequestInit = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow'
+    };
+
+
+    fetch(POST_URI, requestOptions)
       .then(response => response.text())
       .then(result => console.log(result))
       .catch(error => console.log('error', error));
@@ -335,4 +359,30 @@ async function queryAddClient(name: string, password: string, repeatPassword: st
     return fetch("https://jhdiary.com/api/register", requestOptions);
     //TODO fetch: comform this match the prev endpoint [api.routes.backoffice.addUser]
     //return fetch(new Request(apiRoutes.user), {method: "POST", body: data});
+}
+
+async function queryAddUser(name: string, role: "partner" | "client", password: string, repeatPassword: string)
+{
+    const myHeaders = new Headers();
+    const nodeList = window.document.querySelectorAll<jh.csrf> ( 'meta[name=csrf-token]');
+    const csrf = Array.from(nodeList)[0];
+
+    myHeaders.append("X-CSRF-TOKEN", csrf.content);
+    myHeaders.append("Accept", "application/vnd.api+json");
+
+    const formdata = new FormData();
+    formdata.append("name", name);
+    formdata.append("role", role);
+    formdata.append("password", password);
+    formdata.append("style", "#aabbcc");
+    formdata.append("password_confirmation", repeatPassword);
+
+    const requestOptions :RequestInit = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow'
+    };
+
+    return fetch("https://jhdiary.com/api/register", requestOptions)
 }

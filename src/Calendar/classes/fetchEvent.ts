@@ -56,11 +56,7 @@ export class FetchEvent
         //TODO: payload must be typed, with values expected in Laravel
         const payload = {client: event.client, job: event.job, start: event.start, end: event.end, done: String(event.done)};
 
-        interface csrf extends Element {
-            content: string;
-        }
-
-        const nodeList = window.document.querySelectorAll<csrf> ( 'meta[name=csrf-token]');
+        const nodeList = window.document.querySelectorAll<jh.csrf> ( 'meta[name=csrf-token]');
         const csrf = Array.from(nodeList)[0];
 
         const headers = {
