@@ -1,5 +1,8 @@
 declare namespace jh
 {
+    namespace Hooks {
+        type ClientStyles = jh.response.maybe<jh.response.styles>;
+    }
     interface csrf extends Element {content: string;}
 
     interface EnvDefault {
@@ -34,6 +37,9 @@ declare namespace jh
 
     namespace response
     {
+      type maybeWithFallback<Success,Fallback> =
+        | { success: true; response: Success }
+        | { success: false; response: Fallback };
       type maybe<T> =
         | { success: true; response: T }
         | { success: false; response?: T };

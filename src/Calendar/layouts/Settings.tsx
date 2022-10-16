@@ -2,11 +2,11 @@ import { EventCardDemo } from "../components/Event/eventCard";
 import { useHoverEvent, useStyles } from "../components/Event/logic";
 import { useClientsStyles } from "../context/useFetchClientStyle";
 import { nullEvent } from "../interfaces";
-import { createRef, useRef, useState } from "react";
+import { createRef, useEffect, useRef, useState } from "react";
 import { Color, SliderPicker } from "react-color";
 import tw from "tailwind-styled-components/dist/tailwind";
-import { apiRoutes } from "../static/apiRoutes";
 import { TopBar } from "../components/TopBar/main";
+import { Styles } from "../classes/styles";
 
 const PasswordInput = tw.input<{ $error: boolean; $passmatch: boolean }>`
 outline outline-2
@@ -26,16 +26,31 @@ ${({ $status }: { $status: boolean }) =>
 `;
 
 export function Settings() {
-  const clients = useClientsStyles();
+    const [reloadClients, setReloadClients] = useState(0);
+    const [clients, setClients] = useState<jh.Hooks.ClientStyles>({success: false})
+    const fetchClients = useClientsStyles();
+    useEffect(()=>{
+        setClients({...fetchClients});
+    },[reloadClients, fetchClients]);
+
   const [input_ClientName, set_ClientName] = useState("");
   const [input_Password, set_Password] = useState("");
   const [input_RepeatPassword, set_RepeatPassword] = useState("");
+
+  const [input_JobTitle, set_JobTitle] = useState("");
+  const [input_JobType, set_JobType] = useState<"team"|"public"|"private"|"">("");
+  
   const [formError, setFormError] = useState<string | boolean>(false);
   const [formSuccess, setFormSuccess] = useState<string | boolean>(false);
   const [formWaiting, setFormWaiting] = useState<string | boolean>(false);
+
   const [input_ClientError, set_InputClientError] = useState(false);
   const [input_PasswordError, set_InputPasswordError] = useState(false);
   const [input_RepeatPassError, set_InputRepeatPassError] = useState(false);
+
+  const [input_JobTitleError, set_InputJobTitleError] = useState(false);
+  const [input_JobTypeError, set_InputJobTypeError] = useState(false);
+
   const input_ClientRef = useRef<HTMLInputElement>(null);
   const input_PasswordRef = useRef<HTMLInputElement>(null);
   const input_RepeatPasswordRef = useRef<HTMLInputElement>(null);
@@ -43,14 +58,11 @@ export function Settings() {
   return (
     <>
     <TopBar user={"james"} />
-      <ul className="my-30 py-16 grid grid grid-cols-3 gap-16 ">
-        {clients.success &&
-          clients.response.clients.map((name) => {
-            return <Line key={name} name={name} />;
-          })}
-      </ul>
-      <h6>Create a new Client or Collaborator</h6>
-      <form className="flex gap-2 mx-4" autoComplete="off" autoSave="off">
+    
+        <h1 className='mb-4 bg-slate-200 px-4 py-1 flex justify-center align-center font-bold' >
+            Create a new Client
+        </h1>
+      <form className="flex gap-2 mx-4 mb-4" autoComplete="off" autoSave="off">
         <PasswordInput
           ref={input_ClientRef}
           $error={input_ClientError}
@@ -206,6 +218,10 @@ export function Settings() {
             set_RepeatPassword("");
             set_InputPasswordError(false);
             set_InputRepeatPassError(false);
+            setReloadClients(prev=>prev+1)
+            setTimeout(()=>{
+                window.location.reload();
+            },2000)
           }}
         >
           +
@@ -214,16 +230,93 @@ export function Settings() {
       {formError && <div className="text-red-900">{formError}</div>}
       {formSuccess && <div className="text-green-900">{formSuccess}</div>}
       {formWaiting && <div className="text-slate-500">{formWaiting}</div>}
+
+{
+    /**
+     * FORM TO CREATE TEAM, PUBLIC OR PRIVATE EVENT
+     */
+}
+        <h1 className='mb-4 bg-slate-200 px-4 py-1 flex justify-center align-center font-bold' >
+            Create a Team, Public or Private Job
+        </h1>
+      <form className="flex gap-2 mx-4 mb-4" autoComplete="off" autoSave="off">
+        <PasswordInput
+          ref={input_ClientRef}
+          $error={false}
+          $passmatch={input_JobTitle !== ""}
+          autoComplete="new-password"
+          required={true}
+          type="text"
+          placeholder="Enter job title"
+          onChange={(e) => {
+            setFormError(false);
+            setFormSuccess(false);
+            set_JobTitle(e.currentTarget.value);
+          }}
+          value={input_JobTitle}
+        />
+        <select
+          onChange={(e) => {
+            setFormError(false);
+            setFormSuccess(false);
+            set_JobType(e.currentTarget.value.toLowerCase() as "team" | "private" | "public")
+          }}
+        >
+            <option hidden>
+                Select Group
+            </option>
+            <option>
+                Team
+            </option>
+            <option>
+                Public
+            </option>
+            <option>
+                Private
+            </option>
+        </select>
+        <Button
+          $status={
+            !input_ClientError && !input_PasswordError && !input_RepeatPassError
+          }
+          onClick={(e) => {
+            e.preventDefault();
+            //Check gor errors
+
+            setFormWaiting("Waiting request from server...");
+            //</form>queryAddClient(input_ClientName, input_Password, input_RepeatPassword)
+            if(input_JobType !== "")
+            {
+                queryAddClientStyle(input_JobTitle, input_JobType, "#aabbcc").then(()=>{
+                    setFormWaiting("");
+                });
+            }
+
+            set_JobTitle("");
+            set_JobType("");
+            set_InputJobTitleError (false);
+            set_InputJobTypeError(false);
+            setReloadClients(prev=>prev+1)
+            setTimeout(()=>{
+                window.location.reload();
+            },2000)
+          }}
+        >
+          +
+        </Button>
+      </form>
+      {formError && <div className="text-red-900">{formError}</div>}
+      {formSuccess && <div className="text-green-900">{formSuccess}</div>}
+      {formWaiting && <div className="text-slate-500">{formWaiting}</div>}
+        
+        <Styles.ClientEventList key={"clientevent"} list={{...clients}}/>
     </>
   );
 }
 
-function Line({ name }: { name: string }) {
-  const event: jh.event = {
-    ...nullEvent(),
-    client: name,
-    job: "Job description demo",
-  };
+export function EventDemoDescription({ name, description }: { name: string, description: string }) {
+  const event: jh.event = {...nullEvent(), client: name, job: description};
+
   return <EventDemo event={event}></EventDemo>;
 }
 
@@ -240,7 +333,7 @@ const EventDemo = ({ event }: { event: jh.event }) => {
 
   return (
     <>
-      <div className="flex justify-around px-8 ">
+      <div className="flex justify-around px-8 small_screen_w:mb-4 ">
         <div className="flex flex-col gap-4">
           <div className="rounded-md" style={style?.dinamic}>
             <EventCardDemo
@@ -309,7 +402,7 @@ async function queryChangeClientStyle(id: number, color: string )
       .catch(error => console.log('error', error));
 }
 
-async function queryAddClientStyle(name:string, type:"partner"|"client", color: string )
+async function queryAddClientStyle(name:string, type:"client"|"team"|"private"|"public", color: string )
 {
     const POST_URI = "https://jhdiary.com/api/style";
 
@@ -333,7 +426,6 @@ async function queryAddClientStyle(name:string, type:"partner"|"client", color: 
       redirect: 'follow'
     };
 
-
     fetch(POST_URI, requestOptions)
       .then(response => response.text())
       .then(result => console.log(result))
@@ -342,8 +434,6 @@ async function queryAddClientStyle(name:string, type:"partner"|"client", color: 
 
 async function queryAddClient(name: string, password: string, repeatPassword: string)
 {
-    //console.log(`${name} ${password} ${repeatPassword}`)
-
     const myHeaders = new Headers();
     myHeaders.append("Accept", "application/vnd.api+json");
 

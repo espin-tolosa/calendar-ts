@@ -11,7 +11,7 @@ const ClientsStyle = createContext<jh.response.maybe<jh.response.styles>>({
 });
 
 ClientsStyle.displayName = "Clients Style";
-const useClientsStyles = () => useContext(ClientsStyle);
+const useClientsStyles = ():jh.Hooks.ClientStyles => useContext(ClientsStyle);
 
 function ClientsStyles(propTypes: { children: JSX.Element })
 {

@@ -5,6 +5,7 @@ import { useClientsStyles } from "../../context/useFetchClientStyle";
 import { EventClass } from "@/Calendar/classes/event";
 import { FetchEvent } from "@/Calendar/classes/fetchEvent";
 import { useAuthLevel } from "@/Spa/context/authLevel";
+import { Styles } from "@/Calendar/classes/styles";
 
 export type ClientSelector = {
   style: {background: string, borderTop?: string, borderBottom?: string}
@@ -100,7 +101,7 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
         >
         <DefaultOption client={props.event.client} />
 
-        <ClientOptionList list={clientStyles} />
+        <Styles.ClientOptionList list={clientStyles} />
         </StyledEvent.TWStyledSelect>
     );
 }
@@ -110,51 +111,3 @@ const DefaultOption = (props: { client: string }) => (
     Select Client
   </option>
 );
-
-const ClientOptionList = ({list}: {list: jh.response.maybe<jh.response.styles>}): JSX.Element =>
-{
-    if (!list.success)
-    {
-        return <option>{"loading client list..."}</option>;
-    }
-
-    const styleList = Object.values(list.response.colors);
-    const types = ["client","team","public","private"];
-    const styleGroups = types.map(type => {
-        return styleList.filter(style => style.type === type)
-    })
-
-    return (
-    <>
-    {
-        styleGroups.map((collection,index) => {
-            return (<optgroup key={`optgroup-${types[index]}`} label={types[index]}>
-                {
-                    collection.map(entry => {
-                        return (
-                            <option key={entry.name} value={entry.name}>
-                            {
-                                //entry.name
-                                entry.name.charAt(0).toUpperCase() + entry.name.slice(1)
-                            }
-                            </option>
-                        )
-                    })
-                }
-
-            </optgroup>)
-        })
-    //    list.response.clients.map((clientIterator, index) =>
-    //    {
-    //        return (
-    //            <option key={index} value={clientIterator}>
-    //            {
-    //                clientIterator
-    //            }
-    //            </option>
-    //        );
-    //    })
-    }
-    </>
-  );
-};

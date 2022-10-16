@@ -37,17 +37,23 @@ export function TopBar({user}:{user:string})
     return (
 
         <tw_Layouts.TWheader>
-            <StyledTopnav.TWcontainer id={TOPNAV_ID} ref={topNavRef}>
-                {/*left-header*/}
-                <StyledTopnav.TWlogo>{`JH Diary | ${user.toLocaleUpperCase()}`}</StyledTopnav.TWlogo>
-                {/*center-header*/}{" "}
-                <StyledTopnav.TWtitle onClick={() => {
+            <StyledTopnav.TWcontainer id={TOPNAV_ID} ref={topNavRef}
+            
+                onClick={() => {
                     if (monthRef?.current == undefined) {return;}
-                        monthRef?.current?.scrollIntoView({ behavior: "smooth" });
-                    }}
+                    monthRef?.current?.scrollIntoView({ behavior: "smooth" });
+                }}
+            >
+                {/*left-header*/}
+                <StyledTopnav.TWlogo>{`${user.toLocaleUpperCase()} | `}
+                
+                {/*center-header*/}{" "}
+                <StyledTopnav.TWtitle
+                
                 >
                     {DateService.GetTodayDateFormat()}
                 </StyledTopnav.TWtitle>
+                    </StyledTopnav.TWlogo>
                 <div className="flex flex-row gap-1" >
                 {/*right-header*/}
                 {
