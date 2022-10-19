@@ -55,7 +55,7 @@ export function EventClientSelector(props: ClientSelector): JSX.Element {
     return (
         <StyledEvent.TWStyledNonSelect style={styleFilterBorder}>
             {
-                props.event.client
+                props.event.client.charAt(0).toUpperCase() + props.event.client.slice(1)
             }
         </StyledEvent.TWStyledNonSelect>
     )
