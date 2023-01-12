@@ -127,7 +127,7 @@ export class EventClass
      */
     static maxSpread(event: jh.event, dayOff?: DayWeek ): number
     {
-        const maxDayAvailable = DateService.GetDateNextDay(event.start, dayOff ?? DayWeek.Saturday);
+        const maxDayAvailable = DateService.GetDateNextDay(event.start, 7);
         return Math.min(1 + DateService.DaysFrom(event.start, event.end), DateService.DaysFrom(event.start, maxDayAvailable));
     }
 }

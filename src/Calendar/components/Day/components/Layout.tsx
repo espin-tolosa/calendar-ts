@@ -16,7 +16,7 @@ interface DayContainer {
 export function DayLayout ( {fullDate, height, visible, thisDay, children} : DayContainer  )
 {
     const $isLock = false;
-    const $isWeekend = DateService.IsWeekend(fullDate);
+    const $isWeekend = DateService.IsWeekend_v2(fullDate);
     const styledProps = { $isWeekend, $isLock };
     
     const isToday = fullDate === DateService.FormatDate(DateService.GetDate());

@@ -45,7 +45,7 @@ export function TopBar({user}:{user:string})
                 }}
             >
                 {/*left-header*/}
-                <StyledTopnav.TWlogo>{`${user.toLocaleUpperCase()} | `}
+                <StyledTopnav.TWlogo>{`JHDiary v1.0 | ${user.toLocaleUpperCase()} | `}
                 
                 {/*center-header*/}{" "}
                 <StyledTopnav.TWtitle

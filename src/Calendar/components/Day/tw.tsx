@@ -27,7 +27,7 @@ this requires JS, hasta ahora solamente el CSS ha sido incorporado.
 
 	${({ $isWeekend }: { $isWeekend: boolean }) =>
     ($isWeekend &&
-      "bg-slate-300 z-Dayoff outline outline-[1px] outline-slate-100 select-none") ||
+      "bg-slate-50 outline outline-[1px] outline-slate-100 select-none") ||
     (!$isWeekend && "outline outline-[1px] outline-slate-300") ||
     ""}	
     small_screen_w:text-xs
@@ -46,7 +46,7 @@ ${({ $isLock }: { $isLock: boolean }) =>
   ($isLock && "bg-orange-400 z-Dayoff bg-opacity-50 select-none") || ""}	
 
 ${({ $isWeekend }: { $isWeekend: boolean }) =>
-  ($isWeekend && "bg-slate-300 hover:bg-slate-50 select-none") ||
+  ($isWeekend && "bg-slate-50 hover:bg-slate-50 select-none") ||
   (!$isWeekend && "") ||
   ""}	
 
