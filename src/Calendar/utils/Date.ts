@@ -278,13 +278,16 @@ function GetWeekRangeOf(today: string) {
   return rangeDates;
 }
 
+// TODO: all clients of this function should be refactored to remove this dependency
 function IsWeekend(today: string) {
   return false;
 }
 
 function IsWeekend_v2(today: string) {
+    const today_name = DateService.GetMonthDayKey(new Date(DateService.GetDateFrom(today, 0)));
+
   return (
-    DateService.GetMonthDayKey(new Date(DateService.GetDateFrom(today, 0))) === "Sunday"
+    today_name.includes("Sun") || today_name.includes("Sat")
   );
 }
 
